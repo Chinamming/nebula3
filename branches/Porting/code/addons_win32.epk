@@ -1,0 +1,44 @@
+#-------------------------------------------------------------------------------
+#   addons_win32.epk
+#   (C) 2007 Radon Labs GmbH
+#-------------------------------------------------------------------------------
+begintarget db_win32
+    settype lib
+    setbasedir addons
+    setprecompiledheader stdneb
+    setincpath_win32 "../foundation;../render;../extlibs;../extlibs/ode;../addons;../extlibs/opcode;"    
+    setclusters { db db/sqlite3 }
+endtarget
+
+# begintarget http_win32
+#     settype lib
+#     setbasedir addons
+#     setprecompiledheader stdneb
+#     setincpath_win32 "../foundation;../extlibs;../addons"    
+#     setclusters { http http/win32 }
+# endtarget
+
+begintarget nebula2_win32
+    settype lib
+    setbasedir addons
+    setprecompiledheader stdneb
+    setincpath_win32 "../foundation;../extlibs;../render;../addons;../nebula2;../nebula2/character;../nebula2/anim;../character;../anim;../nebula2/particle"    
+    setclusters { nebula2 nebula2/anim nebula2/character nebula2/particle }
+endtarget
+
+begintarget physics_win32
+    settype lib
+    setbasedir addons
+    setprecompiledheader stdneb
+    setincpath_win32 "../foundation;../extlibs;../extlibs/ode;../addons;../render;../extlibs/opcode;"    
+    setclusters { physics }
+endtarget
+
+begintarget addons_win32
+    settype lib
+    setdepends {
+        db_win32
+        nebula2_win32
+        physics_win32
+    }
+endtarget        

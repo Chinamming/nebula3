@@ -1,0 +1,49 @@
+#-------------------------------------------------------------------------------
+#   benchmarks_win32.epk
+#   (C) 2006 Radon Labs GmbH
+#-------------------------------------------------------------------------------
+set Win32ReleaseLibs { application_win32.lib foundation_win32.lib lua_win32.lib tinyxml_win32.lib zlib_win32.lib }
+set Win32DebugLibs { d_application_win32.lib d_foundation_win32.lib d_lua_win32.lib d_tinyxml_win32.lib d_zlib_win32.lib }
+set Win32Libs { dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dxerr9.lib }
+
+#-------------------------------------------------------------------------------
+begintarget benchmarkbase_win32
+    settype lib
+    setbasedir benchmarks
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../render;../extlibs;../benchmarks"    
+    setclusters { benchmarkbase }
+endtarget
+#-------------------------------------------------------------------------------
+begintarget benchmarkfoundation_win32
+    settype exe
+    setbasedir benchmarks
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../render;../extlibs;../benchmarks"    
+    setdepends benchmarkbase_win32
+    setclusters { benchmarkfoundation }
+    setlibs_win32_release "$Win32ReleaseLibs benchmarkbase_win32.lib"
+    setlibs_win32_debug "$Win32DebugLibs d_benchmarkbase_win32.lib"
+    setlibs_win32 $Win32Libs
+endtarget
+#-------------------------------------------------------------------------------
+begintarget benchmarkaddon_win32
+    settype exe
+    setbasedir benchmarks
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../render;../extlibs;../benchmarks"    
+    setdepends benchmarkbase_win32
+    setclusters { benchmarkaddon }
+    setlibs_win32_release "$Win32ReleaseLibs sqlite_win32.lib db_win32.lib benchmarkbase_win32.lib"
+    setlibs_win32_debug "$Win32DebugLibs d_sqlite_win32.lib d_db_win32.lib d_benchmarkbase_win32.lib"
+    setlibs_win32 $Win32Libs
+endtarget
+#-------------------------------------------------------------------------------
+begintarget benchmarks_win32
+    settype lib
+    setdepends {        
+        benchmarkbase_win32
+        benchmarkfoundation_win32
+        benchmarkaddon_win32
+    }
+endtarget
