@@ -1,0 +1,110 @@
+#-------------------------------------------------------------------------------
+#   tools_win32.epk
+#   (C) 2006 Radon Labs GmbH
+#-------------------------------------------------------------------------------
+set Win32ReleaseLibs { foundation_win32.lib render_win32.lib lua_win32.lib tinyxml_win32.lib zlib_win32.lib }
+set Win32DebugLibs { d_foundation_win32.lib d_render_win32.lib d_lua_win32.lib d_tinyxml_win32.lib d_zlib_win32.lib }
+set Win32Libs { dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dinput8.lib xinput.lib dxerr9.lib }
+#-------------------------------------------------------------------------------
+begintarget nsh3
+    settype exe
+    setbasedir tools
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../extlibs;../tools"    
+    setclusters { nsh3 }
+    setlibs_win32_release $Win32ReleaseLibs
+    setlibs_win32_debug $Win32DebugLibs
+    setlibs_win32 $Win32Libs
+endtarget
+#-------------------------------------------------------------------------------
+begintarget nsc3
+    settype exe
+    setbasedir tools
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../extlibs;../tools"    
+    setclusters { nsc3 }
+    setlibs_win32_release $Win32ReleaseLibs
+    setlibs_win32_debug $Win32DebugLibs
+    setlibs_win32 $Win32Libs
+endtarget
+#-------------------------------------------------------------------------------
+begintarget nviewer3
+    settype exe
+    setbasedir tools
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../render;../extlibs;../tools;../addons"    
+    setclusters { nviewer3 }
+    setlibs_win32_release "$Win32ReleaseLibs nebula2_win32.lib"
+    setlibs_win32_debug "$Win32DebugLibs d_nebula2_win32.lib"
+    setlibs_win32 $Win32Libs
+endtarget
+#-------------------------------------------------------------------------------
+begintarget testserver
+    settype exe
+    setbasedir tools
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../extlibs;../tools"    
+    setclusters { testserver }
+    setlibs_win32_release $Win32ReleaseLibs
+    setlibs_win32_debug $Win32DebugLibs
+    setlibs_win32 $Win32Libs
+endtarget
+#-------------------------------------------------------------------------------
+begintarget testclient
+    settype exe
+    setbasedir tools
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../extlibs;../tools"    
+    setclusters { testclient }
+    setlibs_win32_release $Win32ReleaseLibs
+    setlibs_win32_debug $Win32DebugLibs
+    setlibs_win32 $Win32Libs
+endtarget
+#-------------------------------------------------------------------------------
+begintarget testviewer
+    settype exe
+    setbasedir tools
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../render;../extlibs;../tools;../addons"    
+    setclusters { testviewer }
+    setlibs_win32_release "$Win32ReleaseLibs nebula2_win32.lib db_win32.lib sqlite_win32.lib"
+    setlibs_win32_debug "$Win32DebugLibs d_nebula2_win32.lib d_db_win32.lib d_sqlite_win32.lib"
+    setlibs_win32 $Win32Libs
+endtarget
+#-------------------------------------------------------------------------------
+begintarget testgame
+    settype exe
+    setbasedir tools
+    setprecompiledheader stdneb    
+    setincpath_win32 "../application;../application/basegamefeature;../application/corefeature;../application/graphicsfeature;../application/physicsfeature;../foundation;../render;../extlibs;../tools;../addons;../extlibs/ode;"    
+    setclusters { testgame }
+    setlibs_win32_release "$Win32ReleaseLibs physics_win32.lib ode_win32.lib opcode_win32.lib gimpact_win32.lib db_win32.lib sqlite_win32.lib application_win32.lib nebula2_win32.lib"
+    setlibs_win32_debug "$Win32DebugLibs d_physics_win32.lib d_ode_win32.lib d_opcode_win32.lib d_gimpact_win32.lib d_db_win32.lib d_sqlite_win32.lib  d_application_win32.lib d_nebula2_win32.lib"
+    setlibs_win32 $Win32Libs
+endtarget
+#-------------------------------------------------------------------------------
+begintarget testasyncviewer
+    settype exe
+    setbasedir tools
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../render;../extlibs;../tools;../addons"    
+    setclusters { testasyncviewer }
+    setlibs_win32_release "$Win32ReleaseLibs nebula2_win32.lib"
+    setlibs_win32_debug "$Win32DebugLibs d_nebula2_win32.lib"
+    setlibs_win32 $Win32Libs
+endtarget
+#-------------------------------------------------------------------------------
+begintarget tools_win32
+    settype lib
+    setincpath_win32 "../application;../foundation;../render;../extlibs;../tools;../addons;../extlibs/ode;"    
+    setdepends {
+        testserver
+        testclient
+        nsh3
+        nsc3
+        nviewer3        
+        testviewer
+        testgame
+        testasyncviewer
+    }
+endtarget
