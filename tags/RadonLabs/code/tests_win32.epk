@@ -1,0 +1,74 @@
+#-------------------------------------------------------------------------------
+#   tests_win32.epk
+#   (C) 2006 Radon Labs GmbH
+#-------------------------------------------------------------------------------
+set Win32ReleaseLibs { foundation_win32.lib lua_win32.lib tinyxml_win32.lib zlib_win32.lib }
+set Win32DebugLibs { d_foundation_win32.lib d_lua_win32.lib d_tinyxml_win32.lib d_zlib_win32.lib }
+set Win32Libs { dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dxerr9.lib }
+
+#-------------------------------------------------------------------------------
+begintarget testbase_win32
+    settype lib
+    setbasedir tests
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../render;../extlibs;../tests;..addons;"    
+    setclusters { testbase }
+endtarget
+#-------------------------------------------------------------------------------
+begintarget testfoundation_win32
+    settype exe
+    setbasedir tests
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../render;../extlibs;../tests;..addons;"    
+    setdepends testbase_win32
+    setclusters { testfoundation }
+    setlibs_win32_release "$Win32ReleaseLibs testbase_win32.lib"
+    setlibs_win32_debug "$Win32DebugLibs d_testbase_win32.lib"
+    setlibs_win32 $Win32Libs
+endtarget
+#-------------------------------------------------------------------------------
+begintarget testrender_win32
+    settype exe
+    setbasedir tests
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../render;../extlibs;../tests;..addons;"    
+    setdepends testbase_win32
+    setclusters { testrender }
+    setlibs_win32_release "$Win32ReleaseLibs render_win32.lib testbase_win32.lib nebula2_win32.lib"
+    setlibs_win32_debug "$Win32DebugLibs d_render_win32.lib d_testbase_win32.lib d_nebula2_win32.lib"
+    setlibs_win32 $Win32Libs
+endtarget
+#-------------------------------------------------------------------------------
+begintarget testaddon_win32
+    settype exe
+    setbasedir tests
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../render;../extlibs;../tests;..addons;"    
+    setdepends testbase_win32
+    setclusters { testaddon }
+    setlibs_win32_release "$Win32ReleaseLibs application_win32.lib sqlite_win32.lib db_win32.lib testbase_win32.lib"
+    setlibs_win32_debug "$Win32DebugLibs d_application_win32.lib d_sqlite_win32.lib d_db_win32.lib d_testbase_win32.lib"
+    setlibs_win32 $Win32Libs
+endtarget
+#-------------------------------------------------------------------------------
+# begintarget testapplication_win32
+#     settype exe
+#     setbasedir tests
+#     setprecompiledheader stdneb    
+#     setincpath_win32 "../addons;../foundation;../extlibs;"    
+#     setdepends testbase_win32
+#     setclusters { testapplication }
+#     setlibs_win32_release "$Win32ReleaseLibs sqlite_win32.lib db_win32.lib application_win32.lib testbase_win32.lib"
+#     setlibs_win32_debug "$Win32DebugLibs d_sqlite_win32.lib d_db_win32.lib d_application_win32.lib d_testbase_win32.lib"
+#     setlibs_win32 $Win32Libs
+# endtarget
+#-------------------------------------------------------------------------------
+begintarget tests_win32
+    settype lib
+    setdepends {
+        testbase_win32
+        testfoundation_win32
+        testrender_win32
+        testaddon_win32
+    }
+endtarget

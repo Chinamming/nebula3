@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Nebula3 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../schemas/frame.xsd">
+
+<!--
+	Renders shadow buffers for variance shadow mapping.
+-->
+<FrameShader name="VSMShadowMapping">
+
+	<!-- declare render targets -->
+	<DeclareRenderTarget name="VSMRenderBuffer" width="1024" height="1024" depth="true" format="G16R16F" msaa="false"/>
+	<DeclareRenderTarget name="VSMDownscale" width="512" height="512" depth="false" format="G16R16F" msaa="false"/>
+
+    <!-- render shadow casters to render buffer -->
+	<Pass name="VSMRender" renderTarget="VSMRenderBuffer" shader="p_varianceshadowmap" clearColor="1.0 1.0 1.0 1.0" clearDepth="1.0" clearStencil="0">
+        <Batch shader="b_varianceshadowmap" type="Solid" shdFeatures="VSMDepth" nodeFilter="Solid" sorting="FrontToBack" lighting="None"/>
+	</Pass>
+
+	<!-- downsample the rendered result into a render target -->
+    <PostEffect name="Downscale" renderTarget="VSMDownscale" shader="pe_downsample2x2">
+		<ApplyShaderVariable sem="SourceBuffer" value="VSMRenderBuffer"/>
+	</PostEffect>
+
+    <!-- 
+		Blur the downscaled buffer some more into the final shadow buffer 
+		NOTE: the render target is only set to provide a proper size to the post effect object, which is
+		necessary because the posteffect needs to compute a halfpixel offset from the render target's dimensions.
+		When render render targets, the ShadowServer will patch another render target into the Final PostEffect.
+	-->
+	<PostEffect name="Final" renderTarget="VSMDownscale" shader="pe_gaussianblur">
+		<ApplyShaderVariable sem="SourceBuffer" value="VSMDownscale"/>
+	</PostEffect>       
+
+</FrameShader>
+</Nebula3>
