@@ -16,6 +16,8 @@
 #include "math/xbox360/xbox360_vector.h"
 #elif __WII__
 #include "math/wii/wii_vector.h"
+#elif __APPLE__
+#include "math/sce/sce_vector.h"
 #else
 #error "vector class not implemented!"
 #endif

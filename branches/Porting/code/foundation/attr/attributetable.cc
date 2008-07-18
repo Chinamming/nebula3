@@ -20,21 +20,21 @@ AttributeTable::AttributeTable() :
     numRows(0),
     allocatedRows(0),
     valueBuffer(0),
-    rowNewBuffer(0),
     rowModifiedBuffer(0),
     rowDeletedBuffer(0),
+    rowNewBuffer(0),
+    trackModifications(true),
     isModified(false),
     rowsModified(false),
-    trackModifications(true),
     inBeginAddColumns(false),
     addColumnsRecordAsNewColumns(false),
-    firstNewColumnIndex(InvalidIndex),
     columns(128, 128),
     readWriteColumnIndices(128, 128),
     newColumnIndices(128, 128),
     newRowIndices(128, 128),
     deletedRowIndices(128, 128),
-    userData(128, 128)
+    userData(128, 128),
+    firstNewColumnIndex(InvalidIndex)
 {
     // empty
 }

@@ -42,7 +42,7 @@ Assign::Assign()
 */
 inline
 Assign::Assign(const Util::String& name, const Util::String& path) :
-    KeyValuePair(name, path)
+    Util::KeyValuePair<Util::String, Util::String>(name, path)
 {
     n_assert(name.IsValid());
     n_assert(path.IsValid());

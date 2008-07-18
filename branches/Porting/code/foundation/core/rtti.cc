@@ -15,8 +15,8 @@ using namespace Util;
 /**
 */
 Rtti::Rtti(const char* className, FourCC fcc, Creator creatorFunc, const Rtti* parentClass) :
-    fourCC(fcc),
     parent(parentClass),
+    fourCC(fcc),
     creator(creatorFunc)
 {
     n_assert(0 != className);

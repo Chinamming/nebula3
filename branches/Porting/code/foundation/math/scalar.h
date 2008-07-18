@@ -15,6 +15,8 @@
 #include "math/xbox360/xbox360_scalar.h"
 #elif __WII__
 #include "math/wii/wii_scalar.h"
+#elif __APPLE__
+#include "math/sce/sce_scalar.h"
 #else
 #error "scalar class not implemented!"
 #endif

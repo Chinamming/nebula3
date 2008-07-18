@@ -33,6 +33,13 @@ namespace Threading
 class CriticalSection : public Wii::WiiCriticalSection
 { };
 }
+#elif __APPLE__
+#include "threading/posix/posixcriticalsection.h"
+namespace Threading
+{
+class CriticalSection : public Posix::PosixCriticalSection
+{ };
+}
 #else
 #error "Threading::CriticalSection not implemented on this platform!"
 #endif

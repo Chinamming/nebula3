@@ -33,6 +33,13 @@ namespace Internal
 class FSWrapper : public Wii::WiiFSWrapper
 { };
 }
+#elif __APPLE__
+#include "io/posix/posixfswrapper.h"
+namespace Internal
+{
+class FSWrapper : public Posix::PosixFSWrapper
+{ };
+}
 #else
 #error "FSWrapper class not implemented on this platform!"
 #endif

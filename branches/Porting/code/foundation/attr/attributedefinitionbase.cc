@@ -15,8 +15,8 @@ Util::Array<const AttributeDefinitionBase*>* AttributeDefinitionBase::DynamicAtt
 /**
 */
 AttributeDefinitionBase::AttributeDefinitionBase() :
-    accessMode(ReadOnly),
-    isDynamic(false)
+    isDynamic(false),
+    accessMode(ReadOnly)
 {
     // empty
 }
@@ -25,10 +25,10 @@ AttributeDefinitionBase::AttributeDefinitionBase() :
 /**
 */
 AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Util::FourCC& fcc, AccessMode m, bool dyn) :
+    isDynamic(dyn),
     name(n),
     fourCC(fcc),
-    accessMode(m),
-    isDynamic(dyn)
+    accessMode(m)
 {
     this->Register();
 }
@@ -37,10 +37,10 @@ AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Ut
 /**
 */
 AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Util::FourCC& fcc, AccessMode m, bool defVal, bool dyn) :
+    isDynamic(dyn),
     name(n),
     fourCC(fcc),
     accessMode(m),
-    isDynamic(dyn),
     defaultValue(defVal)
 {
     this->Register();
@@ -50,10 +50,10 @@ AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Ut
 /**
 */
 AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Util::FourCC& fcc, AccessMode m, int defVal, bool dyn) :
+    isDynamic(dyn),
     name(n),
     fourCC(fcc),
     accessMode(m),
-    isDynamic(dyn),
     defaultValue(defVal)
 {
     this->Register();
@@ -63,10 +63,10 @@ AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Ut
 /**
 */
 AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Util::FourCC& fcc, AccessMode m, float defVal, bool dyn) :
+    isDynamic(dyn),
     name(n),
     fourCC(fcc),
     accessMode(m),
-    isDynamic(dyn),
     defaultValue(defVal)
 {
     this->Register();
@@ -76,10 +76,10 @@ AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Ut
 /**
 */
 AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Util::FourCC& fcc, AccessMode m, const Util::String& defVal, bool dyn) :
+    isDynamic(dyn),
     name(n),
     fourCC(fcc),
     accessMode(m),
-    isDynamic(dyn),
     defaultValue(defVal)
 {
     this->Register();
@@ -89,10 +89,10 @@ AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Ut
 /**
 */
     AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Util::FourCC& fcc, AccessMode m, const Math::float4& defVal, bool dyn) :
+    isDynamic(dyn),
     name(n),
     fourCC(fcc),
     accessMode(m),
-    isDynamic(dyn),
     defaultValue(defVal)
 {
     this->Register();
@@ -102,10 +102,10 @@ AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Ut
 /**
 */
 AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Util::FourCC& fcc, AccessMode m, const Math::matrix44& defVal, bool dyn) :
+    isDynamic(dyn),
     name(n),
     fourCC(fcc),
     accessMode(m),
-    isDynamic(dyn),
     defaultValue(defVal)
 {
     this->Register();
@@ -115,10 +115,10 @@ AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Ut
 /**
 */
 AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Util::FourCC& fcc, AccessMode m, const Util::Blob& defVal, bool dyn) :
+    isDynamic(dyn),
     name(n),
     fourCC(fcc),
     accessMode(m),
-    isDynamic(dyn),
     defaultValue(defVal)
 {
     this->Register();
@@ -128,10 +128,10 @@ AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Ut
 /**
 */
 AttributeDefinitionBase::AttributeDefinitionBase(const Util::String& n, const Util::FourCC& fcc, AccessMode m, const Util::Guid& defVal, bool dyn) :
+    isDynamic(dyn),
     name(n),
     fourCC(fcc),
     accessMode(m),
-    isDynamic(dyn),
     defaultValue(defVal)
 {
     this->Register();

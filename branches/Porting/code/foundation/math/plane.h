@@ -15,6 +15,8 @@
 #include "math/xbox360/xbox360_plane.h"
 #elif __WII__
 #include "math/wii/wii_plane.h"
+#elif __APPLE__
+#include "math/sce/sce_plane.h"
 #else
 #error "plane class not implemented!"
 #endif

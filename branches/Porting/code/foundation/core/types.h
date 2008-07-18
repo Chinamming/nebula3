@@ -45,6 +45,9 @@ static const unsigned int InvalidIndex = 0xffffffff;
 #elif __WII__
 #define n_stricmp stricmp
 #define n_snprintf sprintf
+#elif __APPLE__
+#define n_stricmp strcasecmp
+#define n_snprintf snprintf
 #else
 #error "Unsupported platform!"
 #endif
@@ -54,6 +57,8 @@ static const unsigned int InvalidIndex = 0xffffffff;
 #elif __XBOX360__
 #define ThreadLocal __declspec(thread)
 #elif __WII__
+#define ThreadLocal
+#elif __APPLE__
 #define ThreadLocal
 #else
 #error "Unsupported platform!"

@@ -33,6 +33,12 @@ namespace Net
 {
 typedef Xbox360::Xbox360IpAddress IpAddress;
 }
+#elif __APPLE__
+#include "net/posix/posixipaddress.h"
+namespace Net
+{
+typedef Posix::PosixIpAddress IpAddress;
+}
 #else
 #error "IpAddress class not implemented on this platform"
 #endif

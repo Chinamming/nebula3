@@ -193,7 +193,7 @@ template<class TYPE> void
 SafeQueue<TYPE>::EraseMatchingElements(const TYPE& e)
 {
     this->criticalSection.Enter();
-    Util::Array<TYPE>::Iterator iter; 
+    typename Util::Array<TYPE>::Iterator iter; 
     for (iter = this->queueArray.Begin(); iter != this->queueArray.End();)
     {
         if ((*iter) == e)

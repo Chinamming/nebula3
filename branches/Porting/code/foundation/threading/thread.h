@@ -37,6 +37,15 @@ class Thread : public Wii::WiiThread
     DeclareClass(Thread);
 };
 }
+#elif __APPLE__
+#include "threading/posix/posixthread.h"
+namespace Threading
+{
+class Thread : public Posix::PosixThread
+{
+    DeclareClass(Thread);
+};
+}
 #else
 #error "Threading::Thread not implemented on this platform!"
 #endif

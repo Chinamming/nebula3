@@ -22,6 +22,8 @@
 #include "threading/xbox360/xbox360barrier.h"
 #elif __WII__
 #include "threading/wii/wiibarrier.h"
+#elif __APPLE__
+#include "threading/darwin/darwinbarrier.h"
 #else
 #error "Barrier not implemented on this platform!"
 #endif

@@ -98,7 +98,7 @@ IoPageHandler::HandleRequest(const Ptr<HttpRequest>& request)
 
         // display mounted zip archives
         htmlWriter->Element(HtmlElement::Heading3, "Mounted Zip Archives");
-        Array<Ptr<ZipArchive>> zipArchives = ZipFileSystem::Instance()->GetMountedZipArchives();
+        Array<Ptr<ZipArchive> > zipArchives = ZipFileSystem::Instance()->GetMountedZipArchives();
         if (zipArchives.Size() > 0)
         {
             htmlWriter->Begin(HtmlElement::UnorderedList);

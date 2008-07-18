@@ -36,6 +36,14 @@ class SysFunc : public Wii::SysFunc
 {
     // empty
 };
+#elif __APPLE__
+#include "core/posix/posixsysfunc.h"
+namespace Core
+{
+class SysFunc : public Posix::SysFunc
+{
+    // empty
+};
 } // namespace Core
 #else
 #error "Core::SysFunc not implemented on this platform!"

@@ -22,10 +22,10 @@ String::Format(const char* fmtString, ...)
     #if __WIN32__
         // need to use non-CRT thread safe function under Win32
         StringCchVPrintf(buf, sizeof(buf), fmtString, argList);
-    #elif __WII__
-		vsnprintf(buf, sizeof(buf), fmtString, argList);
+    #elif __XBOX360__
+		_vsnprintf(buf, sizeof(buf), fmtString, argList);
     #else
-        _vsnprintf(buf, sizeof(buf), fmtString, argList);
+        vsnprintf(buf, sizeof(buf), fmtString, argList);
     #endif
     *this = buf;
     va_end(argList);
@@ -41,10 +41,10 @@ String::FormatArgList(const char* fmtString, va_list argList)
     #if __WIN32__
         // need to use non-CRT thread safe function under Win32
         StringCchVPrintf(buf, sizeof(buf), fmtString, argList);
-    #elif __WII__
-		vsnprintf(buf, sizeof(buf), fmtString, argList);
+    #elif __XBOX360__
+		_vsnprintf(buf, sizeof(buf), fmtString, argList);
     #else
-        _vsnprintf(buf, sizeof(buf), fmtString, argList);
+        vsnprintf(buf, sizeof(buf), fmtString, argList);
     #endif
     *this = buf;
 }

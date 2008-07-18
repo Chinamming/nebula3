@@ -722,7 +722,8 @@ String::ToLower()
     char* str = const_cast<char*>(this->AsCharPtr());
     while (*str)
     {
-        *str++ = (char) tolower(*str);
+        *str = (char) tolower(*str);
+        str++;
     }
 }
 
@@ -735,7 +736,8 @@ String::ToUpper()
     char* str = const_cast<char*>(this->AsCharPtr());
     while (*str)
     {
-        *str++ = (char) toupper(*str);
+        *str = (char) toupper(*str);
+        str++;
     }
 }
 
