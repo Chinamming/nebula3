@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Export Nebula3 project assets for Win32 platform.
+	
+	(C) 2007 Radon Labs GmbH
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="All">
+
+    <!-- define properties -->
+    <PropertyGroup>
+        <ProjDir>c:\nebula3</ProjDir>
+        <ToolkitDir>c:\Programme\Nebula2 Toolkit For Maya\bin\win32</ToolkitDir>
+        <MayaDir>c:\Programme\Alias\Maya7.0\bin</MayaDir>
+        <DXSDK>c:\Programme\Microsoft DirectX SDK (November 2007)\Utilities\Bin\x86</DXSDK>
+        <WorkDir>$(ProjDir)\work</WorkDir>
+        <ShaderDir>$(ProjDir)\work\shaders</ShaderDir>
+        <ExportDir>$(ProjDir)\export</ExportDir>
+        <Rebuild>true</Rebuild>
+        <Debug>false</Debug>
+    </PropertyGroup>
+    <Choose>
+        <When Condition="$(Rebuild)=='true'">
+            <PropertyGroup>
+                <ForceArg>-force</ForceArg>
+            </PropertyGroup>            
+        </When>
+        <Otherwise>
+            <PropertyGroup>
+                <ForceArg></ForceArg>
+            </PropertyGroup>
+        </Otherwise>        
+    </Choose>
+    <Choose>
+        <When Condition="$(Debug)=='true'">
+            <PropertyGroup>
+                <FxcArgs>/nologo /Od /Zi /T fx_2_0 /I $(ShaderDir)\lib /I $(ShaderDir)\sm3\lib</FxcArgs>
+            </PropertyGroup>        
+        </When>
+        <Otherwise>
+            <PropertyGroup>
+                <FxcArgs>/nologo /T fx_2_0 /I $(ShaderDir)\lib /I $(ShaderDir)\sm3\lib</FxcArgs>
+            </PropertyGroup>
+        </Otherwise>        
+    </Choose>
+
+    <!-- define items -->
+    <ItemGroup>
+        <Shaders Include="$(WorkDir)\shaders\sm3\*.fx"/>
+        <FrameShaders Include="$(WorkDir)\frame\win32\*.xml"/>
+        <DataFiles Include="$(ProjDir)\data\**\*.xml"/>
+    </ItemGroup>
+    
+    <!-- preparation -->
+    <Target Name="Prepare">
+        <Exec Command="nsetpath -projdir $(ProjDir)" WorkingDirectory="$(ToolkitDir)"/>
+        <Delete Files="$(ProjDir)\export.zip" ContinueOnError="true"/>
+        <RemoveDir Condition="$(Rebuild)=='true'" Directories="$(ExportDir)" ContinueOnError="true"/>
+        <MakeDir Directories="$(ExportDir)\shaders;$(ExportDir)\shaders\pdb;$(ExportDir)\frame" ContinueOnError="true"/>
+    </Target>
+    
+    <!-- export graphics objects -->
+    <Target Name="ExportGraphics" DependsOnTargets="Prepare">
+        <Copy SourceFiles="@(DataFiles)" DestinationFiles="@(DataFiles->'$(ProjDir)\export\data\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="true"/>
+        <Exec Command="nmayabatcher70 $(ForceArg)" WorkingDirectory="$(MayaDir)"/>
+    </Target>
+    
+    <!-- export textures -->
+    <Target Name="ExportTextures" DependsOnTargets="ExportGraphics">
+        <Exec Command="ntexbatcher $(ForceArg)" WorkingDirectory="$(ToolkitDir)"/>        
+    </Target>
+    
+    <!-- compile shaders -->
+    <Target Name="CompileShaders" DependsOnTargets="Prepare"  Inputs="@(Shaders)" Outputs="@(Shaders->'$(ExportDir)\shaders\%(Filename)')">
+        <Exec Command="fxc $(FxcArgs) /Fo @(Shaders->'$(ExportDir)\shaders\%(Filename)') %(Shaders.Identity)" WorkingDirectory="$(DXSDK)"/>
+    </Target>
+
+    <!-- copy frame shaders -->
+    <Target Name="CopyFrameShaders" DependsOnTargets="Prepare">
+        <Copy SourceFiles="@(FrameShaders)" DestinationFolder="$(ExportDir)\frame"/>
+    </Target>
+
+        <!-- zip everything up -->
+    <Target Name="Pack" DependsOnTargets="ExportGraphics;ExportTextures;CompileShaders;CopyFrameShaders">
+        <Exec Command="zip -r export.zip export\* -x export\db\static.db4 export\db\game.db4" WorkingDirectory="$(ProjDir)"/>        
+    </Target>
+    
+    <!-- final target -->
+    <Target Name="All" DependsOnTargets="Pack" />
+    
+</Project>
+

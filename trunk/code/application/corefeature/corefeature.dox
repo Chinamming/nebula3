@@ -1,0 +1,7 @@
+/**
+@namespace CoreFeature
+
+The CoreFeature creates the fundamental classes of Nebula3 
+used for a new gameapplication.
+It creates Core, IO, Http (for debugging)and script servers.
+*/
