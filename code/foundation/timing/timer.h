@@ -25,6 +25,13 @@ namespace Timing
 class Timer : public Wii::WiiTimer
 { };
 }
+#elif (__APPLE__)
+#include "timing/posix/posixtimer.h"
+namespace Timing
+{
+class Timer : public Posix::PosixTimer
+{ };
+}
 #else
 #error "Timing::Timer not implemented on this platform!"
 #endif

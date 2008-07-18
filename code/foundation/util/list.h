@@ -16,9 +16,9 @@ namespace Util
 {
 template<class TYPE> class List
 {
+    class Node;
 public:
     class Iterator;
-    class Node;
 
     /// constructor
     List();

@@ -31,6 +31,13 @@ namespace IO
 class FileTime : public Wii::WiiFileTime
 { };
 }
+#elif __APPLE__
+#include "io/posix/posixfiletime.h"
+namespace IO
+{
+class FileTime : public Posix::PosixFileTime
+{ };
+}
 #else
 #error "FileTime class not implemented on this platform!"
 #endif

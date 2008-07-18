@@ -31,6 +31,13 @@ namespace Threading
 class Event : public Wii::WiiEvent
 { };
 }
+#elif __APPLE__
+#include "threading/posix/posixevent.h"
+namespace Threading
+{
+class Event : public Posix::PosixEvent
+{ };
+}
 #else
 #error "Threading::Event not implemented on this platform!"
 #endif

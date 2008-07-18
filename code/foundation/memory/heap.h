@@ -28,6 +28,12 @@ namespace Memory
 {
 typedef Wii::WiiHeap Heap;
 }
+#elif __APPLE__
+#include "memory/posix/posixheap.h"
+namespace Memory
+{
+typedef Posix::PosixHeap Heap;
+}
 #else
 #error "IMPLEMENT ME!"
 #endif

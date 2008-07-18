@@ -27,6 +27,15 @@ class Socket : public Xbox360::Xbox360Socket
     DeclareClass(Socket);
 };
 }
+#elif __APPLE__
+#include "net/posix/posixsocket.h"
+namespace Net
+{
+class Socket : public Posix::PosixSocket
+{ 
+    DeclareClass(Socket);
+};
+}
 #else
 #error "Socket class not implemented on this platform"
 #endif

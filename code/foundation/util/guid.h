@@ -28,6 +28,12 @@ namespace Util
 {
 typedef Wii::WiiGuid Guid;
 }
+#elif __APPLE__
+#include "util/posix/posixguid.h"
+namespace Util
+{
+typedef Posix::PosixGuid Guid;
+}
 #else
 #error "IMPLEMENT ME!"
 #endif

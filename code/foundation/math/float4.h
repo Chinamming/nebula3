@@ -16,6 +16,8 @@
 #include "math/xbox360/xbox360_float4.h"
 #elif __WII__
 #include "math/wii/wii_float4.h"
+#elif __APPLE__
+#include "math/sce/sce_float4.h"
 #else
 #error "float4 class not implemented!"
 #endif

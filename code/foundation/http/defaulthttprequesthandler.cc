@@ -55,7 +55,7 @@ DefaultHttpRequestHandler::HandleRequest(const Ptr<HttpRequest>& request)
 
         // list registered HttpRequestHandlers
         htmlWriter->Element(HtmlElement::Heading3, "Available Pages");        
-        const Array<Ptr<HttpRequestHandler>>& handlers = HttpServer::Instance()->GetRequestHandlers();
+        const Array<Ptr<HttpRequestHandler> >& handlers = HttpServer::Instance()->GetRequestHandlers();
         if (handlers.Size() > 0)
         {
             htmlWriter->Begin(HtmlElement::UnorderedList);

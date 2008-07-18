@@ -52,7 +52,7 @@ public:
     /// default constructor
     Variant();
     /// copy constructor
-    explicit Variant(const Variant& rhs);
+    Variant(const Variant& rhs);
     /// int constructor
     explicit Variant(int rhs);
     /// float constructor
@@ -1617,7 +1617,7 @@ Variant::StringToType(const Util::String& str)
     else if ("blobarray" == str)        return BlobArray;
     else
     {
-        n_error("Variant::StringToType(): invalid type string '%s'!", str);
+        n_error("Variant::StringToType(): invalid type string '%s'!", str.AsCharPtr());
         return Void;
     }
 }

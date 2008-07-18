@@ -178,7 +178,7 @@ Attribute::Attribute()
 */
 inline
 Attribute::Attribute(const Attribute& rhs) :
-    KeyValuePair(rhs.key, rhs.value)
+    Util::KeyValuePair<AttrId,Util::Variant>(rhs.key, rhs.value)
 {
     // empty
 }
@@ -188,7 +188,7 @@ Attribute::Attribute(const Attribute& rhs) :
 */
 inline
 Attribute::Attribute(const AttrId& id) :
-    KeyValuePair(id)
+    Util::KeyValuePair<AttrId,Util::Variant>(id)
 {
     // empty
 }
@@ -198,7 +198,7 @@ Attribute::Attribute(const AttrId& id) :
 */
 inline
 Attribute::Attribute(const BoolAttrId& id, bool val) :
-    KeyValuePair(id, Util::Variant(val))
+    Util::KeyValuePair<AttrId,Util::Variant>(id, Util::Variant(val))
 {
     // empty
 }
@@ -208,7 +208,7 @@ Attribute::Attribute(const BoolAttrId& id, bool val) :
 */
 inline
 Attribute::Attribute(const FloatAttrId& id, float val) :
-    KeyValuePair(id, Util::Variant(val))
+    Util::KeyValuePair<AttrId,Util::Variant>(id, Util::Variant(val))
 {
     // empty
 }
@@ -218,7 +218,7 @@ Attribute::Attribute(const FloatAttrId& id, float val) :
 */
 inline
 Attribute::Attribute(const IntAttrId& id, int val) :
-    KeyValuePair(id, Util::Variant(val))
+    Util::KeyValuePair<AttrId,Util::Variant>(id, Util::Variant(val))
 {
     // empty
 }
@@ -228,7 +228,7 @@ Attribute::Attribute(const IntAttrId& id, int val) :
 */
 inline
 Attribute::Attribute(const Matrix44AttrId& id, const Math::matrix44& val) :
-    KeyValuePair(id, Util::Variant(val))
+    Util::KeyValuePair<AttrId,Util::Variant>(id, Util::Variant(val))
 {
     // empty
 }
@@ -238,7 +238,7 @@ Attribute::Attribute(const Matrix44AttrId& id, const Math::matrix44& val) :
 */
 inline
 Attribute::Attribute(const StringAttrId& id, const Util::String& val) :
-    KeyValuePair(id, Util::Variant(val))
+    Util::KeyValuePair<AttrId,Util::Variant>(id, Util::Variant(val))
 {
     // empty
 }
@@ -248,7 +248,7 @@ Attribute::Attribute(const StringAttrId& id, const Util::String& val) :
 */
 inline
 Attribute::Attribute(const Float4AttrId& id, const Math::float4& val) :
-    KeyValuePair(id, Util::Variant(val))
+    Util::KeyValuePair<AttrId,Util::Variant>(id, Util::Variant(val))
 {
     // empty
 }
@@ -258,7 +258,7 @@ Attribute::Attribute(const Float4AttrId& id, const Math::float4& val) :
 */
 inline
 Attribute::Attribute(const GuidAttrId& id, const Util::Guid& val) :
-    KeyValuePair(id, Util::Variant(val))
+    Util::KeyValuePair<AttrId,Util::Variant>(id, Util::Variant(val))
 {
     // empty
 }
@@ -268,7 +268,7 @@ Attribute::Attribute(const GuidAttrId& id, const Util::Guid& val) :
 */
 inline
 Attribute::Attribute(const BlobAttrId& id, const Util::Blob& val) :
-    KeyValuePair(id, Util::Variant(val))
+    Util::KeyValuePair<AttrId,Util::Variant>(id, Util::Variant(val))
 {
     // empty
 }

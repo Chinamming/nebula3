@@ -10,7 +10,7 @@
     
     (C) 2008 Radon Labs GmbH
 */
-#if __WIN32__
+#if defined(__WIN32__) || defined(__APPLE__)
 #include "interface/base/iointerfacehandlerbase.h"
 namespace Interface
 {

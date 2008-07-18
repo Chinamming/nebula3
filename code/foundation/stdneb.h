@@ -17,6 +17,8 @@
 #include "core/xbox360/precompiled.h"
 #elif __WII__
 #include "core/wii/precompiled.h"
+#elif __APPLE__
+#include "core/posix/precompiled.h"
 #else
 #error "precompiled.h not implemented on this platform"
 #endif

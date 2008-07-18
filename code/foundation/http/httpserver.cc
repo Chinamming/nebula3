@@ -109,7 +109,7 @@ HttpServer::OnFrame()
     n_assert(this->isOpen);
 
     // handle pending client requests
-    Array<Ptr<TcpClientConnection>> recvConns = this->tcpServer->Recv();
+    Array<Ptr<TcpClientConnection> > recvConns = this->tcpServer->Recv();
     IndexT i;
     for (i = 0; i < recvConns.Size(); i++)
     {

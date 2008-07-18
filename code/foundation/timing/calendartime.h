@@ -26,6 +26,13 @@ namespace Timing
 class CalendarTime : public Wii::WiiCalendarTime
 { };
 }
+#elif (__APPLE__)
+#include "timing/posix/posixcalendartime.h"
+namespace Timing
+{
+class CalendarTime : public Posix::PosixCalendarTime
+{ };
+}
 #else
 #error "Timing::CalendarTime not implemented on this platform!"
 #endif

@@ -102,6 +102,9 @@
 */
 #ifndef __GNUC__
 #  define  __attribute__(x)  /**/
+#else
+#  define __cdecl /**/
+#  define __forceinline inline
 #endif
 
 //------------------------------------------------------------------------------

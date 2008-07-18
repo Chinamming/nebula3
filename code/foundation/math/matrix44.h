@@ -15,6 +15,8 @@
 #include "math/xbox360/xbox360_matrix44.h"
 #elif __WII__
 #include "math/wii/wii_matrix44.h"
+#elif __APPLE__
+#include "math/sce/sce_matrix44.h"
 #else
 #error "matrix44 class not implemented!"
 #endif

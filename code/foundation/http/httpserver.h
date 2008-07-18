@@ -49,7 +49,7 @@ public:
     /// remove a request handler from the server
     void RemoveRequestHandler(const Ptr<HttpRequestHandler>& h);
     /// get array of currently attached request handlers
-    const Util::Array<Ptr<HttpRequestHandler>>& GetRequestHandlers() const;
+    const Util::Array<Ptr<HttpRequestHandler> >& GetRequestHandlers() const;
     /// call this method frequently to serve http connections
     void OnFrame();
 
@@ -58,7 +58,7 @@ private:
     bool HandleHttpRequest(const Ptr<IO::Stream>& recvStream, const Ptr<IO::Stream>& sendStream);
 
     Ptr<DefaultHttpRequestHandler> defaultRequestHandler;
-    Util::Array<Ptr<HttpRequestHandler>> requestHandlers;
+    Util::Array<Ptr<HttpRequestHandler> > requestHandlers;
     Net::IpAddress ipAddress;
     Ptr<Net::TcpServer> tcpServer;
     bool isOpen;
@@ -94,7 +94,7 @@ HttpServer::GetPort() const
 //------------------------------------------------------------------------------
 /**
 */
-inline const Util::Array<Ptr<HttpRequestHandler>>&
+inline const Util::Array<Ptr<HttpRequestHandler> >&
 HttpServer::GetRequestHandlers() const
 {
     return this->requestHandlers;

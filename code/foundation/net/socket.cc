@@ -11,6 +11,8 @@ namespace Net
 ImplementClass(Net::Socket, 'SOCK', Win32::Win32Socket);
 #elif __XBOX360__
 ImplementClass(Net::Socket, 'SOCK', Xbox360::Xbox360Socket);
+#elif __APPLE__
+ImplementClass(Net::Socket, 'SOCK', Posix::PosixSocket);
 #else
 #error "Socket class not implemented on this platform!"
 #endif

@@ -16,6 +16,8 @@
 #include "memory/xbox360/xbox360memory.h"
 #elif __WII__
 #include "memory/wii/wiimemory.h"
+#elif __APPLE__
+#include "memory/posix/posixmemory.h"
 #else
 #error "IMPLEMENT ME!"
 #endif

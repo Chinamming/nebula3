@@ -31,6 +31,13 @@ namespace Threading
 class Interlocked : public Wii::WiiInterlocked
 { };
 }
+#elif __APPLE__
+#include "threading/darwin/darwininterlocked.h"
+namespace Threading
+{
+class Interlocked : public Darwin::DarwinInterlocked
+{ };
+}
 #else
 #error "Threading::Interlocked not implemented on this platform!"
 #endif

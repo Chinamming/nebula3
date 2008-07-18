@@ -16,6 +16,8 @@
 #include "math/xbox360/xbox360_point.h"
 #elif __WII__
 #include "math/wii/wii_point.h"
+#elif __APPLE__
+#include "math/sce/sce_point.h"
 #else
 #error "point class not implemented!"
 #endif

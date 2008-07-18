@@ -15,6 +15,8 @@
 #include "core/xbox360/xbox360singleton.h"
 #elif __WII__
 #include "core/wii/wiisingleton.h"
+#elif __APPLE__
+#include "core/posix/posixsingleton.h"
 #else
 #error "IMPLEMENT ME!"
 #endif
