@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Nebula3 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../schemas/frame.xsd">
+
+<!-- 
+    Test frame shader for the Win32 platform.
+    Renders a dedicated depth pass first, then renders the solid and alpha geometry to a (possibly
+    multisampled) color buffer, and finally resolves the result through a post-effect into the backbuffer.
+--> 
+<FrameShader name="DX9Default">
+    
+    <!-- declare render targets -->
+    <DeclareRenderTarget name="ColorBuffer" format="A8R8G8B8" depth="true" relWidth="1.0" relHeight="1.0" msaa="true"/>
+    
+    <!-- render the world to the BackBuffer render target -->
+    <Pass name="Color" renderTarget="ColorBuffer" shader="p_color" clearColor="0.0,1.0,0.0,1.0" clearDepth="1.0" clearStencil="0">
+        <Batch shader="b_depth" type="Depth" shdFeatures="Depth" nodeFilter="Solid" sorting="FrontToBack" lighting="None"/>
+        <Batch shader="b_solid" type="Solid" shdFeatures="Solid" nodeFilter="Solid" sorting="None" lighting="SinglePass"/>
+        <Batch shader="b_alpha" type="Alpha" shdFeatures="Alpha" nodeFilter="Alpha" sorting="None" lighting="SinglePass"/>
+    </Pass>
+        
+    <!-- apply a post effect with color correction, renders directly to the presentation buffer -->
+    <PostEffect name="Compose" shader="pe_compose">
+        <ApplyShaderVariable sem="ColorBuffer" value="ColorBuffer"/>        
+    </PostEffect>
+    
+</FrameShader>
+</Nebula3>
