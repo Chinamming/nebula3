@@ -1,0 +1,102 @@
+#ifndef GAME_FEATUREUNIT_H
+#define GAME_FEATUREUNIT_H
+//------------------------------------------------------------------------------
+/**
+    @class Game::FeatureUnit
+
+    A FeatureUnit is an encapsulated feature which can be
+    added to an application.
+    E.g. game features can be core features of Nebula3 like Render or Network, 
+    or it can be some of the addons like db or physics.
+
+    To add a new feature, derive from this class and add it to 
+    the Game::GameServer on application or statehandler startup.
+
+    The Game::GameServer will start, load, save, trigger and close your feature.
+
+    (C) 2007 Radon Labs GmbH
+*/
+#include "core/refcounted.h"
+#include "game/manager.h"
+#include "core/singleton.h"
+#include "util/cmdlineargs.h"
+
+//------------------------------------------------------------------------------
+namespace Game
+{
+
+class FeatureUnit : public Core::RefCounted    
+{
+    DeclareClass(FeatureUnit);
+public:
+    /// constructor
+    FeatureUnit();
+    /// destructor
+    virtual ~FeatureUnit();
+
+    /// called from GameServer::ActivateProperties()
+    virtual void OnActivate();
+    /// called from GameServer::DeactivateProperties()
+    virtual void OnDeactivate();
+    /// return true if property is currently active
+    bool IsActive() const;
+    
+    /// called from within GameServer::Load() after attributes are loaded
+    virtual void OnLoad();
+    /// called from within GameServer::OnStart() after OnLoad when the complete world exist
+    virtual void OnStart();
+    /// called from within GameServer::Save() before attributes are saved back to database
+    virtual void OnSave();
+    
+    /// called on begin of frame
+    virtual void OnBeginFrame();    
+    /// called in the middle of the feature trigger cycle
+    virtual void OnFrame();
+    /// called at the end of the feature trigger cycle
+    virtual void OnEndFrame();
+
+    /// called when game debug visualization is on
+    virtual void OnRenderDebug();
+
+    /// attach a manager to the game world
+    virtual void AttachManager(const Ptr<Manager>& manager);
+    /// remove a manager from the game world
+    virtual void RemoveManager(const Ptr<Manager>& manager);
+    
+    /// set command line args
+    void SetCmdLineArgs(const Util::CmdLineArgs& a);
+        
+protected:
+
+    Util::Array<Ptr<Manager> > managers;
+	bool active;
+
+    // cmdline args for configuration from cmdline
+    Util::CmdLineArgs args;
+    
+    #if __MANAGERS_STATS__
+    Util::Array<nProfiler> managerProfilers;
+    #endif
+};
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline bool
+FeatureUnit::IsActive() const
+{
+    return this->active;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+FeatureUnit::SetCmdLineArgs(const Util::CmdLineArgs& a)
+{
+    this->args = a;
+}
+
+}; // namespace FeatureUnit
+//------------------------------------------------------------------------------
+#endif

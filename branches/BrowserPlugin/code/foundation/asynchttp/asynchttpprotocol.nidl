@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Nebula3>
+    <Protocol namespace="AsyncHttp" name="AsyncHttpProtocol">
+        
+        <!-- dependencies -->
+        <Dependency header="http/httprequesthandler.h"/>
+        
+        <!-- attach a -->
+        
+        <!-- attach a HttpRequestHandler -->
+        <Message name="AttachRequestHandler" fourcc="arqh">
+            <InArg name="AcceptPattern" type="Util::String"/>
+            <InArg name=" "
+            <InArg name="RequestHandler" type="Ptr<Http::HttpRequestHandler>"/>            
+        </Message>
+        
+        <!-- remove an HttpRequestHandler -->
+        <Message name="RemoveRequestHandler" fourcc="rrqh">
+            <InArg name="RequestHandler" type="Ptr<Http::HttpRequestHandler>"/>
+        </Message>
+        
+        <!-- 
+        
+    </Protocol>
+    
+    

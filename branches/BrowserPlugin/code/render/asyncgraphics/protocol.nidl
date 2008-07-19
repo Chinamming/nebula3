@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Nebula3>
+    <Protocol namespace="AsyncGraphics" name="Protocol">
+        <!-- dependencies -->
+        <Dependency header="util/stringatom.h"/>
+        <Dependency header="core/rtti.h"/>
+        <Dependency header="coregraphics/displaymode.h"/>
+        <Dependency header="coregraphics/adapter.h"/>
+        <Dependency header="coregraphics/antialiasquality.h"/>
+        <Dependency header="coregraphics/pixelformat.h"/>
+        <Dependency header="coregraphics/adapterinfo.h"/>
+        <Dependency header="coregraphics/threadsafedisplayeventhandler.h"/>
+        <Dependency header="coregraphics/threadsaferendereventhandler.h"/>
+        <Dependency header="attr/attributecontainer.h"/>
+        <Dependency header="resources/resourceid.h"/>
+        <Dependency header="math/matrix44.h"/>
+        <Dependency header="math/float4.h"/>
+        <Dependency header="asyncgraphics/handle.h"/>
+        
+        <!-- setup the asynchronous graphics runtime -->
+        <Message name="SetupGraphics" fourcc="supg">
+            <InArg name="Adapter" type="CoreGraphics::Adapter::Code"/>
+            <InArg name="DisplayMode" type="CoreGraphics::DisplayMode"/>
+            <InArg name="AntiAliasQuality" type="CoreGraphics::AntiAliasQuality::Code"/>
+            <InArg name="Fullscreen" type="bool"/>
+            <InArg name="DisplayModeSwitchEnabled" type="bool"/>
+            <InArg name="TripleBufferingEnabled" type="bool"/>
+            <InArg name="AlwaysOnTop" type="bool"/>
+            <InArg name="VerticalSyncEnabled" type="bool"/>
+            <InArg name="IconName" type="Util::String"/>
+            <OutArg name="Success" type="bool"/>
+        </Message>
+        
+        <!-- test if adapter exists -->
+        <Message name="AdapterExists" fourcc="aext">
+            <InArg name="Adapter" type="CoreGraphics::Adapter::Code"/>
+            <OutArg name="Result" type="bool"/>
+        </Message>
+            
+        <!-- get available display modes -->
+        <Message name="GetAvailableDisplayModes" fourcc="gadm">
+            <InArg name="Adapter" type="CoreGraphics::Adapter::Code"/>
+            <InArg name="PixelFormat" type="CoreGraphics::PixelFormat::Code"/>
+            <OutArg name="Result" type="Util::Array<CoreGraphics::DisplayMode>"/>
+        </Message>
+        
+        <!-- check if a display mode is supported -->
+        <Message name="SupportsDisplayMode" fourcc="spdm">
+            <InArg name="Adapter" type="CoreGraphics::Adapter::Code"/>
+            <InArg name="DisplayMode" type="CoreGraphics::DisplayMode"/>
+            <OutArg name="Result" type="bool"/>
+        </Message>
+        
+        <!-- get current adapter display mode -->
+        <Message name="GetCurrentAdapterDisplayMode" fourcc="gcdm">
+            <InArg name="Adapter" type="CoreGraphics::Adapter::Code"/>
+            <OutArg name="Result" type="CoreGraphics::DisplayMode"/>
+        </Message>
+        
+        <!-- get adapter info -->
+        <Message name="GetAdapterInfo" fourcc="gadi">
+            <InArg name="Adapter" type="CoreGraphics::Adapter::Code"/>
+            <OutArg name="Result" type="CoreGraphics::AdapterInfo"/>
+        </Message>
+        
+        <!-- attach a thread-safe display event handler -->
+        <Message name="AttachDisplayEventHandler" fourcc="adeh">
+            <InArg name="Handler" type="Ptr<CoreGraphics::ThreadSafeDisplayEventHandler>"/>
+        </Message>
+        
+        <!-- remove a thread-safe display event handler -->
+        <Message name="RemoveDisplayEventHandler" fourcc="rdeh">
+            <InArg name="Handler" type="Ptr<CoreGraphics::ThreadSafeDisplayEventHandler>"/>            
+        </Message>
+        
+        <!-- attach a thread-safe render event handler -->
+        <Message name="AttachRenderEventHandler" fourcc="areh">
+            <InArg name="Handler" type="Ptr<CoreGraphics::ThreadSafeRenderEventHandler>"/>
+        </Message>
+            
+        <!-- remove a thread-safe render event handler -->
+        <Message name="RemoveRenderEventHandler" fourcc="rreh">
+            <InArg name="Handler" type="Ptr<CoreGraphics::ThreadSafeRenderEventHandler>"/>
+        </Message>
+        
+        <!-- create a graphics stage -->
+        <Message name="CreateGraphicsStage" fourcc="cgst">
+            <InArg name="Name" type="Util::StringAtom"/>
+            <InArg name="StageBuilderClass" type="const Core::Rtti*" default="0"/>
+            <InArg name="StageBuilderAttrs" type="Attr::AttributeContainer"/>
+            <OutArg name="Result" type="AsyncGraphics::Handle"/>
+        </Message>
+        
+        <!--- discard a graphics stage -->
+        <Message name="DiscardGraphicsStage" fourcc="digs">
+            <InArg name="StageHandle" type="AsyncGraphics::Handle"/>
+        </Message>
+                    
+        <!-- create a graphics view -->
+        <Message name="CreateGraphicsView" fourcc="cgvw">
+            <InArg name="ViewClass" type="const Core::Rtti*" default="0"/>
+            <InArg name="Name" type="Util::StringAtom"/>
+            <InArg name="StageName" type="Util::StringAtom"/>
+            <InArg name="FrameShaderName" type="Resources::ResourceId"/>
+            <InArg name="DefaultView" type="bool" default="false"/>
+            <OutArg name="Result" type="AsyncGraphics::Handle"/>
+        </Message>
+        
+        <!-- discard a graphics view -->
+        <Message name="DiscardGraphicsView" fourcc="dgvw">
+            <InArg name="ViewHandle" type="AsyncGraphics::Handle"/>
+        </Message>
+        
+        <!-- base class for graphics entity creation -->
+        <Message name="CreateGraphicsEntity" fourcc="cget">
+            <InArg name="StageName" type="Util::StringAtom"/>
+            <InArg name="Transform" type="Math::matrix44"/>
+            <InArg name="Visible" type="bool" default="true"/>
+            <OutArg name="EntityHandle" type="AsyncGraphics::Handle"/>
+        </Message>
+        
+        <!-- discard a graphics entity -->
+        <Message name="DiscardGraphicsEntity" fourcc="dcge">
+            <InArg name="EntityHandle" type="AsyncGraphics::Handle"/>
+        </Message>
+
+        <!-- create a ModelEntity -->
+        <Message name="CreateModelEntity" fourcc="cmde" derivedFrom="CreateGraphicsEntity">
+            <InArg name="ResourceId" type="Resources::ResourceId"/>
+        </Message>            
+
+        <!-- create a CameraEntity with perspective fov -->
+        <Message name="CreateCameraEntity" fourcc="cpce" derivedFrom="CreateGraphicsEntity">
+            <InArg name="ViewName" type="Util::StringAtom"/>
+            <InArg name="IsPerspective" type="bool" default="true"/>            
+            <InArg name="PerspFieldOfView" type="float" default="0.0f"/>
+            <InArg name="PerspAspectRatio" type="float" default="0.0f"/>
+            <InArg name="OrthoWidth" type="float" default="0.0f"/>
+            <InArg name="OrthoHeight" type="float" default="0.0f"/>
+            <InArg name="NearPlane" type="float"/>
+            <InArg name="FarPlane" type="float"/>
+        </Message>
+            
+        <!-- create a global light entity -->
+        <Message name="CreateGlobalLightEntity" fourcc="cgle" derivedFrom="CreateGraphicsEntity">
+            <InArg name="LightColor" type="Math::float4"/>
+            <InArg name="CastShadows" type="bool"/>
+            <InArg name="BackLightColor" type="Math::float4"/>
+        </Message>    
+            
+        <!-- create a spotlight entity -->
+        <Message name="CreateSpotLightEntity" fourcc="csle" derivedFrom="CreateGraphicsEntity">
+            <InArg name="Visible" type="bool"/>
+            <InArg name="LightColor" type="Math::float4"/>
+            <InArg name="CastShadows" type="bool"/>
+        </Message>
+               
+        <!-- a generic graphics entity message -->
+        <Message name="GraphicsEntityMsg" fourcc="gemg">
+            <InArg name="EntityHandle" type="AsyncGraphics::Handle"/>
+        </Message>
+            
+        <!-- update entity transform -->
+        <Message name="UpdateTransform" fourcc="sttr" derivedFrom="GraphicsEntityMsg">
+            <InArg name="Transform" type="Math::matrix44"/>
+        </Message>
+        
+        <!-- set entity visibility -->
+        <Message name="SetVisibility" fourcc="svsb" derivedFrom="GraphicsEntityMsg">
+            <InArg name="Visible" type="bool"/>
+        </Message>
+        
+    </Protocol>    
+</Nebula3>
