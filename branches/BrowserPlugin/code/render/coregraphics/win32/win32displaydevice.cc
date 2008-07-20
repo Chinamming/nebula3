@@ -21,7 +21,9 @@ Win32DisplayDevice::Win32DisplayDevice() :
     hWnd(0),
     hAccel(0),
     windowedStyle(WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_VISIBLE),
-    fullscreenStyle(WS_POPUP | WS_SYSMENU | WS_VISIBLE)
+    fullscreenStyle(WS_POPUP | WS_SYSMENU | WS_VISIBLE),
+    childStyle(WS_CHILD | WS_VISIBLE),
+    hWndParent(0)
 {
     ConstructSingleton;
     this->hInst = GetModuleHandle(0);
@@ -142,7 +144,11 @@ Win32DisplayDevice::OpenWindow()
 
     // we may need to adjust window size so that the client area of 
     // the window is of the requested size
-    DWORD windowStyle = this->fullscreen ? this->fullscreenStyle : this->windowedStyle;
+    DWORD windowStyle = 0;
+    if (this->hWndParent)
+        windowStyle = this->childStyle;
+    else
+        windowStyle = this->fullscreen ? this->fullscreenStyle : this->windowedStyle;
     DisplayMode adjMode = this->ComputeAdjustedWindowRect();
 
     // open window
@@ -153,14 +159,14 @@ Win32DisplayDevice::OpenWindow()
                               adjMode.GetYPos(),                    // y
                               adjMode.GetWidth(),                   // nWidth
                               adjMode.GetHeight(),                  // nHeight
-                              NULL,                                 // hWndParent
+                              this->hWndParent,                     // hWndParent
                               NULL,                                 // hMenu
                               this->hInst,                          // hInstance
                               NULL);                                // lParam
     n_assert(0 != this->hWnd);
 
     // set topmost flag
-    if (this->IsAlwaysOnTop())
+    if (this->IsAlwaysOnTop() && !this->hWndParent)
     {
         SetWindowPos(this->hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
     }
@@ -543,6 +549,8 @@ Win32DisplayDevice::WinProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             break;
 
         case WM_MOUSEMOVE:
+            // on win32 events generated from this message are ignored,
+            // mouse movement is instead sourced from a DirectInput8 device
             self->OnMouseMove(lParam);
             break;
 

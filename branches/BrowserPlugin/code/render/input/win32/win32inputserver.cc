@@ -23,7 +23,8 @@ using namespace CoreGraphics;
 */
 Win32InputServer::Win32InputServer() :
     di8(0),
-    di8Mouse(0)
+    di8Mouse(0),
+    hWndParent(0)
 {
     ConstructSingleton;
 }
@@ -120,7 +121,20 @@ Win32InputServer::OnFrame()
 
 //------------------------------------------------------------------------------
 /**    
-    This intitialies a DirectInput mouse device in order to track
+*/
+static bool IsTopLevelWindow(HWND hWnd)
+{
+    WINDOWINFO wi;
+    ZeroMemory(&wi, sizeof(wi));
+    wi.cbSize = sizeof(wi);
+    if (GetWindowInfo(hWnd, &wi))
+        return (wi.dwStyle & WS_CHILD) == 0;
+    return false;
+}
+
+//------------------------------------------------------------------------------
+/**    
+    This initializes a DirectInput mouse device in order to track
     raw mouse movement (WM mouse events stop at the screen borders).
 */
 bool
@@ -145,11 +159,27 @@ Win32InputServer::OpenDInputMouse()
     n_assert(SUCCEEDED(hr));
 
     // set the cooperative level of the device, we're friendly
-    // note: use Win32's FindWindow() to find our top level window because 
-    // the DisplayDevice may be running in a different thread
-    HWND hWnd = FindWindow(NEBULA3_WINDOW_CLASS, NULL);
+    HWND hWnd = 0;
+    if (this->hWndParent)
+    {
+        if (IsTopLevelWindow(this->hWndParent))
+            hWnd = this->hWndParent;
+        else
+            hWnd = GetAncestor(this->hWndParent, GA_ROOT);
+    }
+    else
+    {
+        // note: use Win32's FindWindow() to find our top level window because 
+        // the DisplayDevice may be running in a different thread
+        hWnd = FindWindow(NEBULA3_WINDOW_CLASS, NULL);
+    }
     n_assert(0 != hWnd);
-    hr = this->di8Mouse->SetCooperativeLevel(hWnd, DISCL_FOREGROUND | DISCL_NOWINKEY | DISCL_NONEXCLUSIVE);
+    DWORD coopFlags = DISCL_NOWINKEY | DISCL_NONEXCLUSIVE;
+    if (this->hWndParent)
+        coopFlags |= DISCL_BACKGROUND;
+    else
+        coopFlags |= DISCL_FOREGROUND;
+    hr = this->di8Mouse->SetCooperativeLevel(hWnd, coopFlags);
     n_assert(SUCCEEDED(hr));
 
     // set buffer size and relative axis mode on the mouse
@@ -166,7 +196,6 @@ Win32InputServer::OpenDInputMouse()
     hr = this->di8Mouse->SetProperty(DIPROP_AXISMODE, &dipdw.diph);
     n_assert(SUCCEEDED(hr));
 
-    // aquire the mouse
     this->di8Mouse->Acquire();
 
     return true;
