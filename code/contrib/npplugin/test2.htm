@@ -1,0 +1,41 @@
+<html>
+<body>
+<script type="text/javascript" language="javascript">
+    (function () {
+        function pluginIsInstalled() {
+            var MIME_TYPE = "application/nebula3";
+            if (!navigator || !navigator.mimeTypes) {
+                return false;
+            }
+            var mimeType = navigator.mimeTypes[MIME_TYPE];
+            return mimeType && mimeType.enabledPlugin;
+        }
+                  
+        var pluginIntervalCheck;
+          
+        function pollUntilPluginIsPresent() {
+            navigator.plugins.refresh(false);
+          
+            if (pluginIsInstalled()) {
+                window.clearInterval(pluginIntervalCheck);
+                window.location.reload();
+            }
+        }
+          
+        navigator.plugins.refresh(false);
+          
+        if (!pluginIsInstalled()) {
+            pluginIntervalCheck = window.setInterval(pollUntilPluginIsPresent, 1000);
+        }
+        
+        document.write(pluginIsInstalled()
+            ? "\74object type\75\42application/nebula3\42 width\75\042100%\42 height\75\042100%\42\76\74/object\76"
+            : "\74p\76Plugin Not Installed\74/p\76");
+    })();
+</script>
+<noscript>
+        <object type="application/nebula3" width="100%" height="100%">
+        </object>
+</noscript>
+</body>
+</html>

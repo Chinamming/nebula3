@@ -35,6 +35,11 @@ public:
     /// get the application window HWND
     HWND GetHwnd() const;
 
+    /// set the parent window HWND
+    void SetParentHwnd(HWND hWnd);
+    /// get the parent window HWND
+    HWND GetParentHwnd() const;
+
 protected:
     /// the WinProc
     static LRESULT CALLBACK WinProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -84,6 +89,8 @@ protected:
     HACCEL hAccel;
     DWORD windowedStyle;
     DWORD fullscreenStyle;
+    DWORD childStyle;
+    HWND hWndParent;
 
     enum
     {
@@ -98,6 +105,24 @@ inline HWND
 Win32DisplayDevice::GetHwnd() const
 {
     return this->hWnd;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+Win32DisplayDevice::SetParentHwnd(HWND hWnd)
+{
+    this->hWndParent = hWnd;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline HWND
+Win32DisplayDevice::GetParentHwnd() const
+{
+    return this->hWndParent;
 }
 
 } // namespace CoreGraphics

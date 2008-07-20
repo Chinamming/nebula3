@@ -197,6 +197,7 @@ RenderApplication::Open()
 
         // setup input subsystem
         this->inputServer = InputServer::Create();
+        this->inputServer->SetParentHwnd(this->displayDevice->GetParentHwnd());
         this->inputServer->Open();
         
         // setup model server
@@ -278,6 +279,19 @@ RenderApplication::OnConfigureDisplayDevice()
     {
         this->displayDevice->SetWindowTitle("Nebula3 Viewer");
     }
+
+#if __WIN32__
+#if _DEBUG
+    Timing::Sleep(10); // you've got 10 secs to hook the debugger up, go go go!
+#endif // _DEBUG
+    // run the app in a child window of the given parent window
+    if (this->args.HasArg("-parentwnd"))
+    {
+        String wndStr = this->args.GetString("-parentwnd");
+        HWND hWndParent = (HWND)_atoi64(wndStr.AsCharPtr());
+        this->displayDevice->SetParentHwnd(hWndParent);
+    }
+#endif //__WIN32__
 }
 
 //------------------------------------------------------------------------------

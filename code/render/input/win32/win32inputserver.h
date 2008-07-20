@@ -36,6 +36,9 @@ public:
     /// call after processing window events (reads DInput raw mouse events)
     void OnFrame();
 
+    /// set the parent window HWND
+    void SetParentHwnd(HWND hWnd);
+
 protected:
     friend class Win32Mouse;
 
@@ -52,6 +55,7 @@ protected:
     IDirectInput8* di8;
     IDirectInputDevice8* di8Mouse;
     Math::float2 mouseMovement;
+    HWND hWndParent;
     static const int DInputMouseBufferSize = 16;
 };
 
@@ -62,6 +66,15 @@ inline const Math::float2&
 Win32InputServer::GetMouseMovement() const
 {
     return this->mouseMovement;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+Win32InputServer::SetParentHwnd(HWND hWnd)
+{
+    this->hWndParent = hWnd;
 }
 
 } // namespace Win32
