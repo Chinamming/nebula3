@@ -124,7 +124,9 @@ DarwinTimer::GetTime() const
 
     // query the performance frequency
     int64_t freq;
+#if 0
     QueryPerformanceFrequency((LARGE_INTEGER*) &freq);
+#endif
  
     // convert to seconds
     Timing::Time seconds = ((Timing::Time)time) / ((Timing::Time)freq);
@@ -143,7 +145,9 @@ DarwinTimer::GetTicks() const
 
     // query the performance frequency
     int64_t freq;
+#if 0
     QueryPerformanceFrequency((LARGE_INTEGER*) &freq);
+#endif
 
     uint64_t ticks64 = time / (freq / 100000);
     return (uint) ticks64;

@@ -1,0 +1,33 @@
+INCLUDE_DIRECTORIES(${Nebula3_SOURCE_DIR}/foundation)
+
+ADD_LIBRARY(Nebula3ZLib
+    adler32.c
+    compress.c
+    crc32.c
+    crc32.h
+    crypt.h
+    deflate.c
+    deflate.h
+    gzio.c
+    infback.c
+    inffast.c
+    inffast.h
+    inffixed.h
+    inflate.c
+    inflate.h
+    inftrees.c
+    inftrees.h
+    ioapi.h
+    ionebula3.cc
+    ionebula3.h
+    trees.c
+    trees.h
+    uncompr.c
+    unzip.c
+    unzip.h
+    zconf.h
+    zconf.in.h
+    zlib.h
+    zutil.c
+    zutil.h
+)

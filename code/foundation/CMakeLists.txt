@@ -1,11 +1,5 @@
-PROJECT(Nebula3Foundation)
-
-IF (NOT CMAKE_BUILD_TYPE)
-  SET(CMAKE_BUILD_TYPE "Release")
-ENDIF (NOT CMAKE_BUILD_TYPE)
-
-INCLUDE_DIRECTORIES(${Nebula3Foundation_SOURCE_DIR}
-                    ${Nebula3Foundation_SOURCE_DIR}/../extlibs/)
+INCLUDE_DIRECTORIES(${Nebula3_SOURCE_DIR}/foundation/
+                    ${Nebula3_SOURCE_DIR}/extlibs/)
 
 SET(Nebula3Foundation_SRCS
     app/application.cc
