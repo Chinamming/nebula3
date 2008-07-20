@@ -396,14 +396,7 @@ PosixFSWrapper::ListDirectories(const String& dirPath, const String& pattern)
 String
 PosixFSWrapper::GetUserDirectory()
 {
-    char buf[MAXPATHLEN] = { 0 };
-    HRESULT hr = SHGetFolderPath(NULL, 
-                                 CSIDL_PERSONAL | CSIDL_FLAG_CREATE, 
-                                 NULL, 
-                                 0,
-                                 buf);
-    n_assert(SUCCEEDED(hr));
-    String result = buf;
+    String result = getenv("HOME");
     result.ConvertBackslashes();
     return String("file:///") + result;
 }
@@ -452,8 +445,11 @@ String
 PosixFSWrapper::GetHomeDirectory()
 {
     char buf[MAXPATHLEN];
+#if 0
+    // XXX: Fix!
     DWORD res = GetModuleFileName(NULL, buf, sizeof(buf));
     n_assert(0 != res);
+#endif
 
     String pathToExe(buf);
     pathToExe.ConvertBackslashes();

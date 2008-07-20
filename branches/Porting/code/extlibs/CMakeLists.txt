@@ -1,0 +1,1 @@
+SUBDIRS(lua tinyxml zlib)

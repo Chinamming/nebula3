@@ -9,7 +9,9 @@ namespace Posix
 {
 ImplementClass(Posix::PosixThread, 'THRD', Core::RefCounted);
 
+#ifdef HAVE_THREAD_LOCAL_STORAGE
 __thread const char* PosixThread::ThreadName = 0; 
+#endif
 
 //------------------------------------------------------------------------------
 /**
@@ -118,7 +120,9 @@ PosixThread::ThreadProc(void* self)
 {
     n_assert(0 != self);
     PosixThread* threadObj = (PosixThread*) self;
+#ifdef HAVE_THREAD_LOCAL_STORAGE
     ThreadName = threadObj->GetName().AsCharPtr();
+#endif
     threadObj->DoWork();
     return 0;
 }
@@ -131,7 +135,11 @@ PosixThread::ThreadProc(void* self)
 const char*
 PosixThread::GetMyThreadName()
 {
+#ifdef HAVE_THREAD_LOCAL_STORAGE
     return ThreadName;
+#else
+    return NULL;
+#endif
 }
 
 };

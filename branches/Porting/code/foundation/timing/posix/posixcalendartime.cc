@@ -109,11 +109,10 @@ PosixCalendarTime::FileTimeToSystemTime(const FileTime& fileTime)
 FileTime
 PosixCalendarTime::LocalTimeToFileTime(const CalendarTime& localTime)
 {
-    timeval t = ToPosixSystemTime(localTime);
-    FileTime localFileTime;
+    // XXX: This needs fixing.
     FileTime fileTime;
-    ::SystemTimeToFileTime(&t, &localFileTime.time);
-    ::LocalFileTimeToFileTime(&localFileTime.time, &fileTime.time);
+    timeval t = ToPosixSystemTime(localTime);
+    TIMEVAL_TO_TIMESPEC(&t, &(fileTime.time));
     return fileTime;
 }
 
@@ -123,10 +122,9 @@ PosixCalendarTime::LocalTimeToFileTime(const CalendarTime& localTime)
 CalendarTime
 PosixCalendarTime::FileTimeToLocalTime(const FileTime& fileTime)
 {
-    FileTime localFileTime;
-    ::FileTimeToLocalFileTime(&fileTime.time, &localFileTime.time);
+    // XXX: This needs fixing.
     timeval t;
-    ::FileTimeToSystemTime(&localFileTime.time, &t);
+    TIMESPEC_TO_TIMEVAL(&t, &(fileTime.time));
     return FromPosixSystemTime(t);
 }
 
