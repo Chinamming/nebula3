@@ -10,6 +10,8 @@
 #include "io/xbox360/xbox360consolehandler.h"
 #elif __WII__
 #include "io/wii/wiiconsolehandler.h"
+#elif __APPLE__
+#include "io/posix/posixconsolehandler.h"
 #endif
 
 namespace IO
@@ -58,6 +60,9 @@ Console::Open()
     this->AttachHandler(consoleHandler);
     #elif __WII__
     Ptr<ConsoleHandler> consoleHandler = Wii::WiiConsoleHandler::Create();
+    this->AttachHandler(consoleHandler);
+    #elif __APPLE__
+    Ptr<ConsoleHandler> consoleHandler = Posix::PosixConsoleHandler::Create();
     this->AttachHandler(consoleHandler);
     #endif
 

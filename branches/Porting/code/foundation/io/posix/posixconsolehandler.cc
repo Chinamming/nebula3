@@ -133,10 +133,10 @@ PosixConsoleHandler::GetInput()
 {
     String result;
     char buf[4096];
-    size_t numCharsRead = fread(buf, sizeof(char), sizeof(buf), this->stdinHandle);
-    if (numCharsRead > 0)
+    char * bufRead = fgets(buf, sizeof(buf), this->stdinHandle);
+    if (NULL != bufRead)
     {
-        result.Set(buf, numCharsRead);
+        result.SetCharPtr(buf);
         result.TrimRight("\n\r");
     }
     return result;
