@@ -325,7 +325,7 @@ template<class TYPE> void
 Atom<TYPE>::PerformGarbageCollection()
 {
     critSect.Enter();
-    Array<Proxy<TYPE> >::Iterator iter;
+    typename Array<Proxy<TYPE> >::Iterator iter;
     for (iter = atomTable.Begin(); iter != atomTable.End();)
     {
         if ((*iter).GetObjectRefCount() == 1)
