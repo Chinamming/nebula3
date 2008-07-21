@@ -5,7 +5,7 @@
 #include "stdneb.h"
 #include "math/sce/sce_matrix44.h"
 #include "math/sce/sce_plane.h"
-#include "math/sce/sce_quaternion.h"
+// XXX: #include "math/sce/sce_quaternion.h"
 
 namespace Math
 {
@@ -17,7 +17,7 @@ matrix44
 matrix44::reflect(const plane& p)
 {
     matrix44 res;
-    D3DXMatrixReflect((D3DXMATRIX*)&res, (CONST D3DXPLANE*)&p);
+    // XXX: D3DXMatrixReflect((D3DXMATRIX*)&res, (CONST D3DXPLANE*)&p);
     return res;
 }
 
@@ -29,7 +29,7 @@ matrix44::decompose(float4& outScale, quaternion& outRotation, float4& outTransl
 {
     outScale.set(0.0f, 0.0f, 0.0f, 0.0f);
     outTranslation.set(0.0f, 0.0f, 0.0f, 0.0f);
-    D3DXMatrixDecompose((D3DXVECTOR3*)&outScale, (D3DXQUATERNION*)&outRotation, (D3DXVECTOR3*)&outTranslation, (CONST D3DXMATRIX*)this);
+    // XXX: D3DXMatrixDecompose((D3DXVECTOR3*)&outScale, (D3DXQUATERNION*)&outRotation, (D3DXVECTOR3*)&outTranslation, (CONST D3DXMATRIX*)this);
 }
 
 //------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ matrix44
 matrix44::affinetransformation(scalar scaling, const float4& rotationCenter, const quaternion& rotation, const float4& translation)
 {
     matrix44 res;
-    D3DXMatrixAffineTransformation((D3DXMATRIX*)&res, scaling, (CONST D3DXVECTOR3*)&rotationCenter, (CONST D3DXQUATERNION*)&rotation, (CONST D3DXVECTOR3*)&translation);
+    // XXX: D3DXMatrixAffineTransformation((D3DXMATRIX*)&res, scaling, (CONST D3DXVECTOR3*)&rotationCenter, (CONST D3DXQUATERNION*)&rotation, (CONST D3DXVECTOR3*)&translation);
     return res;
 }
 
@@ -50,7 +50,7 @@ matrix44
 matrix44::rotationquaternion(const quaternion& q)
 {
     matrix44 res;
-    D3DXMatrixRotationQuaternion((D3DXMATRIX*)&res, (CONST D3DXQUATERNION*)&q);
+    // XXX: D3DXMatrixRotationQuaternion((D3DXMATRIX*)&res, (CONST D3DXQUATERNION*)&q);
     return res;
 }
 
@@ -61,6 +61,7 @@ matrix44
 matrix44::transformation(const float4& scalingCenter, const quaternion& scalingRotation, const float4& scaling, const float4& rotationCenter, const quaternion& rotation, const float4& translation)
 {
     matrix44 res;
+#if 0
     D3DXMatrixTransformation((D3DXMATRIX*)&res, 
                              (CONST D3DXVECTOR3*)&scalingCenter, 
                              (CONST D3DXQUATERNION*)&scalingRotation, 
@@ -68,6 +69,7 @@ matrix44::transformation(const float4& scalingCenter, const quaternion& scalingR
                              (CONST D3DXVECTOR3*)&rotationCenter, 
                              (CONST D3DXQUATERNION*)&rotation, 
                              (CONST D3DXVECTOR3*)&translation);
+#endif
     return res;
 }
 

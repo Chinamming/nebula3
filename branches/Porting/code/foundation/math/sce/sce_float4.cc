@@ -16,7 +16,7 @@ float4
 float4::transform(const float4& v, const matrix44& m)
 {
     float4 res;
-    D3DXVec4Transform((D3DXVECTOR4*)&res, (CONST D3DXVECTOR4*)&v, (CONST D3DXMATRIX*)&m);
+    // XXX: D3DXVec4Transform((D3DXVECTOR4*)&res, (CONST D3DXVECTOR4*)&v, (CONST D3DXMATRIX*)&m);
     return res;
 }
 

@@ -50,13 +50,13 @@ public:
     /// set content
     void set(const float4& row0, const float4& row1, const float4& row2, const float4& row3);
     /// write access to x component
-    void setrow0(float4& row0);
+    void setrow0(const float4& row0);
     /// write access to y component
-    void setrow1(float4& row1);
+    void setrow1(const float4& row1);
     /// write access to z component
-    void setrow2(float4& row2);
+    void setrow2(const float4& row2);
     /// write access to w component
-    void setrow3(float4& row3);
+    void setrow3(const float4& row3);
     /// read-only access to x component
     float4 getrow0() const;
     /// read-only access to y component
@@ -67,13 +67,13 @@ public:
     float4 getrow3() const;
 
     /// write access to x component
-    void setx_component(float4& x);
+    void setx_component(const float4& x);
     /// write access to y component
-    void sety_component(float4& y);
+    void sety_component(const float4& y);
     /// write access to z component
-    void setz_component(float4& z);
+    void setz_component(const float4& z);
     /// write access to w component / pos component
-    void setpos_component(float4& pos);
+    void setpos_component(const float4& pos);
     /// read access to x component
     float4 getx_component() const;
     /// read access to y component
@@ -301,7 +301,7 @@ matrix44::set(const float4& row0, const float4& row1, const float4& row2, const 
 /**
 */
 __forceinline void
-matrix44::setrow0(float4& row0)
+matrix44::setrow0(const float4& row0)
 {
     this->r0 = row0;
 }
@@ -319,7 +319,7 @@ matrix44::getrow0() const
 /**
 */
 __forceinline void
-matrix44::setrow1(float4& row1)
+matrix44::setrow1(const float4& row1)
 {
     this->r1 = row1;
 }
@@ -337,7 +337,7 @@ matrix44::getrow1() const
 /**
 */
 __forceinline void
-matrix44::setrow2(float4& row2)
+matrix44::setrow2(const float4& row2)
 {
     this->r2 = row2;
 }
@@ -355,7 +355,7 @@ matrix44::getrow2() const
 /**
 */
 __forceinline void
-matrix44::setrow3(float4& row3)
+matrix44::setrow3(const float4& row3)
 {
     this->r3 = row3;
 }
@@ -373,7 +373,7 @@ matrix44::getrow3() const
 /**
 */
 __forceinline void
-matrix44::setx_component(float4& x)
+matrix44::setx_component(const float4& x)
 {
     this->r0 = x;
 }
@@ -382,7 +382,7 @@ matrix44::setx_component(float4& x)
 /**
 */
 __forceinline void
-matrix44::sety_component(float4& y)
+matrix44::sety_component(const float4& y)
 {
     this->r1 = y;
 }
@@ -391,7 +391,7 @@ matrix44::sety_component(float4& y)
 /**
 */
 __forceinline void
-matrix44::setz_component(float4& z)
+matrix44::setz_component(const float4& z)
 {
     this->r2 = z;
 }
@@ -400,7 +400,7 @@ matrix44::setz_component(float4& z)
 /**
 */
 __forceinline void
-matrix44::setpos_component(float4& pos)
+matrix44::setpos_component(const float4& pos)
 {
     this->r3 = pos;
 }

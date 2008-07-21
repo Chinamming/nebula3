@@ -310,6 +310,15 @@ IF(APPLE)
         io/posix/posixfiletime.h
         io/posix/posixfswrapper.cc
         io/posix/posixfswrapper.h
+        math/sce/sce_float4.cc
+        math/sce/sce_float4.h
+        math/sce/sce_matrix44.cc
+        math/sce/sce_matrix44.h
+        math/sce/sce_plane.cc
+        math/sce/sce_plane.h
+        math/sce/sce_point.h
+        math/sce/sce_scalar.h
+        math/sce/sce_vector.h
         memory/posix/posixheap.cc
         memory/posix/posixheap.h
         memory/posix/posixmemory.cc
