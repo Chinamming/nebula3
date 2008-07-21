@@ -43,7 +43,7 @@ public:
     /// return the description string
     const Util::String& GetDesc() const;
     /// get the shader fragments in the group
-    const Util::Dictionary<Util::String, Ptr<ShaderFragment>>& GetFragments() const;
+    const Util::Dictionary<Util::String, Ptr<ShaderFragment> >& GetFragments() const;
 
 private:
     IO::URI fileUri;
@@ -51,7 +51,7 @@ private:
     Util::String category;
     Util::String desc;
     bool isExclusive;
-    Util::Dictionary<Util::String, Ptr<ShaderFragment>> fragments;
+    Util::Dictionary<Util::String, Ptr<ShaderFragment> > fragments;
 };
 
 //------------------------------------------------------------------------------
@@ -111,7 +111,7 @@ ShaderFragmentGroup::IsExclusive() const
 //------------------------------------------------------------------------------
 /**
 */
-inline const Util::Dictionary<Util::String, Ptr<ShaderFragment>>&
+inline const Util::Dictionary<Util::String, Ptr<ShaderFragment> >&
 ShaderFragmentGroup::GetFragments() const
 {
     return this->fragments;

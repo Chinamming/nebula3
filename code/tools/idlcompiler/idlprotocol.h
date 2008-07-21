@@ -35,9 +35,9 @@ public:
     /// get protocol fourcc code
     const Util::String& GetFourCC() const;
     /// get dependencies
-    const Util::Array<Ptr<IDLDependency>>& GetDependencies() const;
+    const Util::Array<Ptr<IDLDependency> >& GetDependencies() const;
     /// get messages
-    const Util::Array<Ptr<IDLMessage>>& GetMessages() const;
+    const Util::Array<Ptr<IDLMessage> >& GetMessages() const;
 
 private:
     /// set error string
@@ -47,8 +47,8 @@ private:
     Util::String name;
     Util::String nameSpace;
     Util::String fourcc;
-    Util::Array<Ptr<IDLDependency>> dependencies;
-    Util::Array<Ptr<IDLMessage>> messages;
+    Util::Array<Ptr<IDLDependency> > dependencies;
+    Util::Array<Ptr<IDLMessage> > messages;
 };
 
 //------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ IDLProtocol::GetFourCC() const
 //------------------------------------------------------------------------------
 /**
 */
-inline const Util::Array<Ptr<IDLDependency>>&
+inline const Util::Array<Ptr<IDLDependency> >&
 IDLProtocol::GetDependencies() const
 {
     return this->dependencies;
@@ -108,7 +108,7 @@ IDLProtocol::GetDependencies() const
 //------------------------------------------------------------------------------
 /**
 */
-inline const Util::Array<Ptr<IDLMessage>>&
+inline const Util::Array<Ptr<IDLMessage> >&
 IDLProtocol::GetMessages() const
 {
     return this->messages;

@@ -31,9 +31,9 @@ public:
     /// get library name
     const Util::String& GetName() const;
     /// get dependencies
-    const Util::Array<Ptr<IDLDependency>>& GetDependencies() const;
+    const Util::Array<Ptr<IDLDependency> >& GetDependencies() const;
     /// get commands
-    const Util::Array<Ptr<IDLCommand>>& GetCommands() const;
+    const Util::Array<Ptr<IDLCommand> >& GetCommands() const;
 
 private:
     /// set error string
@@ -41,8 +41,8 @@ private:
 
     Util::String error;
     Util::String name;
-    Util::Array<Ptr<IDLDependency>> dependencies;
-    Util::Array<Ptr<IDLCommand>> commands;
+    Util::Array<Ptr<IDLDependency> > dependencies;
+    Util::Array<Ptr<IDLCommand> > commands;
 };
 
 //------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ IDLLibrary::GetName() const
 //------------------------------------------------------------------------------
 /**
 */
-inline const Util::Array<Ptr<IDLDependency>>&
+inline const Util::Array<Ptr<IDLDependency> >&
 IDLLibrary::GetDependencies() const
 {
     return this->dependencies;
@@ -84,7 +84,7 @@ IDLLibrary::GetDependencies() const
 //------------------------------------------------------------------------------
 /**
 */
-inline const Util::Array<Ptr<IDLCommand>>&
+inline const Util::Array<Ptr<IDLCommand> >&
 IDLLibrary::GetCommands() const
 {
     return this->commands;

@@ -289,8 +289,8 @@ IDLCodeGenerator::GetNebulaSetterMethod(const String& type) const
 String
 IDLCodeGenerator::BuildCallbackPrototype(IDLCommand* cmd, bool withClassName) const
 {
-    const Util::Array<Ptr<IDLArg>> inArgs = cmd->GetInputArgs();
-    const Util::Array<Ptr<IDLArg>> outArgs = cmd->GetOutputArgs();
+    const Util::Array<Ptr<IDLArg> > inArgs = cmd->GetInputArgs();
+    const Util::Array<Ptr<IDLArg> > outArgs = cmd->GetOutputArgs();
     n_assert(outArgs.Size() <= 1);
     
     String str;
@@ -347,7 +347,7 @@ IDLCodeGenerator::WriteIncludeHeader(TextWriter* writer) const
     }
 
     // write dependencies
-    const Array<Ptr<IDLLibrary>>& libs = this->document->GetLibraries();
+    const Array<Ptr<IDLLibrary> >& libs = this->document->GetLibraries();
     IndexT libIndex;
     for (libIndex = 0; libIndex < libs.Size(); libIndex++)
     {
@@ -359,7 +359,7 @@ IDLCodeGenerator::WriteIncludeHeader(TextWriter* writer) const
             writer->WriteFormatted("#include \"%s\"\n", dep->GetHeader().AsCharPtr());
         }
     }
-    const Array<Ptr<IDLProtocol>>& protocols = this->document->GetProtocols();
+    const Array<Ptr<IDLProtocol> >& protocols = this->document->GetProtocols();
     IndexT protIndex;
     for (protIndex = 0; protIndex < protocols.Size(); protIndex++)
     {
@@ -388,7 +388,7 @@ IDLCodeGenerator::WriteLibraryDeclarations(TextWriter* writer) const
         writer->WriteLine("{");
 
         // for each library definition...
-        const Array<Ptr<IDLLibrary>>& libs = this->document->GetLibraries();
+        const Array<Ptr<IDLLibrary> >& libs = this->document->GetLibraries();
         IndexT libIndex;
         SizeT numLibs = libs.Size();
         for (libIndex = 0; libIndex < numLibs; libIndex++)
@@ -404,7 +404,7 @@ IDLCodeGenerator::WriteLibraryDeclarations(TextWriter* writer) const
             writer->WriteLine("};");
 
             // for each command in the library...
-            const Array<Ptr<IDLCommand>>& cmds = curLib->GetCommands();
+            const Array<Ptr<IDLCommand> >& cmds = curLib->GetCommands();
             IndexT cmdIndex;
             SizeT numCmds = cmds.Size();
             for (cmdIndex = 0; cmdIndex < numCmds; cmdIndex++)
@@ -427,7 +427,7 @@ IDLCodeGenerator::WriteProtocolDeclarations(TextWriter* writer) const
     if (!this->document->GetProtocols().IsEmpty())
     {
         // for each protocol definition...
-        const Array<Ptr<IDLProtocol>>& protocols = this->document->GetProtocols();
+        const Array<Ptr<IDLProtocol> >& protocols = this->document->GetProtocols();
         IndexT protocolIndex;
         SizeT numProtocols = protocols.Size();
         for (protocolIndex = 0; protocolIndex < numProtocols; protocolIndex++)
@@ -439,7 +439,7 @@ IDLCodeGenerator::WriteProtocolDeclarations(TextWriter* writer) const
             writer->WriteLine("{");
 
             // for each message in the protocol:
-            const Array<Ptr<IDLMessage>>& msgs = curProtocol->GetMessages();
+            const Array<Ptr<IDLMessage> >& msgs = curProtocol->GetMessages();
             IndexT msgIndex;
             for (msgIndex = 0; msgIndex < msgs.Size(); msgIndex++)
             {
@@ -497,7 +497,7 @@ IDLCodeGenerator::WriteMessageDeclaration(IDLMessage* msg, TextWriter* writer) c
     
     // write constructor 
     String initList;
-    Array<Ptr<IDLArg>> args = msg->GetInputArgs();
+    Array<Ptr<IDLArg> > args = msg->GetInputArgs();
     args.AppendArray(msg->GetOutputArgs());
     IndexT i;
     for (i = 0; i < args.Size(); i++)
@@ -526,7 +526,7 @@ IDLCodeGenerator::WriteMessageDeclaration(IDLMessage* msg, TextWriter* writer) c
     writer->WriteLine("    { };");
 
     // write input args
-    const Array<Ptr<IDLArg>>& inArgs = msg->GetInputArgs();
+    const Array<Ptr<IDLArg> >& inArgs = msg->GetInputArgs();
     IndexT argIndex;
     for (argIndex = 0; argIndex < inArgs.Size(); argIndex++)
     {
@@ -534,7 +534,7 @@ IDLCodeGenerator::WriteMessageDeclaration(IDLMessage* msg, TextWriter* writer) c
     }
 
     // write output args
-    const Array<Ptr<IDLArg>>& outArgs = msg->GetOutputArgs();
+    const Array<Ptr<IDLArg> >& outArgs = msg->GetOutputArgs();
     for (argIndex = 0; argIndex < outArgs.Size(); argIndex++)
     {
         this->WriteMessageArg(outArgs[argIndex], writer, false);
@@ -648,7 +648,7 @@ IDLCodeGenerator::WriteSourceHeader(TextWriter* writer) const
     // write ImplementClass macros
     if (!this->document->GetLibraries().IsEmpty())
     {
-        const Array<Ptr<IDLLibrary>>& libs = this->document->GetLibraries();
+        const Array<Ptr<IDLLibrary> >& libs = this->document->GetLibraries();
         IndexT libIndex;
         for (libIndex = 0; libIndex < libs.Size(); libIndex++)
         {
@@ -664,7 +664,7 @@ IDLCodeGenerator::WriteSourceHeader(TextWriter* writer) const
     }
     if (!this->document->GetProtocols().IsEmpty())
     {
-        const Array<Ptr<IDLProtocol>>& protocols = this->document->GetProtocols();
+        const Array<Ptr<IDLProtocol> >& protocols = this->document->GetProtocols();
         IndexT protIndex;
         for (protIndex = 0; protIndex < protocols.Size(); protIndex++)
         {
@@ -709,7 +709,7 @@ IDLCodeGenerator::WriteLibraryImplementations(TextWriter* writer) const
     writer->WriteLine("{");
 
     // for each library definition...
-    const Array<Ptr<IDLLibrary>>& libs = this->document->GetLibraries();
+    const Array<Ptr<IDLLibrary> >& libs = this->document->GetLibraries();
     IndexT libIndex;
     SizeT numLibs = libs.Size();
     for (libIndex = 0; libIndex < numLibs; libIndex++)

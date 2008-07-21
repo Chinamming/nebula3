@@ -33,9 +33,9 @@ public:
     /// get document name
     const Util::String& GetName() const;
     /// get parsed command libraries
-    const Util::Array<Ptr<IDLLibrary>>& GetLibraries() const;
+    const Util::Array<Ptr<IDLLibrary> >& GetLibraries() const;
     /// get parsed message protocols
-    const Util::Array<Ptr<IDLProtocol>>& GetProtocols() const;
+    const Util::Array<Ptr<IDLProtocol> >& GetProtocols() const;
 
 private:    
     /// set error string
@@ -43,8 +43,8 @@ private:
         
     Util::String name;
     Util::String error;
-    Util::Array<Ptr<IDLLibrary>> libraries;
-    Util::Array<Ptr<IDLProtocol>> protocols;
+    Util::Array<Ptr<IDLLibrary> > libraries;
+    Util::Array<Ptr<IDLProtocol> > protocols;
 };
 
 //------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ IDLDocument::GetName() const
 //------------------------------------------------------------------------------
 /**
 */
-inline const Util::Array<Ptr<IDLLibrary>>&
+inline const Util::Array<Ptr<IDLLibrary> >&
 IDLDocument::GetLibraries() const
 {
     return this->libraries;
@@ -95,7 +95,7 @@ IDLDocument::GetLibraries() const
 //------------------------------------------------------------------------------
 /**
 */
-inline const Util::Array<Ptr<IDLProtocol>>&
+inline const Util::Array<Ptr<IDLProtocol> >&
 IDLDocument::GetProtocols() const
 {
     return this->protocols;

@@ -289,7 +289,7 @@ ShaderCodeGenerator::WriteFragmentFunctions(const Ptr<TextWriter>& textWriter)
 {
     n_assert(this->shader.isvalid());
 
-    Array<Ptr<ShaderFragment>> fragments = this->shader->GatherShaderFragments();
+    Array<Ptr<ShaderFragment> > fragments = this->shader->GatherShaderFragments();
     IndexT i;
     for (i = 0; i < fragments.Size(); i++)
     {
@@ -399,7 +399,7 @@ ShaderCodeGenerator::WriteInputVariables(const Ptr<TextWriter>& textWriter,
                                          ShaderSlot::SlotType slotType)
 {
     // for each input slot...
-    const Dictionary<String, Ptr<ShaderSlot>>& slots = shaderNode->GetInputSlots();
+    const Dictionary<String, Ptr<ShaderSlot> >& slots = shaderNode->GetInputSlots();
     IndexT i;
     for (i = 0; i < slots.Size(); i++)
     {
@@ -452,7 +452,7 @@ ShaderCodeGenerator::WriteOutputVariables(const Ptr<TextWriter>& textWriter,
                                           ShaderSlot::SlotType slotType)
 {
     // for each output slot...
-    const Dictionary<String, Ptr<ShaderSlot>>& slots = shaderNode->GetOutputSlots();
+    const Dictionary<String, Ptr<ShaderSlot> >& slots = shaderNode->GetOutputSlots();
     IndexT i;
     for (i = 0; i < slots.Size(); i++)
     {
@@ -564,7 +564,7 @@ ShaderCodeGenerator::WriteShaderReturnValues(const Ptr<TextWriter>& textWriter,
     textWriter->WriteFormatted("    %s %s;\n", outStruct.AsCharPtr(), outName.AsCharPtr());
 
     // for each input slot...
-    const Dictionary<String, Ptr<ShaderSlot>>& slots = shaderNode->GetInputSlots();
+    const Dictionary<String, Ptr<ShaderSlot> >& slots = shaderNode->GetInputSlots();
     IndexT i;
     for (i = 0; i < slots.Size(); i++)
     {
@@ -626,7 +626,7 @@ ShaderCodeGenerator::WriteVertexShader(const Ptr<TextWriter>& textWriter)
     textWriter->WriteString("{\n");
 
     // get shader node in reverse dependency order
-    Array<Ptr<ShaderNode>> shaderNodes;
+    Array<Ptr<ShaderNode> > shaderNodes;
     this->shader->GetUplinkDependencyNodes("Interpolator", ShaderSlot::VertexShader, shaderNodes);
     IndexT i;
     for (i = 0; i < shaderNodes.Size(); i++)
@@ -662,7 +662,7 @@ ShaderCodeGenerator::WritePixelShader(const Ptr<TextWriter>& textWriter)
     textWriter->WriteString("{\n");
 
     // get shader node in reverse dependency order
-    Array<Ptr<ShaderNode>> shaderNodes;
+    Array<Ptr<ShaderNode> > shaderNodes;
     this->shader->GetUplinkDependencyNodes("Result", ShaderSlot::PixelShader, shaderNodes);
     IndexT i;
     for (i = 0; i < shaderNodes.Size(); i++)

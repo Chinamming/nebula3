@@ -44,13 +44,13 @@ public:
     /// add a shader input slot
     void AddInputSlot(const Ptr<ShaderSlot>& slot);
     /// get shader input slots
-    const Util::Dictionary<Util::String, Ptr<ShaderSlot>>& GetInputSlots() const;
+    const Util::Dictionary<Util::String, Ptr<ShaderSlot> >& GetInputSlots() const;
     /// add a shader output slot
     void AddOutputSlot(const Ptr<ShaderSlot>& slot);
     /// get shader output slot
-    const Util::Dictionary<Util::String, Ptr<ShaderSlot>>& GetOutputSlots() const;
+    const Util::Dictionary<Util::String, Ptr<ShaderSlot> >& GetOutputSlots() const;
     /// get manually defined bindings
-    const Util::Array<Ptr<ShaderBinding>>& GetManualBindings() const;
+    const Util::Array<Ptr<ShaderBinding> >& GetManualBindings() const;
     /// count shader slots by slot channel and slot type
     SizeT CountSlotsByTypeAndChannel(ShaderSlot::SlotType slotType, ShaderSlot::SlotChannel slotChannel) const;
 
@@ -63,9 +63,9 @@ private:
     Util::String error;
     Util::String name;
     Util::String fragmentName;
-    Util::Dictionary<Util::String, Ptr<ShaderSlot>> inputSlots;
-    Util::Dictionary<Util::String, Ptr<ShaderSlot>> outputSlots;
-    Util::Array<Ptr<ShaderBinding>> bindings;
+    Util::Dictionary<Util::String, Ptr<ShaderSlot> > inputSlots;
+    Util::Dictionary<Util::String, Ptr<ShaderSlot> > outputSlots;
+    Util::Array<Ptr<ShaderBinding> > bindings;
 };
 
 } // namespace ShaderNode

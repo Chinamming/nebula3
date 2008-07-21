@@ -574,7 +574,7 @@ Shader::GetName() const
 //------------------------------------------------------------------------------
 /**
 */
-const Dictionary<String, Ptr<ShaderNode>>&
+const Dictionary<String, Ptr<ShaderNode> >&
 Shader::GetShaderNodes() const
 {
     return this->shaderNodes;
@@ -666,10 +666,10 @@ Shader::DebugDumpShaderNodes(const Ptr<IO::TextWriter>& textWriter)
 /**
     This returns an array of all unique fragment pointers used by this shader.
 */
-Array<Ptr<ShaderFragment>>
+Array<Ptr<ShaderFragment> >
 Shader::GatherShaderFragments() const
 {
-    Dictionary<String, Ptr<ShaderFragment>> fragments;
+    Dictionary<String, Ptr<ShaderFragment> > fragments;
     IndexT nodeIndex;
     for (nodeIndex = 0; nodeIndex < this->shaderNodes.Size(); nodeIndex++)
     {
@@ -696,12 +696,12 @@ Shader::GatherShaderFragments() const
 void
 Shader::GetUplinkDependencyNodes(const String& startNode, 
                                  ShaderSlot::SlotType slotType, 
-                                 Array<Ptr<ShaderNode>>& inOutNodes) const
+                                 Array<Ptr<ShaderNode> >& inOutNodes) const
 {
     const Ptr<ShaderNode>& node = this->shaderNodes[startNode];
 
     // for each input slot...
-    const Dictionary<String, Ptr<ShaderSlot>>& inputSlots = node->GetInputSlots();
+    const Dictionary<String, Ptr<ShaderSlot> >& inputSlots = node->GetInputSlots();
     IndexT i;
     for (i = 0; i < inputSlots.Size(); i++)
     {

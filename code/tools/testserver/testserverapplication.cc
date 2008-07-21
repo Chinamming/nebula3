@@ -79,7 +79,7 @@ TestServerApplication::Run()
     bool running = true;
     while (running)
     {
-        Array<Ptr<TcpClientConnection>> recvConns = this->tcpServer->Recv();
+        Array<Ptr<TcpClientConnection> > recvConns = this->tcpServer->Recv();
         IndexT i;
         for (i = 0; i < recvConns.Size(); i++)
         {

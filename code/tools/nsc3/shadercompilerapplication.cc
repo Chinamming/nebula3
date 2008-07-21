@@ -4,11 +4,15 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "shadercompilerapplication.h"
+#ifdef __WIN32__
 #include "system/win32/win32registry.h"
+#endif
 
 namespace Tools
 {
+#ifdef __WIN32__
 using namespace System;
+#endif
 using namespace Util;
 using namespace IO;
 
@@ -63,6 +67,7 @@ ShaderCompilerApplication::Run()
 
     // get shaderlib base directory
     URI projDirectory;
+#ifdef __WIN32__
     if (Win32Registry::Exists(Win32Registry::LocalMachine, "SOFTWARE\\RadonLabs\\Toolkit", "project"))
     {
         String str = "file:///";
@@ -70,6 +75,7 @@ ShaderCompilerApplication::Run()
         projDirectory = str;
     }
     else
+#endif
     {
         projDirectory = "home:";
     }

@@ -33,9 +33,9 @@ public:
     /// get command description
     const Util::String& GetDesc() const;
     /// get input arguments
-    const Util::Array<Ptr<IDLArg>>& GetInputArgs() const;
+    const Util::Array<Ptr<IDLArg> >& GetInputArgs() const;
     /// get output arguments
-    const Util::Array<Ptr<IDLArg>>& GetOutputArgs() const;
+    const Util::Array<Ptr<IDLArg> >& GetOutputArgs() const;
     /// get code fragment
     const Util::String& GetCode() const;
 
@@ -48,8 +48,8 @@ private:
     Util::String fourcc;
     Util::String desc;
     Util::String code;
-    Util::Array<Ptr<IDLArg>> inArgs;
-    Util::Array<Ptr<IDLArg>> outArgs;
+    Util::Array<Ptr<IDLArg> > inArgs;
+    Util::Array<Ptr<IDLArg> > outArgs;
 };
 
 //------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ IDLCommand::GetCode() const
 //------------------------------------------------------------------------------
 /**
 */
-inline const Util::Array<Ptr<IDLArg>>&
+inline const Util::Array<Ptr<IDLArg> >&
 IDLCommand::GetInputArgs() const
 {
     return this->inArgs;
@@ -118,7 +118,7 @@ IDLCommand::GetInputArgs() const
 //------------------------------------------------------------------------------
 /**
 */
-inline const Util::Array<Ptr<IDLArg>>&
+inline const Util::Array<Ptr<IDLArg> >&
 IDLCommand::GetOutputArgs() const
 {
     return this->outArgs;
