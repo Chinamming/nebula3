@@ -4,4 +4,4 @@ IF (NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE "Release")
 ENDIF (NOT CMAKE_BUILD_TYPE)
 
-SUBDIRS(foundation extlibs tools)
+SUBDIRS(foundation extlibs tools tests)
