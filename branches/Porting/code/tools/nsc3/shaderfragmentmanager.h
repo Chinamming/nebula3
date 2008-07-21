@@ -41,7 +41,7 @@ public:
     /// continue group fragment iteration, return false when iteration finished
     bool ContinueIterateGroupFragments();
     /// get fragment groups
-    const Util::Dictionary<Util::String, Ptr<ShaderFragmentGroup>>& GetFragmentGroups() const;
+    const Util::Dictionary<Util::String, Ptr<ShaderFragmentGroup> >& GetFragmentGroups() const;
     /// get active group fragment names (sorted alphabetically)
     const Util::Array<Util::String>& GetActiveGroupFragments() const;
 
@@ -53,8 +53,8 @@ private:
     /// deactivate a group fragment
     void DeactivateGroupFragment(const Util::String& fragmentGroup);
 
-    Util::Dictionary<Util::String, Ptr<ShaderFragment>> fragments;
-    Util::Dictionary<Util::String, Ptr<ShaderFragmentGroup>> fragmentGroups;
+    Util::Dictionary<Util::String, Ptr<ShaderFragment> > fragments;
+    Util::Dictionary<Util::String, Ptr<ShaderFragmentGroup> > fragmentGroups;
     IndexT innerIndex;
     IndexT outerIndex;
     SizeT numGroups;
@@ -103,7 +103,7 @@ ShaderFragmentManager::GetFragment(const Util::String& name) const
 //------------------------------------------------------------------------------
 /**
 */
-inline const Util::Dictionary<Util::String, Ptr<ShaderFragmentGroup>>&
+inline const Util::Dictionary<Util::String, Ptr<ShaderFragmentGroup> >&
 ShaderFragmentManager::GetFragmentGroups() const
 {
     return this->fragmentGroups;

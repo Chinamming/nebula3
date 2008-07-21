@@ -48,7 +48,7 @@ private:
     IO::URI projDirectory;
     Ptr<ShaderFragmentManager> fragmentManager;
     Ptr<ShaderSamplerManager> samplerManager;
-    Util::Dictionary<Util::String, Ptr<Shader>> shaders;
+    Util::Dictionary<Util::String, Ptr<Shader> > shaders;
     bool verbose;
 };
 

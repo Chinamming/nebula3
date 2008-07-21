@@ -209,7 +209,7 @@ ShaderNode::AddOutputSlot(const Ptr<ShaderSlot>& slot)
 //------------------------------------------------------------------------------
 /**
 */
-const Dictionary<String, Ptr<ShaderSlot>>&
+const Dictionary<String, Ptr<ShaderSlot> >&
 ShaderNode::GetInputSlots() const
 {
     return this->inputSlots;
@@ -218,7 +218,7 @@ ShaderNode::GetInputSlots() const
 //------------------------------------------------------------------------------
 /**
 */
-const Dictionary<String, Ptr<ShaderSlot>>&
+const Dictionary<String, Ptr<ShaderSlot> >&
 ShaderNode::GetOutputSlots() const
 {
     return this->outputSlots;
@@ -254,7 +254,7 @@ ShaderNode::GetFragmentName() const
 //------------------------------------------------------------------------------
 /**
 */
-const Array<Ptr<ShaderBinding>>& 
+const Array<Ptr<ShaderBinding> >& 
 ShaderNode::GetManualBindings() const
 {
     return this->bindings;

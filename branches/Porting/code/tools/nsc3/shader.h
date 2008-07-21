@@ -55,11 +55,11 @@ public:
     /// get the shader's name
     const Util::String& GetName() const;    
     /// get shader nodes
-    const Util::Dictionary<Util::String, Ptr<ShaderNode>>& GetShaderNodes() const;
+    const Util::Dictionary<Util::String, Ptr<ShaderNode> >& GetShaderNodes() const;
     /// get all used fragments
-    Util::Array<Ptr<ShaderFragment>> GatherShaderFragments() const;
+    Util::Array<Ptr<ShaderFragment> > GatherShaderFragments() const;
     /// get dependent shader nodes in reverse dependency order
-    void GetUplinkDependencyNodes(const Util::String& startNode, ShaderSlot::SlotType slotType, Util::Array<Ptr<ShaderNode>>& inOutNodes) const;
+    void GetUplinkDependencyNodes(const Util::String& startNode, ShaderSlot::SlotType slotType, Util::Array<Ptr<ShaderNode> >& inOutNodes) const;
 
 private:
     /// set error string
@@ -78,7 +78,7 @@ private:
     Util::String error;
     IO::URI fileUri;
     Util::String name;
-    Util::Dictionary<Util::String, Ptr<ShaderNode>> shaderNodes;
+    Util::Dictionary<Util::String, Ptr<ShaderNode> > shaderNodes;
 };
 
 } // namespace Tools

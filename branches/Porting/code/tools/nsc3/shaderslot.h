@@ -71,7 +71,7 @@ public:
     /// add a connection (must have compatible type)
     void AddConnection(const Ptr<ShaderSlot>& slot);
     /// get connections
-    const Util::Array<Ptr<ShaderSlot>>& GetConnections() const;
+    const Util::Array<Ptr<ShaderSlot> >& GetConnections() const;
     /// convert slot type to string
     static Util::String SlotTypeAsString(SlotType t);
     /// convert slot channel to string
@@ -86,7 +86,7 @@ private:
     Util::String name;
     Util::String dataType;
     Util::String semantics;
-    Util::Array<Ptr<ShaderSlot>> connections;
+    Util::Array<Ptr<ShaderSlot> > connections;
 };
 
 } // namespace Tools

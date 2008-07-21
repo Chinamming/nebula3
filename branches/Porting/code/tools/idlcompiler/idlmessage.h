@@ -31,9 +31,9 @@ public:
     /// get fourcc string
     const Util::String& GetFourCC() const;
     /// get input arguments
-    const Util::Array<Ptr<IDLArg>>& GetInputArgs() const;
+    const Util::Array<Ptr<IDLArg> >& GetInputArgs() const;
     /// get output arguments
-    const Util::Array<Ptr<IDLArg>>& GetOutputArgs() const;
+    const Util::Array<Ptr<IDLArg> >& GetOutputArgs() const;
     /// get parent class name
     const Util::String& GetParentClass() const;
 
@@ -44,8 +44,8 @@ private:
     Util::String error;
     Util::String name;
     Util::String fourcc;
-    Util::Array<Ptr<IDLArg>> inArgs;
-    Util::Array<Ptr<IDLArg>> outArgs;
+    Util::Array<Ptr<IDLArg> > inArgs;
+    Util::Array<Ptr<IDLArg> > outArgs;
     Util::String parentClass;
 };
 
@@ -88,7 +88,7 @@ IDLMessage::GetFourCC() const
 //------------------------------------------------------------------------------
 /**
 */
-inline const Util::Array<Ptr<IDLArg>>&
+inline const Util::Array<Ptr<IDLArg> >&
 IDLMessage::GetInputArgs() const
 {
     return this->inArgs;
@@ -97,7 +97,7 @@ IDLMessage::GetInputArgs() const
 //------------------------------------------------------------------------------
 /**
 */
-inline const Util::Array<Ptr<IDLArg>>&
+inline const Util::Array<Ptr<IDLArg> >&
 IDLMessage::GetOutputArgs() const
 {
     return this->outArgs;

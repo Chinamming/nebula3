@@ -34,7 +34,7 @@ public:
     const Ptr<ShaderSampler>& GetSampler(const Util::String& name) const;
 
 private:
-    Util::Dictionary<Util::String, Ptr<ShaderSampler>> samplers;
+    Util::Dictionary<Util::String, Ptr<ShaderSampler> > samplers;
 };
 
 //------------------------------------------------------------------------------

@@ -167,7 +167,7 @@ ShaderSlot::AddConnection(const Ptr<ShaderSlot>& slot)
 //------------------------------------------------------------------------------
 /**
 */
-const Array<Ptr<ShaderSlot>>&
+const Array<Ptr<ShaderSlot> >&
 ShaderSlot::GetConnections() const
 {
     return this->connections;
