@@ -121,7 +121,7 @@ PosixConsoleHandler::Warning(const String& s)
 bool
 PosixConsoleHandler::HasInput()
 {
-    return true;
+    return !feof(this->stdinHandle);
 }
 
 //------------------------------------------------------------------------------

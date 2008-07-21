@@ -49,9 +49,9 @@ ShellApplication::Run()
     {
         Console* con = Console::Instance();
         ScriptServer* scriptServer = ScriptServer::Instance();
-        con->Print("Welcome! Enter 'listcmds()' to get started.\n");
+        con->Print("Welcome! Enter 'listcmds()' to get started or 'exit' to exit.\n");
         bool running = true;
-        while (running)
+        while (running && con->HasInput())
         {
             con->Print("> ");
             String cmd = con->GetInput();
