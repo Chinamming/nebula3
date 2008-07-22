@@ -43,12 +43,12 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "FileDescription", "npneb3"
+            VALUE "FileDescription", "Nebula3 Mozilla Plugin"
             VALUE "FileVersion", "1, 0, 0, 1"
             VALUE "InternalName", "npneb3"
             VALUE "LegalCopyright", "Copyright (C) 2008 Vadim Macagon"
             VALUE "OriginalFilename", "npneb3.dll"
-            VALUE "ProductName", "Nebula3 Firefox 3 Plugin"
+            VALUE "ProductName", "Nebula3 Mozilla Plugin"
             VALUE "ProductVersion", "1, 0, 0, 1"
 			VALUE "MIMEType", "application/nebula3"
 			VALUE "FileExtents", "*"
