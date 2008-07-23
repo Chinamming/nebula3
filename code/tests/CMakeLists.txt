@@ -1,1 +1,91 @@
-SUBDIRS(testbase testfoundation)
+INCLUDE_DIRECTORIES(
+    ${Nebula3_SOURCE_DIR}
+    ${Nebula3_SOURCE_DIR}/foundation
+    ${Nebula3_SOURCE_DIR}/extlibs
+    ${Nebula3_SOURCE_DIR}/tests
+)
+
+IF(APPLE)
+    FIND_LIBRARY(CORE_FOUNDATION_LIBRARY CoreFoundation)
+    MARK_AS_ADVANCED(CORE_FOUNDATION_LIBRARY)
+    SET(EXTRA_LIBS ${CORE_FOUNDATION_LIBRARY})
+ENDIF(APPLE)
+
+LINK_LIBRARIES(Nebula3Foundation Nebula3ZLib Nebula3Lua Nebula3TinyXML Nebula3TestBase ${EXTRA_LIBS})
+
+ADD_LIBRARY(Nebula3TestBase
+    testbase/testcase.cc
+    testbase/testcase.h
+    testbase/testrunner.cc
+    testbase/testrunner.h
+)
+
+ADD_EXECUTABLE(testfoundation
+    testfoundation/arraytest.cc
+    testfoundation/arraytest.h
+    testfoundation/atomtest.cc
+    testfoundation/atomtest.h
+    testfoundation/attributecontainertest.cc
+    testfoundation/attributecontainertest.h
+    testfoundation/attributetabletest.cc
+    testfoundation/attributetabletest.h
+    testfoundation/binaryreaderwritertest.cc
+    testfoundation/binaryreaderwritertest.h
+    testfoundation/cmdlineargstest.cc
+    testfoundation/cmdlineargstest.h
+    testfoundation/dictionarytest.cc
+    testfoundation/dictionarytest.h
+    testfoundation/fileservertest.cc
+    testfoundation/fileservertest.h
+    testfoundation/fixedarraytest.cc
+    testfoundation/fixedarraytest.h
+    testfoundation/fixedtabletest.cc
+    testfoundation/fixedtabletest.h
+    testfoundation/float4test.cc
+    testfoundation/float4test.h
+    testfoundation/guidtest.cc
+    testfoundation/guidtest.h
+    testfoundation/hashtabletest.cc
+    testfoundation/hashtabletest.h
+    testfoundation/iointerfacetest.cc
+    testfoundation/iointerfacetest.h
+    testfoundation/listtest.cc
+    testfoundation/listtest.h
+    testfoundation/luaservertest.cc
+    testfoundation/luaservertest.h
+    testfoundation/main.cc
+    testfoundation/matrix44test.cc
+    testfoundation/matrix44test.h
+    testfoundation/mediatypetest.cc
+    testfoundation/mediatypetest.h
+    testfoundation/memorystreamtest.cc
+    testfoundation/memorystreamtest.h
+    testfoundation/messagereaderwritertest.cc
+    testfoundation/messagereaderwritertest.h
+    testfoundation/proxytest.cc
+    testfoundation/proxytest.h
+    testfoundation/queuetest.cc
+    testfoundation/queuetest.h
+    testfoundation/simpletreetest.cc
+    testfoundation/simpletreetest.h
+    testfoundation/stacktest.cc
+    testfoundation/stacktest.h
+    testfoundation/streamservertest.cc
+    testfoundation/streamservertest.h
+    testfoundation/stringtest.cc
+    testfoundation/stringtest.h
+    testfoundation/testattrs.cc
+    testfoundation/testattrs.h
+    testfoundation/textreaderwritertest.cc
+    testfoundation/textreaderwritertest.h
+    testfoundation/threadtest.cc
+    testfoundation/threadtest.h
+    testfoundation/uritest.cc
+    testfoundation/uritest.h
+    testfoundation/varianttest.cc
+    testfoundation/varianttest.h
+    testfoundation/xmlreaderwritertest.cc
+    testfoundation/xmlreaderwritertest.h
+    testfoundation/zipfstest.cc
+    testfoundation/zipfstest.h
+)
