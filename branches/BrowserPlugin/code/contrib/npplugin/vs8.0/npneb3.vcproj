@@ -63,10 +63,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\..\..\bin\win32\$(ProjectName).dll"
+				OutputFile="..\..\..\..\bin\win32\$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;D:\Dev\xulrunner-sdk\sdk\lib&quot;"
-				ModuleDefinitionFile="plugin.def"
+				ModuleDefinitionFile="..\plugin.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -141,10 +141,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\..\..\bin\win32\$(ProjectName).dll"
+				OutputFile="..\..\..\..\bin\win32\$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;D:\Dev\xulrunner-sdk\sdk\lib&quot;"
-				ModuleDefinitionFile="plugin.def"
+				ModuleDefinitionFile="..\plugin.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -186,23 +186,23 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\np_entry.cpp"
+				RelativePath="..\np_entry.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\npn_gate.cpp"
+				RelativePath="..\npn_gate.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\npp_gate.cpp"
+				RelativePath="..\npp_gate.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\plugin.cpp"
+				RelativePath="..\plugin.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\plugin.def"
+				RelativePath="..\plugin.def"
 				>
 			</File>
 		</Filter>
@@ -212,15 +212,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\plugin.h"
+				RelativePath="..\plugin.h"
 				>
 			</File>
 			<File
-				RelativePath=".\pluginbase.h"
+				RelativePath="..\pluginbase.h"
 				>
 			</File>
 			<File
-				RelativePath=".\resource.h"
+				RelativePath="..\resource.h"
 				>
 			</File>
 		</Filter>
@@ -230,7 +230,7 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\plugin.rc"
+				RelativePath="..\plugin.rc"
 				>
 			</File>
 		</Filter>
