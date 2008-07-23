@@ -19,11 +19,16 @@ register_plugin.py <"full_path_to_plugin_dll">
 #-------------------------------------------------------------------------------
 def CreatePluginKey(key):
     hKey = None
+    # first try to create the key under HKEY_LOCAL_MACHINE so it can be 
+    # accessed by all users, this probably won't work without Admin rights
     try:
         hKey = _winreg.CreateKey(_winreg.HKEY_LOCAL_MACHINE, key)
     except EnvironmentError, err:
         print std(err)
     
+    # if we didn't have sufficient rights to create the key above
+    # try again under HKEY_CURRENT_USER so it will at least be accessible 
+    # by the current user
     if not hKey:
         hKey = _winreg.CreateKey(_winreg.HKEY_CURRENT_USER, key)
     
@@ -39,6 +44,8 @@ def main():
     numCmdLineArgs = len(sys.argv)
     if numCmdLineArgs > 1:
         pluginPath = sys.argv[1]
+        # write info to Windows Registry to allow Mozilla to auto-discover the
+        # plugin 
         key = CreatePluginKey(r'SOFTWARE\MozillaPlugins\@macagon.com/Nebula3,version=0.0.1.0')
         if key:
             SetPluginKeyValue(key, r'Description', r'Nebula3 Mozilla Plugin')

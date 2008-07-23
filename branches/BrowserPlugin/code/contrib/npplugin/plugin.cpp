@@ -3,6 +3,7 @@
 //  Contents are licensed under the terms of the Nebula License.
 //------------------------------------------------------------------------------
 #include "plugin.h"
+#include <string.h>
 
 //------------------------------------------------------------------------------
 /**
@@ -82,6 +83,30 @@ NPBool NPPlugin::Open(NPWindow* aWindow)
     if (!this->hWnd)
         return FALSE;
 
+    // get the full path to the plugin dll
+    char modulePath[MAX_PATH] = { 0 };
+    HMODULE hModule = 0;
+    if (GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCSTR)PluginWinProc, &hModule))
+    {
+        GetModuleFileName(hModule, modulePath, MAX_PATH);
+        FreeLibrary(hModule);
+    }
+
+    if (!modulePath[0])
+        return FALSE;
+
+    // strip the filename off the end
+    char* lastSlash = strrchr(modulePath, '\\');
+    if (lastSlash)
+        *lastSlash = 0;
+
+    // construct full path to Nebula3 app that the plugin should execute
+    const char* appName = "testviewer.exe";
+    char appPath[MAX_PATH] = { 0 };
+    strcpy_s(appPath, sizeof(appPath), modulePath);
+    strcat_s(appPath, sizeof(appPath), "\\");
+    strcat_s(appPath, sizeof(appPath), appName);
+
     STARTUPINFO si;
     ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
@@ -104,22 +129,22 @@ NPBool NPPlugin::Open(NPWindow* aWindow)
     if (0 == h)
         h = 510;
     char args[256];
-    sprintf_s(args, sizeof(args), "\"testviewer.exe\" -parentwnd=%I64u -x=%d -y=%d -w=%d -h=%d", 
-              (unsigned __int64)this->hWnd, x, y, w, h);
+    sprintf_s(args, sizeof(args), "\"%s\" -parentwnd=%I64u -x=%d -y=%d -w=%d -h=%d", 
+              appName, (unsigned __int64)this->hWnd, x, y, w, h);
 
     OutputDebugString("Launching Process...\n");
     OutputDebugString(args);
     OutputDebugString("\n");
 
     this->isOpen = CreateProcess(
-        "D:\\Dev\\n3_BrowserPlugin\\bin\\win32\\testviewer.exe", // application to launch
+        appPath, // application to launch
         args, // command line
         NULL, // process attributes
         NULL, // thread attributes
         FALSE, // don't inherit handles from parent
         NORMAL_PRIORITY_CLASS, // priority & other creation flags
         NULL, // use parent's environment block
-        NULL, // use parent's current directory
+        modulePath, // set the current directory for the new process to the plugin directory
         &si,
         &this->pi);
 
