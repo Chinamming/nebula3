@@ -33,6 +33,7 @@ Win32InputDisplayEventHandler::HandleEvent(const DisplayEvent& displayEvent)
             inputEvent.SetType(InputEvent::AppLoseFocus);
             inputServer->PutEvent(inputEvent);
             XInputEnable(false);
+            inputServer->SetFocus(false);
             return true;
 
         case DisplayEvent::DisplayRestored:
@@ -40,6 +41,7 @@ Win32InputDisplayEventHandler::HandleEvent(const DisplayEvent& displayEvent)
             inputEvent.SetType(InputEvent::AppObtainFocus);
             inputServer->PutEvent(inputEvent);
             XInputEnable(true);
+            inputServer->SetFocus(true);
             return true;
 
         case DisplayEvent::KeyDown:

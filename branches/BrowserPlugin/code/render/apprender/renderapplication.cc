@@ -281,9 +281,6 @@ RenderApplication::OnConfigureDisplayDevice()
     }
 
 #if __WIN32__
-#if _DEBUG
-    Timing::Sleep(10); // you've got 10 secs to hook the debugger up, go go go!
-#endif // _DEBUG
     // run the app in a child window of the given parent window
     if (this->args.HasArg("-parentwnd"))
     {
