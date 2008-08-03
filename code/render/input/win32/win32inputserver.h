@@ -35,6 +35,8 @@ public:
     void Close();
     /// call after processing window events (reads DInput raw mouse events)
     void OnFrame();
+    /// call after window gains/loses input focus
+    void SetFocus(bool);
 
     /// set the parent window HWND
     void SetParentHwnd(HWND hWnd);
@@ -55,6 +57,7 @@ protected:
     IDirectInput8* di8;
     IDirectInputDevice8* di8Mouse;
     Math::float2 mouseMovement;
+    bool wndHasFocus; // ignored unless hWndParent is set
     HWND hWndParent;
     static const int DInputMouseBufferSize = 16;
 };

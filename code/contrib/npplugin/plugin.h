@@ -16,6 +16,7 @@ public:
     void Close();
     NPBool IsOpen();
 
+    LONG_PTR GetOldWndProc();
     const char* GetVersion();
 
 private:
@@ -23,6 +24,17 @@ private:
     bool isOpen;
     HWND hWnd;
     PROCESS_INFORMATION pi;
+    LONG_PTR lpOldProc;
 };
+
+//------------------------------------------------------------------------------
+/**
+    Get the original WndProc of the sub-classed window.
+*/
+inline
+LONG_PTR NPPlugin::GetOldWndProc()
+{
+    return this->lpOldProc;
+}
 
 #endif // N_NP_PLUGIN_H

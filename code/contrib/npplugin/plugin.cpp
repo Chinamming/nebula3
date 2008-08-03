@@ -55,7 +55,8 @@ void NS_DestroyPluginInstance(NPPluginBase * aPlugin)
 NPPlugin::NPPlugin(NPP aInstance) : NPPluginBase(),
 instance(aInstance),
 isOpen(false),
-hWnd(0)
+hWnd(0),
+lpOldProc(0)
 {
     ZeroMemory(&this->pi, sizeof(this->pi));
 }
@@ -69,7 +70,6 @@ NPPlugin::~NPPlugin()
 }
 
 static LRESULT CALLBACK PluginWinProc(HWND, UINT, WPARAM, LPARAM);
-static WNDPROC lpOldProc = NULL;
 
 //------------------------------------------------------------------------------
 /**
@@ -149,11 +149,11 @@ NPBool NPPlugin::Open(NPWindow* aWindow)
         &this->pi);
 
     // subclass window so we can forward them to the nebula window
-    lpOldProc = SubclassWindow(this->hWnd, (WNDPROC)PluginWinProc);
+    this->lpOldProc = SetWindowLongPtr(this->hWnd, GWLP_WNDPROC, (LONG_PTR)PluginWinProc);
 
     // associate window with our plugin instance so we can access 
     // it in the winproc
-    SetWindowLong(this->hWnd, GWL_USERDATA, (LONG)this);
+    SetWindowLongPtr(this->hWnd, GWL_USERDATA, (LONG_PTR)this);
 
     return this->isOpen;
 }
@@ -187,7 +187,7 @@ void NPPlugin::Close()
     if (this->pi.hThread)
         CloseHandle(this->pi.hThread);
     // subclass it back
-    SubclassWindow(this->hWnd, lpOldProc);
+    SetWindowLongPtr(this->hWnd, GWLP_WNDPROC, this->lpOldProc);
     this->hWnd = NULL;
     this->isOpen = FALSE;
 }
@@ -213,45 +213,31 @@ const char* NPPlugin::GetVersion()
 */
 static LRESULT CALLBACK PluginWinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    /*
-    switch (msg)
-    {
-        case WM_PAINT:
-        {
-            // draw a frame and display the version string
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            RECT rc;
-            GetClientRect(hWnd, &rc);
-            FrameRect(hdc, &rc, GetStockBrush(BLACK_BRUSH));
-
-            // get our plugin instance object and ask it for the version string
-            NPPlugin *plugin = (NPPlugin*)GetWindowLong(hWnd, GWL_USERDATA);
-            if (plugin) 
-            {
-                const char * string = plugin->GetVersion();
-                DrawText(hdc, string, strlen(string), &rc, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-            }
-            else 
-            {
-                char string[] = "Error occured";
-                DrawText(hdc, string, strlen(string), &rc, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-            }
-
-            EndPaint(hWnd, &ps);
-        }
-        break;
-        
-        default:
-        break;
-    }
-    */
-
     HWND hNebulaWnd = FindWindowEx(hWnd, NULL, NEBULA3_WINDOW_CLASS, NULL);
     if (hNebulaWnd)
     {
-        SendMessage(hNebulaWnd, msg, wParam, lParam);
+        switch (msg)
+        {
+            case WM_MOUSEACTIVATE:
+                // This is here to work around an issue where minimizing the browser 
+                // window, restoring it, and then clicking on the Nebula window doesn't
+                // set the input focus back to the Nebula window.
+                //
+                // Not sure if this should be handled here or in
+                // Win32DisplayDevice::WinProc, but I'll leave it here for now to
+                // minimize changes to core.
+                SetFocus(hNebulaWnd);
+                break;
+
+            default:
+                SendMessage(hNebulaWnd, msg, wParam, lParam);
+                break;
+        }
     }
     
-    return DefWindowProc(hWnd, msg, wParam, lParam);
+    NPPlugin* plugin = (NPPlugin*)GetWindowLongPtr(hWnd, GWL_USERDATA);
+    if (plugin)
+        return CallWindowProc((WNDPROC)plugin->GetOldWndProc(), hWnd, msg, wParam, lParam);
+    else
+        return DefWindowProc(hWnd, msg, wParam, lParam);
 }

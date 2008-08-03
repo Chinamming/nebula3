@@ -24,6 +24,7 @@ using namespace CoreGraphics;
 Win32InputServer::Win32InputServer() :
     di8(0),
     di8Mouse(0),
+    wndHasFocus(false),
     hWndParent(0)
 {
     ConstructSingleton;
@@ -120,6 +121,28 @@ Win32InputServer::OnFrame()
 }
 
 //------------------------------------------------------------------------------
+/**
+    Calling this has no effect when the application window is not a child window.
+*/
+void
+Win32InputServer::SetFocus(bool gotFocus)
+{
+    // When the application window is a child window the DirectInput mouse 
+    // device is created with a coop level of DISCL_BACKGROUND, this means the 
+    // device is not automatically unacquired when the application window loses 
+    // focus. Thus, we must unacquire the device manually.
+    if (this->hWndParent)
+    {
+        this->wndHasFocus = gotFocus;
+        if (!this->wndHasFocus)
+        {
+            n_assert(0 != this->di8Mouse);
+            this->di8Mouse->Unacquire();
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
 /**    
 */
 static bool IsTopLevelWindow(HWND hWnd)
@@ -196,7 +219,8 @@ Win32InputServer::OpenDInputMouse()
     hr = this->di8Mouse->SetProperty(DIPROP_AXISMODE, &dipdw.diph);
     n_assert(SUCCEEDED(hr));
 
-    this->di8Mouse->Acquire();
+    if (!this->hWndParent || this->wndHasFocus)
+        this->di8Mouse->Acquire();
 
     return true;
 }
@@ -230,6 +254,9 @@ Win32InputServer::ReadDInputMouse()
     HRESULT hr;
     
     this->mouseMovement.set(0.0f, 0.0f);
+
+    if (this->hWndParent && !this->wndHasFocus)
+        return;
 
     // read buffered mouse data
     DWORD inOutNumElements = DInputMouseBufferSize;
