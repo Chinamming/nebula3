@@ -110,15 +110,6 @@ Win32DisplayDevice::GetHwnd() const
 //------------------------------------------------------------------------------
 /**
 */
-inline void
-Win32DisplayDevice::SetParentHwnd(HWND hWnd)
-{
-    this->hWndParent = hWnd;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 inline HWND
 Win32DisplayDevice::GetParentHwnd() const
 {

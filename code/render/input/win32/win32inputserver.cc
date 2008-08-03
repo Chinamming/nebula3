@@ -143,6 +143,26 @@ Win32InputServer::SetFocus(bool gotFocus)
 }
 
 //------------------------------------------------------------------------------
+/**
+*/
+void
+Win32InputServer::SetParentHwnd(HWND hWndNewParent)
+{
+    if (this->IsOpen())
+    {
+        // FIXME: shutting everything down is probably unnecessary, simply
+        // recreating the DirectInput mouse device should suffice.
+        this->Close();
+        this->hWndParent = hWndNewParent;
+        this->Open();
+    }
+    else
+    {
+        this->hWndParent = hWndNewParent;
+    }
+}
+
+//------------------------------------------------------------------------------
 /**    
 */
 static bool IsTopLevelWindow(HWND hWnd)

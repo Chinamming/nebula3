@@ -71,15 +71,6 @@ Win32InputServer::GetMouseMovement() const
     return this->mouseMovement;
 }
 
-//------------------------------------------------------------------------------
-/**
-*/
-inline void
-Win32InputServer::SetParentHwnd(HWND hWnd)
-{
-    this->hWndParent = hWnd;
-}
-
 } // namespace Win32
 //------------------------------------------------------------------------------
 #endif

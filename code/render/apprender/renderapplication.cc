@@ -58,7 +58,10 @@ RenderApplication::RenderApplication() :
     frameTime(0.0),
     quitRequested(false)
 {
-    // empty
+#if __WIN32__
+    this->hWndParent = 0;
+    this->parentWindowChanged = 0;
+#endif // __WIN32__
 }
 
 //------------------------------------------------------------------------------
@@ -197,7 +200,9 @@ RenderApplication::Open()
 
         // setup input subsystem
         this->inputServer = InputServer::Create();
-        this->inputServer->SetParentHwnd(this->displayDevice->GetParentHwnd());
+#if __WIN32__
+        this->inputServer->SetParentHwnd(this->hWndParent);
+#endif // __WIN32__
         this->inputServer->Open();
         
         // setup model server
@@ -285,8 +290,8 @@ RenderApplication::OnConfigureDisplayDevice()
     if (this->args.HasArg("-parentwnd"))
     {
         String wndStr = this->args.GetString("-parentwnd");
-        HWND hWndParent = (HWND)_atoi64(wndStr.AsCharPtr());
-        this->displayDevice->SetParentHwnd(hWndParent);
+        this->hWndParent = (HWND)_atoi64(wndStr.AsCharPtr());
+        this->displayDevice->SetParentHwnd(this->hWndParent);
     }
 #endif //__WIN32__
 }
@@ -380,8 +385,17 @@ RenderApplication::Run()
         this->OnRenderFrame();
         this->inputServer->EndFrame();
 
-        // if we're running in windowed mode, give up time slice, 
-        // for better responsives of other apps
+#if __WIN32__
+        if (this->parentWindowChanged)
+        {
+            this->parentWindowChanged = false;
+            this->displayDevice->SetParentHwnd(this->hWndParent);
+            this->inputServer->SetParentHwnd(this->hWndParent);
+        }
+#endif // __WIN32__
+
+        // if we're running in windowed mode, give up a time slice, 
+        // for better responsiveness of other apps
         if (!this->displayDevice->IsFullscreen())
         {
             Timing::Sleep(0.0f);
