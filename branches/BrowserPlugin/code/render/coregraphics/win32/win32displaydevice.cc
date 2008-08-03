@@ -230,6 +230,41 @@ Win32DisplayDevice::ComputeAdjustedWindowRect()
 /**
 */
 void
+Win32DisplayDevice::SetParentHwnd(HWND hWndNewParent)
+{
+    if (this->IsOpen())
+    {
+        if (this->hWndParent)
+        {
+            if (!hWndNewParent)
+            {
+                // convert the child window to a popup window
+                SetParent(this->hWnd, NULL);
+                SetWindowLong(this->hWnd, GWL_STYLE, this->windowedStyle);
+                // FIXME: synchronize the UISTATE of both windows
+            }
+            else if (this->hWndParent != hWndNewParent)
+            {
+                // just change the parent of the child window
+                SetParent(this->hWnd, hWndNewParent);
+                // FIXME: synchronize the UISTATE of both windows
+            }
+        }
+        else
+        {
+            // convert the popup window to a child window
+            SetWindowLong(this->hWnd, GWL_STYLE, this->childStyle);
+            SetParent(this->hWnd, hWndNewParent);
+            // FIXME: synchronize the UISTATE of both windows
+        }
+    }
+    this->hWndParent = hWndNewParent;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 Win32DisplayDevice::OnMinimized()
 {
     this->NotifyEventHandlers(DisplayEvent(DisplayEvent::DisplayMinimized));

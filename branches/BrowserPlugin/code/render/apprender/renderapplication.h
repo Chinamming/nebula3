@@ -73,6 +73,10 @@ protected:
     Timing::Time GetTime() const;
     /// get current frame time
     Timing::Time GetFrameTime() const;
+#if __WIN32__
+    /// set the parent window for the main window
+    void SetParentHwnd(HWND);
+#endif // __WIN32__
 
     Ptr<Core::CoreServer> coreServer;
     Ptr<IO::IoServer> ioServer;
@@ -100,6 +104,10 @@ protected:
     Timing::Time time;
     Timing::Time frameTime;
     bool quitRequested;
+#if __WIN32__
+    HWND hWndParent;
+    bool parentWindowChanged;
+#endif // __WIN32__
 };
 
 //------------------------------------------------------------------------------
@@ -137,6 +145,28 @@ RenderApplication::GetFrameTime() const
 {
     return this->frameTime;
 }
+
+#if __WIN32__
+//------------------------------------------------------------------------------
+/**
+    If the main app window is a child window and the given parent window is NULL
+    then the main app window will be converted to a popup window. Conversely,
+    if the main app window is a popup window and the given parent window is not
+    NULL then the main app window will be converted to a child window.
+*/
+inline void
+RenderApplication::SetParentHwnd(HWND hWnd)
+{
+    if (this->hWndParent != hWnd)
+    {
+        // delay the actual re-parenting until the end of the current frame,
+        // because the input server objects to being closed and opened again
+        // mid-frame
+        this->hWndParent = hWnd;
+        this->parentWindowChanged = true;
+    }
+}
+#endif // __WIN32__
 
 } // namespace App
 //------------------------------------------------------------------------------

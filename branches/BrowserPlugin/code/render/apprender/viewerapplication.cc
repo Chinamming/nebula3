@@ -205,6 +205,22 @@ ViewerApplication::OnProcessInput()
         this->mayaCameraUtil.SetZoomOut(zoomOut);
         this->mayaCameraUtil.Update();
         this->cameraEntity->SetTransform(this->mayaCameraUtil.GetCameraTransform());
+
+#if __WIN32__
+        // switch between child window and popup window modes
+        if (keyboard->KeyPressed(Key::P))
+        {
+            if (this->hWndParent)
+            {
+                this->hWndPrevParent = this->hWndParent;
+                this->SetParentHwnd(0);
+            }
+            else if (this->hWndPrevParent)
+            {
+                this->SetParentHwnd(this->hWndPrevParent);
+            }
+        }
+#endif // __WIN32__
     }
 }
 

@@ -46,6 +46,9 @@ protected:
     Ptr<Graphics::ModelEntity> modelEntity;
     Ptr<Lighting::SpotLightEntity> lightEntity;
     RenderUtil::MayaCameraUtil mayaCameraUtil;
+#if __WIN32__
+    HWND hWndPrevParent;
+#endif // __WIN32__
 };
 
 } // namespace App
