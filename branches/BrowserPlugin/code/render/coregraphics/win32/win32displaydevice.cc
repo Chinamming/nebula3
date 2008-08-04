@@ -232,22 +232,23 @@ Win32DisplayDevice::ComputeAdjustedWindowRect()
 void
 Win32DisplayDevice::SetParentHwnd(HWND hWndNewParent)
 {
+    if (this->hWndParent == hWndNewParent)
+        return;
+
     if (this->IsOpen())
     {
         if (this->hWndParent)
         {
-            if (!hWndNewParent)
+            if (hWndNewParent)
+            {
+                // just change the parent of the child window
+                SetParent(this->hWnd, hWndNewParent);
+            }
+            else
             {
                 // convert the child window to a popup window
                 SetParent(this->hWnd, NULL);
                 SetWindowLong(this->hWnd, GWL_STYLE, this->windowedStyle);
-                // FIXME: synchronize the UISTATE of both windows
-            }
-            else if (this->hWndParent != hWndNewParent)
-            {
-                // just change the parent of the child window
-                SetParent(this->hWnd, hWndNewParent);
-                // FIXME: synchronize the UISTATE of both windows
             }
         }
         else
@@ -255,10 +256,21 @@ Win32DisplayDevice::SetParentHwnd(HWND hWndNewParent)
             // convert the popup window to a child window
             SetWindowLong(this->hWnd, GWL_STYLE, this->childStyle);
             SetParent(this->hWnd, hWndNewParent);
-            // FIXME: synchronize the UISTATE of both windows
         }
+
+        this->hWndParent = hWndNewParent;
+
+        // synchronize the UISTATE... something to do with accelerators
+        SendMessage(this->hWnd, WM_CHANGEUISTATE, MAKEWPARAM(UIS_INITIALIZE, 0), 0);
+        // resize, move and repaint the window
+        DisplayMode adjMode = this->ComputeAdjustedWindowRect();
+        MoveWindow(this->hWnd, adjMode.GetXPos(), adjMode.GetYPos(),
+                   adjMode.GetWidth(), adjMode.GetHeight(), TRUE);
     }
-    this->hWndParent = hWndNewParent;
+    else
+    {
+        this->hWndParent = hWndNewParent;
+    }
 }
 
 //------------------------------------------------------------------------------
