@@ -155,6 +155,11 @@ NPBool NPPlugin::Open(NPWindow* aWindow)
     // it in the winproc
     SetWindowLongPtr(this->hWnd, GWL_USERDATA, (LONG_PTR)this);
 
+    // make sure the window doesn't attempt to draw in the area occupied by the 
+    // child Nebula3 window, otherwise we'll get flickering when scrolling
+    LONG lStyle = GetWindowLong(this->hWnd, GWL_STYLE);
+    SetWindowLong(this->hWnd, GWL_STYLE, lStyle | WS_CLIPCHILDREN);
+
     return this->isOpen;
 }
 
@@ -213,25 +218,21 @@ const char* NPPlugin::GetVersion()
 */
 static LRESULT CALLBACK PluginWinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    HWND hNebulaWnd = FindWindowEx(hWnd, NULL, NEBULA3_WINDOW_CLASS, NULL);
-    if (hNebulaWnd)
+    switch (msg)
     {
-        switch (msg)
+        case WM_MOUSEACTIVATE:
         {
-            case WM_MOUSEACTIVATE:
-                // This is here to work around an issue where minimizing the browser 
-                // window, restoring it, and then clicking on the Nebula window doesn't
-                // set the input focus back to the Nebula window.
-                //
-                // Not sure if this should be handled here or in
-                // Win32DisplayDevice::WinProc, but I'll leave it here for now to
-                // minimize changes to core.
+            // This is here to work around an issue where minimizing the browser 
+            // window, restoring it, and then clicking on the Nebula window doesn't
+            // set the input focus back to the Nebula window.
+            //
+            // Not sure if this should be handled here or in
+            // Win32DisplayDevice::WinProc, but I'll leave it here for now to
+            // minimize changes to core.
+            HWND hNebulaWnd = FindWindowEx(hWnd, NULL, NEBULA3_WINDOW_CLASS, NULL);
+            if (hNebulaWnd)
                 SetFocus(hNebulaWnd);
-                break;
-
-            default:
-                SendMessage(hNebulaWnd, msg, wParam, lParam);
-                break;
+            break;
         }
     }
     
