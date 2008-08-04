@@ -162,13 +162,27 @@ D3D9DisplayDevice::ComputeAdjustedWindowRect()
     }
     else
     {
+        // When running in windowed or embedded mode assume the original
+        // display mode specifies the size of the client area and
+        // calculate the size of the entire window (which may include 
+        // non-client areas).
         const DisplayMode& mode = this->displayMode;
         RECT r;
         r.left   = monitorOriginX + mode.GetXPos();
         r.right  = monitorOriginX + mode.GetXPos() + mode.GetWidth();
         r.top    = monitorOriginY + mode.GetYPos();
         r.bottom = monitorOriginY + mode.GetYPos() + mode.GetHeight();
-        AdjustWindowRect(&r, this->fullscreenStyle, 0);
+        // AdjustWindowRect() may alter r.left and r.top, we don't want that
+        // because the top left corner of the window may then end up off-screen.
+        RECT adjRect = r;
+        if (this->hWndParent)
+            AdjustWindowRect(&adjRect, this->childStyle, 0);
+        else
+            AdjustWindowRect(&adjRect, this->windowedStyle, 0);
+        // Now we can adjust the size of the original rect to account for the 
+        // space taken up by non-client parts of the window.
+        r.right += (adjRect.right - adjRect.left) - (r.right - r.left);
+        r.bottom += (adjRect.bottom - adjRect.top) - (r.bottom - r.top);
         return DisplayMode(r.left, r.top, r.right - r.left, r.bottom - r.top, this->displayMode.GetPixelFormat());
     }
 }
