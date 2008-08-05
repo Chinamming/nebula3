@@ -15,13 +15,18 @@ public:
     NPBool Open(NPWindow* aWindow);
     void Close();
     NPBool IsOpen();
+    bool IsNebulaOpen();
 
     LONG_PTR GetOldWndProc();
     const char* GetVersion();
+    NPError SetWindow(NPWindow* aWindow);
 
 private:
+    bool OpenNebula(int width, int height);
+
     NPP instance;
     bool isOpen;
+    bool isNebulaOpen;
     HWND hWnd;
     PROCESS_INFORMATION pi;
     LONG_PTR lpOldProc;
