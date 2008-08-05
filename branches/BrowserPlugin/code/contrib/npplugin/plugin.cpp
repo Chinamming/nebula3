@@ -55,6 +55,7 @@ void NS_DestroyPluginInstance(NPPluginBase * aPlugin)
 NPPlugin::NPPlugin(NPP aInstance) : NPPluginBase(),
 instance(aInstance),
 isOpen(false),
+isNebulaOpen(false),
 hWnd(0),
 lpOldProc(0)
 {
@@ -74,15 +75,8 @@ static LRESULT CALLBACK PluginWinProc(HWND, UINT, WPARAM, LPARAM);
 //------------------------------------------------------------------------------
 /**
 */
-NPBool NPPlugin::Open(NPWindow* aWindow)
+bool NPPlugin::OpenNebula(int width, int height)
 {
-    if (!aWindow)
-        return FALSE;
-
-    this->hWnd = (HWND)aWindow->window;
-    if (!this->hWnd)
-        return FALSE;
-
     // get the full path to the plugin dll
     char modulePath[MAX_PATH] = { 0 };
     HMODULE hModule = 0;
@@ -113,30 +107,11 @@ NPBool NPPlugin::Open(NPWindow* aWindow)
 
     int x = 0;
     int y = 0;
-    int w = 0;
-    int h = 0;
-    RECT rc;
-    if (GetClientRect(this->hWnd, &rc))
-    {
-        x = rc.left;
-        y = rc.top;
-        w = rc.right - rc.left;
-        h = rc.bottom - rc.top;
-    }
-    // keep getting a (0,0,0,0) rc for some reason
-    if (0 == w)
-        w = 760;
-    if (0 == h)
-        h = 510;
     char args[256];
     sprintf_s(args, sizeof(args), "\"%s\" -parentwnd=%I64u -x=%d -y=%d -w=%d -h=%d", 
-              appName, (unsigned __int64)this->hWnd, x, y, w, h);
+              appName, (unsigned __int64)this->hWnd, x, y, width, height);
 
-    OutputDebugString("Launching Process...\n");
-    OutputDebugString(args);
-    OutputDebugString("\n");
-
-    this->isOpen = CreateProcess(
+    this->isNebulaOpen = CreateProcess(
         appPath, // application to launch
         args, // command line
         NULL, // process attributes
@@ -147,8 +122,29 @@ NPBool NPPlugin::Open(NPWindow* aWindow)
         modulePath, // set the current directory for the new process to the plugin directory
         &si,
         &this->pi);
+    return this->isNebulaOpen;
+}
 
-    // subclass window so we can forward them to the nebula window
+//------------------------------------------------------------------------------
+/**
+*/
+NPBool NPPlugin::Open(NPWindow* aWindow)
+{
+    if (!aWindow)
+        return FALSE;
+
+    this->hWnd = (HWND)aWindow->window;
+    if (!this->hWnd)
+        return FALSE;
+
+    // if window size is unknown wait until we find out what it is before
+    // creating the Nebula window
+    if (aWindow->width && aWindow->height)
+        this->isOpen = this->OpenNebula(aWindow->width, aWindow->height);
+    else
+        this->isOpen = true;
+
+    // subclass window so we can do evil things
     this->lpOldProc = SetWindowLongPtr(this->hWnd, GWLP_WNDPROC, (LONG_PTR)PluginWinProc);
 
     // associate window with our plugin instance so we can access 
@@ -171,30 +167,35 @@ NPBool NPPlugin::Open(NPWindow* aWindow)
 */
 void NPPlugin::Close()
 {
-    HWND hWnd = FindWindowEx(this->hWnd, NULL, NEBULA3_WINDOW_CLASS, NULL);
-    if (hWnd)
+    if (this->isNebulaOpen)
     {
-        // ask nebula politely to shutdown
-        SendMessage(hWnd, WM_CLOSE, 0, 0);
-    }
-    else
-    {
-        // can't find the nebula window handle so forcefully terminate 
-        // the child process
-        TerminateProcess(this->pi.hProcess, -1);
-    }
+        HWND hWnd = FindWindowEx(this->hWnd, NULL, NEBULA3_WINDOW_CLASS, NULL);
+        if (hWnd)
+        {
+            // ask nebula politely to shutdown
+            SendMessage(hWnd, WM_CLOSE, 0, 0);
+        }
+        else
+        {
+            // can't find the nebula window handle so forcefully terminate 
+            // the child process
+            TerminateProcess(this->pi.hProcess, -1);
+        }
 
-    // wait until child process terminates
-    WaitForSingleObject(this->pi.hProcess, INFINITE);
+        // wait until child process terminates
+        WaitForSingleObject(this->pi.hProcess, INFINITE);
 
-    if (this->pi.hProcess)
-        CloseHandle(this->pi.hProcess);
-    if (this->pi.hThread)
-        CloseHandle(this->pi.hThread);
+        if (this->pi.hProcess)
+            CloseHandle(this->pi.hProcess);
+        if (this->pi.hThread)
+            CloseHandle(this->pi.hThread);
+
+        this->isNebulaOpen = false;
+    }
     // subclass it back
     SetWindowLongPtr(this->hWnd, GWLP_WNDPROC, this->lpOldProc);
     this->hWnd = NULL;
-    this->isOpen = FALSE;
+    this->isOpen = false;
 }
 
 //------------------------------------------------------------------------------
@@ -208,6 +209,14 @@ NPBool NPPlugin::IsOpen()
 //------------------------------------------------------------------------------
 /**
 */
+bool NPPlugin::IsNebulaOpen()
+{
+    return this->isNebulaOpen;  
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 const char* NPPlugin::GetVersion()
 {
     return NPN_UserAgent(this->instance);
@@ -216,29 +225,48 @@ const char* NPPlugin::GetVersion()
 //------------------------------------------------------------------------------
 /**
 */
+NPError NPPlugin::SetWindow(NPWindow* aWindow)
+{
+    // Create the Nebula window as soon as we find out what the size of the
+    // parent window is!
+    if (!this->isNebulaOpen)
+        if (aWindow->width && aWindow->height)
+            this->OpenNebula(aWindow->width, aWindow->height);
+    return NPERR_NO_ERROR;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 static LRESULT CALLBACK PluginWinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    switch (msg)
-    {
-        case WM_MOUSEACTIVATE:
-        {
-            // This is here to work around an issue where minimizing the browser 
-            // window, restoring it, and then clicking on the Nebula window doesn't
-            // set the input focus back to the Nebula window.
-            //
-            // Not sure if this should be handled here or in
-            // Win32DisplayDevice::WinProc, but I'll leave it here for now to
-            // minimize changes to core.
-            HWND hNebulaWnd = FindWindowEx(hWnd, NULL, NEBULA3_WINDOW_CLASS, NULL);
-            if (hNebulaWnd)
-                SetFocus(hNebulaWnd);
-            break;
-        }
-    }
-    
     NPPlugin* plugin = (NPPlugin*)GetWindowLongPtr(hWnd, GWL_USERDATA);
     if (plugin)
+    {
+        switch (msg)
+        {   
+            case WM_MOUSEACTIVATE:
+            {
+                // This is here to work around an issue where minimizing the browser 
+                // window, restoring it, and then clicking on the Nebula window doesn't
+                // set the input focus back to the Nebula window.
+                //
+                // Not sure if this should be handled here or in
+                // Win32DisplayDevice::WinProc, but I'll leave it here for now to
+                // minimize changes to core.
+                if (plugin->IsNebulaOpen())
+                {
+                    HWND hNebulaWnd = FindWindowEx(hWnd, NULL, NEBULA3_WINDOW_CLASS, NULL);
+                    if (hNebulaWnd)
+                        SetFocus(hNebulaWnd);
+                }
+                break;
+            }
+        }
         return CallWindowProc((WNDPROC)plugin->GetOldWndProc(), hWnd, msg, wParam, lParam);
+    }
     else
+    {
         return DefWindowProc(hWnd, msg, wParam, lParam);
+    }
 }
