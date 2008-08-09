@@ -50,8 +50,8 @@ BEGIN
             VALUE "OriginalFilename", "npneb3.dll"
             VALUE "ProductName", "Nebula3 Mozilla Plugin"
             VALUE "ProductVersion", "1, 0, 0, 1"
-			VALUE "MIMEType", "application/nebula3"
-			VALUE "FileExtents", "*"
+            VALUE "MIMEType", "application/x-nebula3"
+            VALUE "FileExtents", "*"
         END
     END
     BLOCK "VarFileInfo"
