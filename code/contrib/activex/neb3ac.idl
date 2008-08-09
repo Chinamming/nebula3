@@ -1,0 +1,39 @@
+// neb3ac.idl : IDL source for neb3ac
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (neb3ac.tlb) and marshalling code.
+
+#include "olectl.h"
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+    object,
+    uuid(A3FC115A-AD5E-43E0-994E-17AAC999CF1A),
+    dual,
+    nonextensible,
+    helpstring("INebula3Ctrl Interface"),
+    pointer_default(unique)
+]
+interface INebula3Ctrl : IDispatch{
+};
+
+[
+    uuid(964B2717-D4A8-4E6D-AEDB-811BC2662D9F),
+    version(1.0),
+    helpstring("neb3ac 1.0 Type Library")
+]
+library neb3acLib
+{
+    importlib("stdole2.tlb");
+    [
+        uuid(78108512-8093-4C87-8775-5CEB140ECC27),
+        control,
+        helpstring("Nebula3Ctrl Class")
+    ]
+    coclass Nebula3Ctrl
+    {
+        [default] interface INebula3Ctrl;
+    };
+};
