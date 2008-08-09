@@ -1,0 +1,47 @@
+HKCR
+{
+    neb3ac.Nebula3Ctrl.1 = s 'Nebula3Ctrl Class'
+    {
+        CLSID = s '{78108512-8093-4C87-8775-5CEB140ECC27}'
+    }
+    neb3ac.Nebula3Ctrl = s 'Nebula3Ctrl Class'
+    {
+        CLSID = s '{78108512-8093-4C87-8775-5CEB140ECC27}'
+        CurVer = s 'neb3ac.Nebula3Ctrl.1'
+    }
+    NoRemove CLSID
+    {
+        ForceRemove {78108512-8093-4C87-8775-5CEB140ECC27} = s 'Nebula3Ctrl Class'
+        {
+            ProgID = s 'neb3ac.Nebula3Ctrl.1'
+            VersionIndependentProgID = s 'neb3ac.Nebula3Ctrl'
+            ForceRemove 'Programmable'
+            InprocServer32 = s '%MODULE%'
+            {
+                val ThreadingModel = s 'Apartment'
+            }
+            val AppID = s '%APPID%'
+            ForceRemove 'Control'
+            ForceRemove 'ToolboxBitmap32' = s '%MODULE%, 102'
+            'MiscStatus' = s '0'
+            {
+                '1' = s '%OLEMISC%'
+            }
+            'TypeLib' = s '{964B2717-D4A8-4E6D-AEDB-811BC2662D9F}'
+            'Version' = s '1.0'
+        }
+    }
+    NoRemove MIME
+    {
+        NoRemove Database
+        {
+            NoRemove 'Content Type'
+            {
+                ForceRemove 'application/x-nebula3'
+                {
+                    val CLSID = s '{78108512-8093-4C87-8775-5CEB140ECC27}'
+                }
+            }
+        }   
+    }
+}

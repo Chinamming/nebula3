@@ -1,0 +1,9 @@
+; neb3ac.def : Declares the module parameters.
+
+LIBRARY      "neb3ac.DLL"
+
+EXPORTS
+    DllCanUnloadNow     PRIVATE
+    DllGetClassObject   PRIVATE
+    DllRegisterServer   PRIVATE
+    DllUnregisterServer PRIVATE
