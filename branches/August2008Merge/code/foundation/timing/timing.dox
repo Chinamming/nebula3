@@ -1,0 +1,6 @@
+/**
+@namespace Timing
+
+The Nebula3 Timing subsystem offers classes for measuring absolute and
+elapsed time, or obtaining the current date and wall clock time.
+*/

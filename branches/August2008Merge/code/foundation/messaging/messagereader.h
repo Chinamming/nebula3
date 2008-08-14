@@ -1,0 +1,36 @@
+#pragma once
+#ifndef MESSAGING_MESSAGEREADER_H
+#define MESSAGING_MESSAGEREADER_H
+//------------------------------------------------------------------------------
+/**
+    @class Messaging::MessageReader
+    
+    Implements a binary stream protocol for decoding messages from
+    a stream.
+    
+    (C) 2006 Radon Labs GmbH
+*/
+#include "io/binaryreader.h"
+
+//------------------------------------------------------------------------------
+namespace Messaging
+{
+class Message;
+
+class MessageReader : public IO::StreamReader
+{
+    DeclareClass(MessageReader);
+public:
+    /// constructor
+    MessageReader();
+    /// set stream to read from
+    virtual void SetStream(const Ptr<IO::Stream>& s);
+    /// decode a new message from the stream
+    Message* ReadMessage();
+private:
+    Ptr<IO::BinaryReader> binaryReader;
+};
+
+} // namespace Messaging
+//------------------------------------------------------------------------------
+#endif
