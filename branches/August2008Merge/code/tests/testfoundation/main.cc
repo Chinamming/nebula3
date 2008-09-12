@@ -39,6 +39,9 @@
 #include "float4test.h"
 #include "matrix44test.h"
 #include "threadtest.h"
+#include "memorypooltest.h"
+#include "runlengthcodectest.h"
+#include "ringbuffertest.h"
 
 using namespace Core;
 using namespace Test;
@@ -56,6 +59,9 @@ __cdecl main()
 
     // setup and run test runner
     Ptr<TestRunner> testRunner = TestRunner::Create();
+    testRunner->AttachTestCase(RingBufferTest::Create());
+    testRunner->AttachTestCase(RunLengthCodecTest::Create());
+    testRunner->AttachTestCase(MemoryPoolTest::Create());
     testRunner->AttachTestCase(Matrix44Test::Create());
     testRunner->AttachTestCase(Float4Test::Create());
     testRunner->AttachTestCase(AtomTest::Create());

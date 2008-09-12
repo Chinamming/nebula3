@@ -65,30 +65,34 @@ public:
     void Append(const TYPE& elm);
     /// append the contents of an array to this array
     void AppendArray(const Array<TYPE>& rhs);
-    /// reserve num elements at end of array
+    /// increase capacity to fit N more elements into the array
     void Reserve(SizeT num);
     /// get number of elements in array
     SizeT Size() const;
     /// get overall allocated size of array in number of elements
     SizeT Capacity() const;
-    /// set element at index, grow array if necessary
-    void Set(IndexT index, const TYPE& elm);
-    /// return reference to nth element in array
-    TYPE& At(IndexT index);
     /// return reference to first element
     TYPE& Front() const;
     /// return reference to last element
     TYPE& Back() const;
     /// return true if array empty
     bool IsEmpty() const;
-    /// erase element at index
+    /// erase element at index, keep sorting intact
     void EraseIndex(IndexT index);
-    /// erase element pointed to by iterator
+    /// erase element pointed to by iterator, keep sorting intact
     Iterator Erase(Iterator iter);
+    /// erase element at index, fill gap by swapping in last element, destroys sorting!
+    void EraseIndexSwap(IndexT index);
+    /// erase element at iterator, fill gap by swapping in last element, destroys sorting!
+    Iterator EraseSwap(Iterator iter);
     /// insert element before element at index
     void Insert(IndexT index, const TYPE& elm);
-    /// insert element into sorted array
-    void InsertSorted(const TYPE& elm);
+    /// insert element into sorted array, return false if element already existed
+    bool InsertSorted(const TYPE& elm);
+    /// insert element at the first non-identical position
+    void InsertAtEndOfIdenticalRange(IndexT startIndex, const TYPE& elm);
+    /// test if the array is sorted, this is a slow operation!
+    bool IsSorted() const;
     /// clear array (calls destructors)
     void Clear();
     /// reset array (does NOT call destructors)
@@ -113,8 +117,6 @@ public:
     IndexT BinarySearchIndex(const TYPE& elm) const;
 
 private:
-    /// check if index is in valid range, and grow array if necessary
-    void CheckIndex(IndexT index);
     /// destroy an element (call destructor without freeing memory)
     void Destroy(TYPE* elm);
     /// copy content
@@ -201,11 +203,12 @@ Array<TYPE>::Array(SizeT initialSize, SizeT _grow, const TYPE& initialValue) :
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::Copy(const Array<TYPE>& src)
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(0 == this->elements);
+    #endif
 
     this->grow = src.grow;
     this->capacity = src.capacity;
@@ -224,8 +227,7 @@ Array<TYPE>::Copy(const Array<TYPE>& src)
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::Delete()
 {
     this->grow = 0;
@@ -241,8 +243,7 @@ Array<TYPE>::Delete()
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::Destroy(TYPE* elm)
 {
     elm->~TYPE();
@@ -273,8 +274,7 @@ Array<TYPE>::~Array()
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::Reallocate(SizeT _capacity, SizeT _grow)
 {
     this->Delete();
@@ -294,8 +294,7 @@ Array<TYPE>::Reallocate(SizeT _capacity, SizeT _grow)
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void 
+template<class TYPE> void 
 Array<TYPE>::operator=(const Array<TYPE>& rhs)
 {
     if (this != &rhs)
@@ -308,8 +307,7 @@ Array<TYPE>::operator=(const Array<TYPE>& rhs)
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::GrowTo(SizeT newCapacity)
 {
     TYPE* newArray = n_new_array(TYPE, newCapacity);
@@ -332,11 +330,13 @@ Array<TYPE>::GrowTo(SizeT newCapacity)
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::Grow()
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(this->grow > 0);
+    #endif
+
     SizeT growToSize;
     if (0 == this->capacity)
     {
@@ -354,12 +354,13 @@ Array<TYPE>::Grow()
     30-Jan-03   floh    serious bugfixes!
 	07-Dec-04	jo		bugfix: neededSize >= this->capacity => neededSize > capacity	
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::Move(IndexT fromIndex, IndexT toIndex)
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(this->elements);
     n_assert(fromIndex < this->size);
+    #endif
 
     // nothing to move?
     if (fromIndex == toIndex)
@@ -415,8 +416,7 @@ Array<TYPE>::Move(IndexT fromIndex, IndexT toIndex)
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::Append(const TYPE& elm)
 {
     // grow allocated space if exhausted
@@ -424,15 +424,16 @@ Array<TYPE>::Append(const TYPE& elm)
     {
         this->Grow();
     }
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(this->elements);
+    #endif
     this->elements[this->size++] = elm;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::AppendArray(const Array<TYPE>& rhs)
 {
     IndexT i;
@@ -445,63 +446,31 @@ Array<TYPE>::AppendArray(const Array<TYPE>& rhs)
 
 //------------------------------------------------------------------------------
 /**
-    Make room for N new elements at the end of the array, and return a pointer 
-    to the start of the reserved area. This can be (carefully!) used as a fast 
-    shortcut to fill the array directly with data.
+    This increases the capacity to make room for N elements. If the
+    number of elements is known before appending the elements, this 
+    method can be used to prevent reallocation. If there is already
+    enough room for N more elements, nothing will happen.
+    
+    NOTE: the functionality of this method has been changed as of 26-Apr-08,
+    it will now only change the capacity of the array, not its size.
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::Reserve(SizeT num)
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(num > 0);
-    SizeT maxElement = this->size + num;
-    while (maxElement >= this->capacity)
+    #endif
+    SizeT neededCapacity = this->size + num;
+    if (neededCapacity > this->capacity)
     {
-        this->Grow();
-    }
-    n_assert(this->elements);
-    this->size += num;
-}
-
-//------------------------------------------------------------------------------
-/**
-    This will check if the provided index is in the valid range. If it is
-    not the array will be grown to that index.
-*/
-template<class TYPE>
-void
-Array<TYPE>::CheckIndex(IndexT index)
-{
-    if (index >= this->size)
-    {
-        // grow array if necessary
-        if (index >= this->capacity)
-        {
-            n_assert(this->grow > 0);
-            this->GrowTo(index + this->grow);
-        }
-        // update number of contained elements
-        this->size = index + 1;
+        this->GrowTo(neededCapacity);
     }
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
-Array<TYPE>::Set(IndexT index, const TYPE& elm)
-{
-    // make sure the array is big enough
-    this->CheckIndex(index);
-    this->elements[index] = elm;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-template<class TYPE>
-SizeT
+template<class TYPE> SizeT
 Array<TYPE>::Size() const
 {
     return this->size;
@@ -510,8 +479,7 @@ Array<TYPE>::Size() const
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-SizeT
+template<class TYPE> SizeT
 Array<TYPE>::Capacity() const
 {
     return this->capacity;
@@ -519,27 +487,15 @@ Array<TYPE>::Capacity() const
 
 //------------------------------------------------------------------------------
 /**
-    Access an element. This method may grow the array if the index is
-    outside the array range.
-*/
-template<class TYPE>
-TYPE&
-Array<TYPE>::At(IndexT index)
-{
-    this->CheckIndex(index);
-    return this->elements[index];
-}
-
-//------------------------------------------------------------------------------
-/**
     Access an element. This method will NOT grow the array, and instead do
     a range check, which may throw an assertion.
 */
-template<class TYPE>
-TYPE&
+template<class TYPE> TYPE&
 Array<TYPE>::operator[](IndexT index) const
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(this->elements && (index < this->size));
+    #endif
     return this->elements[index];
 }
 
@@ -548,8 +504,7 @@ Array<TYPE>::operator[](IndexT index) const
     The equality operator returns true if all elements are identical. The
     TYPE class must support the equality operator.
 */
-template<class TYPE>
-bool
+template<class TYPE> bool
 Array<TYPE>::operator==(const Array<TYPE>& rhs) const
 {
     if (rhs.Size() == this->Size())
@@ -576,8 +531,7 @@ Array<TYPE>::operator==(const Array<TYPE>& rhs) const
     The inequality operator returns true if at least one element in the 
     array is different, or the array sizes are different.
 */
-template<class TYPE>
-bool
+template<class TYPE> bool
 Array<TYPE>::operator!=(const Array<TYPE>& rhs) const
 {
     return !(*this == rhs);
@@ -586,30 +540,31 @@ Array<TYPE>::operator!=(const Array<TYPE>& rhs) const
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-TYPE&
+template<class TYPE> TYPE&
 Array<TYPE>::Front() const
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(this->elements && (this->size > 0));
+    #endif
     return this->elements[0];
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-TYPE&
+template<class TYPE> TYPE&
 Array<TYPE>::Back() const
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(this->elements && (this->size > 0));
+    #endif
     return this->elements[this->size - 1];
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-bool 
+template<class TYPE> bool 
 Array<TYPE>::IsEmpty() const
 {
     return (this->size == 0);
@@ -618,11 +573,12 @@ Array<TYPE>::IsEmpty() const
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::EraseIndex(IndexT index)
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(this->elements && (index < this->size));
+    #endif
     if (index == (this->size - 1))
     {
         // special case: last element
@@ -636,25 +592,62 @@ Array<TYPE>::EraseIndex(IndexT index)
 }
 
 //------------------------------------------------------------------------------
+/**    
+    NOTE: this method is fast but destroys the sorting order!
+*/
+template<class TYPE> void
+Array<TYPE>::EraseIndexSwap(IndexT index)
+{
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(this->elements && (index < this->size));
+    #endif
+
+    // swap with last element, and destroy last element
+    IndexT lastElementIndex = this->size - 1;
+    if (index < lastElementIndex)
+    {
+        this->elements[index] = this->elements[lastElementIndex];
+    }
+    this->Destroy(&(this->elements[lastElementIndex]));
+    this->size--;
+}
+
+//------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-typename Array<TYPE>::Iterator
+template<class TYPE> typename Array<TYPE>::Iterator
 Array<TYPE>::Erase(typename Array<TYPE>::Iterator iter)
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(this->elements && (iter >= this->elements) && (iter < (this->elements + this->size)));
+    #endif
     this->EraseIndex(IndexT(iter - this->elements));
     return iter;
 }
 
 //------------------------------------------------------------------------------
 /**
+    NOTE: this method is fast but destroys the sorting order!
 */
-template<class TYPE>
-void
+template<class TYPE> typename Array<TYPE>::Iterator
+Array<TYPE>::EraseSwap(typename Array<TYPE>::Iterator iter)
+{
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(this->elements && (iter >= this->elements) && (iter < (this->elements + this->size)));
+    #endif
+    this->EraseSwapIndex(IndexT(iter - this->elements));
+    return iter;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+template<class TYPE> void
 Array<TYPE>::Insert(IndexT index, const TYPE& elm)
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(index <= this->size);
+    #endif
     if (index == this->size)
     {
         // special case: append element to back
@@ -672,8 +665,7 @@ Array<TYPE>::Insert(IndexT index, const TYPE& elm)
     The current implementation of this method does not shrink the 
     preallocated space. It simply sets the array size to 0.
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::Clear()
 {
     IndexT i;
@@ -689,8 +681,7 @@ Array<TYPE>::Clear()
     This is identical with Clear(), but does NOT call destructors (it just
     resets the size member. USE WITH CARE!
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::Reset()
 {
     this->size = 0;
@@ -699,8 +690,7 @@ Array<TYPE>::Reset()
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-typename Array<TYPE>::Iterator
+template<class TYPE> typename Array<TYPE>::Iterator
 Array<TYPE>::Begin() const
 {
     return this->elements;
@@ -709,8 +699,7 @@ Array<TYPE>::Begin() const
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-typename Array<TYPE>::Iterator
+template<class TYPE> typename Array<TYPE>::Iterator
 Array<TYPE>::End() const
 {
     return this->elements + this->size;
@@ -724,8 +713,7 @@ Array<TYPE>::End() const
     @param  elm     element to find
     @return         element iterator, or 0 if not found
 */
-template<class TYPE>
-typename Array<TYPE>::Iterator
+template<class TYPE> typename Array<TYPE>::Iterator
 Array<TYPE>::Find(const TYPE& elm) const
 {
     IndexT index;
@@ -747,8 +735,7 @@ Array<TYPE>::Find(const TYPE& elm) const
     @param  elm     element to find
     @return         index to element, or InvalidIndex if not found
 */
-template<class TYPE>
-IndexT
+template<class TYPE> IndexT
 Array<TYPE>::FindIndex(const TYPE& elm) const
 {
     IndexT index;
@@ -771,8 +758,7 @@ Array<TYPE>::FindIndex(const TYPE& elm) const
     @param  num     num elements to fill
     @param  elm     fill value
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::Fill(IndexT first, SizeT num, const TYPE& elm)
 {
     if ((first + num) > this->size)
@@ -793,8 +779,7 @@ Array<TYPE>::Fill(IndexT first, SizeT num, const TYPE& elm)
 
     @todo this method is broken, check test case to see why!
 */
-template<class TYPE>
-Array<TYPE>
+template<class TYPE> Array<TYPE>
 Array<TYPE>::Difference(const Array<TYPE>& rhs)
 {
     Array<TYPE> diff;
@@ -814,8 +799,7 @@ Array<TYPE>::Difference(const Array<TYPE>& rhs)
 /**
     Sorts the array. This just calls the STL sort algorithm.
 */
-template<class TYPE>
-void
+template<class TYPE> void
 Array<TYPE>::Sort()
 {
     std::sort(this->Begin(), this->End());
@@ -826,8 +810,7 @@ Array<TYPE>::Sort()
     Does a binary search on the array, returns the index of the identical
     element, or InvalidIndex if not found
 */
-template<class TYPE>
-IndexT
+template<class TYPE> IndexT
 Array<TYPE>::BinarySearchIndex(const TYPE& elm) const
 {
     SizeT num = this->Size();
@@ -879,42 +862,141 @@ Array<TYPE>::BinarySearchIndex(const TYPE& elm) const
 
 //------------------------------------------------------------------------------
 /**
-    This inserts the element into a sorted array. In the current
-    implementation this is a slow operation O(n). This should be
-    optimized to O(log n).
+    This tests, whether the array is sorted. This is a slow operation
+    O(n).
 */
-template<class TYPE>
-void
-Array<TYPE>::InsertSorted(const TYPE& elm)
+template<class TYPE> bool
+Array<TYPE>::IsSorted() const
 {
-    if (0 == this->Size())
+    if (this->size > 1)
     {
-        // empty shortcut
-        this->Append(elm);
-    }
-    else if (elm < this->Front())
-    {
-        // front shortcut
-        this->Insert(0, elm);
-    }
-    else if (elm > this->Back())
-    {
-        // back shortcut
-        this->Append(elm);
-    }
-    else
-    {
-        // default case
         IndexT i;
-        for (i = 0; i < this->Size(); i++)
+        for (i = 0; i < this->size - 1; i++)
         {
-            if (elm <= (*this)[i])
+            if (this->elements[i] > this->elements[i + 1])
             {
-                this->Insert(i, elm);
-                break;
+                return false;
             }
         }
     }
+    return true;
+}
+
+//------------------------------------------------------------------------------
+/**
+    This inserts an element at the end of a range of identical elements
+    starting at a given index. Performance is O(n).
+*/
+template<class TYPE> void
+Array<TYPE>::InsertAtEndOfIdenticalRange(IndexT startIndex, const TYPE& elm)
+{
+    IndexT i = startIndex + 1;
+    for (; i < this->size; i++)
+    {
+        if (this->elements[i] != elm)
+        {
+            this->Insert(i, elm);
+            return;
+        }
+    }
+
+    // fallthrough: new element needs to be appended to end
+    this->Append(elm);
+}
+
+//------------------------------------------------------------------------------
+/**
+    This inserts the element into a sorted array. If an identical element
+    was already existing in the array, the method will return false, 
+    but the element will be inserted anyway at the end of the
+    identical range.
+*/
+template<class TYPE> bool
+Array<TYPE>::InsertSorted(const TYPE& elm)
+{
+    SizeT num = this->Size();
+    if (num == 0)
+    {
+        // array is currently empty
+        this->Append(elm);
+        return true;
+    }
+    else
+    {
+        IndexT half;
+        IndexT lo = 0;
+	    IndexT hi = num - 1;
+	    IndexT mid;
+        while (lo <= hi) 
+        {
+            if (0 != (half = num/2)) 
+            {
+                mid = lo + ((num & 1) ? half : (half - 1));
+                if (elm < this->elements[mid])
+                {
+                    hi = mid - 1;
+                    num = num & 1 ? half : half - 1;
+                } 
+                else if (elm > this->elements[mid]) 
+                {
+                    lo = mid + 1;
+                    num = half;
+                } 
+                else
+                {
+                    // element already exists at [mid], append the
+                    // new element to the end of the range
+                    this->InsertAtEndOfIdenticalRange(mid, elm);
+                    return false;
+                }
+            } 
+            else if (0 != num) 
+            {
+                if (elm < this->elements[lo])
+                {
+                    this->Insert(lo, elm);
+                    return true;
+                }
+                else if (elm > this->elements[lo])
+                {
+                    this->Insert(lo + 1, elm);
+                    return true;
+                }
+                else      
+                {
+                    // element already exists at [low], append 
+                    // the new element to the end of the range
+                    this->InsertAtEndOfIdenticalRange(lo, elm);
+                    return false;
+                }
+            } 
+            else 
+            {
+                #if NEBULA3_BOUNDSCHECKS
+                n_assert(0 == lo);
+                #endif
+                this->Insert(lo, elm);
+                return true;
+            }
+        }
+        if (elm < this->elements[lo])
+        {
+            this->Insert(lo, elm);
+            return true;
+        }
+        else if (elm > this->elements[lo])
+        {
+            this->Insert(lo + 1, elm);
+            return true;
+        }
+        else
+        {
+            // can't happen(?)
+            n_assert(false);
+        }
+    }
+    n_assert(false);
+    return true;
 }
 
 } // namespace Core

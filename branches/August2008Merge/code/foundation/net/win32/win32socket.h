@@ -97,6 +97,8 @@ public:
     Win32Socket();
     /// destructor
     virtual ~Win32Socket();
+    /// static initializer method (called by SysFunc::Setup())
+    static void InitNetwork();
 
     /// open the socket
     bool Open(Protocol p);
@@ -175,8 +177,6 @@ public:
 private:
     friend class Win32IpAddress;
 
-    /// static initializer method (called only once)
-    static void InitNetwork();
     /// open with an existing socket (called by Accept())
     void OpenWithExistingSocket(SOCKET s);
     /// clear the last error code

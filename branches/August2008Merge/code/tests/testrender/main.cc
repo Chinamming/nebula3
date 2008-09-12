@@ -14,7 +14,6 @@
 #include "shadertest.h"
 #include "simplemeshmappertest.h"
 #include "simpletexturemappertest.h"
-#include "graphicsservertest.h"
 #include "n2modelloadertest.h"
 
 using namespace Core;
@@ -34,7 +33,6 @@ __cdecl main()
     // setup and run test runner
     Ptr<TestRunner> testRunner = TestRunner::Create();
     testRunner->AttachTestCase(N2ModelLoaderTest::Create());
-	testRunner->AttachTestCase(GraphicsServerTest::Create());
     testRunner->AttachTestCase(LoadMeshTest::Create());
     testRunner->AttachTestCase(LoadTextureTest::Create());
     testRunner->AttachTestCase(ModelLoadSaveTest::Create());

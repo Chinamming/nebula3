@@ -21,8 +21,8 @@ set indent_level 0
 proc begin_noattrs_withtext { name } {
     global indent_level
     indent
-	print "<$name>"
-	incr indent_level
+    print "<$name>"
+    incr indent_level
 }
 
 #-------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ proc end_aftertext { name } {
 #-------------------------------------------------------------------------------
 proc print { str } {
     global indent_level 
-	global cid
+    global cid
     puts -nonewline $cid $str
 }
 
@@ -84,8 +84,8 @@ proc begin { name } {
 proc begin_noattrs { name } {
     global indent_level
     indent
-	print "<$name>\n"
-	incr indent_level
+    print "<$name>\n"
+    incr indent_level
 }
 
 #-------------------------------------------------------------------------------
@@ -251,6 +251,7 @@ proc write_files { configs compilerTool target module_list } {
             
             # add source and header files
             set cur_dir "none"
+            set subLevels 0
             for {set k 0} {$k < [llength $module_list]} {incr k} {
                 set m  [lindex $module_list $k]
                 
@@ -278,6 +279,7 @@ proc write_files { configs compilerTool target module_list } {
                 
                 # create filter for each module and add files
                 set createModuleFilter "false"
+                set endFilter "false"
                 if {$genDirGroups} {
                     # only the last path should be name of the filter
                     set pathList [split $mod($m,name) "/\\"]
@@ -286,6 +288,16 @@ proc write_files { configs compilerTool target module_list } {
                     # do not create the filter if parent filter has the same name                
                     if {($cur_dir != "none") && ($mod_dir_root != $mod($m,dir))} {
                         set createModuleFilter "true"
+                        set endFilter "true"
+                        #check if next module has sublevel
+                        if {([expr $k + 1] < [llength $module_list])} {                        
+                            set nextM  [lindex $module_list [expr $k + 1]]
+                            set nextPathList [split $mod($nextM,name) "/\\"]
+                            if {[llength $pathList] < [llength $nextPathList]} {
+                                incr subLevels
+                                set endFilter "false"
+                            }
+                        }
                     }
                     
                     if {$createModuleFilter == "true"} {
@@ -322,9 +334,27 @@ proc write_files { configs compilerTool target module_list } {
                         end "File"
                     }
                 }
+                #if we are in sublevels
+                if {$subLevels > 0} {
+                    #check if next module has no sublevel, so we have to go up enough levels
+                    set levelDiff 0
+                    if {[expr $k + 1] < [llength $module_list]} {
+                        set nextM  [lindex $module_list [expr $k + 1]]
+                        set nextPathList [split $mod($nextM,name) "/\\"]
+                        set levelDiff [expr [llength $pathList] - [llength $nextPathList]]
+                    } else {
+                       set levelDiff $subLevels 
+                    }
+                    if {$levelDiff > 0} {
+                        for {set iL 0} {$iL < $levelDiff} {incr iL} {
+                            end "Filter"
+                            set subLevels [expr $subLevels - 1]
+                        }
+                    }
+                }
                 
                 # close the module filter if created
-                if {$genDirGroups && $createModuleFilter == "true"} {
+                if {$genDirGroups && $endFilter == "true"} {
                     end "Filter"
                 }
             }

@@ -72,7 +72,7 @@ InputServerBase::Close()
     // release default input handlers
     this->defaultKeyboard = 0;
     this->defaultMouse = 0;
-    this->defaultGamePad.Clear(0);
+    this->defaultGamePad.Fill(0);
 
     this->isOpen = false;
 }

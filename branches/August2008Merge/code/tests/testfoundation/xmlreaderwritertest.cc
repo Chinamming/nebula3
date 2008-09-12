@@ -56,7 +56,8 @@ XmlReaderWriterTest::Run()
 
         writer->BeginNode("Node3");
         matrix44 m = matrix44::identity();
-        m.setrow3(float4(10.0,20.0, 30.0, 1.0f));
+        float4 value(10.0,20.0, 30.0, 1.0f);
+        m.setrow3(value);
         writer->SetMatrix44("attr", m);
         writer->EndNode();
     }

@@ -133,7 +133,7 @@ Win32Timer::GetTime() const
 /**
     This returns the timer's current time in "ticks".
 */
-uint
+Timing::Tick
 Win32Timer::GetTicks() const
 {
     // get the current real time
@@ -144,7 +144,7 @@ Win32Timer::GetTicks() const
     QueryPerformanceFrequency((LARGE_INTEGER*) &freq);
 
     __int64 ticks64 = time / (freq / 100000);
-    return (uint) ticks64;
+    return (Timing::Tick) ticks64;
 }
 
 } // namespace Win32

@@ -14,12 +14,14 @@
 #include "io/ioserver.h"
 #include "interface/iointerface.h"
 #include "appgame/appconfig.h"
+#include "debug/debuginterface.h"
 
-#if __USE_SCRIPTING__
+#if __NEBULA3_SCRIPTING__
 #include "scripting/scriptserver.h"
 #endif
-#if __USE_HTTP__
-#include "http/httpserver.h"
+#if __NEBULA3_HTTP__
+#include "http/httpinterface.h"
+#include "http/httpserverproxy.h"
 #endif
 
 //------------------------------------------------------------------------------
@@ -47,13 +49,15 @@ public:
         
 protected:
     Ptr<Core::CoreServer> coreServer;
+    Ptr<Debug::DebugInterface> debugInterface;
     Ptr<IO::IoServer> ioServer;
     Ptr<Interface::IOInterface> ioInterface;  
-#if __USE_SCRIPTING__    
+#if __NEBULA3_SCRIPTING__    
     Ptr<Scripting::ScriptServer> scriptServer; 
 #endif    
-#if __USE_HTTP__
-    Ptr<Http::HttpServer> httpServer;
+#if __NEBULA3_HTTP__
+    Ptr<Http::HttpInterface> httpInterface;
+    Ptr<Http::HttpServerProxy> httpServerProxy;
 #endif
 };
 

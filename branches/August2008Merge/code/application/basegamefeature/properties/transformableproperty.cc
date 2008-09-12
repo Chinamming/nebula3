@@ -6,7 +6,7 @@
 #include "properties/transformableproperty.h"
 #include "game/entity.h"
 #include "basegameattr/basegameattributes.h"
-#include "msg/settransform.h"
+#include "basegameprotocol.h"
 
 namespace BaseGameFeature
 {

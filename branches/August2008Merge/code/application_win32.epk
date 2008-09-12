@@ -2,9 +2,12 @@
 #   application_win32.epk
 #   (C) 2007 Radon Labs GmbH
 #-------------------------------------------------------------------------------
-begintarget nidls_win32
+begintarget application_nidls_win32
     settype lib
     setbasedir application
+    setnidlclusters {
+        graphicsfeature physicsfeature basegamefeature
+    }
 endtarget
 
 begintarget application_win32
@@ -12,12 +15,15 @@ begintarget application_win32
     setbasedir application
     setprecompiledheader stdneb
     setincpath_win32 "../foundation;../application;../application/basegamefeature;../application/corefeature;../application/graphicsfeature;../application/physicsfeature;../render;../extlibs;../addons;../extlibs/ode;"
+    setdepends {
+        application_nidls_win32
+    }
     setclusters {
         appgame
         game
         corefeature
-        basegamefeature basegamefeature/managers basegamefeature/basegametiming basegamefeature/loader basegamefeature/properties basegamefeature/msg basegamefeature/basegameattr
-        graphicsfeature graphicsfeature/properties graphicsfeature/msg graphicsfeature/graphicsattr graphicsfeature/graphicsutil
-        physicsfeature physicsfeature/properties physicsfeature/msg physicsfeature/physicsattr
+        basegamefeature basegamefeature/managers basegamefeature/basegametiming basegamefeature/loader basegamefeature/properties basegamefeature/basegameattr basegamefeature/debug
+        graphicsfeature graphicsfeature/properties graphicsfeature/graphicsattr graphicsfeature/graphicsutil
+        physicsfeature physicsfeature/properties physicsfeature/physicsattr
     }
 endtarget            

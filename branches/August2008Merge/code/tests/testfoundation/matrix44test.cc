@@ -63,10 +63,14 @@ Matrix44Test::Run()
            float4(0.0f, 2.0f, 0.0f, 0.0f),
            float4(0.0f, 0.0f, 2.0f, 0.0f),
            float4(0.0f, 0.0f, 0.0f, 1.0f));
-    m1.setrow0(float4(2.0f, 0.0f, 0.0f, 0.0f));
-    m1.setrow1(float4(0.0f, 2.0f, 0.0f, 0.0f));
-    m1.setrow2(float4(0.0f, 0.0f, 2.0f, 0.0f));
-    m1.setrow3(float4(0.0f, 0.0f, 0.0f, 1.0f));
+    float4 value(2.0f, 0.0f, 0.0f, 0.0f);
+    m1.setrow0(value);
+    value = float4(0.0f, 2.0f, 0.0f, 0.0f);
+    m1.setrow1(value);
+    value = float4(0.0f, 0.0f, 2.0f, 0.0f);
+    m1.setrow2(value);
+    value = float4(0.0f, 0.0f, 0.0f, 1.0f);
+    m1.setrow3(value);
     this->Verify(m0 == m1);
     this->Verify(m0.getrow0() == float4(2.0f, 0.0f, 0.0f, 0.0f));
     this->Verify(m0.getrow1() == float4(0.0f, 2.0f, 0.0f, 0.0f));

@@ -22,8 +22,12 @@ begintarget nebula2_win32
     settype lib
     setbasedir addons
     setprecompiledheader stdneb
-    setincpath_win32 "../foundation;../extlibs;../render;../addons;../nebula2;../nebula2/character;../nebula2/anim;../character;../anim;../nebula2/particle"    
-    setclusters { nebula2 nebula2/anim nebula2/character nebula2/particle }
+    setincpath_win32 "../foundation;../extlibs;../render;../addons;../nebula2;../nebula2/character;../nebula2/anim;../character;../anim"    
+    setclusters { nebula2 
+                  nebula2/anim 
+                  nebula2/character 
+                  nebula2/character/base 
+                  nebula2/character/d3d9  }
 endtarget
 
 begintarget physics_win32

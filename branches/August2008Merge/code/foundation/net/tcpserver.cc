@@ -97,10 +97,10 @@ TcpServer::AddClientConnection(const Ptr<TcpClientConnection>& conn)
 //------------------------------------------------------------------------------
 /**
 */
-Array<Ptr<TcpClientConnection>>
+Array<Ptr<TcpClientConnection> >
 TcpServer::Recv()
 {
-    Array<Ptr<TcpClientConnection>> clientsWithData;
+    Array<Ptr<TcpClientConnection> > clientsWithData;
 
     // iterate over all clients, and check for new data,
     // if the client connection has been closed, remove

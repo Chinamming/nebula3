@@ -4,23 +4,24 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "graphics/stage.h"
-#include "graphics/stagebuilder.h"
-#include "graphics/cell.h"
-#include "graphics/cameraentity.h"
-#include "timing/timer.h"
+#include "graphics/graphicsprotocol.h"
+#include "graphics/graphicsinterface.h"
+#include "graphics/graphicsentitytype.h"
+#include "internalgraphics/simplestagebuilder.h"
 
 namespace Graphics
 {
 ImplementClass(Graphics::Stage, 'GSTG', Core::RefCounted);
 
 using namespace Util;
+using namespace Messaging;
 
 //------------------------------------------------------------------------------
 /**
 */
 Stage::Stage() :
-    isAttachedToServer(false),
-    updateEntitiesFrameCount(InvalidIndex)
+    stageBuilderClass(&InternalGraphics::SimpleStageBuilder::RTTI),
+    stageHandle(0)
 {
     // empty
 }
@@ -30,152 +31,71 @@ Stage::Stage() :
 */
 Stage::~Stage()
 {
-    // make sure we've been properly cleaned up
-    n_assert(!this->IsAttachedToServer());
-    n_assert(!this->rootCell.isvalid());
-    n_assert(!this->stageBuilder.isvalid());
-    n_assert(this->entities.IsEmpty());
-    IndexT i;
-    for (i = 0; i < GraphicsEntity::NumTypes; i++)
-    {
-        n_assert(this->entitiesByType[i].IsEmpty());
-    }
-}
-
-//------------------------------------------------------------------------------
-/**
-    Setting a root cell will also initialize it.
-*/
-void
-Stage::SetRootCell(const Ptr<Cell>& cell)
-{
-    n_assert(!this->rootCell.isvalid());
-    this->rootCell = cell;
-    this->rootCell->OnAttachToStage(this);
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-const Ptr<Cell>&
-Stage::GetRootCell() const
-{
-    return this->rootCell;
+    n_assert(!this->IsValid());
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-Stage::SetStageBuilder(const Ptr<StageBuilder>& b)
+Stage::Setup()
 {
-    this->stageBuilder = b;
-}
+    n_assert(0 != this->stageBuilderClass);
+    n_assert(!this->IsValid());
+    n_assert(this->name.Value().IsValid());
 
-//------------------------------------------------------------------------------
-/**
-*/
-const Ptr<StageBuilder>&
-Stage::GetStageBuilder() const
-{
-    return this->stageBuilder;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-Stage::OnAttachToServer()
-{
-    n_assert(!this->IsAttachedToServer());
-    this->isAttachedToServer = true;
-
-    // if a stage builder has been set, ask it to initialize us,
-    // otherwise require a valid root cell
-    if (this->stageBuilder.isvalid())
-    {
-        this->stageBuilder->BuildStage(this);
-    }
-    n_assert(this->rootCell.isvalid());
-    n_assert(this->rootCell->IsAttachedToStage());
+    // send a CreateGraphicsStage message and wait for completion 
+    Ptr<Graphics::CreateGraphicsStage> msg = Graphics::CreateGraphicsStage::Create();
+    msg->SetName(this->name);
+    msg->SetStageBuilderClass(this->stageBuilderClass);
+    msg->SetStageBuilderAttrs(this->stageBuilderAttrs);
+    GraphicsInterface::Instance()->SendWait(msg.cast<Message>());
+    n_assert(msg->Handled());
+    this->stageHandle = msg->GetResult();
+    n_assert(0 != this->stageHandle);
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-Stage::OnRemoveFromServer()
+Stage::Discard()
 {
-    n_assert(this->IsAttachedToServer());
-    n_assert(this->rootCell.isvalid());
+    n_assert(this->IsValid());
 
-    // properly shutdown root cell
-    n_assert(this->rootCell->IsAttachedToStage());
-    this->rootCell->OnRemoveFromStage();
-    this->rootCell = 0;
-
-    // properly cleanup entities
-    IndexT entityIndex;
-    for (entityIndex = 0; entityIndex < this->entities.Size(); entityIndex++)
-    {
-        const Ptr<GraphicsEntity> curEntity = this->entities[entityIndex];
-        curEntity->OnRemoveFromStage();
-        curEntity->OnDeactivate();
-    }
-    this->entities.Clear();
-    IndexT typeIndex;
-    for (typeIndex = 0; typeIndex < GraphicsEntity::NumTypes; typeIndex++)
-    {
-        this->entitiesByType[typeIndex].Clear();
-    }
-
-    // release stage builder
-    this->stageBuilder = 0;
-
-    this->isAttachedToServer = false;
+    // send a DiscardGraphicsStage message and wait for completion
+    Ptr<DiscardGraphicsStage> msg = DiscardGraphicsStage::Create();
+    msg->SetStageHandle(this->stageHandle);
+    GraphicsInterface::Instance()->SendWait(msg.cast<Message>());
+    this->stageHandle = 0;
 }
 
 //------------------------------------------------------------------------------
 /**
-    Add an entity to the stage. The method OnAttachToStage() will be
-    invoked on the entity, and the entity will be inserted into 
-    the cell hierarchy of the stage (which in turn call OnAttachToCell()
-    on the entity).
 */
 void
 Stage::AttachEntity(const Ptr<GraphicsEntity>& entity)
 {
-    n_assert(!entity->IsActive());
-    n_assert(!entity->IsAttachedToStage());
-    n_assert(entity->GetType() < GraphicsEntity::NumTypes);
+    n_assert(!entity->IsValid());
+    n_assert(entity->GetType() < GraphicsEntityType::NumTypes);
 
     this->entities.Append(entity);
     this->entitiesByType[entity->GetType()].Append(entity);
-    entity->OnActivate();
-    entity->OnAttachToStage(this);
-    this->rootCell->InsertEntity(entity);
+    this->pendingEntities.Append(entity);
+    entity->Setup(this);
 }
 
 //------------------------------------------------------------------------------
 /**
-    Remove an entity from the stage. This will remove the entity from
-    the cell hierarchy of the stage (which invoked OnRemoveFromCell()
-    on the entity), and then the method OnRemoveFromStage() will
-    be called on the entity.
 */
 void
 Stage::RemoveEntity(const Ptr<GraphicsEntity>& entity)
 {
-    n_assert(entity->IsActive());
-    n_assert(entity->IsAttachedToStage());
+    n_assert(entity->IsValid());
     n_assert(entity->GetStage().get() == this);
-    n_assert(entity->IsAttachedToCell());
-    n_assert(entity->GetType() < GraphicsEntity::NumTypes);
+    n_assert(entity->GetType() < GraphicsEntityType::NumTypes);
 
-    // first remove entity from its cell, stage and deactivate it
-    entity->GetCell()->RemoveEntity(entity);
-    entity->OnRemoveFromStage();
-    entity->OnDeactivate();
+    entity->Discard();
 
     IndexT entitiesIndex = this->entities.FindIndex(entity);
     n_assert(InvalidIndex != entitiesIndex);
@@ -184,94 +104,37 @@ Stage::RemoveEntity(const Ptr<GraphicsEntity>& entity)
     IndexT entitiesByTypeIndex = this->entitiesByType[entity->GetType()].FindIndex(entity);
     n_assert(InvalidIndex != entitiesByTypeIndex);
     this->entitiesByType[entity->GetType()].EraseIndex(entitiesByTypeIndex);
+
+    IndexT pendingEntitiesIndex = this->pendingEntities.FindIndex(entity);
+    if (InvalidIndex != pendingEntitiesIndex)
+    {
+        this->pendingEntities.EraseIndex(pendingEntitiesIndex);
+    }
 }
 
 //------------------------------------------------------------------------------
 /**
-    Update the entities in the stage. This usually implements graphics
-    animations, etc... This method must be called first after
-    BeginUpdate() and before any of the visibility link update methods to 
-    make sure entity transforms and bounding boxes are uptodate before resolving 
-    visibility.
-
-    FIXME: this is no good for worlds with many static entities, entities should
-    know whether they need to have their Update method called, and
-    register themselves somewhere!
+    The per-frame method. This will validate each pending entity (an entity
+    whose server-side internal entity hasn't been created yet).
 */
 void
-Stage::UpdateEntities(Timing::Time curTime, IndexT curFrameCount)
+Stage::OnFrame()
 {
-    // check if entities have already been updated for this frame
-    if (curFrameCount != this->updateEntitiesFrameCount)
+    n_assert(this->IsValid());
+
+    // validate pending entities
+    IndexT i;
+    for (i = 0; i < this->pendingEntities.Size();)
     {
-        this->updateEntitiesFrameCount = curFrameCount;
-        IndexT entityIndex;
-        SizeT numEntities = this->entities.Size();
-        for (entityIndex = 0; entityIndex < numEntities; entityIndex++)
+        this->pendingEntities[i]->ValidateEntityHandle(false);
+        if (this->pendingEntities[i]->IsEntityHandleValid())
         {
-            this->entities[entityIndex]->SetTime(curTime);
-            this->entities[entityIndex]->OnUpdate();
+            // this entity is now valid, remove it from the pending array
+            this->pendingEntities.EraseIndex(i);
         }
-    }
-}
-
-//------------------------------------------------------------------------------
-/**
-    Update visibility links for a given camera. This will create bidirectional
-    visibility links between the camera and all other entities (most importantly
-    light and model entities) which are visible through this camera. This
-    method must be called once for each active camera after UpdateEntities()
-    and before UpdateVisibleLightLinks().
-*/
-void
-Stage::UpdateCameraLinks(const Ptr<CameraEntity>& cameraEntity)
-{
-    n_assert(cameraEntity.isvalid());
-
-    // clear camera links in all entities
-    IndexT entityIndex;
-    SizeT numEntities = this->entities.Size();
-    for (entityIndex = 0; entityIndex < numEntities; entityIndex++)
-    {
-        this->entities[entityIndex]->ClearLinks(GraphicsEntity::CameraLink);
-    }
-
-    if (cameraEntity.isvalid())
-    {
-        // resolve visible model and light entities from this camera
-        uint entityTypeMask = (1 << GraphicsEntity::ModelType) | (1 << GraphicsEntity::LightType);
-        this->rootCell->UpdateLinks(cameraEntity.upcast<GraphicsEntity>(), entityTypeMask, GraphicsEntity::CameraLink);
-    }
-}
-
-//------------------------------------------------------------------------------
-/**
-    For each visible light entity, this method will create light links
-    between the light entities, and model entities influenced by 
-    this light. This method must be called after UpdateCameraLinks() (this
-    makes sure that no invisible lights and models will be checked).
-*/
-void
-Stage::UpdateLightLinks()
-{
-    // clear light links in all entities
-    IndexT entityIndex;
-    SizeT numEntities = this->entities.Size();
-    for (entityIndex = 0; entityIndex < numEntities; entityIndex++)
-    {
-        this->entities[entityIndex]->ClearLinks(GraphicsEntity::LightLink);
-    }
-
-    // for each visible light...
-    const Array<Ptr<GraphicsEntity> >& lightEntities = this->entitiesByType[GraphicsEntity::LightType];
-    IndexT lightIndex;
-    for (lightIndex = 0; lightIndex < lightEntities.Size(); lightIndex++)
-    {
-        const Ptr<GraphicsEntity>& lightEntity = lightEntities[lightIndex];
-        if (lightEntity->GetLinks(GraphicsEntity::CameraLink).Size() > 0)
+        else
         {
-            // find model entities influenced by this light
-            this->rootCell->UpdateLinks(lightEntity, (1<<GraphicsEntity::ModelType), GraphicsEntity::LightLink);
+            i++;
         }
     }
 }

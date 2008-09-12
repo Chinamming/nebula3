@@ -176,7 +176,7 @@ transform44::getmatrix()
     if (this->isDirty)
     {
         quaternion ident = quaternion::identity();
-        this->matrix = matrix44::transformation(this->scale, ident, this->scale, this->rotatePivot, this->rotate, this->position);
+        this->matrix = matrix44::transformation(this->scalePivot, ident, this->scale, this->rotatePivot, this->rotate, this->position);
         this->isDirty = false;
     }
     return this->matrix;

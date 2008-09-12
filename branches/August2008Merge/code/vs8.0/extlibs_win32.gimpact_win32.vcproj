@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="gimpact_win32"
-	ProjectGUID="{C85DF2CE-2DCD-4D80-9095-535F94F1E6BC}"
+	ProjectGUID="{192D8DAB-F180-4F7E-B930-5539861E1243}"
 	>
 	<Platforms>
 		<Platform

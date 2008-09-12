@@ -10,8 +10,9 @@
     (C) 2006 Radon Labs GmbH
 */
 #include "apprender/viewerapplication.h"
-#include "lighting/spotlightentity.h"
+#include "graphics/spotlightentity.h"
 #include "graphics/modelentity.h"
+#include "graphics/globallightentity.h"
 
 //------------------------------------------------------------------------------
 namespace Tools
@@ -33,10 +34,9 @@ private:
     virtual void OnUpdateFrame();
 
     Ptr<Graphics::ModelEntity> ground;
-    Ptr<Graphics::ModelEntity> head;
-    Ptr<Lighting::GlobalLightEntity> globalLight;
-    Ptr<Lighting::SpotLightEntity> localLight0;
-    Ptr<Lighting::SpotLightEntity> localLight1;
+    Ptr<Graphics::ModelEntity> model;
+    Ptr<Graphics::GlobalLightEntity> globalLight;
+    Ptr<Graphics::SpotLightEntity> localLight0;
 };
 
 } // namespace Test

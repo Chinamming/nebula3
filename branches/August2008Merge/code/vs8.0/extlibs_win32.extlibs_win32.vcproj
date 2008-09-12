@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="extlibs_win32"
-	ProjectGUID="{4381F24A-6DA2-40A1-ACBB-4DBB9860303F}"
+	ProjectGUID="{BF38ACDD-0E97-415E-9389-65D55E3CDF7C}"
 	>
 	<Platforms>
 		<Platform

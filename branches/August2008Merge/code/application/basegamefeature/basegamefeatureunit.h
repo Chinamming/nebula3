@@ -32,6 +32,7 @@
 #if __USE_PHYSICS__
 #include "managers/envquerymanager.h"
 #endif
+
 //------------------------------------------------------------------------------
 namespace BaseGameFeature
 {

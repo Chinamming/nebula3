@@ -6,20 +6,20 @@
 #include "corefeature/corefeatureunit.h"
 #include "app/application.h"
 #include "io/filestream.h"
-#include "memory/debug/memorypagehandler.h"
 
-#if __USE_SCRIPTING__
+#if __NEBULA3_SCRIPTING__
 #include "scripting/lua/luaserver.h"
 #include "commands/iolibrary.h"
 #include "commands/stdlibrary.h"
 #endif
 
-#if __USE_HTTP__
+#if __NEBULA3_HTTP__
 #include "io/debug/iopagehandler.h"
 #include "core/debug/corepagehandler.h"
+#include "memory/debug/memorypagehandler.h"
 #endif
 
-#if __USE_HTTP__ && __USE_SCRIPTING__
+#if __NEBULA3_HTTP__ && __NEBULA3_SCRIPTING__
 #include "scripting/debug/scriptingpagehandler.h"
 #endif
 
@@ -34,6 +34,7 @@ ImplementSingleton(CoreFeatureUnit);
 
 using namespace App;
 using namespace Core;
+using namespace Debug;
 using namespace Util;
 using namespace Math;
 using namespace IO;
@@ -106,17 +107,22 @@ CoreFeatureUnit::OnActivate()
         this->ioInterface->Send(mountZipArchiveMsg.upcast<Messaging::Message>());
     }
 
-#if __USE_HTTP__
-    // setup debug http server
-    this->httpServer = Http::HttpServer::Create();
-    this->httpServer->Open();
-    this->httpServer->AttachRequestHandler(Debug::MemoryPageHandler::Create());
-    this->httpServer->AttachRequestHandler(Debug::CorePageHandler::Create());
-    this->httpServer->AttachRequestHandler(Debug::IoPageHandler::Create());
-    this->httpServer->AttachRequestHandler(Debug::ScriptingPageHandler::Create());
+#if __NEBULA3_HTTP__
+    // setup http subsystem
+    this->httpInterface = Http::HttpInterface::Create();
+    this->httpInterface->Open();
+    this->httpServerProxy = Http::HttpServerProxy::Create();
+    this->httpServerProxy->Open();
+    this->httpServerProxy->AttachRequestHandler(Debug::CorePageHandler::Create());
+    this->httpServerProxy->AttachRequestHandler(Debug::MemoryPageHandler::Create());
+    this->httpServerProxy->AttachRequestHandler(Debug::IoPageHandler::Create());
 #endif    
 
-#if __USE_SCRIPTING__    
+    // setup debug subsystem
+    this->debugInterface = DebugInterface::Create();
+    this->debugInterface->Open();
+
+#if __NEBULA3_SCRIPTING__    
     // setup scripting subsystem
     this->scriptServer = Scripting::LuaServer::Create();
     this->scriptServer->Open();
@@ -131,14 +137,19 @@ CoreFeatureUnit::OnActivate()
 void
 CoreFeatureUnit::OnDeactivate()
 {    
-#if __USE_SCRIPTING__ 
+#if __NEBULA3_SCRIPTING__ 
     this->scriptServer->Close();
     this->scriptServer = 0;
 #endif
 
-#if __USE_HTTP__
-    this->httpServer->Close();
-    this->httpServer = 0;
+    this->debugInterface->Close();
+    this->debugInterface = 0;
+
+#if __NEBULA3_HTTP__
+    this->httpServerProxy->Close();
+    this->httpServerProxy = 0;
+    this->httpInterface->Close();
+    this->httpInterface = 0;
 #endif
         
     this->ioInterface->Close();
@@ -157,8 +168,8 @@ CoreFeatureUnit::OnDeactivate()
 void
 CoreFeatureUnit::OnBeginFrame()
 {  
-#if __USE_HTTP__
-    this->httpServer->OnFrame(); 
+#if __NEBULA3_HTTP__
+    this->httpServerProxy->HandlePendingRequests(); 
 #endif
 }
 

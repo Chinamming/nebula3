@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="nebula2_win32"
-	ProjectGUID="{6D4FBE12-3B5E-4BE7-A20A-59FEA6698E2B}"
+	ProjectGUID="{FAFCADFB-6E79-446A-999A-416D6E1BF74F}"
 	>
 	<Platforms>
 		<Platform
@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				additionalOptions=""
 				Optimization="0"
-				AdditionalIncludeDirectories="..;../foundation;../extlibs;../render;../addons;../nebula2;../nebula2/character;../nebula2/anim;../character;../anim;../nebula2/particle ;"
+				AdditionalIncludeDirectories="..;../foundation;../extlibs;../render;../addons;../nebula2;../nebula2/character;../nebula2/anim;../character;../anim ;"
 				PreprocessorDefinitions="__WIN32__;WIN32;_DEBUG;NT_PLUGIN;_HAS_EXCEPTIONS=0;"
 				StringPooling="true"
 				MinimalRebuild="true"
@@ -129,7 +129,7 @@
 				FavorSizeOrSpeed="2"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="..;../foundation;../extlibs;../render;../addons;../nebula2;../nebula2/character;../nebula2/anim;../character;../anim;../nebula2/particle ;"
+				AdditionalIncludeDirectories="..;../foundation;../extlibs;../render;../addons;../nebula2;../nebula2/character;../nebula2/anim;../character;../anim ;"
 				PreprocessorDefinitions="__WIN32__;WIN32;NT_PLUGIN;_HAS_EXCEPTIONS=0;"
 				StringPooling="true"
 				ExceptionHandling="0"
@@ -278,6 +278,14 @@
 				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 				>
 				<File
+					RelativePath="..\addons\nebula2/character\characterrenderer.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\addons\nebula2/character\characterrenderer.h"
+					>
+				</File>
+				<File
 					RelativePath="..\addons\nebula2/character\characterserver.cc"
 					>
 				</File>
@@ -325,47 +333,32 @@
 					RelativePath="..\addons\nebula2/character\skininfo.h"
 					>
 				</File>
-			</Filter>
-			<Filter
-				Name="particle"
-				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
-				>
-				<File
-					RelativePath="..\addons\nebula2/particle\envelopecurve.h"
+				<Filter
+					Name="base"
+					Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 					>
-				</File>
-				<File
-					RelativePath="..\addons\nebula2/particle\ndynamicmesh.cc"
+					<File
+						RelativePath="..\addons\nebula2/character/base\characterrendererbase.cc"
+						>
+					</File>
+					<File
+						RelativePath="..\addons\nebula2/character/base\characterrendererbase.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="d3d9"
+					Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 					>
-				</File>
-				<File
-					RelativePath="..\addons\nebula2/particle\ndynamicmesh.h"
-					>
-				</File>
-				<File
-					RelativePath="..\addons\nebula2/particle\nparticle2.h"
-					>
-				</File>
-				<File
-					RelativePath="..\addons\nebula2/particle\nparticle2emitter.h"
-					>
-				</File>
-				<File
-					RelativePath="..\addons\nebula2/particle\nparticle2emitter_main.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\addons\nebula2/particle\nparticleserver2.h"
-					>
-				</File>
-				<File
-					RelativePath="..\addons\nebula2/particle\nparticleserver2_main.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\addons\nebula2/particle\vector3envelopecurve.h"
-					>
-				</File>
+					<File
+						RelativePath="..\addons\nebula2/character/d3d9\d3d9characterrenderer.cc"
+						>
+					</File>
+					<File
+						RelativePath="..\addons\nebula2/character/d3d9\d3d9characterrenderer.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

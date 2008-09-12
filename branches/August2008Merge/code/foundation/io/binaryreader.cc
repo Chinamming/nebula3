@@ -18,7 +18,6 @@ using namespace System;
 BinaryReader::BinaryReader() :
     enableMapping(false),
     isMapped(false),
-    streamByteOrder(ByteOrder::Host),
     mapCursor(0),
     mapEnd(0)
 {
@@ -117,29 +116,20 @@ BinaryReader::ReadUChar()
 short
 BinaryReader::ReadShort()
 {
+    short val;
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(short)) <= this->mapEnd);        
-        short val;
         Memory::Copy(this->mapCursor, &val, sizeof(val));
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertShort(this->streamByteOrder, ByteOrder::Host, val);
-        }
         this->mapCursor += sizeof(val);
-        return val;
     }
     else
     {
-        short val;
         this->stream->Read(&val, sizeof(val));
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertShort(this->streamByteOrder, ByteOrder::Host, val);
-        }
-        return val;
     }
+    this->byteOrder.Convert<short>(val);
+    return val;
 }
 
 //------------------------------------------------------------------------------
@@ -148,29 +138,20 @@ BinaryReader::ReadShort()
 unsigned short
 BinaryReader::ReadUShort()
 {
+    ushort val;
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(unsigned short)) <= this->mapEnd);
-        unsigned short val;
         Memory::Copy(this->mapCursor, &val, sizeof(val));
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertUShort(this->streamByteOrder, ByteOrder::Host, val);
-        }
         this->mapCursor += sizeof(val);
-        return val;
     }
     else
     {
-        unsigned short val;
         this->stream->Read(&val, sizeof(val));
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertUShort(this->streamByteOrder, ByteOrder::Host, val);
-        }
-        return val;
     }
+    this->byteOrder.Convert<ushort>(val);
+    return val;
 }
 
 //------------------------------------------------------------------------------
@@ -179,29 +160,20 @@ BinaryReader::ReadUShort()
 int
 BinaryReader::ReadInt()
 {
+    int val;
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(int)) <= this->mapEnd);
-        int val;
         Memory::Copy(this->mapCursor, &val, sizeof(val));
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertInt(this->streamByteOrder, ByteOrder::Host, val);
-        }
         this->mapCursor += sizeof(val);
-        return val;
     }
     else
     {
-        int val;
         this->stream->Read(&val, sizeof(val));
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertInt(this->streamByteOrder, ByteOrder::Host, val);
-        }
-        return val;
     }
+    this->byteOrder.Convert<int>(val);
+    return val;
 }
 
 //------------------------------------------------------------------------------
@@ -210,29 +182,20 @@ BinaryReader::ReadInt()
 unsigned int
 BinaryReader::ReadUInt()
 {
+    uint val;
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(unsigned int)) <= this->mapEnd);
-        unsigned int val;
         Memory::Copy(this->mapCursor, &val, sizeof(val));
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertUInt(this->streamByteOrder, ByteOrder::Host, val);
-        }
         this->mapCursor += sizeof(val);
-        return val;
     }
     else
     {
-        unsigned int val;
         this->stream->Read(&val, sizeof(val));
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertUInt(this->streamByteOrder, ByteOrder::Host, val);
-        }
-        return val;
     }
+    this->byteOrder.Convert<uint>(val);
+    return val;
 }
 
 //------------------------------------------------------------------------------
@@ -241,29 +204,20 @@ BinaryReader::ReadUInt()
 float
 BinaryReader::ReadFloat()
 {
+    float val;
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(float)) <= this->mapEnd);
-        float val;
         Memory::Copy(this->mapCursor, &val, sizeof(val));
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertFloat(this->streamByteOrder, ByteOrder::Host, val);
-        }
         this->mapCursor += sizeof(val);
-        return val;
     }
     else
     {
-        float val;
         this->stream->Read(&val, sizeof(val));
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertFloat(this->streamByteOrder, ByteOrder::Host, val);
-        }
-        return val;
     }
+    this->byteOrder.Convert<float>(val);
+    return val;
 }
 
 //------------------------------------------------------------------------------
@@ -272,29 +226,20 @@ BinaryReader::ReadFloat()
 double
 BinaryReader::ReadDouble()
 {
+    double val;
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(double)) <= this->mapEnd);
-        double val;
         Memory::Copy(this->mapCursor, &val, sizeof(val));
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertDouble(this->streamByteOrder, ByteOrder::Host, val);
-        }
         this->mapCursor += sizeof(val);
-        return val;
     }
     else
     {
-        double val;
         this->stream->Read(&val, sizeof(val));
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertDouble(this->streamByteOrder, ByteOrder::Host, val);
-        }
-        return val;
     }
+    this->byteOrder.Convert<double>(val);
+    return val;
 }
 
 //------------------------------------------------------------------------------
@@ -303,21 +248,19 @@ BinaryReader::ReadDouble()
 bool
 BinaryReader::ReadBool()
 {
+    bool val;
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(bool)) <= this->mapEnd);
-        bool val;
         Memory::Copy(this->mapCursor, &val, sizeof(val));
         this->mapCursor += sizeof(val);
-        return val;
     }
     else
     {
-        bool b;
-        this->stream->Read(&b, sizeof(b));
-        return b;
+        this->stream->Read(&val, sizeof(val));        
     }
+    return val;
 }
 
 //------------------------------------------------------------------------------
@@ -394,29 +337,20 @@ BinaryReader::ReadGuid()
 Math::float4
 BinaryReader::ReadFloat4()
 {
+    Math::float4 val;
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(Math::float4)) <= this->mapEnd);
-        Math::float4 val;
         Memory::Copy(this->mapCursor, &val, sizeof(val));     
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertFloat4(this->streamByteOrder, ByteOrder::Host, val);
-        }
         this->mapCursor += sizeof(val);
-        return val;
     }
     else
     {
-        Math::float4 val;
         this->stream->Read(&val, sizeof(val));
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertFloat4(this->streamByteOrder, ByteOrder::Host, val);
-        }
-        return val;
     }
+    this->byteOrder.Convert<Math::float4>(val);
+    return val;
 }
 
 //------------------------------------------------------------------------------
@@ -425,29 +359,20 @@ BinaryReader::ReadFloat4()
 Math::matrix44
 BinaryReader::ReadMatrix44()
 {
+    Math::matrix44 val;
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(Math::matrix44)) <= this->mapEnd);
-        Math::matrix44 val;
         Memory::Copy(this->mapCursor, &val, sizeof(val));        
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertMatrix44(this->streamByteOrder, ByteOrder::Host, val);
-        }
         this->mapCursor += sizeof(val);
-        return val;
     }
     else
     {
-        Math::matrix44 val;
         this->stream->Read(&val, sizeof(val));
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            val = ByteOrder::ConvertMatrix44(this->streamByteOrder, ByteOrder::Host, val);
-        }
-        return val;
     }
+    this->byteOrder.Convert<Math::matrix44>(val);
+    return val;
 }
 
 } // namespace IO

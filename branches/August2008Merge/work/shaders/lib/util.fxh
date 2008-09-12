@@ -108,4 +108,35 @@ psWorldSpaceNormalFromBumpMap(sampler bumpMapSampler, float2 uv, float3 worldNor
 }
 
 //------------------------------------------------------------------------------
+/**
+    Unpack a UB4N packed normal.
+*/
+float3
+UnpackNormal(float3 packedNormal)
+{
+    return (packedNormal * 2.0) - 1.0;
+}
+
+//------------------------------------------------------------------------------
+/**
+    Unpack a 4.12 packed texture coord.
+*/
+float2
+UnpackUv(float2 packedUv)
+{
+    return (packedUv / 4096.0);
+}   
+
+//------------------------------------------------------------------------------
+/**
+    Unpack a skin weight vertex component. Since the packing looses some
+    precision we need to re-normalize the weights.
+*/
+float4
+UnpackWeights(float4 weights)
+{
+    return (weights / dot(weights, float4(1.0, 1.0, 1.0, 1.0)));
+}
+
+//------------------------------------------------------------------------------
 #endif

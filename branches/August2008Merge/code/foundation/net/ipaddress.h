@@ -33,6 +33,12 @@ namespace Net
 {
 typedef Xbox360::Xbox360IpAddress IpAddress;
 }
+#elif __WII__
+#include "net/wii/wiiipaddress.h"
+namespace Net
+{
+typedef Wii::WiiIpAddress IpAddress;
+}
 #else
 #error "IpAddress class not implemented on this platform"
 #endif

@@ -14,7 +14,16 @@
 void 
 n_barf(const char* exp, const char* file, int line)
 {
-    n_error("*** NEBULA ASSERTION ***\nexpression: %s\nfile: %s\nline: %d\n", exp, file, line);
+    if (IO::Console::HasInstance())
+    {
+        n_error("*** NEBULA ASSERTION ***\nexpression: %s\nfile: %s\nline: %d\n", exp, file, line);
+    }
+    else
+    {
+        Util::String str;
+        str.Format("*** NEBULA ASSERTION ***\nexpression: %s\nfile: %s\nline: %d\n", exp, file, line);
+        Core::SysFunc::Error(str.AsCharPtr());
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -24,7 +33,16 @@ n_barf(const char* exp, const char* file, int line)
 void
 n_barf2(const char* exp, const char* msg, const char* file, int line)
 {
-    n_error("*** NEBULA ASSERTION ***\nprogrammer says: %s\nexpression: %s\nfile: %s\nline: %d\n", msg, exp, file, line);
+    if (IO::Console::HasInstance())
+    {
+        n_error("*** NEBULA ASSERTION ***\nprogrammer says: %s\nexpression: %s\nfile: %s\nline: %d\n", msg, exp, file, line);
+    }
+    else
+    {
+        Util::String str;
+        str.Format("*** NEBULA ASSERTION ***\nprogrammer says: %s\nexpression: %s\nfile: %s\nline: %d\n", msg, exp, file, line);
+        Core::SysFunc::Error(str.AsCharPtr());
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -37,7 +55,17 @@ n_error(const char* msg, ...)
 {
     va_list argList;
     va_start(argList, msg);
-    IO::Console::Instance()->Error(msg, argList);
+    if (IO::Console::HasInstance())
+    {
+        IO::Console::Instance()->Error(msg, argList);
+    }
+    else
+    {
+        Util::String str;
+        str.FormatArgList(msg, argList);
+        Core::SysFunc::Error(str.AsCharPtr());
+    }
+    va_end(argList);
 }
 
 //------------------------------------------------------------------------------
@@ -50,7 +78,17 @@ n_warning(const char* msg, ...)
 {
     va_list argList;
     va_start(argList, msg);
-    IO::Console::Instance()->Warning(msg, argList);
+    if (IO::Console::HasInstance())
+    {
+        IO::Console::Instance()->Warning(msg, argList);
+    }
+    else
+    {
+        Util::String str;
+        str.FormatArgList(msg, argList);
+        Core::SysFunc::Error(str.AsCharPtr());
+    }
+    va_end(argList);
 }        
 
 //------------------------------------------------------------------------------

@@ -5,10 +5,11 @@
 #include "stdneb.h"
 #include "coregraphics/debug/texturepagehandler.h"
 #include "coregraphics/texture.h"
-#include "http/htmlpagewriter.h"
+#include "http/html/htmlpagewriter.h"
 #include "resources/sharedresourceserver.h"
 #include "coregraphics/streamtexturesaver.h"
 #include "io/ioserver.h"
+#include "coregraphics/imagefileformat.h"
 
 namespace Debug
 {
@@ -27,16 +28,7 @@ TexturePageHandler::TexturePageHandler()
 {
     this->SetName("Textures");
     this->SetDesc("show debug information about shared texture resources");
-    this->SetRootLocation("/texture");
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-TexturePageHandler::AcceptsRequest(const Ptr<HttpRequest>& request)
-{
-    return (HttpMethod::Get == request->GetMethod()) && (String::MatchPattern(request->GetURI().LocalPath(), "texture*"));
+    this->SetRootLocation("texture");
 }
 
 //------------------------------------------------------------------------------
@@ -73,7 +65,7 @@ TexturePageHandler::HandleRequest(const Ptr<HttpRequest>& request)
         htmlWriter->LineBreak();
 
         // get all texture resources
-        Array<Ptr<Resource>> texResources = SharedResourceServer::Instance()->GetSharedResourcesByType(Texture::RTTI);
+        Array<Ptr<Resource> > texResources = SharedResourceServer::Instance()->GetSharedResourcesByType(Texture::RTTI);
 
         // create a table of all existing textures
         htmlWriter->AddAttr("border", "1");

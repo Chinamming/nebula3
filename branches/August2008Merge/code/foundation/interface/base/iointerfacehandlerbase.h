@@ -12,13 +12,7 @@
 #include "messaging/handler.h"
 #include "io/console.h"
 #include "io/ioserver.h"
-#include "interface/iomsg/createdirectory.h"
-#include "interface/iomsg/deletedirectory.h"
-#include "interface/iomsg/deletefile.h"
-#include "interface/iomsg/writestream.h"
-#include "interface/iomsg/readstream.h"
-#include "interface/iomsg/copyfile.h"
-#include "interface/iomsg/mountziparchive.h"
+#include "interface/interfaceprotocol.h"
 
 //------------------------------------------------------------------------------
 namespace Base

@@ -72,7 +72,7 @@ public:
 public:
     bool enableMapping;
     bool isMapped;
-    System::ByteOrder::Type streamByteOrder;
+    System::ByteOrder byteOrder;
     unsigned char* mapCursor;
     unsigned char* mapEnd;
 };
@@ -101,9 +101,9 @@ BinaryWriter::IsMemoryMappingEnabled() const
 /**
 */
 inline void
-BinaryWriter::SetStreamByteOrder(System::ByteOrder::Type byteOrder)
+BinaryWriter::SetStreamByteOrder(System::ByteOrder::Type order)
 {
-    this->streamByteOrder = byteOrder;
+    this->byteOrder.SetToByteOrder(order);
 }
 
 //------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ BinaryWriter::SetStreamByteOrder(System::ByteOrder::Type byteOrder)
 inline System::ByteOrder::Type
 BinaryWriter::GetStreamByteOrder() const
 {
-    return this->streamByteOrder;
+    return this->byteOrder.GetToByteOrder();
 }
 
 } // namespace IO

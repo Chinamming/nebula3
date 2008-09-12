@@ -65,6 +65,7 @@ public:
         Util::FourCC classFourCC;
         SizeT numObjects;
         SizeT overallRefCount;
+        SizeT instanceSize;
     };
     /// get overall statistics
     static Util::Dictionary<Util::String,Stats> GetOverallStats();

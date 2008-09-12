@@ -4,127 +4,23 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "coregraphics/d3d9/d3d9streamtextureloader.h"
-#include "interface/iointerface.h"
 #include "coregraphics/d3d9/d3d9texture.h"
 #include "coregraphics/d3d9/d3d9renderdevice.h"
-#include "io/memorystream.h"
-#include "resources/resource.h"
 
 namespace Direct3D9
 {
-ImplementClass(Direct3D9::D3D9StreamTextureLoader, 'D9TL', Resources::ResourceLoader);
+ImplementClass(Direct3D9::D3D9StreamTextureLoader, 'D9TL', Resources::StreamResourceLoader);
 
 using namespace CoreGraphics;
 using namespace Resources;
 using namespace IO;
-using namespace Interface;
-using namespace Messaging;
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-D3D9StreamTextureLoader::CanLoadAsync() const
-{
-    return true;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-D3D9StreamTextureLoader::OnLoadRequested()
-{
-    n_assert(this->GetState() == Resource::Initial);
-    n_assert(this->resource.isvalid());
-    if (this->resource->IsAsyncEnabled())
-    {
-        // perform asynchronous load
-        // send off an asynchronous loader job
-        n_assert(!this->readStreamMsg.isvalid());
-        this->readStreamMsg = ReadStream::Create();
-        this->readStreamMsg->SetURI(this->resource->GetResourceId().Value());
-        this->readStreamMsg->SetStream(MemoryStream::Create());
-        IOInterface::Instance()->Send(this->readStreamMsg.upcast<Message>());
-        
-        // go into Pending state
-        this->SetState(Resource::Pending);
-        return true;
-    }
-    else
-    {
-        // perform synchronous load
-        Ptr<Stream> stream = IoServer::Instance()->CreateStream(this->resource->GetResourceId().Value());
-        if (this->SetupTextureFromStream(stream))
-        {
-            this->SetState(Resource::Loaded);
-            return true;
-        }
-        // fallthrough: synchronous loading failed
-        this->SetState(Resource::Failed);
-        return false;
-    }
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-D3D9StreamTextureLoader::OnLoadCancelled()
-{
-    n_assert(this->GetState() == Resource::Pending);
-    n_assert(this->readStreamMsg.isvalid());
-    IOInterface::Instance()->Cancel(this->readStreamMsg.upcast<Message>());
-    this->readStreamMsg = 0;
-    ResourceLoader::OnLoadCancelled();
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-D3D9StreamTextureLoader::OnPending()
-{
-    n_assert(this->GetState() == Resource::Pending);
-    n_assert(this->readStreamMsg.isvalid());
-    bool retval = false;
-
-    // check if asynchronous loader job has finished
-    if (this->readStreamMsg->Handled())
-    {
-        // ok, loader job has finished
-        if (this->readStreamMsg->GetResult())
-        {
-            // IO operation was successful
-            if (this->SetupTextureFromStream(this->readStreamMsg->GetStream()))
-            {
-                // everything ok!
-                this->SetState(Resource::Loaded);                
-                retval = true;
-            }
-            else
-            {
-                // this probably wasn't a texture file...
-                this->SetState(Resource::Failed);
-            }
-        }
-        else
-        {
-            // error during IO operation
-            this->SetState(Resource::Failed);
-        }
-        // we no longer need the loader job message
-        this->readStreamMsg = 0;
-    }
-    return retval;
-}
 
 //------------------------------------------------------------------------------
 /**
     This method actually setups the Texture object from the data in the stream.
 */
 bool
-D3D9StreamTextureLoader::SetupTextureFromStream(const Ptr<Stream>& stream)
+D3D9StreamTextureLoader::SetupResourceFromStream(const Ptr<Stream>& stream)
 {
     n_assert(stream.isvalid());
     n_assert(stream->CanBeMapped());

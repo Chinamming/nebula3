@@ -11,7 +11,7 @@
 #include "io/ioserver.h"
 #include "graphicsutil/segmentedgfxutil.h"
 #include "graphics/stage.h"
-#include "msg/settransform.h"
+#include "basegameprotocol.h"
 
 #if __USE_PHYSICS__
 #include "physics/collideshapeloader.h"
@@ -22,7 +22,6 @@ namespace BaseGameFeature
 ImplementClass(EnvEntityManager, 'MENV', Game::Manager);
 ImplementSingleton(EnvEntityManager);
 
-using namespace PhysicsFeature;
 using namespace GraphicsFeature;
 using namespace Util;
 using namespace Math;
@@ -94,7 +93,7 @@ EnvEntityManager::ValidateEnvEntity()
         this->envGraphicsProperty = EnvironmentGraphicsProperty::Create();
         this->envEntity->AttachProperty(this->envGraphicsProperty.upcast<Game::Property>());
     #if __USE_PHYSICS__
-        this->envCollideProperty = EnvironmentCollideProperty::Create();
+        this->envCollideProperty = PhysicsFeature::EnvironmentCollideProperty::Create();
         this->envEntity->AttachProperty(this->envCollideProperty.upcast<Game::Property>());
     #endif        
         
@@ -220,7 +219,7 @@ EnvEntityManager::CreatePhysicsEntity(const Ptr<Db::ValueTable>& instTable, Inde
     FactoryManager* factory = FactoryManager::Instance();
 
     // create a game entity
-    Entity* gameEntity = factory->CreateEntityByClassName("Entity");
+    Ptr<Game::Entity> gameEntity = factory->CreateEntityByClassName("Entity");
 
     // link game entity to instance attribute table
     gameEntity->SetCategory("_Environment");
@@ -229,8 +228,8 @@ EnvEntityManager::CreatePhysicsEntity(const Ptr<Db::ValueTable>& instTable, Inde
 
     // attach required properties (NOTE: the order of attachment is
     // important in this case)
-    Ptr<Property> physicsProperty  = factory->CreateProperty("PhysicsProperty");
-    Ptr<Property> graphicsProperty = factory->CreateProperty("GraphicsProperty");
+    Ptr<Property> physicsProperty  = factory->CreateProperty("PhysicsFeature::PhysicsProperty");
+    Ptr<Property> graphicsProperty = factory->CreateProperty("GraphicsFeature::GraphicsProperty");
     gameEntity->AttachProperty(physicsProperty);
     gameEntity->AttachProperty(graphicsProperty);
 

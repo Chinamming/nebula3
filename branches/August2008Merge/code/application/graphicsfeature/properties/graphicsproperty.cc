@@ -15,14 +15,14 @@
 #include "graphics/stage.h"
 #include "game/entity.h"
 #include "basegameattr/basegameattributes.h"
-#include "msg/updatetransform.h"
-#include "msg/setvisible.h"
-#include "msg/getgraphicsentities.h"
+#include "basegameprotocol.h"
+#include "graphicsprotocol.h"
 
 namespace GraphicsFeature
 {
 ImplementClass(GraphicsFeature::GraphicsProperty, 'GFXP', Game::Property);
 
+using namespace Graphics;
 using namespace Game;
 using namespace Math;
 using namespace BaseGameFeature;
@@ -73,18 +73,13 @@ GraphicsProperty::OnActivate()
 void
 GraphicsProperty::OnDeactivate()
 {
-    Graphics::Stage* stage = GraphicsFeatureUnit::Instance()->GetDefaultStage();
+    const Ptr<Graphics::Stage>& stage = GraphicsFeatureUnit::Instance()->GetDefaultStage();
 
     // release graphics entities
-    int i;
-    int num = this->graphicsEntities.Size();
-    for (i = 0;  i < num; i++)
+    IndexT i;
+    for (i = 0; i < this->graphicsEntities.Size(); i++)
     {
-        Graphics::GraphicsEntity* gfxEntity = this->graphicsEntities[i];
-        if (gfxEntity->GetCell())
-        {
-            stage->RemoveEntity(gfxEntity);
-        }
+        stage->RemoveEntity(this->graphicsEntities[i].cast<GraphicsEntity>());
         this->graphicsEntities[i] = 0;
     }
     this->graphicsEntities.Clear();
@@ -102,8 +97,8 @@ void
 GraphicsProperty::SetupGraphicsEntities()
 {
     // get some entity attributes
-    Util::String resName =  this->GetGraphicsResource();
-    Graphics::Stage* stage = Graphics::GraphicsServer::Instance()->GetStageByName(Util::StringAtom("DefaultStage"));
+    const Util::String& resName =  this->GetGraphicsResource();
+    const Ptr<Stage>& stage = GraphicsFeatureUnit::Instance()->GetDefaultStage();
 
 #if __USE_PHYSICS__
     //// check if we have a physics property attached
@@ -123,7 +118,7 @@ GraphicsProperty::SetupGraphicsEntities()
 #endif
 
     // fallthrough: setup physics-less graphics entity
-    const matrix44 worldMatrix = GetEntity()->GetMatrix44(Attr::Transform);
+    const matrix44& worldMatrix = GetEntity()->GetMatrix44(Attr::Transform);
     SegmentedGfxUtil segGfxUtil;
     this->graphicsEntities = segGfxUtil.CreateAndSetupGraphicsEntities(resName, worldMatrix, stage);
 }
@@ -134,9 +129,9 @@ GraphicsProperty::SetupGraphicsEntities()
 void
 GraphicsProperty::SetupAcceptedMessages()
 {
-    this->RegisterMessage(UpdateTransform::Id);
-    this->RegisterMessage(SetVisibleMsg::Id);
-    this->RegisterMessage(GetGraphicsEntities::Id);
+    this->RegisterMessage(BaseGameFeature::UpdateTransform::Id);
+    this->RegisterMessage(GraphicsFeature::SetVisibleMsg::Id);
+    this->RegisterMessage(GraphicsFeature::GetGraphicsEntities::Id);
     Property::SetupAcceptedMessages();
 }
 
@@ -147,17 +142,17 @@ void
 GraphicsProperty::HandleMessage(const Ptr<Messaging::Message>& msg)
 {
     n_assert(msg);
-    if (msg->CheckId(UpdateTransform::Id))
+    if (msg->CheckId(BaseGameFeature::UpdateTransform::Id))
     {
-        this->UpdateTransform((msg.downcast<BaseGameFeature::UpdateTransform>())->GetMatrix(), false);
+		this->UpdateTransform((msg.cast<BaseGameFeature::UpdateTransform>())->GetMatrix(), false);
     }
-    if (msg->CheckId(SetVisibleMsg::Id))
+    else if (msg->CheckId(GraphicsFeature::SetVisibleMsg::Id))
     {
-        this->SetVisible((msg.upcast<SetVisibleMsg>())->GetVisible());
+        this->SetVisible((msg.cast<SetVisibleMsg>())->GetVisible());
     }
-    else if (msg->CheckId(GetGraphicsEntities::Id))
+    else if (msg->CheckId(GraphicsFeature::GetGraphicsEntities::Id))
     {
-        (msg.downcast<GetGraphicsEntities>())->SetEntities(this->graphicsEntities);
+        (msg.cast<GetGraphicsEntities>())->SetEntities(this->graphicsEntities);
     }
     else
     {

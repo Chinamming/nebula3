@@ -5,7 +5,7 @@
 #include "stdneb.h"
 #include "models/modelinstance.h"
 #include "models/modelnodeinstance.h"
-#include "graphics/modelentity.h"
+#include "internalgraphics/internalmodelentity.h"
 
 namespace Models
 {
@@ -34,7 +34,7 @@ ModelInstance::~ModelInstance()
 /**
 */
 void
-ModelInstance::SetModelEntity(const Ptr<Graphics::ModelEntity>& mdlEntity)
+ModelInstance::SetModelEntity(const Ptr<InternalGraphics::InternalModelEntity>& mdlEntity)
 {
     this->modelEntity = mdlEntity;
 }
@@ -42,7 +42,7 @@ ModelInstance::SetModelEntity(const Ptr<Graphics::ModelEntity>& mdlEntity)
 //------------------------------------------------------------------------------
 /**
 */
-const Ptr<Graphics::ModelEntity>&
+const Ptr<InternalGraphics::InternalModelEntity>&
 ModelInstance::GetModelEntity() const
 {
     return this->modelEntity;

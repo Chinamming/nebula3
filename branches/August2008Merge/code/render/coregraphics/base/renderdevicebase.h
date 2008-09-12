@@ -19,6 +19,7 @@
 #include "coregraphics/batchtype.h"
 #include "coregraphics/imagefileformat.h"
 #include "io/stream.h"
+#include "debug/debugcounter.h"
 
 namespace CoreGraphics
 {
@@ -108,6 +109,8 @@ protected:
     bool inBeginFrame;
     bool inBeginPass;
     bool inBeginBatch;
+
+    _declare_counter(RenderDeviceNumPrimitives);
 };
 
 //------------------------------------------------------------------------------

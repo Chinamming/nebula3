@@ -2,6 +2,8 @@
 #define ATTR_PHYSICSATTR_H
 //------------------------------------------------------------------------------
 /**
+    @file physicsattr/physicsattributes.h
+
     This is the central attribute registry for thisfeature. For more information
     on attributes, see Attr::Attribute.
 

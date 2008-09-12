@@ -39,6 +39,9 @@ public:
 private:
     /// shd variable for eyepos
     Ptr<CoreGraphics::ShaderVariable> shdEyePos;
+
+    CoreGraphics::ShaderVariable::Semantic mvpSemantic;
+    CoreGraphics::ShaderVariable::Semantic modelSemantic;
 };
 
 

@@ -28,7 +28,14 @@ class StreamTextureSaver : public Xbox360::Xbox360StreamTextureSaver
 };
 }
 #elif __WII__
-
+#include "coregraphics/wii/wiistreamtexturesaver.h"
+namespace CoreGraphics
+{
+class StreamTextureSaver : public Wii::WiiStreamTextureSaver
+{
+    DeclareClass(StreamTextureSaver);
+};
+}
 #else
 #error "StreamTextureSaver class not implemented on this platform!"
 #endif

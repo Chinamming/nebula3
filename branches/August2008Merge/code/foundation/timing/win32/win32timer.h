@@ -37,7 +37,7 @@ public:
     /// get current time in seconds
     Timing::Time GetTime() const;
     /// get current time in ticks
-    uint GetTicks() const;
+    Timing::Tick GetTicks() const;
 
 private:
     /// return internal time as 64 bit integer

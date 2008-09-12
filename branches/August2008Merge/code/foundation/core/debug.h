@@ -1,6 +1,8 @@
 #pragma once
 #ifndef CORE_DEBUG_H
 #define CORE_DEBUG_H
+#include "core/config.h"
+
 //------------------------------------------------------------------------------
 /**
     @file core/debug.h
@@ -31,8 +33,10 @@ void n_barf2(const char*, const char*, const char*, int) __attribute__((noreturn
 // an assert with a verbose hint from the programmer
 #define n_assert2(exp, msg) { if (!(exp)) n_barf2(#exp,msg,__FILE__,__LINE__); }
 
+#if __WIN32__
 // dx9 specific: check HRESULT and display DX9 specific message box
 #define n_dxtrace(hr, msg) { if (FAILED(hr)) DXTrace(__FILE__,__LINE__,hr,msg,true); }
+#endif
 
 #endif
 //------------------------------------------------------------------------------

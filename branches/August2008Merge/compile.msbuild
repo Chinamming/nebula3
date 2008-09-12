@@ -23,7 +23,9 @@
     <!-- define vstudio project files (order is important!) -->
     <ItemGroup>
         <!-- interface definition files -->
-        <NidlProjects Include="code/vs8.0/foundation_win32.nidls.vcproj"/>
+        <NidlProjects Include="code/vs8.0/foundation_win32.foundation_nidls_win32.vcproj"/>
+        <NidlProjects Include="code/vs8.0/render_win32.render_nidls_win32.vcproj"/>
+        <NidlProjects Include="code/vs8.0/application_win32.application_nidls_win32.vcproj"/>
 
         <!-- link libs -->
         <Win32Targets Include="code/vs8.0/foundation_win32.sln"/>

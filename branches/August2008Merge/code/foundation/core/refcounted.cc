@@ -69,6 +69,7 @@ RefCounted::GetOverallStats()
             newStats.classFourCC = cur->GetClassFourCC();
             newStats.numObjects  = 1;
             newStats.overallRefCount = cur->GetRefCount();
+            newStats.instanceSize = cur->GetRtti()->GetInstanceSize();
             result.Add(cur->GetClassName(), newStats);
         }
         else

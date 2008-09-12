@@ -35,6 +35,10 @@ public:
     const Util::String& GetEncodeCode() const;
     /// get optional deserialization code
     const Util::String& GetDecodeCode() const;
+    /// get serialize flag
+    bool IsSerialized() const;
+    /// check if string is a valid simple type
+    static bool IsValidType(const Util::String& str);
 
 private:
     /// set error string
@@ -46,6 +50,7 @@ private:
     Util::String defaultValue;
     Util::String encodeCode;
     Util::String decodeCode;
+    bool serialize;
 };
 
 //------------------------------------------------------------------------------
@@ -93,6 +98,14 @@ IDLArg::GetDefaultValue() const
     return this->defaultValue;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+inline bool 
+IDLArg::IsSerialized() const
+{
+    return this->serialize;
+}
 } // namespace Tools
 //------------------------------------------------------------------------------
 #endif

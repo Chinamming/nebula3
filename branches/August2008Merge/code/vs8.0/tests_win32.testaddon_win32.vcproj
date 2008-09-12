@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="testaddon_win32"
-	ProjectGUID="{E14CF77D-4CE2-4B85-8A86-91A3CBB43D24}"
+	ProjectGUID="{E9876D59-4AF6-42A5-B2D1-1867C9B6B369}"
 	>
 	<Platforms>
 		<Platform
@@ -78,7 +78,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dxerr9.lib  d_foundation_win32.lib d_lua_win32.lib d_tinyxml_win32.lib d_zlib_win32.lib d_application_win32.lib d_sqlite_win32.lib d_db_win32.lib d_testbase_win32.lib "
+				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dinput8.lib xinput.lib dxerr9.lib  d_foundation_win32.lib d_lua_win32.lib d_tinyxml_win32.lib d_zlib_win32.lib d_application_win32.lib d_sqlite_win32.lib d_db_win32.lib d_testbase_win32.lib "
 				OutputFile="..\..\bin\win32\testaddon_win32.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
@@ -173,7 +173,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dxerr9.lib  foundation_win32.lib lua_win32.lib tinyxml_win32.lib zlib_win32.lib application_win32.lib sqlite_win32.lib db_win32.lib testbase_win32.lib "
+				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dinput8.lib xinput.lib dxerr9.lib  foundation_win32.lib lua_win32.lib tinyxml_win32.lib zlib_win32.lib application_win32.lib sqlite_win32.lib db_win32.lib testbase_win32.lib "
 				OutputFile="..\..\bin\win32\testaddon_win32.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"

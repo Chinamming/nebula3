@@ -1,29 +1,24 @@
 #pragma once
 #ifndef GRAPHICS_VIEW_H
-#define GRAPHICS_VIEW_H
+#define GRAPHOCS_VIEW_H
 //------------------------------------------------------------------------------
 /**
     @class Graphics::View
-  
-    A graphics View is used to render a Stage through a CameraEntity into a 
-    RenderTarget. Any number of views can be associated with the same Stage.
-    Views may depend on other views. When a View is rendered, it will
-    first ask the Views it depends on to render themselves. Subclasses of
-    View may implement their own rendering strategies.
+    
+    A client-side proxy of a InternalGraphics::InternalView in the Graphic subsystem.
     
     (C) 2007 Radon Labs GmbH
-*/    
+*/
 #include "core/refcounted.h"
 #include "util/stringatom.h"
-#include "graphics/stage.h"
-#include "graphics/cameraentity.h"
-#include "coregraphics/texture.h"
-#include "coregraphics/rendertarget.h"
-#include "frame/frameshader.h"
+#include "resources/resourceid.h"
+#include "graphics/handle.h"
 
 //------------------------------------------------------------------------------
 namespace Graphics
 {
+class CameraEntity;
+
 class View : public Core::RefCounted
 {
     DeclareClass(View);
@@ -33,71 +28,57 @@ public:
     /// destructor
     virtual ~View();
 
-    /// return true if currently attached to graphics server
-    bool IsAttachedToServer() const;
-    /// get human-readable name
+    /// return true if the View is valid
+    bool IsValid() const;    
+    /// get name of view
     const Util::StringAtom& GetName() const;
-    /// set the stage this View is associated with
-    void SetStage(const Ptr<Stage>& stage);
-    /// get the stage this View is associated with
-    const Ptr<Stage>& GetStage() const;
-    /// set the CameraEntity this View looks through
-    void SetCameraEntity(const Ptr<CameraEntity>& camera);
-    /// get the CameraEntity this View looks through
+    /// get the class-type of the server-side view object
+    const Core::Rtti& GetViewClass() const;
+    /// get the name of the stage this view is attached to
+    const Util::StringAtom& GetStageName() const;
+    /// get the name of the frame-shader this view will use for rendering
+    const Resources::ResourceId& GetFrameShaderName() const;
+    /// check whether this is the default view
+    bool IsDefaultView() const;
+    /// set the camera entity this view should "look through"
+    void SetCameraEntity(const Ptr<CameraEntity>& cameraEntity);
+    /// get the view's current camera entity (may return invalid ptr if no camera is set)
     const Ptr<CameraEntity>& GetCameraEntity() const;
-    /// set the render target this view renders to
-    void SetRenderTarget(const Ptr<CoreGraphics::RenderTarget>& renderTarget);
-    /// get the render target this view renders to
-    const Ptr<CoreGraphics::RenderTarget>& GetRenderTarget() const;
-    /// set the view's frame shader 
-    void SetFrameShader(const Ptr<Frame::FrameShader>& frameShader);
-    /// get the view's frame shader
-    const Ptr<Frame::FrameShader>& GetFrameShader() const;
 
-    /// add a view which this view depends on
-    void AddDependency(const Ptr<View>& view);
-    /// get all dependency views
-    const Util::Array<Ptr<View> >& GetDependencies() const;
-
-    /// update the visibility links for this view 
-    virtual void UpdateVisibilityLinks();
-    /// render the view into its render target
-    virtual void Render();
-    /// render a debug view of the world
-    virtual void RenderDebug();
-    /// render a debug view of the world, without begin and end shape renderering
-    virtual void RenderDebugSimple();
-
-protected:
+private:
     friend class GraphicsServer;
 
-    /// set a human-readable name of the view
+    /// set name of view
     void SetName(const Util::StringAtom& name);
-    /// called when attached to graphics server
-    virtual void OnAttachToServer();
-    /// called when detached from graphics server
-    virtual void OnRemoveFromServer();
-    /// resolve visible lights
-    void ResolveVisibleLights();
-    /// resolve visibility for optimal batch rendering
-    void ResolveVisibleModelNodeInstances();
+    /// set the class-type of the server-side view object
+    void SetViewClass(const Core::Rtti& rtti);
+    /// set the name of the stage this view will be attached to (stage must already exist!)
+    void SetStageName(const Util::StringAtom& stageName);
+    /// set the name of the frame-shader this view will use for rendering
+    void SetFrameShaderName(const Resources::ResourceId& frameShaderName);
+    /// set to true if this is the default view
+    void SetDefaultView(bool b);
+    /// setup the view (waits for completion)
+    void Setup();
+    /// discard the view (waits for completion)
+    void Discard();
 
-    bool isAttachedToServer;
     Util::StringAtom name;
-    Ptr<Stage> stage;
-    Ptr<CameraEntity> camera;
-    Ptr<CoreGraphics::RenderTarget> renderTarget;
-    Ptr<Frame::FrameShader> frameShader;
-    Util::Array<Ptr<View> > dependencies;    
+    const Core::Rtti* viewClass;
+    Util::StringAtom stageName;
+    Resources::ResourceId frameShaderName;
+    bool isDefaultView;
+    Graphics::Handle viewHandle;
+    Ptr<CameraEntity> cameraEntity;
 };
 
 //------------------------------------------------------------------------------
 /**
 */
 inline bool
-View::IsAttachedToServer() const
+View::IsValid() const
 {
-    return this->isAttachedToServer;
+    return (0 != this->viewHandle);
 }
 
 //------------------------------------------------------------------------------
@@ -122,83 +103,75 @@ View::GetName() const
 /**
 */
 inline void
-View::SetStage(const Ptr<Stage>& s)
+View::SetViewClass(const Core::Rtti& rtti)
 {
-    this->stage = s;
+    this->viewClass = &rtti;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-inline const Ptr<Stage>&
-View::GetStage() const
+inline const Core::Rtti& 
+View::GetViewClass() const
 {
-    return this->stage;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-inline const Ptr<CameraEntity>&
-View::GetCameraEntity() const
-{
-    return this->camera;
+    n_assert(0 != this->viewClass);
+    return *this->viewClass;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 inline void
-View::SetRenderTarget(const Ptr<CoreGraphics::RenderTarget>& rt)
+View::SetStageName(const Util::StringAtom& n)
 {
-    this->renderTarget = rt;
+    this->stageName = n;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-inline const Ptr<CoreGraphics::RenderTarget>&
-View::GetRenderTarget() const
+inline const Util::StringAtom&
+View::GetStageName() const
 {
-    return this->renderTarget;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-inline void
-View::AddDependency(const Ptr<View>& depView)
-{
-    this->dependencies.Append(depView);
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-inline const Util::Array<Ptr<View> >&
-View::GetDependencies() const
-{
-    return this->dependencies;
+    return this->stageName;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 inline void
-View::SetFrameShader(const Ptr<Frame::FrameShader>& shd)
+View::SetFrameShaderName(const Resources::ResourceId& r)
 {
-    this->frameShader = shd;
+    this->frameShaderName = r;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-inline const Ptr<Frame::FrameShader>&
-View::GetFrameShader() const
+inline const Resources::ResourceId&
+View::GetFrameShaderName() const
 {
-    return this->frameShader;
+    return this->frameShaderName;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+View::SetDefaultView(bool b)
+{
+    this->isDefaultView = b;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline bool
+View::IsDefaultView() const
+{
+    return this->isDefaultView;
 }
 
 } // namespace Graphics
 //------------------------------------------------------------------------------
-#endif
+#endif    

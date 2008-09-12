@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="testrender_win32"
-	ProjectGUID="{C1247C0C-2630-49D3-A847-4D5F89F5DA62}"
+	ProjectGUID="{F1A368CF-01B9-4F72-9C81-DB17E7B26548}"
 	>
 	<Platforms>
 		<Platform
@@ -78,7 +78,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dxerr9.lib  d_foundation_win32.lib d_lua_win32.lib d_tinyxml_win32.lib d_zlib_win32.lib d_render_win32.lib d_testbase_win32.lib d_nebula2_win32.lib "
+				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dinput8.lib xinput.lib dxerr9.lib  d_foundation_win32.lib d_lua_win32.lib d_tinyxml_win32.lib d_zlib_win32.lib d_render_win32.lib d_testbase_win32.lib d_nebula2_win32.lib "
 				OutputFile="..\..\bin\win32\testrender_win32.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
@@ -173,7 +173,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dxerr9.lib  foundation_win32.lib lua_win32.lib tinyxml_win32.lib zlib_win32.lib render_win32.lib testbase_win32.lib nebula2_win32.lib "
+				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dinput8.lib xinput.lib dxerr9.lib  foundation_win32.lib lua_win32.lib tinyxml_win32.lib zlib_win32.lib render_win32.lib testbase_win32.lib nebula2_win32.lib "
 				OutputFile="..\..\bin\win32\testrender_win32.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
@@ -236,14 +236,6 @@
 			</File>
 			<File
 				RelativePath="..\tests\testrender\coregraphicstest.h"
-				>
-			</File>
-			<File
-				RelativePath="..\tests\testrender\graphicsservertest.cc"
-				>
-			</File>
-			<File
-				RelativePath="..\tests\testrender\graphicsservertest.h"
 				>
 			</File>
 			<File

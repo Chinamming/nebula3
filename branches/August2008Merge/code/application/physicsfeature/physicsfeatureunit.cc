@@ -57,12 +57,6 @@ PhysicsFeatureUnit::OnActivate()
     
     this->physicsServer = PhysicsServer::Create();
     this->physicsServer->Open();
-
-    if (GraphicsFeature::GraphicsFeatureUnit::HasInstance())
-    {
-        /// add this feature for render debug callback
-        GraphicsFeature::GraphicsFeatureUnit::Instance()->AddRenderDebugCallback(this, "Physics");
-    }
 }
 
 //------------------------------------------------------------------------------

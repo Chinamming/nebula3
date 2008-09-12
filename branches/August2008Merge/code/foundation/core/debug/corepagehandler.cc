@@ -4,7 +4,7 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "core/debug/corepagehandler.h"
-#include "http/htmlpagewriter.h"
+#include "http/html/htmlpagewriter.h"
 
 namespace Debug
 {
@@ -22,16 +22,7 @@ CorePageHandler::CorePageHandler()
 {
     this->SetName("Core");
     this->SetDesc("show debug information about Core subsystem");
-    this->SetRootLocation("/core");
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-CorePageHandler::AcceptsRequest(const Ptr<HttpRequest>& request)
-{
-    return (HttpMethod::Get == request->GetMethod()) && String::MatchPattern(request->GetURI().LocalPath(), "core");
+    this->SetRootLocation("core");
 }
 
 //------------------------------------------------------------------------------
@@ -78,6 +69,7 @@ CorePageHandler::HandleRequest(const Ptr<HttpRequest>& request)
             htmlWriter->Begin(HtmlElement::TableRow);
                 htmlWriter->Element(HtmlElement::TableHeader, "Class Name");
                 htmlWriter->Element(HtmlElement::TableHeader, "Class FourCC");
+                htmlWriter->Element(HtmlElement::TableHeader, "Instance Size");
                 htmlWriter->Element(HtmlElement::TableHeader, "NumInstances");
                 htmlWriter->Element(HtmlElement::TableHeader, "References");
             htmlWriter->End(HtmlElement::TableRow);
@@ -88,6 +80,7 @@ CorePageHandler::HandleRequest(const Ptr<HttpRequest>& request)
                 htmlWriter->Begin(HtmlElement::TableRow);
                     htmlWriter->Element(HtmlElement::TableData, curStats.className);
                     htmlWriter->Element(HtmlElement::TableData, curStats.classFourCC.AsString());
+                    htmlWriter->Element(HtmlElement::TableData, String::FromInt(curStats.instanceSize));
                     htmlWriter->Element(HtmlElement::TableData, String::FromInt(curStats.numObjects));
                     htmlWriter->Element(HtmlElement::TableData, String::FromInt(curStats.overallRefCount));
                 htmlWriter->End(HtmlElement::TableRow);

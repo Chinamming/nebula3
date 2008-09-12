@@ -75,7 +75,7 @@ public:
 public:
     bool enableMapping;
     bool isMapped;
-    System::ByteOrder::Type streamByteOrder;
+    System::ByteOrder byteOrder;
     unsigned char* mapCursor;
     unsigned char* mapEnd;
 };
@@ -102,9 +102,9 @@ BinaryReader::IsMemoryMappingEnabled() const
 /**
 */
 inline void
-BinaryReader::SetStreamByteOrder(System::ByteOrder::Type byteOrder)
+BinaryReader::SetStreamByteOrder(System::ByteOrder::Type order)
 {
-    this->streamByteOrder = byteOrder;
+    this->byteOrder.SetFromByteOrder(order);
 }
 
 //------------------------------------------------------------------------------
@@ -113,7 +113,7 @@ BinaryReader::SetStreamByteOrder(System::ByteOrder::Type byteOrder)
 inline System::ByteOrder::Type
 BinaryReader::GetStreamByteOrder() const
 {
-    return this->streamByteOrder;
+    return this->byteOrder.GetFromByteOrder();
 }
 
 } // namespace IO
