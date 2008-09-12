@@ -9,7 +9,7 @@
     
     (C) 2007 Radon Labs GmbH
 */    
-#include "lighting/abstractlightentity.h"
+#include "graphics/abstractlightentity.h"
 #include "math/vector.h"
 
 //------------------------------------------------------------------------------
@@ -22,9 +22,9 @@ public:
     LightFlickerUtil();
     
     /// set light entity to manipulate
-    void SetLightEntity(Lighting::AbstractLightEntity* e);
+    void SetLightEntity(const Ptr<Graphics::AbstractLightEntity>& e);
     /// get light entity
-    Lighting::AbstractLightEntity* GetLightEntity() const;
+    const Ptr<Graphics::AbstractLightEntity>& GetLightEntity() const;
     /// return true if entity is valid
     bool HasLightEntity() const;
     
@@ -49,7 +49,7 @@ public:
     void Update();
 
 private:
-    Ptr<Lighting::AbstractLightEntity> lightEntity;
+    Ptr<Graphics::AbstractLightEntity> lightEntity;
     bool enabled;
     float frequency;
     float intensityAmplitude;
@@ -60,7 +60,7 @@ private:
 /**
 */
 inline void
-LightFlickerUtil::SetLightEntity(Lighting::AbstractLightEntity* e)
+LightFlickerUtil::SetLightEntity(const Ptr<Graphics::AbstractLightEntity>& e)
 {
     this->lightEntity = e;
 }
@@ -68,7 +68,7 @@ LightFlickerUtil::SetLightEntity(Lighting::AbstractLightEntity* e)
 //------------------------------------------------------------------------------
 /**
 */
-inline Lighting::AbstractLightEntity*
+inline const Ptr<Graphics::AbstractLightEntity>&
 LightFlickerUtil::GetLightEntity() const
 {
     return this->lightEntity;

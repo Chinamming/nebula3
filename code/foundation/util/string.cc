@@ -7,7 +7,6 @@
 
 namespace Util
 {
-Memory::Heap* String::DataHeap = 0;
 Memory::Heap* String::ObjectHeap = 0;
 
 //------------------------------------------------------------------------------
@@ -343,9 +342,9 @@ String::TrimRight(const String& charSet)
     if (this->IsValid())
     {
         SizeT charSetLen = charSet.strLen;
-        IndexT thisIndex = this->strLen - 1;
+        int thisIndex = this->strLen - 1;   // NOTE: may not be unsigned (thus not IndexT!)
         bool stopped = false;
-        while (!stopped && (thisIndex < this->strLen))
+        while (!stopped && (thisIndex >= 0))
         {
             IndexT charSetIndex;
             bool match = false;
@@ -489,7 +488,7 @@ String::ANSItoUTF8()
 {
     n_assert(!this->IsEmpty());
     SizeT bufSize = this->strLen * 2 + 1;
-    char* buffer = (char*) DataHeap->Alloc(bufSize);
+    char* buffer = (char*) Memory::Alloc(Memory::ScratchHeap, bufSize);
     char* dstPtr = buffer;
     const char* srcPtr = this->AsCharPtr();
     unsigned char c;
@@ -509,7 +508,7 @@ String::ANSItoUTF8()
     }
     *dstPtr = 0;
     this->SetCharPtr(buffer);
-    DataHeap->Free(buffer);
+    Memory::Free(Memory::ScratchHeap, buffer);
 }
 
 //------------------------------------------------------------------------------

@@ -69,6 +69,7 @@ private:
     static DWORD WINAPI ThreadProc(LPVOID self);
 
     HANDLE threadHandle;
+    Win32Event threadStartedEvent;
     Win32Event stopRequestEvent;
     bool running;
     Priority priority;

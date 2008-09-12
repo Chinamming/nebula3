@@ -79,9 +79,6 @@ MeshShape::Attach(dSpaceID spaceId)
                                     this->GetIndexBuffer(),
                                     this->GetNumIndices(),
                                     3 * sizeof(int));
-
-        this->sharedMesh->UnmapVertexBuffer();
-        this->sharedMesh->UnmapIndexBuffer();
         this->odeTriMeshID = dCreateTriMesh(0, odeTriMeshDataId, 0, 0, 0);
         this->AttachGeom(this->odeTriMeshID, spaceId);
 
@@ -194,8 +191,6 @@ MeshShape::RenderDebug(const Math::matrix44& t)
                                                             (void*) this->GetIndexBuffer(),
                                                             CoreGraphics::IndexType::Index32,                                                            
                                                             this->GetDebugVisualizationColor());
-        this->sharedMesh->UnmapVertexBuffer();
-        this->sharedMesh->UnmapIndexBuffer();
     }
 }
 

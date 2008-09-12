@@ -8,7 +8,7 @@
 #include "input/keyboard.h"
 #include "input/mouse.h"
 #include "input/gamepad.h"
-#include "asyncgraphics/displayproxy.h"
+#include "graphics/display.h"
 
 namespace Win32
 {
@@ -55,16 +55,7 @@ Win32InputServer::Open()
     // setup a display event handler which translates
     // some display events into input events
     this->eventHandler = Win32InputDisplayEventHandler::Create();
-    if (DisplayDevice::HasInstance())
-    {
-        // non-multithreaded rendering
-        DisplayDevice::Instance()->AttachEventHandler(this->eventHandler.upcast<DisplayEventHandler>());
-    }
-    else if (AsyncGraphics::DisplayProxy::HasInstance())
-    {
-        // multithreaded rendering
-        AsyncGraphics::DisplayProxy::Instance()->AttachDisplayEventHandler(this->eventHandler.upcast<ThreadSafeDisplayEventHandler>());
-    }
+    Graphics::Display::Instance()->AttachDisplayEventHandler(this->eventHandler.upcast<ThreadSafeDisplayEventHandler>());
 
     // create a default keyboard and mouse handler
     this->defaultKeyboard = Keyboard::Create();
@@ -91,14 +82,7 @@ Win32InputServer::Close()
     n_assert(this->IsOpen());
 
     // remove our event handler from the display device
-    if (DisplayDevice::HasInstance())
-    {
-        DisplayDevice::Instance()->RemoveEventHandler(this->eventHandler.upcast<DisplayEventHandler>());
-    }
-    else if (AsyncGraphics::DisplayProxy::HasInstance())
-    {
-        AsyncGraphics::DisplayProxy::Instance()->RemoveDisplayEventHandler(this->eventHandler.upcast<ThreadSafeDisplayEventHandler>());
-    }
+    Graphics::Display::Instance()->RemoveDisplayEventHandler(this->eventHandler.upcast<ThreadSafeDisplayEventHandler>());
 
     // shutdown the DirectInput mouse device
     this->CloseDInputMouse();

@@ -39,7 +39,7 @@ Win32Thread::~Win32Thread()
 /**
     Start the thread, this creates a Win32 thread and calls the static
     ThreadProc, which in turn calls the virtual DoWork() class of this object.
-    The method returns immediately without waiting for the thread to start.
+    The method waits for the thread to start and then returns.
 */
 void
 Win32Thread::Start()
@@ -69,6 +69,9 @@ Win32Thread::Start()
             SetThreadPriority(this->threadHandle, THREAD_PRIORITY_ABOVE_NORMAL);
             break;
     }
+    
+    // wait for the thread to start
+    this->threadStartedEvent.Wait();
 }
 
 //------------------------------------------------------------------------------
@@ -136,6 +139,7 @@ Win32Thread::ThreadProc(LPVOID self)
 {
     n_assert(0 != self);
     Win32Thread* threadObj = (Win32Thread*) self;
+    threadObj->threadStartedEvent.Signal();
     ThreadName = threadObj->GetName().AsCharPtr();
     threadObj->DoWork();
     return 0;

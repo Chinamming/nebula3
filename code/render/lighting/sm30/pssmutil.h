@@ -13,7 +13,7 @@
 #include "math/vector.h"
 #include "math/bbox.h"
 #include "util/fixedarray.h"
-#include "graphics/cameraentity.h"
+#include "internalgraphics/internalcameraentity.h"
 
 //------------------------------------------------------------------------------
 namespace Lighting
@@ -24,9 +24,9 @@ public:
     /// constructor
     PSSMUtil();
     /// set camera entity which defines the view and projection transform
-    void SetCameraEntity(const Ptr<Graphics::CameraEntity>& camera);
+    void SetCameraEntity(const Ptr<InternalGraphics::InternalCameraEntity>& camera);
     /// get camera entity
-    const Ptr<Graphics::CameraEntity>& GetCameraEntity() const;
+    const Ptr<InternalGraphics::InternalCameraEntity>& GetCameraEntity() const;
     /// set light direction
     void SetLightDir(const Math::vector& dir);
     /// get light direction
@@ -60,7 +60,7 @@ private:
 
     static const SizeT NumCorners = 8;
     float maxShadowDistance;
-    Ptr<Graphics::CameraEntity> cameraEntity;
+    Ptr<InternalGraphics::InternalCameraEntity> cameraEntity;
     Math::vector lightDir;
 
     float splitDistances[NumSplits + 1];
@@ -75,7 +75,7 @@ private:
 /**
 */
 inline void
-PSSMUtil::SetCameraEntity(const Ptr<Graphics::CameraEntity>& camera)
+PSSMUtil::SetCameraEntity(const Ptr<InternalGraphics::InternalCameraEntity>& camera)
 {
     this->cameraEntity = camera;
 }
@@ -83,7 +83,7 @@ PSSMUtil::SetCameraEntity(const Ptr<Graphics::CameraEntity>& camera)
 //------------------------------------------------------------------------------
 /**
 */
-inline const Ptr<Graphics::CameraEntity>&
+inline const Ptr<InternalGraphics::InternalCameraEntity>&
 PSSMUtil::GetCameraEntity() const
 {
     return this->cameraEntity;

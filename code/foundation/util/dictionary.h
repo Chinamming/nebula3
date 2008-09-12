@@ -11,11 +11,16 @@
     Internally the dictionary is implemented as a sorted array.
 
     On insertion performance:
-    Key/value pairs can be added at any time with the Add() methods.
-    Internally, lazy evaluation is used to keep the array sorted 
-    only when it needs to be sorted. Thus adding many keys
-    is very fast, but the first search may be slow because that's
-    when the sorting happens. 
+    Key/value pairs are inserted with the Add() method, which normally
+    calls the Util::Array::InsertSorted() method internally. If many
+    insertions are performed at once, it may be beneficial to call
+    BeginBulkAdd() before, and EndBulkAdd() after adding the 
+    key/value pairs. Between BeginBulkAdd() and EndBulkAdd(), the
+    Add() method will just append the new elements to the internal
+    array, and only call Util::Array::Sort() inside EndBulkAdd().
+
+    Any methods which require the internal array to be sorted will
+    throw an assertion between BeginBulkAdd() and EndBulkAdd().
 
     (C) 2006 Radon Labs GmbH
 */    
@@ -44,10 +49,16 @@ public:
     void Clear();
     /// return true if empty
     bool IsEmpty() const;
+    /// reserve space (useful if number of elements is known beforehand)
+    void Reserve(SizeT numElements);
+    /// begin a bulk insert (array will be sorted at End)
+    void BeginBulkAdd();
     /// add a key/value pair
     void Add(const KeyValuePair<KEYTYPE, VALUETYPE>& kvp);
     /// add a key and associated value
     void Add(const KEYTYPE& key, const VALUETYPE& value);
+    /// end a bulk insert (this will sort the internal array)
+    void EndBulkAdd();
     /// erase a key and its associated value
     void Erase(const KEYTYPE& key);
     /// erase a key at index
@@ -74,7 +85,7 @@ protected:
     void SortIfDirty() const;
 
     Array<KeyValuePair<KEYTYPE, VALUETYPE> > keyValuePairs;
-    bool dirty;
+    bool inBulkInsert;
 };
 
 //------------------------------------------------------------------------------
@@ -82,7 +93,7 @@ protected:
 */
 template<class KEYTYPE, class VALUETYPE>
 Dictionary<KEYTYPE, VALUETYPE>::Dictionary() :
-    dirty(false)
+    inBulkInsert(false)
 {
     // empty
 }
@@ -93,9 +104,11 @@ Dictionary<KEYTYPE, VALUETYPE>::Dictionary() :
 template<class KEYTYPE, class VALUETYPE>
 Dictionary<KEYTYPE, VALUETYPE>::Dictionary(const Dictionary<KEYTYPE, VALUETYPE>& rhs) :
     keyValuePairs(rhs.keyValuePairs),
-    dirty(rhs.dirty)
+    inBulkInsert(false)
 {
-    // empty
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(!rhs.inBulkInsert);
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -104,8 +117,11 @@ Dictionary<KEYTYPE, VALUETYPE>::Dictionary(const Dictionary<KEYTYPE, VALUETYPE>&
 template<class KEYTYPE, class VALUETYPE> void
 Dictionary<KEYTYPE, VALUETYPE>::operator=(const Dictionary<KEYTYPE, VALUETYPE>& rhs)
 {
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(!this->inBulkInsert);
+    n_assert(!rhs.inBulkInsert);
+    #endif
     this->keyValuePairs = rhs.keyValuePairs;
-    this->dirty = rhs.dirty;
 }
 
 //------------------------------------------------------------------------------
@@ -114,8 +130,10 @@ Dictionary<KEYTYPE, VALUETYPE>::operator=(const Dictionary<KEYTYPE, VALUETYPE>& 
 template<class KEYTYPE, class VALUETYPE> void
 Dictionary<KEYTYPE, VALUETYPE>::Clear()
 {
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(!this->inBulkInsert);
+    #endif
     this->keyValuePairs.Clear();
-    this->dirty = false;
 }
 
 //------------------------------------------------------------------------------
@@ -140,14 +158,15 @@ Dictionary<KEYTYPE, VALUETYPE>::IsEmpty() const
 /**
 */
 template<class KEYTYPE, class VALUETYPE> void
-Dictionary<KEYTYPE, VALUETYPE>::SortIfDirty() const
+Dictionary<KEYTYPE, VALUETYPE>::Add(const KeyValuePair<KEYTYPE, VALUETYPE>& kvp)
 {
-    if (this->dirty)
+    if (this->inBulkInsert)
     {
-        // cast this to no-const
-        Dictionary<KEYTYPE, VALUETYPE>* noConstThis = const_cast<Dictionary<KEYTYPE, VALUETYPE>*>(this);
-        noConstThis->keyValuePairs.Sort();
-        noConstThis->dirty = false;
+        this->keyValuePairs.Append(kvp);
+    }
+    else
+    {
+        this->keyValuePairs.InsertSorted(kvp);
     }
 }
 
@@ -155,10 +174,34 @@ Dictionary<KEYTYPE, VALUETYPE>::SortIfDirty() const
 /**
 */
 template<class KEYTYPE, class VALUETYPE> void
-Dictionary<KEYTYPE, VALUETYPE>::Add(const KeyValuePair<KEYTYPE, VALUETYPE>& kvp)
+Dictionary<KEYTYPE, VALUETYPE>::Reserve(SizeT numElements)
 {
-    this->keyValuePairs.Append(kvp);
-    this->dirty = true;
+    this->keyValuePairs.Reserve(numElements);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+template<class KEYTYPE, class VALUETYPE> void
+Dictionary<KEYTYPE, VALUETYPE>::BeginBulkAdd()
+{
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(!this->inBulkInsert);
+    #endif
+    this->inBulkInsert = true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+template<class KEYTYPE, class VALUETYPE> void
+Dictionary<KEYTYPE, VALUETYPE>::EndBulkAdd()
+{
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(this->inBulkInsert);
+    #endif
+    this->keyValuePairs.Sort();
+    this->inBulkInsert = false;
 }
 
 //------------------------------------------------------------------------------
@@ -168,8 +211,14 @@ template<class KEYTYPE, class VALUETYPE> void
 Dictionary<KEYTYPE, VALUETYPE>::Add(const KEYTYPE& key, const VALUETYPE& value)
 {
     KeyValuePair<KEYTYPE, VALUETYPE> kvp(key, value);
-    this->keyValuePairs.Append(kvp);
-    this->dirty = true;
+    if (this->inBulkInsert)
+    {
+        this->keyValuePairs.Append(kvp);
+    }
+    else
+    {
+        this->keyValuePairs.InsertSorted(kvp);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -178,9 +227,13 @@ Dictionary<KEYTYPE, VALUETYPE>::Add(const KEYTYPE& key, const VALUETYPE& value)
 template<class KEYTYPE, class VALUETYPE> void
 Dictionary<KEYTYPE, VALUETYPE>::Erase(const KEYTYPE& key)
 {
-    this->SortIfDirty();
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(!this->inBulkInsert);
+    #endif
     IndexT eraseIndex = this->keyValuePairs.BinarySearchIndex(key);
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(InvalidIndex != eraseIndex);
+    #endif
     this->keyValuePairs.EraseIndex(eraseIndex);
 }
 
@@ -190,7 +243,9 @@ Dictionary<KEYTYPE, VALUETYPE>::Erase(const KEYTYPE& key)
 template<class KEYTYPE, class VALUETYPE> void
 Dictionary<KEYTYPE, VALUETYPE>::EraseAtIndex(IndexT index)
 {
-    this->SortIfDirty();
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(!this->inBulkInsert);
+    #endif
     this->keyValuePairs.EraseIndex(index);
 }
 
@@ -200,7 +255,9 @@ Dictionary<KEYTYPE, VALUETYPE>::EraseAtIndex(IndexT index)
 template<class KEYTYPE, class VALUETYPE> IndexT
 Dictionary<KEYTYPE, VALUETYPE>::FindIndex(const KEYTYPE& key) const
 {
-    this->SortIfDirty();
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(!this->inBulkInsert);
+    #endif
     return this->keyValuePairs.BinarySearchIndex(key);
 }
 
@@ -210,7 +267,9 @@ Dictionary<KEYTYPE, VALUETYPE>::FindIndex(const KEYTYPE& key) const
 template<class KEYTYPE, class VALUETYPE> bool
 Dictionary<KEYTYPE, VALUETYPE>::Contains(const KEYTYPE& key) const
 {
-    this->SortIfDirty();
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(!this->inBulkInsert);
+    #endif
     return (InvalidIndex != this->keyValuePairs.BinarySearchIndex(key));
 }
 
@@ -220,7 +279,9 @@ Dictionary<KEYTYPE, VALUETYPE>::Contains(const KEYTYPE& key) const
 template<class KEYTYPE, class VALUETYPE> const KEYTYPE&
 Dictionary<KEYTYPE, VALUETYPE>::KeyAtIndex(IndexT index) const
 {
-    this->SortIfDirty();
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(!this->inBulkInsert);
+    #endif
     return this->keyValuePairs[index].Key();
 }
 
@@ -230,7 +291,9 @@ Dictionary<KEYTYPE, VALUETYPE>::KeyAtIndex(IndexT index) const
 template<class KEYTYPE, class VALUETYPE> VALUETYPE&
 Dictionary<KEYTYPE, VALUETYPE>::ValueAtIndex(IndexT index)
 {
-    this->SortIfDirty();
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(!this->inBulkInsert);
+    #endif
     return this->keyValuePairs[index].Value();
 }
 
@@ -240,7 +303,9 @@ Dictionary<KEYTYPE, VALUETYPE>::ValueAtIndex(IndexT index)
 template<class KEYTYPE, class VALUETYPE> const VALUETYPE&
 Dictionary<KEYTYPE, VALUETYPE>::ValueAtIndex(IndexT index) const
 {
-    this->SortIfDirty();
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(!this->inBulkInsert);
+    #endif
     return this->keyValuePairs[index].Value();
 }
 
@@ -250,7 +315,9 @@ Dictionary<KEYTYPE, VALUETYPE>::ValueAtIndex(IndexT index) const
 template<class KEYTYPE, class VALUETYPE> KeyValuePair<KEYTYPE, VALUETYPE>&
 Dictionary<KEYTYPE, VALUETYPE>::KeyValuePairAtIndex(IndexT index) const
 {
-    this->SortIfDirty();
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(!this->inBulkInsert);
+    #endif
     return this->keyValuePairs[index];
 }
 
@@ -261,7 +328,9 @@ template<class KEYTYPE, class VALUETYPE> VALUETYPE&
 Dictionary<KEYTYPE, VALUETYPE>::operator[](const KEYTYPE& key)
 {
     int keyValuePairIndex = this->FindIndex(key);
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(InvalidIndex != keyValuePairIndex);
+    #endif   
     return this->keyValuePairs[keyValuePairIndex].Value();
 }
 
@@ -272,7 +341,9 @@ template<class KEYTYPE, class VALUETYPE> const VALUETYPE&
 Dictionary<KEYTYPE, VALUETYPE>::operator[](const KEYTYPE& key) const
 {
     int keyValuePairIndex = this->FindIndex(key);
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(InvalidIndex != keyValuePairIndex);
+    #endif
     return this->keyValuePairs[keyValuePairIndex].Value();
 }
 
@@ -282,7 +353,9 @@ Dictionary<KEYTYPE, VALUETYPE>::operator[](const KEYTYPE& key) const
 template<class KEYTYPE, class VALUETYPE> Array<VALUETYPE>
 Dictionary<KEYTYPE, VALUETYPE>::ValuesAsArray() const
 {
-    this->SortIfDirty();
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(!this->inBulkInsert);
+    #endif
     Array<VALUETYPE> result(this->Size(),this->Size());
     IndexT i;
     for (i = 0; i < this->keyValuePairs.Size(); i++)
@@ -298,7 +371,9 @@ Dictionary<KEYTYPE, VALUETYPE>::ValuesAsArray() const
 template<class KEYTYPE, class VALUETYPE> Array<KEYTYPE>
 Dictionary<KEYTYPE, VALUETYPE>::KeysAsArray() const
 {
-    this->SortIfDirty();
+    #if NEBULA3_BOUNDSCHECKS    
+    n_assert(!this->inBulkInsert);
+    #endif
     Array<KEYTYPE> result(this->Size(),this->Size());
     IndexT i;
     for (i = 0; i < this->keyValuePairs.Size(); i++)

@@ -74,7 +74,7 @@ public:
     /// is quit requested
     bool IsQuitRequested() const;
     /// request quit
-    void RequestQuit();
+    void SetQuitRequested();
 
 protected:
     /// render a debug visualization 
@@ -101,7 +101,7 @@ GameServer::IsQuitRequested() const
 /**
 */
 inline void 
-GameServer::RequestQuit()
+GameServer::SetQuitRequested()
 {
     this->quitRequested = true;
 }

@@ -12,9 +12,9 @@
 */
 #include "core/refcounted.h"
 #include "core/singleton.h"
-#include "graphics/cameraentity.h"
-#include "lighting/abstractlightentity.h"
-#include "lighting/globallightentity.h"
+#include "internalgraphics/internalcameraentity.h"
+#include "lighting/internalabstractlightentity.h"
+#include "lighting/internalgloballightentity.h"
     
 //------------------------------------------------------------------------------
 namespace Lighting
@@ -37,11 +37,11 @@ public:
     bool IsOpen() const;
 
     /// begin shadow frame
-    void BeginFrame(const Ptr<Graphics::CameraEntity>& cameraEntity);
+    void BeginFrame(const Ptr<InternalGraphics::InternalCameraEntity>& cameraEntity);
     /// begin attaching visible shadow casting light sources
     void BeginAttachVisibleLights();
     /// attach a visible shadow casting light source
-    void AttachVisibleLight(const Ptr<AbstractLightEntity>& lightEntity);
+    void AttachVisibleLight(const Ptr<InternalAbstractLightEntity>& lightEntity);
     /// end attaching visible shadow casting light sources
     void EndAttachVisibleLights();
     /// update shadow buffer
@@ -53,9 +53,9 @@ protected:
     bool isOpen;
     bool inBeginFrame;
     bool inBeginAttach;
-    Ptr<Graphics::CameraEntity> cameraEntity;
-    Ptr<GlobalLightEntity> globalLightEntity;
-    Util::Array<Ptr<AbstractLightEntity> > localLightEntities;
+    Ptr<InternalGraphics::InternalCameraEntity> cameraEntity;
+    Ptr<InternalGlobalLightEntity> globalLightEntity;
+    Util::Array<Ptr<InternalAbstractLightEntity> > localLightEntities;
 };
 
 //------------------------------------------------------------------------------

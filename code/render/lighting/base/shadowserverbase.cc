@@ -10,7 +10,7 @@ namespace Lighting
 ImplementClass(Lighting::ShadowServerBase, 'SDSB', Core::RefCounted);
 ImplementSingleton(Lighting::ShadowServerBase);
 
-using namespace Graphics;
+using namespace InternalGraphics;
 
 //------------------------------------------------------------------------------
 /**
@@ -60,7 +60,7 @@ ShadowServerBase::Close()
 /**
 */
 void
-ShadowServerBase::BeginFrame(const Ptr<CameraEntity>& camEntity)
+ShadowServerBase::BeginFrame(const Ptr<InternalCameraEntity>& camEntity)
 {
     n_assert(this->isOpen);
     n_assert(!this->inBeginFrame);
@@ -105,12 +105,12 @@ ShadowServerBase::BeginAttachVisibleLights()
 /**
 */
 void
-ShadowServerBase::AttachVisibleLight(const Ptr<AbstractLightEntity>& lightEntity)
+ShadowServerBase::AttachVisibleLight(const Ptr<InternalAbstractLightEntity>& lightEntity)
 {
     n_assert(lightEntity->GetCastShadows());
     if (lightEntity->GetLightType() == LightType::Global)
     {
-        this->globalLightEntity = lightEntity.downcast<GlobalLightEntity>();
+        this->globalLightEntity = lightEntity.downcast<InternalGlobalLightEntity>();
     }
     else
     {

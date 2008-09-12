@@ -10,8 +10,10 @@ namespace Memory
 {
 HANDLE volatile Win32ProcessHeap = 0;
 #if NEBULA3_MEMORY_STATS
-int volatile AllocCount = 0;
-int volatile AllocSize = 0;
+int volatile TotalAllocCount = 0;
+int volatile TotalAllocSize = 0;
+int volatile HeapTypeAllocCount[NumHeapTypes] = { 0 };
+int volatile HeapTypeAllocSize[NumHeapTypes] = { 0 };
 
 //------------------------------------------------------------------------------
 /**
@@ -21,11 +23,13 @@ int volatile AllocSize = 0;
 bool
 Validate()
 {
-    if (0 == Win32ProcessHeap)
+    bool res = true;
+    IndexT i;
+    for (i = 0; i < NumHeapTypes; i++)
     {
-        Win32ProcessHeap = GetProcessHeap();
+        n_assert(0 != Heaps[i]);
+        res &= (0 != HeapValidate(Heaps[i], 0, NULL));
     }
-    bool res = (0 != HeapValidate(Win32ProcessHeap, 0, NULL));
     res &= Heap::ValidateAllHeaps();
     return res;
 }

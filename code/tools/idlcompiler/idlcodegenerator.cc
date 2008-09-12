@@ -540,6 +540,10 @@ IDLCodeGenerator::WriteMessageDeclaration(IDLMessage* msg, TextWriter* writer) c
         this->WriteMessageArg(outArgs[argIndex], writer, false);
     }
 
+    // write encode and decode 
+    this->WriteEncodeImplementation(msg, writer);
+    this->WriteDecodeImplementation(msg, writer);
+
     writer->WriteLine("};");
 }
 
@@ -852,5 +856,98 @@ IDLCodeGenerator::WriteCommandImplementation(IDLCommand* cmd, TextWriter* writer
     writer->WriteLine("}");
     writer->WriteLine("");
 }
- 
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+IDLCodeGenerator::WriteEncodeImplementation(IDLMessage* msg, IO::TextWriter* writer) const
+{
+    String str;
+    str.Append("public:\n");
+    str.Append("    void Encode");    
+    str.Append("(const Ptr<IO::BinaryWriter>& writer)\n");
+    str.Append("    {\n");    
+    
+    bool writeString = false;
+    // check all input args
+    const Array<Ptr<IDLArg>>& inArgs = msg->GetInputArgs();
+    IndexT argIndex;
+    for (argIndex = 0; argIndex < inArgs.Size(); argIndex++)
+    {
+        if (inArgs[argIndex]->IsSerialized())
+        {
+            String type = inArgs[argIndex]->GetType();
+            // remove possible namespace
+            IndexT namespaceIdx = type.FindCharIndex(':', 0);
+            if (InvalidIndex != namespaceIdx)
+            {
+                type = type.ExtractToEnd(namespaceIdx+2);
+            }            
+            type.FirstCharToUpper();
+            // check valid type
+            if (!IDLArg::IsValidType(type))
+            {
+                n_error("Message %s, type %s not valid for serialization!!!", msg->GetName().AsCharPtr(), type.AsCharPtr());
+            }
+            String name = inArgs[argIndex]->GetName();
+            str.Append("        writer->Write" + type + "(this->Get" + name + "());\n");
+            writeString = true;
+        }
+    }
+    str.Append("    };\n");   
+
+    if (writeString)
+    {
+        writer->WriteString(str);
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+IDLCodeGenerator::WriteDecodeImplementation(IDLMessage* msg, IO::TextWriter* writer) const 
+{
+    String str;
+    str.Append("public:\n");
+    str.Append("    void Decode");    
+    str.Append("(const Ptr<IO::BinaryReader>& reader)\n");
+    str.Append("    {\n");    
+
+    bool writeString = false;
+    // check all input args
+    const Array<Ptr<IDLArg>>& inArgs = msg->GetInputArgs();
+    IndexT argIndex;
+    for (argIndex = 0; argIndex < inArgs.Size(); argIndex++)
+    {
+        if (inArgs[argIndex]->IsSerialized())
+        {
+            String type = inArgs[argIndex]->GetType();
+            // remove possible namespace
+            IndexT namespaceIdx = type.FindCharIndex(':', 0);
+            if (InvalidIndex != namespaceIdx)
+            {
+                type = type.ExtractToEnd(namespaceIdx+2);
+            }            
+            type.FirstCharToUpper();
+            // check valid type
+            if (!IDLArg::IsValidType(type))
+            {
+                n_error("Message %s, type %s not valid for serialization!!!", msg->GetName().AsCharPtr(), type.AsCharPtr());
+            }
+            String name = inArgs[argIndex]->GetName();
+            str.Append("        this->Set" + name + "(reader->Read" + type + "());\n");
+            writeString = true;
+        }
+    }
+
+    str.Append("    };\n");   
+
+    if (writeString)
+    {
+        writer->WriteString(str);
+    }
+}
+
 } // namespace Tools

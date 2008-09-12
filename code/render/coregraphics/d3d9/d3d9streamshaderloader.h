@@ -8,24 +8,21 @@
     
     (C) 2007 Radon Labs GmbH
 */
-#include "resources/resourceloader.h"
-#include "io/stream.h"
+#include "resources/streamresourceloader.h"
 
 //------------------------------------------------------------------------------
 namespace Direct3D9
 {
-class D3D9StreamShaderLoader : public Resources::ResourceLoader
+class D3D9StreamShaderLoader : public Resources::StreamResourceLoader
 {
     DeclareClass(D3D9StreamShaderLoader);
 public:
     /// return true if asynchronous loading is supported
     virtual bool CanLoadAsync() const;
-    /// called by resource when a load is requested
-    virtual bool OnLoadRequested();
     
 private:
     /// setup the shader from a Nebula3 stream
-    bool SetupShaderFromStream(const Ptr<IO::Stream>& stream);
+    virtual bool SetupResourceFromStream(const Ptr<IO::Stream>& stream);
 };
 
 } // namespace Direct3D9

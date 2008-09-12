@@ -101,6 +101,8 @@ public:
 	void ToLower();
     /// convert string to upper case
 	void ToUpper();
+    /// convert first char of string to upper case
+    void FirstCharToUpper();
     /// tokenize string into a provided String array
     Array<String> Tokenize(const String& whiteSpace) const;
     /// tokenize string, keep strings within fence characters intact
@@ -247,7 +249,6 @@ private:
     char localBuffer[LocalStringSize];
     SizeT strLen;
     SizeT heapBufferSize;
-    static Memory::Heap* DataHeap;
     static Memory::Heap* ObjectHeap;
 };
 
@@ -257,10 +258,8 @@ private:
 inline void
 String::Setup()
 {
-    n_assert(0 == DataHeap);
     n_assert(0 == ObjectHeap);
     ObjectHeap = new Memory::Heap("Util.String.ObjectHeap");
-    DataHeap = new Memory::Heap("Util.String.DataHeap");
 }
 
 //------------------------------------------------------------------------------
@@ -303,8 +302,7 @@ String::Delete()
 {
     if (this->heapBuffer)
     {
-        n_assert(0 != DataHeap);
-        DataHeap->Free((void*)this->heapBuffer);
+        Memory::Free(Memory::StringHeap, (void*) this->heapBuffer);
         this->heapBuffer = 0;
     }
     this->localBuffer[0] = 0;
@@ -330,17 +328,16 @@ String::Allocate(SizeT newSize)
 {
     n_assert(newSize > (this->strLen + 1));
     n_assert(newSize > this->heapBufferSize);
-    n_assert(0 != DataHeap);
 
     // free old buffer
     if (this->heapBuffer)
     {
-        DataHeap->Free((void*) this->heapBuffer);
+        Memory::Free(Memory::StringHeap, (void*) this->heapBuffer);
         this->heapBuffer = 0;
     }
 
     // allocate new buffer
-    this->heapBuffer = (char*) DataHeap->Alloc(newSize);
+    this->heapBuffer = (char*) Memory::Alloc(Memory::StringHeap, newSize);
     this->heapBufferSize = newSize;
     this->localBuffer[0] = 0;
 }
@@ -354,10 +351,9 @@ String::Reallocate(SizeT newSize)
 {
     n_assert(newSize > (this->strLen + 1));
     n_assert(newSize > this->heapBufferSize);
-    n_assert(0 != DataHeap);
 
     // allocate a new buffer
-    char* newBuffer = (char*) DataHeap->Alloc(newSize);
+    char* newBuffer = (char*) Memory::Alloc(Memory::StringHeap, newSize);
 
     // copy existing contents there...
     if (this->strLen > 0)
@@ -370,7 +366,7 @@ String::Reallocate(SizeT newSize)
     // assign new buffer
     if (this->heapBuffer)
     {
-        DataHeap->Free((void*) this->heapBuffer);
+        Memory::Free(Memory::StringHeap, (void*) this->heapBuffer);
         this->heapBuffer = 0;
     }
     this->localBuffer[0] = 0;
@@ -737,6 +733,16 @@ String::ToUpper()
     {
         *str++ = (char) toupper(*str);
     }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+String::FirstCharToUpper()
+{
+    char* str = const_cast<char*>(this->AsCharPtr());    
+    *str = (char) toupper(*str);
 }
 
 //------------------------------------------------------------------------------

@@ -1,7 +1,9 @@
-#ifndef PROPERTIES_CAMERAPROPERTY_H
-#define PROPERTIES_CAMERAPROPERTY_H
+#ifndef GRAPHICSFEATURE_CAMERAPROPERTY_H
+#define GRAPHICSFEATURE_CAMERAPROPERTY_H
 //------------------------------------------------------------------------------
 /**
+    @class GraphicsFeature::CameraProperty
+
     A camera property adds the ability to manipulate the camera to an entity.
     Please note that more advanced camera properties should always be 
     derived from the class camera property if camera focus handling is desired,
@@ -18,7 +20,6 @@
 */
 #include "game/property.h"
 #include "graphicsattr/graphicsattributes.h"
-//#include "vfx/shakeeffecthelper.h"
 
 //------------------------------------------------------------------------------
 namespace Attr
@@ -26,6 +27,7 @@ namespace Attr
     // camera specific attributes
     DeclareBool(CameraFocus, 'CAMF', ReadWrite);
 };
+
 namespace Graphics
 {
     class CameraEntity;
@@ -68,12 +70,9 @@ protected:
     Ptr<Graphics::CameraEntity> cameraEntity;
     Ptr<Graphics::View> defaultView;
     Ptr<Graphics::Stage> defaultStage;
-
-    //VFX::ShakeEffectHelper shakeEffectHelper;
-
 };
 RegisterClass(CameraProperty);
 
-}; // namespace Property
+}; // namespace GraphicsFeature
 //------------------------------------------------------------------------------
 #endif

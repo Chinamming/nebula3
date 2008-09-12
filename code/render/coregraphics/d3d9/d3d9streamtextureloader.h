@@ -8,31 +8,17 @@
 
     (C) 2007 Radon Labs GmbH
 */    
-#include "resources/resourceloader.h"
-#include "io/stream.h"
-#include "interface/iomsg/readstream.h"
+#include "resources/streamresourceloader.h"
 
 //------------------------------------------------------------------------------
 namespace Direct3D9
 {
-class D3D9StreamTextureLoader : public Resources::ResourceLoader
+class D3D9StreamTextureLoader : public Resources::StreamResourceLoader
 {
     DeclareClass(D3D9StreamTextureLoader);
-public:
-    /// return true if asynchronous loading is supported
-    virtual bool CanLoadAsync() const;
-    /// called by resource when a load is requested
-    virtual bool OnLoadRequested();
-    /// called by resource to cancel a pending load
-    virtual void OnLoadCancelled();
-    /// call frequently while after OnLoadRequested() to put Resource into loaded state
-    virtual bool OnPending();
-
 private:
     /// setup the texture from a Nebula3 stream
-    bool SetupTextureFromStream(const Ptr<IO::Stream>& stream);
-
-    Ptr<Interface::ReadStream> readStreamMsg;
+    virtual bool SetupResourceFromStream(const Ptr<IO::Stream>& stream);
 };
 
 } // namespace Direct3D9

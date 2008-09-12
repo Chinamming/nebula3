@@ -5,7 +5,7 @@
 #include "stdneb.h"
 #include "coregraphics/debug/meshpagehandler.h"
 #include "coregraphics/mesh.h"
-#include "http/htmlpagewriter.h"
+#include "http/html/htmlpagewriter.h"
 #include "resources/sharedresourceserver.h"
 #include "io/ioserver.h"
 
@@ -26,16 +26,7 @@ MeshPageHandler::MeshPageHandler()
 {
     this->SetName("Meshes");
     this->SetDesc("show debug information about shared mesh resources");
-    this->SetRootLocation("/mesh");
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-MeshPageHandler::AcceptsRequest(const Ptr<HttpRequest>& request)
-{
-    return (HttpMethod::Get == request->GetMethod()) && (String::MatchPattern(request->GetURI().LocalPath(), "mesh*"));
+    this->SetRootLocation("mesh");
 }
 
 //------------------------------------------------------------------------------
@@ -67,7 +58,7 @@ MeshPageHandler::HandleRequest(const Ptr<HttpRequest>& request)
         htmlWriter->LineBreak();
 
         // get all mesh resources
-        Array<Ptr<Resource>> meshResources = SharedResourceServer::Instance()->GetSharedResourcesByType(Mesh::RTTI);
+        Array<Ptr<Resource> > meshResources = SharedResourceServer::Instance()->GetSharedResourcesByType(Mesh::RTTI);
     
         // create a table of all existing meshes
         htmlWriter->AddAttr("border", "1");

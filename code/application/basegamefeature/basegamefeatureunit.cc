@@ -27,6 +27,11 @@
 #include "input/inputserver.h"
 #include "input/keyboard.h"
 
+#if __NEBULA3_HTTP__
+#include "http/httpserverproxy.h"
+#include "debug/objectinspectorhandler.h"
+#endif
+
 // include all properties for known by managers::factorymanager
 #include "properties/timeproperty.h"
 #include "properties/transformableproperty.h"
@@ -121,11 +126,10 @@ BaseGameFeatureUnit::OnActivate()
     timeManager->AttachTimeSource(gameTimeSource.upcast<TimeSource>());
     timeManager->AttachTimeSource(inputTimeSource.upcast<TimeSource>());
 
-    if (GraphicsFeatureUnit::HasInstance())
-    {
-        /// add this feature for render debug callback
-        GraphicsFeature::GraphicsFeatureUnit::Instance()->AddRenderDebugCallback(this, "BaseGame");
-    }
+#if __NEBULA3_HTTP__
+    // create handler for http debug requests
+    Http::HttpServerProxy::Instance()->AttachRequestHandler(Debug::ObjectInspectorHandler::Create());
+#endif    
 }
 
 //------------------------------------------------------------------------------
@@ -227,11 +231,12 @@ BaseGameFeatureUnit::NewGame()
     n_assert(curAppStateHandler);
 
     // open database in NewGame mode
-#if __WII__    
-    bool dbOpened = Db::DbServer::Instance()->OpenNewGame(userProfile->GetProfileDirectory(), "export:db/game.db4");
-#else
-    bool dbOpened = Db::DbServer::Instance()->OpenNewGame(userProfile->GetProfileDirectory(), userProfile->GetDatabasePath());
-#endif    
+    bool dbOpened = false;
+#if !__WII__    
+    dbOpened = Db::DbServer::Instance()->OpenNewGame(userProfile->GetProfileDirectory(), userProfile->GetDatabasePath());    
+#else 
+    dbOpened = Db::DbServer::Instance()->OpenNewGame(userProfile->GetProfileDirectory(), "export:db/game.db4");
+#endif
     n_assert(dbOpened);
 
     // load attributes and reload categories
@@ -422,7 +427,7 @@ BaseGameFeatureUnit::SetupEmptyWorld()
 
     // build new graphics world with stage and view
     n_assert(GraphicsFeatureUnit::HasInstance());
-    GraphicsFeatureUnit::Instance()->CreateDefaultGraphicsWorld();    
+    GraphicsFeatureUnit::Instance()->SetupDefaultGraphicsWorld();    
 
     // TODO:
     //open navigation subsystem
@@ -473,7 +478,7 @@ BaseGameFeatureUnit::CleanupWorld()
 
     // clean up graphics world
     n_assert(GraphicsFeatureUnit::HasInstance());
-    GraphicsFeatureUnit::Instance()->CleanupDefaultGraphicsWorld();   
+    GraphicsFeatureUnit::Instance()->DiscardDefaultGraphicsWorld();   
 
 #if __USE_PHYSICS__
     // cleanup physics world

@@ -12,7 +12,7 @@
 
 namespace Game
 {
-ImplementClass(Game::GameServer, 'GSRV', Core::RefCounted);
+ImplementClass(Game::GameServer, 'GMSV', Core::RefCounted);
 ImplementSingleton(Game::GameServer);
 
 //------------------------------------------------------------------------------

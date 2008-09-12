@@ -29,7 +29,7 @@ public:
     IDirect3DVertexDeclaration9* GetD3D9VertexDeclaration() const;
         
 private:
-    friend class CoreGraphics::VertexLayoutServer;
+    friend class Base::VertexLayoutServerBase;
 
     /// discard the vertex layout object
     void Discard();

@@ -26,9 +26,9 @@ public:
     /// destructor
     ~Win32CriticalSection();
     /// enter the critical section
-    void Enter();
+    void Enter() const;
     /// leave the critical section
-    void Leave();
+    void Leave() const;
 private:
     CRITICAL_SECTION criticalSection;
 };
@@ -56,9 +56,9 @@ Win32CriticalSection::~Win32CriticalSection()
 */
 inline
 void
-Win32CriticalSection::Enter()
+Win32CriticalSection::Enter() const
 {
-    EnterCriticalSection(&this->criticalSection);
+    EnterCriticalSection(const_cast<LPCRITICAL_SECTION>(&this->criticalSection));
 }
 
 //------------------------------------------------------------------------------
@@ -66,9 +66,9 @@ Win32CriticalSection::Enter()
 */
 inline
 void
-Win32CriticalSection::Leave()
+Win32CriticalSection::Leave() const
 {
-    LeaveCriticalSection(&this->criticalSection);
+    LeaveCriticalSection(const_cast<LPCRITICAL_SECTION>(&this->criticalSection));
 }
 
 };

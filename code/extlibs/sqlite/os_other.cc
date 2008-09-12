@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------------
+
 /**
     os_nebula3
     
@@ -24,15 +24,14 @@ extern "C"
 
 // overwrite memfuncs
 void *sqlite3GenericMalloc(int n){
-  void *p = Memory::Alloc((size_t)n);    
-  return p;
+    void *p = Memory::Alloc(Memory::DefaultHeap, (size_t)n);    
+    return p;
 }
-void *sqlite3GenericRealloc(void *p, int n){
-    
-    return Memory::Realloc(p, n);
+void *sqlite3GenericRealloc(void *p, int n){    
+    return Memory::Realloc(Memory::DefaultHeap, p, n);
 }
 void sqlite3GenericFree(void *p){
-  Memory::Free(p);
+    Memory::Free(Memory::DefaultHeap, p);
 }
 
 #if __WII__ 
@@ -123,13 +122,13 @@ static WCHAR *utf8ToUnicode(const char *zFilename){
   WCHAR *zWideFilename;
 
   nChar = MultiByteToWideChar(CP_UTF8, 0, zFilename, -1, NULL, 0);
-  zWideFilename = (WCHAR*)Memory::Alloc( nChar*sizeof(zWideFilename[0]) );
+  zWideFilename = (WCHAR*)Memory::Alloc(Memory::DefaultHeap, nChar*sizeof(zWideFilename[0]) );
   if( zWideFilename==0 ){
     return 0;
   }
   nChar = MultiByteToWideChar(CP_UTF8, 0, zFilename, -1, zWideFilename, nChar);
   if( nChar==0 ){
-    Memory::Free(zWideFilename);
+      Memory::Free(Memory::DefaultHeap, zWideFilename);
     zWideFilename = 0;
   }
   return zWideFilename;
@@ -148,14 +147,14 @@ static char *unicodeToMbcs(const WCHAR *zWideFilename){
   int codepage = CP_ACP;
 
   nByte = WideCharToMultiByte(codepage, 0, zWideFilename, -1, 0, 0, 0, 0);
-  zFilename = (char*)Memory::Alloc( nByte );
+  zFilename = (char*)Memory::Alloc(Memory::DefaultHeap, nByte );
   if( zFilename==0 ){
     return 0;
   }
   nByte = WideCharToMultiByte(codepage, 0, zWideFilename, -1, zFilename, nByte,
                               0, 0);
   if( nByte == 0 ){
-    Memory::Free(zFilename);
+    Memory::Free(Memory::DefaultHeap, zFilename);
     zFilename = 0;
   }
   return zFilename;
@@ -174,7 +173,7 @@ static char *utf8ToMbcs(const char *zFilename){
     return 0;
   }
   zFilenameMbcs = unicodeToMbcs(zTmpWide);
-  Memory::Free(zTmpWide);
+  Memory::Free(Memory::DefaultHeap, zTmpWide);
   return zFilenameMbcs;
 }
 
@@ -224,7 +223,7 @@ int sqlite3Nebula3Delete(const char *zFilename)
     }
     while( !fileDeleted && cnt++ < MX_DELETION_ATTEMPTS && (Sleep(100), 1) );
 
-    Memory::Free(zConverted);
+    Memory::Free(Memory::DefaultHeap, zConverted);
     TRACE2("DELETE \"%s\"\n", zFilename);
     return fileDeleted ? SQLITE_OK : SQLITE_IOERR;
 }
@@ -241,7 +240,7 @@ int sqlite3Nebula3FileExists(const char *zFilename){
   
   exists = IO::IoServer::Instance()->FileExists((char*)zConverted);
 
-  Memory::Free(zConverted);
+  Memory::Free(Memory::DefaultHeap, zConverted);
   return exists;
 }
 
@@ -289,7 +288,7 @@ int sqlite3Nebula3OpenReadWrite(
       else
       {
           // failed, can't open or create file
-          Memory::Free(zConverted);
+          Memory::Free(Memory::DefaultHeap, zConverted);
           return SQLITE_CANTOPEN;
       }
     }
@@ -297,7 +296,7 @@ int sqlite3Nebula3OpenReadWrite(
     {
         *pReadonly = 0;
     }
-    Memory::Free(zConverted);
+    Memory::Free(Memory::DefaultHeap, zConverted);
     
     return allocateNebula3File(fileStream, pId);
 }
@@ -347,7 +346,7 @@ int sqlite3Nebula3OpenExclusive(const char *zFilename, OsFile **pId, int delFlag
         }
         while( !fileCreated && cnt++ < 2 && (Sleep(100), 1) );
     }
-    Memory::Free(zConverted);
+    Memory::Free(Memory::DefaultHeap, zConverted);
     if( !fileCreated )
     {        
         return SQLITE_CANTOPEN;
@@ -379,10 +378,10 @@ int sqlite3Nebula3OpenReadOnly(const char *zFilename, OsFile **pId)
     
     if (!fileStream->Open())
     {
-        Memory::Free(zConverted);
+        Memory::Free(Memory::DefaultHeap, zConverted);
         return SQLITE_CANTOPEN;
     }
-    Memory::Free(zConverted);
+    Memory::Free(Memory::DefaultHeap, zConverted);
     
     return allocateNebula3File(fileStream, pId);
 }
@@ -481,7 +480,7 @@ static int winClose(OsFile **pId){
   
     pFile->stream = 0;
     OpenCounter(-1);
-    Memory::Free(pFile);
+    Memory::Free(Memory::DefaultHeap, pFile);
     *pId = 0;
   }
   return fileClosed ? SQLITE_OK : SQLITE_IOERR;
@@ -686,7 +685,7 @@ static int winUnlock(OsFile *id, int locktype){
 char *sqlite3Nebula3FullPathname(const char *zRelative){
     /* nebula3 solves relative path names */
     char *zAbsolute;
-    zAbsolute=(char*)Memory::Alloc( strlen(zRelative)+1 );
+    zAbsolute=(char*)Memory::Alloc(Memory::DefaultHeap, strlen(zRelative)+1 );
     strcpy(zAbsolute, zRelative);
     return zAbsolute;
 }
@@ -744,7 +743,7 @@ static const IoMethod sqlite3Nebula3IoMethod = {
 static int allocateNebula3File(IO::FileStream* stream, OsFile **pId)
 {   
     winFile *pNew;
-    pNew = (winFile*)Memory::Alloc( sizeof(winFile) );
+    pNew = (winFile*)Memory::Alloc(Memory::DefaultHeap, sizeof(winFile) );
     if( pNew==0 )
     {
         stream->Close();
@@ -811,6 +810,7 @@ int sqlite3Nebula3Sleep(int ms){
 ** Static variables used for thread synchronization
 */
 static int inMutex = 0;
+static Threading::CriticalSection criticalSection;
 #ifdef SQLITE_W32_THREADS
   static DWORD mutexOwner;
   static CRITICAL_SECTION cs;
@@ -842,11 +842,14 @@ void sqlite3Nebula3EnterMutex(){
   EnterCriticalSection(&cs);
   mutexOwner = GetCurrentThreadId();
 #endif
+
+  criticalSection.Enter();
   inMutex++;
 }
 void sqlite3Nebula3LeaveMutex(){
   assert( inMutex );
   inMutex--;
+  criticalSection.Leave();
 #ifdef SQLITE_W32_THREADS
   assert( mutexOwner==GetCurrentThreadId() );
   LeaveCriticalSection(&cs);
@@ -924,7 +927,6 @@ int sqlite3_tsd_count = 0;
 #endif
 
 
-
 /*
 ** If called with allocateFlag>1, then return a pointer to thread
 ** specific data for the current thread.  Allocate and zero the
@@ -939,6 +941,7 @@ int sqlite3_tsd_count = 0;
 ** Return a pointer to the thread specific data or NULL if it is
 ** unallocated or gets deallocated.
 */
+
 ThreadData *sqlite3Nebula3ThreadSpecificData(int allocateFlag){
 
   ThreadData *pTsd = 0;
@@ -947,7 +950,6 @@ ThreadData *sqlite3Nebula3ThreadSpecificData(int allocateFlag){
   static int keyInit = 0;
   static const ThreadData zeroData = {0};
   
-
   if( !keyInit ){
     sqlite3OsEnterMutex();
     if( !keyInit ){
@@ -963,7 +965,7 @@ ThreadData *sqlite3Nebula3ThreadSpecificData(int allocateFlag){
   pTsd = (ThreadData*)TlsGetValue(key);
   if( allocateFlag>0 ){
     if( !pTsd ){
-      pTsd = (ThreadData*)Memory::Alloc( sizeof(zeroData) );
+      pTsd = (ThreadData*)Memory::Alloc(Memory::DefaultHeap, sizeof(zeroData) );
       if( pTsd ){
         *pTsd = zeroData;
         TlsSetValue(key, pTsd);

@@ -35,7 +35,7 @@ MemoryStream::~MemoryStream()
     // release memory buffer if allocated
     if (0 != this->buffer)
     {
-        Memory::Free(this->buffer);
+        Memory::Free(Memory::StreamDataHeap, this->buffer);
         this->buffer = 0;
     }
 }
@@ -250,13 +250,13 @@ MemoryStream::HasRoom(Size numBytes) const
 void
 MemoryStream::Reallocate(Size newCapacity)
 {
-    unsigned char* newBuffer = (unsigned char*) Memory::Alloc(newCapacity);
+    unsigned char* newBuffer = (unsigned char*) Memory::Alloc(Memory::StreamDataHeap, newCapacity);
     n_assert(0 != newBuffer);
     int newSize = n_min(newCapacity, this->size);
     if (0 != this->buffer)
     {
         Memory::Copy(this->buffer, newBuffer, newSize);
-        Memory::Free(this->buffer);
+        Memory::Free(Memory::StreamDataHeap, this->buffer);
     }
     this->buffer = newBuffer;
     this->size = newSize;

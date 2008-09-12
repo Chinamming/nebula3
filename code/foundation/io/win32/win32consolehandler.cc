@@ -136,7 +136,24 @@ Win32ConsoleHandler::Warning(const String& s)
 bool
 Win32ConsoleHandler::HasInput()
 {
-    return true;
+    const DWORD bufNumInputs = 16;
+    DWORD  numEvents = 0;
+    INPUT_RECORD buf[bufNumInputs];
+    BOOL success = PeekConsoleInput(this->stdinHandle, buf, bufNumInputs, &numEvents);
+    DWORD dw = GetLastError(); 
+
+    if (success && (numEvents > 0))
+    {
+        IndexT i;
+        for (i = 0; i < numEvents; i++)
+        {
+            if (buf[i].EventType == KEY_EVENT)
+            {
+                return true;
+            }
+        }
+    }    
+    return false;
 }
 
 //------------------------------------------------------------------------------

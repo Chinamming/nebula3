@@ -11,8 +11,8 @@
 #include "graphics/cameraentity.h"
 #include "graphics/view.h"
 #include "graphics/stage.h"
-#include "msg/camerafocus.h"
-//TODO: #include "posteffects/server.h"
+#include "graphicsprotocol.h"
+#include "basegamefeature/basegameattr/basegameattributes.h"
 
 // camera specific attributes
 namespace Attr
@@ -33,9 +33,6 @@ using namespace BaseGameFeature;
 */
 CameraProperty::CameraProperty()
 {
-    //this->shakeEffectHelper.SetMaxDisplacement(Math::vector(0.5f, 0.5f, 0.25f));
-    //this->shakeEffectHelper.SetMaxTumble(Math::vector(5.0f, 5.0f, 5.0f));
-
     this->cameraEntity = Graphics::CameraEntity::Create();
 }
 
@@ -44,7 +41,6 @@ CameraProperty::CameraProperty()
 */
 CameraProperty::~CameraProperty()
 {
-    // remove cameraEntity
     this->cameraEntity = 0;
 }
 
@@ -81,28 +77,6 @@ CameraProperty::SetupAcceptedMessages()
 /**
 */
 void
-CameraProperty::HandleMessage(const Ptr<Messaging::Message>& msg)
-{
-    n_assert(msg != 0);
-    
-    if (msg->CheckId(CameraFocus::Id))
-    {
-        const Ptr<CameraFocus>& focusMsg = msg.downcast<CameraFocus>();
-        if (focusMsg->GetObtainFocus())
-        {
-            this->OnObtainFocus();
-        }
-        else
-        {
-            this->OnLoseFocus();
-        }
-    }
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
 CameraProperty::OnStart()
 {
     Property::OnStart();
@@ -129,6 +103,28 @@ CameraProperty::OnDeactivate()
 
 //------------------------------------------------------------------------------
 /**
+*/
+void
+CameraProperty::HandleMessage(const Ptr<Messaging::Message>& msg)
+{
+    n_assert(msg != 0);
+    
+    if (msg->CheckId(CameraFocus::Id))
+    {
+        const Ptr<CameraFocus>& focusMsg = msg.downcast<CameraFocus>();
+        if (focusMsg->GetObtainFocus())
+        {
+            this->OnObtainFocus();
+        }
+        else
+        {
+            this->OnLoseFocus();
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
     This method is called by the FocusManager when our entity gains the
     camera focus. Override this method if your subclass needs to do 
     some initialization when gaining the camera focus.
@@ -141,7 +137,7 @@ CameraProperty::OnObtainFocus()
     
     this->defaultStage = GraphicsFeature::GraphicsFeatureUnit::Instance()->GetDefaultStage();
     this->defaultView = GraphicsFeature::GraphicsFeatureUnit::Instance()->GetDefaultView();
-    this->defaultStage->AttachEntity(this->cameraEntity.upcast<Graphics::GraphicsEntity>());
+    this->defaultStage->AttachEntity(this->cameraEntity.cast<Graphics::GraphicsEntity>());
     this->defaultView->SetCameraEntity(this->cameraEntity);
 }
 
@@ -159,13 +155,8 @@ CameraProperty::OnLoseFocus()
     {
         this->defaultView->SetCameraEntity(0);
     }
-
-    // remove to stage to let it updated
-    this->defaultStage->RemoveEntity(this->cameraEntity.upcast<Graphics::GraphicsEntity>());
+    this->defaultStage->RemoveEntity(this->cameraEntity.cast<Graphics::GraphicsEntity>());
     this->defaultStage = 0;
-
-    // clear default view ptr
-    n_assert(0 != this->defaultView);
     this->defaultView = 0;
 
     // update focus attribute
@@ -192,18 +183,24 @@ CameraProperty::HasFocus() const
 void
 CameraProperty::OnRender()
 {
+	// do only if we got focus
     if (FocusManager::Instance()->GetCameraFocusEntity() == this->entity)
     {        
+		// apply final transform
         n_assert(this->cameraEntity != 0);
-        //this->shakeEffectHelper.SetCameraTransform(camera->GetTransform());
-        //this->shakeEffectHelper.Update();
-        //camera->SetTransform(this->shakeEffectHelper.GetShakeCameraTransform());
+		this->cameraEntity->SetTransform(this->GetEntity()->GetMatrix44(Attr::Transform));
+        
+		/* ========================================================================================= NEB 2 STUFF 
+		TODO!?!?! shaker effect stuff 
+
+		this->shakeEffectHelper.SetCameraTransform(camera->GetTransform());
+        this->shakeEffectHelper.Update();
+        camera->SetTransform(this->shakeEffectHelper.GetShakeCameraTransform());
         
         // if enity has transform set the current position between camera and entity as audio listener position
         // otherwise only use camera transform
 
         // TODO: use new audio listener
-        /*
         Audio::Listener* listener = Audio::Server::Instance()->GetListener();
         n_assert(listener);
         matrix44 transform = camera->GetTransform();
@@ -212,10 +209,12 @@ CameraProperty::OnRender()
             const matrix44& enityTransform = this->entity->GetMatrix44(Attr::Transform);
             transform.translate((enityTransform.pos_component() - transform.pos_component()) * 0.5f);
         }
-        listener->SetTransform(transform);*/
+        listener->SetTransform(transform);
 
         // TODO: set the point-of-interest in the posteffects subsystem
-        //PostEffects::Server::Instance()->SetPointOfInterest(this->entity->GetMatrix44(Attr::Transform).pos_component());
+        PostEffects::Server::Instance()->SetPointOfInterest(this->entity->GetMatrix44(Attr::Transform).pos_component());
+        =========================================================================================== NEB 2 STUFF */
+		
     }
 }
 

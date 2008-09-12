@@ -14,7 +14,6 @@ namespace Tools
 using namespace Graphics;
 using namespace Math;
 using namespace Util;
-using namespace Lighting;
 using namespace Resources;
 using namespace Timing;
 

@@ -3,6 +3,8 @@
 #define PROPERTIES_ENVIRONMENTGRAPHICSPROPERTY_H
 //------------------------------------------------------------------------------
 /**
+    @class GraphicsFeature::EnvironmentGraphicsProperty
+
     This is a specialized graphics property which handles all the static
     environment graphics. Probably 90% of all objects in a level will 
     just be static environment objects, so it makes sense to create

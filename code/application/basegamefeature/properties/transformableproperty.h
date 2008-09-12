@@ -2,6 +2,8 @@
 #define PROPERTIES_TRANSFORMABLEPROPERTY_H
 //------------------------------------------------------------------------------
 /**
+    @class BaseGameFeature::TransformableProperty
+
     Entites with this property can be transformed.
   
     (C) 2007 Radon Labs GmbH

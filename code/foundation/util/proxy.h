@@ -129,7 +129,9 @@ Proxy<TYPE>::Object::AddRef()
 template<class TYPE> void
 Proxy<TYPE>::Object::Release()
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(this->refCount > 0);
+    #endif
     this->refCount--;
     if (this->refCount == 0)
     {

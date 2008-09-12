@@ -79,6 +79,10 @@ private:
     void WriteSourceFooter(IO::TextWriter* writer) const;
     /// write a command implementation to the source file
     void WriteCommandImplementation(IDLCommand* cmd, IO::TextWriter* writer) const;
+    /// write encode function
+    void WriteEncodeImplementation(IDLMessage* msg, IO::TextWriter* writer) const;
+    /// write decode function
+    void WriteDecodeImplementation(IDLMessage* msg, IO::TextWriter* writer) const;
 
     IO::URI uri;
     Util::String error;

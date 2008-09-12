@@ -19,9 +19,6 @@
 namespace CoreGraphics
 {
     class StreamMeshLoader;
-}
-namespace Resources
-{
 	class DynamicMeshResourceLoader;
 }
 
@@ -59,7 +56,7 @@ public:
  
 protected:
     friend class CoreGraphics::StreamMeshLoader;
-	friend class Resources::DynamicMeshResourceLoader;
+	friend class CoreGraphics::DynamicMeshResourceLoader;
     /// set the vertex buffer object
     void SetVertexBuffer(const Ptr<CoreGraphics::VertexBuffer>& vb);
     /// set the index buffer object

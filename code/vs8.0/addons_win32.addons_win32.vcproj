@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="addons_win32"
-	ProjectGUID="{C1904BB1-C1D5-4F0F-8301-A30ABD776156}"
+	ProjectGUID="{E53EEC49-6807-4C20-890E-BBAC641D31C9}"
 	>
 	<Platforms>
 		<Platform

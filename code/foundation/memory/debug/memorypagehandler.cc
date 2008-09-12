@@ -5,7 +5,7 @@
 #include "stdneb.h"
 #include "memory/debug/memorypagehandler.h"
 #include "memory/heap.h"
-#include "http/htmlpagewriter.h"
+#include "http/html/htmlpagewriter.h"
 
 namespace Debug
 {
@@ -23,16 +23,7 @@ MemoryPageHandler::MemoryPageHandler()
 {
     this->SetName("Memory");
     this->SetDesc("show memory debug information");
-    this->SetRootLocation("/memory");
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-MemoryPageHandler::AcceptsRequest(const Ptr<HttpRequest>& request)
-{
-    return (HttpMethod::Get == request->GetMethod()) && String::MatchPattern(request->GetURI().LocalPath(), "memory*");
+    this->SetRootLocation("memory");
 }
 
 //------------------------------------------------------------------------------
@@ -81,28 +72,28 @@ MemoryPageHandler::HandleRequest(const Ptr<HttpRequest>& request)
         htmlWriter->Element(HtmlElement::Heading3, "Nebula3 Overall Stats");
         htmlWriter->Begin(HtmlElement::Table);
             htmlWriter->Begin(HtmlElement::TableRow);
-                htmlWriter->Element(HtmlElement::TableData, "Nebula3 Global Alloc Count: ");
-                htmlWriter->Element(HtmlElement::TableData, String::FromInt(Memory::AllocCount));
+                htmlWriter->Element(HtmlElement::TableData, "Nebula3 Global Heaps Alloc Count: ");
+                htmlWriter->Element(HtmlElement::TableData, String::FromInt(Memory::TotalAllocCount));
             htmlWriter->End(HtmlElement::TableRow);
             htmlWriter->Begin(HtmlElement::TableRow);
-                htmlWriter->Element(HtmlElement::TableData, "Nebula3 Global Alloc Size: ");
-                htmlWriter->Element(HtmlElement::TableData, String::FromInt(Memory::AllocSize) + " bytes");
+                htmlWriter->Element(HtmlElement::TableData, "Nebula3 Global Heaps Alloc Size: ");
+                htmlWriter->Element(HtmlElement::TableData, String::FromInt(Memory::TotalAllocSize) + " bytes");
             htmlWriter->End(HtmlElement::TableRow);
             htmlWriter->Begin(HtmlElement::TableRow);
-                htmlWriter->Element(HtmlElement::TableData, "Nebula3 Heap Alloc Count: ");
+                htmlWriter->Element(HtmlElement::TableData, "Nebula3 Local Heaps Alloc Count: ");
                 htmlWriter->Element(HtmlElement::TableData, String::FromInt(heapAllocCount));
             htmlWriter->End(HtmlElement::TableRow);
             htmlWriter->Begin(HtmlElement::TableRow);
-                htmlWriter->Element(HtmlElement::TableData, "Nebula3 Heap Alloc Size: ");
+                htmlWriter->Element(HtmlElement::TableData, "Nebula3 Local Heaps Alloc Size: ");
                 htmlWriter->Element(HtmlElement::TableData, String::FromInt(heapAllocSize) + " bytes");
             htmlWriter->End(HtmlElement::TableRow);
             htmlWriter->Begin(HtmlElement::TableRow);
                 htmlWriter->Element(HtmlElement::TableData, "Nebula3 Overall Alloc Count: ");
-                htmlWriter->Element(HtmlElement::TableData, String::FromInt(heapAllocCount + Memory::AllocCount));
+                htmlWriter->Element(HtmlElement::TableData, String::FromInt(heapAllocCount + Memory::TotalAllocCount));
             htmlWriter->End(HtmlElement::TableRow);
             htmlWriter->Begin(HtmlElement::TableRow);
                 htmlWriter->Element(HtmlElement::TableData, "Nebula3 Overall Alloc Size: ");
-                htmlWriter->Element(HtmlElement::TableData, String::FromInt(heapAllocSize + Memory::AllocSize) + " bytes");
+                htmlWriter->Element(HtmlElement::TableData, String::FromInt(heapAllocSize + Memory::TotalAllocSize) + " bytes");
             htmlWriter->End(HtmlElement::TableRow);
             htmlWriter->Begin(HtmlElement::TableRow);
                 htmlWriter->Element(HtmlElement::TableData, "Process and Local Heaps Valid Checks: ");
@@ -111,7 +102,7 @@ MemoryPageHandler::HandleRequest(const Ptr<HttpRequest>& request)
         htmlWriter->End(HtmlElement::Table);
 
         // lowlevel system stats
-        Memory::MemoryStatus globalStats = Memory::GetMemoryStatus();
+        Memory::TotalMemoryStatus globalStats = Memory::GetTotalMemoryStatus();
         const int mega = 1024 * 1024;
         htmlWriter->Element(HtmlElement::Heading3, "System Memory Stats");
         htmlWriter->Begin(HtmlElement::Table);
@@ -133,7 +124,29 @@ MemoryPageHandler::HandleRequest(const Ptr<HttpRequest>& request)
             htmlWriter->End(HtmlElement::TableRow);
         htmlWriter->End(HtmlElement::Table);
 
-        // display per-heap info
+        // display global heaps info
+        htmlWriter->Element(HtmlElement::Heading3, "Global Heap Stats");
+        htmlWriter->AddAttr("border", "1");
+        htmlWriter->AddAttr("rules", "cols");
+        htmlWriter->Begin(HtmlElement::Table);
+            htmlWriter->AddAttr("bgcolor", "lightsteelblue");
+            htmlWriter->Begin(HtmlElement::TableRow);
+                htmlWriter->Element(HtmlElement::TableHeader, "Heap Name");
+                htmlWriter->Element(HtmlElement::TableHeader, "Alloc Count");
+                htmlWriter->Element(HtmlElement::TableHeader, "Alloc Size");
+            htmlWriter->End(HtmlElement::TableRow);
+
+            for (i = 0; i < Memory::NumHeapTypes; i++)
+            {
+                htmlWriter->Begin(HtmlElement::TableRow);
+                    htmlWriter->Element(HtmlElement::TableData, Memory::GetHeapTypeName((Memory::HeapType)i));
+                    htmlWriter->Element(HtmlElement::TableData, String::FromInt(Memory::HeapTypeAllocCount[i]));
+                    htmlWriter->Element(HtmlElement::TableData, String::FromInt(Memory::HeapTypeAllocSize[i]));
+                htmlWriter->End(HtmlElement::TableRow);
+            }
+        htmlWriter->End(HtmlElement::Table);
+
+        // display local heaps info
         htmlWriter->Element(HtmlElement::Heading3, "Local Heap Stats");
         htmlWriter->AddAttr("border", "1");
         htmlWriter->AddAttr("rules", "cols");

@@ -18,11 +18,7 @@ using namespace Util;
 */
 ResourceMapper::ResourceMapper() :
     isAttached(false),
-    #if __WII__
-    asyncEnabled(false)
-    #else
     asyncEnabled(true)
-    #endif
 {
     // empty
 }

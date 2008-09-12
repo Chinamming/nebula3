@@ -14,7 +14,7 @@
 */
 #include "resources/resourceloader.h"
 #include "io/stream.h"
-#include "interface/iomsg/readstream.h"
+#include "interface/interfaceprotocol.h"
 
 //------------------------------------------------------------------------------
 namespace Models

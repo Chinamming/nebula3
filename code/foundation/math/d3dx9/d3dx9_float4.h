@@ -134,6 +134,7 @@ public:
 
 protected:
     friend class matrix44;
+    friend class quaternion;
 
     scalar X;
     scalar Y;

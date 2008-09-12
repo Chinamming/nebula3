@@ -1,33 +1,23 @@
 //------------------------------------------------------------------------------
 //  graphicsserver.cc
-//  (C) 2007 Radon Labs GmbH
+//  (C) 2008 Radon Labs GmbH
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "graphics/graphicsserver.h"
-#include "graphics/stage.h"
-#include "graphics/view.h"
-#include "graphics/stagebuilder.h"
-#include "resources/resourcemanager.h"
-#include "coregraphics/renderdevice.h"
-#include "coregraphics/displaydevice.h"
 
 namespace Graphics
 {
-ImplementClass(Graphics::GraphicsServer, 'GFXS', Core::RefCounted);
+ImplementClass(Graphics::GraphicsServer, 'GSRV', Core::RefCounted);
 ImplementSingleton(Graphics::GraphicsServer);
 
-using namespace Core;
 using namespace Util;
 using namespace Math;
-using namespace Resources;
-using namespace CoreGraphics;
 
 //------------------------------------------------------------------------------
 /**
 */
 GraphicsServer::GraphicsServer() :
-    isOpen(false),
-    frameCount(0)
+    isOpen(false)
 {
     ConstructSingleton;
 }
@@ -71,20 +61,21 @@ GraphicsServer::Close()
 /**
 */
 Ptr<Stage>
-GraphicsServer::CreateStage(const StringAtom& stageName, const Ptr<StageBuilder>& stageBuilder)
+GraphicsServer::CreateStage(const Util::StringAtom& name, const Core::Rtti& stageBuilderClass, const Attr::AttributeContainer& stageBuilderAttrs)
 {
     n_assert(this->isOpen);
-    n_assert(!this->stageIndexMap.Contains(stageName));
+    n_assert(!this->stageIndexMap.Contains(name));
 
-    Ptr<Stage> newStage = Stage::Create();
-    newStage->SetName(stageName);
-    newStage->SetStageBuilder(stageBuilder);
-    newStage->OnAttachToServer();
+    Ptr<Stage> stage = Stage::Create();
+    stage->SetName(name);
+    stage->SetStageBuilderClass(stageBuilderClass);
+    stage->SetStageBuilderAttributes(stageBuilderAttrs);
+    stage->Setup();
 
-    this->stages.Append(newStage);
-    this->stageIndexMap.Add(stageName, this->stages.Size() - 1);
+    this->stages.Append(stage);
+    this->stageIndexMap.Add(name, this->stages.Size() - 1);
 
-    return newStage;
+    return stage;
 }
 
 //------------------------------------------------------------------------------
@@ -96,7 +87,7 @@ GraphicsServer::DiscardStage(const Ptr<Stage>& stage)
     n_assert(this->stageIndexMap.Contains(stage->GetName()));
     this->stages.EraseIndex(this->stageIndexMap[stage->GetName()]);
     this->stageIndexMap.Erase(stage->GetName());
-    stage->OnRemoveFromServer();
+    stage->Discard();
 }
 
 //------------------------------------------------------------------------------
@@ -106,10 +97,9 @@ void
 GraphicsServer::DiscardAllStages()
 {
     IndexT i;
-    SizeT num = this->stages.Size();
-    for (i = 0; i < num; i++)
+    for (i = 0; i < this->stages.Size(); i++)
     {
-        this->stages[i]->OnRemoveFromServer();
+        this->stages[i]->Discard();
     }
     this->stages.Clear();
     this->stageIndexMap.Clear();
@@ -146,22 +136,26 @@ GraphicsServer::GetStages() const
 /**
 */
 Ptr<View>
-GraphicsServer::CreateView(const Core::Rtti& viewClass, const StringAtom& viewName, bool isDefaultView)
+GraphicsServer::CreateView(const Core::Rtti& viewClass, const Util::StringAtom& viewName, const Util::StringAtom& stageName, const Resources::ResourceId& frameShaderName, bool isDefaultView)
 {
+    n_assert(this->isOpen);
     n_assert(!this->viewIndexMap.Contains(viewName));
-    n_assert(viewClass.IsDerivedFrom(View::RTTI));
 
-    Ptr<View> newView = (View*) viewClass.Create();
-    newView->SetName(viewName);
-    newView->OnAttachToServer();
+    Ptr<View> view = View::Create();
+    view->SetName(viewName);
+    view->SetViewClass(viewClass);
+    view->SetStageName(stageName);
+    view->SetFrameShaderName(frameShaderName);
+    view->SetDefaultView(isDefaultView);
+    view->Setup();
 
-    this->views.Append(newView);
+    this->views.Append(view);
     this->viewIndexMap.Add(viewName, this->views.Size() - 1);
     if (isDefaultView)
     {
-        this->SetDefaultView(newView);
+        this->defaultView = view;
     }
-    return newView;
+    return view;
 }
 
 //------------------------------------------------------------------------------
@@ -170,14 +164,16 @@ GraphicsServer::CreateView(const Core::Rtti& viewClass, const StringAtom& viewNa
 void
 GraphicsServer::DiscardView(const Ptr<View>& view)
 {
+    n_assert(this->isOpen);
     n_assert(this->viewIndexMap.Contains(view->GetName()));
+
     this->views.EraseIndex(this->viewIndexMap[view->GetName()]);
     this->viewIndexMap.Erase(view->GetName());
     if (view == this->defaultView)
     {
         this->defaultView = 0;
     }
-    view->OnRemoveFromServer();
+    view->Discard();
 }
 
 //------------------------------------------------------------------------------
@@ -186,11 +182,11 @@ GraphicsServer::DiscardView(const Ptr<View>& view)
 void
 GraphicsServer::DiscardAllViews()
 {
+    n_assert(this->isOpen);
     IndexT i;
-    SizeT num = this->views.Size();
-    for (i = 0; i < num; i++)
+    for (i = 0; i < this->views.Size(); i++)
     {
-        this->views[i]->OnRemoveFromServer();
+        this->views[i]->Discard();
     }
     this->views.Clear();
     this->viewIndexMap.Clear();
@@ -227,15 +223,6 @@ GraphicsServer::GetViews() const
 //------------------------------------------------------------------------------
 /**
 */
-void
-GraphicsServer::SetDefaultView(const Ptr<View>& defView)
-{
-    this->defaultView = defView;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 const Ptr<View>&
 GraphicsServer::GetDefaultView() const
 {
@@ -246,66 +233,21 @@ GraphicsServer::GetDefaultView() const
 /**
 */
 void
-GraphicsServer::OnFrame(Timing::Time curTime)
+GraphicsServer::OnFrame()
 {
-    RenderDevice* renderDevice = RenderDevice::Instance();
-    DisplayDevice* displayDevice = DisplayDevice::Instance();
-
-    // call pre-render update on resource manager
-    ResourceManager::Instance()->Prepare();
-
-    // process window messages
-    displayDevice->ProcessWindowMessages();
-
-    // start rendering
-    if (renderDevice->BeginFrame())
+    IndexT i;
+    for (i = 0; i < this->stages.Size(); i++)
     {
-        // render the default view
-        if (this->defaultView.isvalid() && this->defaultView->GetCameraEntity().isvalid())
-        {
-            const Ptr<Stage> defaultStage = this->defaultView->GetStage();
-
-            // update the view's stage, this will happen only once
-            // per frame, regardless of how many views are attached to the stage
-            defaultStage->UpdateEntities(curTime, this->frameCount);
-
-            // update visibility from the default view's camera
-            this->defaultView->UpdateVisibilityLinks();
-
-            // update light linking for visible lights
-            defaultStage->UpdateLightLinks();
-
-            // finally render the view
-            this->defaultView->Render();
-        }
-        else
-        {
-            // hmm, no default view set, or default view doesn't have a valid
-            // camera yet, just render an empty frame
-            renderDevice->BeginPass(renderDevice->GetDefaultRenderTarget(), 0);
-            renderDevice->EndPass();
-        }
-        renderDevice->EndFrame();
-        renderDevice->Present();
+        this->stages[i]->OnFrame();
     }
-    
-    // call post-render update on Resource Manager
-    ResourceManager::Instance()->Update();
-
-    // if we're running in windowed mode, give up time-slice
-    if (!displayDevice->IsFullscreen())
-    {
-        Timing::Sleep(0.0);
-    }
-
-    // update the frame count
-    this->frameCount++;
 }
 
 //------------------------------------------------------------------------------
 /**
     Utility function which computes a ray in world space between the eye
     and the current mouse position on the near plane.
+
+    FIXME: this doesn't belong here!
 */
 line
 GraphicsServer::ComputeWorldMouseRay(const float2& mousePos, float length, const matrix44& viewMatrix, const matrix44& invProjMatrix, float nearPlane)

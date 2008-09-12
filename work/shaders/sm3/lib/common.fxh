@@ -29,6 +29,7 @@ technique name < string Mask = features; > \
 }
 
 float4x4 mvp   : ModelViewProjection;
+float4x4 imv   : InvModelView;
 float4x4 model : Model;
 
 texture diffMap : DiffMap0;

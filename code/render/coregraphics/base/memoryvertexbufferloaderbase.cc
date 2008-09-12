@@ -31,41 +31,30 @@ MemoryVertexBufferLoaderBase::Setup(const Util::Array<CoreGraphics::VertexCompon
 {
     n_assert(num > 0);
     n_assert(0 != ptr);
+
     this->vertexComponents = components;
     this->numVertices = num;
 	this->vertexDataPtr = ptr;
 	this->vertexDataSize = numBytes;
-	//set default settings
 	this->vertexBufferUsage = CoreGraphics::VertexBuffer::UsageImmutable;
 	this->accessMode = CoreGraphics::VertexBuffer::AccessNone;
-	
 }
-
-
 
 //------------------------------------------------------------------------------
 /**
     Setup all information needed to initialize a empty VertexBuffer resource.
 */
-
 void 
-MemoryVertexBufferLoaderBase::Setup(const Util::Array<CoreGraphics::VertexComponent>& vertexComponents, SizeT num,SizeT numBytes,
-				CoreGraphics::VertexBuffer::Usage usage, CoreGraphics::VertexBuffer::Access access)
+MemoryVertexBufferLoaderBase::Setup(const Util::Array<CoreGraphics::VertexComponent>& vertexComponents, SizeT num,SizeT numBytes, CoreGraphics::VertexBuffer::Usage usage, CoreGraphics::VertexBuffer::Access access)
 {
 	n_assert(num > 0);
-	
-	
-	this->vertexComponents = vertexComponents;
+
+    this->vertexComponents = vertexComponents;
 	this->numVertices = num;
-	//start as empty vertexbuffer
 	this->vertexDataPtr = 0;
     this->vertexDataSize = numBytes;
-	
-	
 	this->vertexBufferUsage = usage;
 	this->accessMode = access;
-	
-
 }
 
 //------------------------------------------------------------------------------
@@ -75,19 +64,17 @@ MemoryVertexBufferLoaderBase::Setup(const Util::Array<CoreGraphics::VertexCompon
     will invaliate the data).
 */
 void
-MemoryVertexBufferLoaderBase::Setup(const Util::Array<CoreGraphics::VertexComponent>& components, SizeT num, void* ptr, SizeT numBytes,
-									CoreGraphics::VertexBuffer::Usage usage, CoreGraphics::VertexBuffer::Access access)
+MemoryVertexBufferLoaderBase::Setup(const Util::Array<CoreGraphics::VertexComponent>& components, SizeT num, void* ptr, SizeT numBytes, CoreGraphics::VertexBuffer::Usage usage, CoreGraphics::VertexBuffer::Access access)
 {
     n_assert(num > 0);
     n_assert(0 != ptr);
+
     this->vertexComponents = components;
     this->numVertices = num;
 	this->vertexDataPtr = ptr;
-	this->vertexDataSize = numBytes;
-		
+	this->vertexDataSize = numBytes;		
 	this->vertexBufferUsage = usage;
-	this->accessMode = access;
-	
+	this->accessMode = access;	
 }
 
-}; // namespace Base
+} // namespace Base

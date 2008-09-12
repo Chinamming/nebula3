@@ -13,29 +13,38 @@
 */    
 #if __WIN32__
 #include "coregraphics/base/meshbase.h"
+#include "coregraphics/d3d9/d3d9streammeshloader.h"
 namespace CoreGraphics
 {
 class Mesh : public Base::MeshBase
 {
     DeclareClass(Mesh);
+private:
+    friend class Direct3D9::D3D9StreamMeshLoader;
 };
 }
 #elif __XBOX360__
 #include "coregraphics/base/meshbase.h"
+#include "coregraphics/xbox360/xbox360streammeshloader.h"
 namespace CoreGraphics
 {
 class Mesh : public Base::MeshBase
 {
     DeclareClass(Mesh);
+private:
+    friend class Xbox360::Xbox360StreamMeshLoader;
 };
 }
 #elif __WII__
 #include "coregraphics/wii/wiimesh.h"
+#include "coregraphics/wii/wiistreammeshloader.h"
 namespace CoreGraphics
 {
 class Mesh : public Wii::WiiMesh
 {
     DeclareClass(Mesh);
+private:
+    friend class Wii::WiiStreamMeshLoader;
 };
 }
 #else

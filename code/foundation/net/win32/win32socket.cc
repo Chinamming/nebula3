@@ -21,11 +21,7 @@ Win32Socket::Win32Socket() :
     isBlocking(true),
     isBound(false)
 {
-    // one time init of Windows Sockets
-    if (!NetworkInitialized)
-    {
-        this->InitNetwork();
-    }
+    n_assert(NetworkInitialized);
 }
 
 //------------------------------------------------------------------------------
@@ -41,7 +37,9 @@ Win32Socket::~Win32Socket()
 
 //------------------------------------------------------------------------------
 /**
-    This is a one-time init for the Windows Sockets system.
+    This is a one-time init for the Windows Sockets system. The method
+    is called from SysFunc::Setup() once at startup before any threads
+    are launched.
 */
 void
 Win32Socket::InitNetwork()

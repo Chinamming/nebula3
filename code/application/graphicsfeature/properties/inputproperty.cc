@@ -10,15 +10,8 @@
 #include "input/keyboard.h"
 #include "input/mouse.h"
 #include "input/gamepad.h"
-#include "msg/camerareset.h"
-#include "msg/cameraorbit.h"
-#include "msg/cameradistance.h"
-#include "msg/inputfocus.h"
-#include "msg/applyimpulseatpos.h"
-#include "msg/moverotate.h"
-#include "msg/movestop.h"
-#include "msg/movedirection.h"
-#include "msg/setanimation.h"
+#include "graphicsprotocol.h"
+#include "basegameprotocol.h"
 #include "io/console.h"
 
 namespace Attr

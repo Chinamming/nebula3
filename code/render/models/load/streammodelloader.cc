@@ -5,7 +5,7 @@
 #include "stdneb.h"
 #include "models/load/streammodelloader.h"
 #include "interface/iointerface.h"
-#include "interface/iomsg/readstream.h"
+#include "interface/interfaceprotocol.h"
 #include "io/memorystream.h"
 #include "models/model.h"
 #include "models/load/binarymodelreader.h"

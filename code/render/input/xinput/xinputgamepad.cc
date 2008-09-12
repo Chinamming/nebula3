@@ -30,6 +30,11 @@ XInputGamePad::~XInputGamePad()
 /**
     This compares the current state of the game pad against the
     previous state and sets the internal state accordingly.
+
+    FIXME: Calling XInputGetState() on non-connected controllers is very 
+    expensive, thus if XInputGetState return ERROR_DEVICE_NOT_CONNECTED, only
+    call XInputGetState() every 2 seconds to check if a device has actually
+    been connected!!!
 */
 void
 XInputGamePad::OnBeginFrame()

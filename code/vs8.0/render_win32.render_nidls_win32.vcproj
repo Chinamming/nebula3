@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="render_nidls_win32"
-	ProjectGUID="{545D9F54-0A16-4015-B84E-775DAE9130B4}"
+	ProjectGUID="{2DD2AA76-6D4C-41AA-8BD8-45ADAED68591}"
 	>
 	<Platforms>
 		<Platform
@@ -181,11 +181,11 @@
 	</References>
 	<Files>
 		<Filter
-			Name="asyncgraphics"
+			Name="graphics"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 			>
 			<File
-				RelativePath="..\render\asyncgraphics\protocol.nidl"
+				RelativePath="..\render\graphics\graphicsprotocol.nidl"
 				>
 			</File>
 		</Filter>

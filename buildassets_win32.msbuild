@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	Export Nebula3 project assets for Win32 platform.
-	
-	(C) 2007 Radon Labs GmbH
+    Export Nebula3 project assets for Win32 platform.
+    
+    (C) 2007 Radon Labs GmbH
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="All">
 
@@ -11,7 +11,7 @@
         <ProjDir>c:\nebula3</ProjDir>
         <ToolkitDir>c:\Programme\Nebula2 Toolkit For Maya\bin\win32</ToolkitDir>
         <MayaDir>c:\Programme\Alias\Maya7.0\bin</MayaDir>
-        <DXSDK>c:\Programme\Microsoft DirectX SDK (November 2007)\Utilities\Bin\x86</DXSDK>
+        <DXSDK>c:\Programme\Microsoft DirectX SDK (June 2008)\Utilities\Bin\x86</DXSDK>
         <WorkDir>$(ProjDir)\work</WorkDir>
         <ShaderDir>$(ProjDir)\work\shaders</ShaderDir>
         <ExportDir>$(ProjDir)\export</ExportDir>

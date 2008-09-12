@@ -52,7 +52,10 @@ Composite::~Composite()
 void
 Composite::ClearJoints()
 {
-    this->jointArray.Clear(0);
+    if (!this->jointArray.IsEmpty())
+    {
+        this->jointArray.Fill(0);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -62,7 +65,10 @@ Composite::ClearJoints()
 void
 Composite::ClearBodies()
 {
-    this->bodyArray.Clear(0);
+    if (!this->bodyArray.IsEmpty())
+    {
+        this->bodyArray.Fill(0);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -72,7 +78,10 @@ Composite::ClearBodies()
 void
 Composite::ClearShapes()
 {
-    this->shapeArray.Clear(0);
+    if (!this->shapeArray.IsEmpty())
+    {
+        this->shapeArray.Fill(0);
+    }
 }
 
 //------------------------------------------------------------------------------

@@ -2,6 +2,8 @@
 #define PROPERTIES_GRAPHICSPROPERTY_H
 //------------------------------------------------------------------------------
 /**
+    @class GraphicsFeature::GraphicsProperty
+
     This is the standard graphics property which adds visibility to a game 
     entity. 
 
