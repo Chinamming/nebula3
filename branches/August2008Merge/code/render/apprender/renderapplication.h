@@ -18,7 +18,6 @@
 #include "graphics/display.h"
 #include "input/inputserver.h"
 #include "timing/timer.h"
-#include "debug/debuginterface.h"
 #include "debug/debugtimer.h"
 
 #if !__WII__
