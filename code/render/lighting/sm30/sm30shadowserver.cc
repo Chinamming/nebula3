@@ -7,7 +7,7 @@
 #include "frame/frameserver.h"
 #include "coregraphics/transformdevice.h"
 #include "models/visresolver.h"
-#include "graphics/modelentity.h"
+#include "internalgraphics/internalmodelentity.h"
 
 namespace Lighting
 {
@@ -18,7 +18,7 @@ using namespace Util;
 using namespace Frame;
 using namespace Resources;
 using namespace CoreGraphics;
-using namespace Graphics;
+using namespace InternalGraphics;
 using namespace Models;
 
 //------------------------------------------------------------------------------
@@ -160,19 +160,19 @@ SM30ShadowServer::UpdateLocalLightShadowBuffers()
     for (lightIndex = 0; lightIndex < numLights; lightIndex++)
     {
         // render shadow casters in current light volume to shadow buffer
-        const Ptr<AbstractLightEntity>& lightEntity = this->localLightEntities[lightIndex];
+        const Ptr<InternalAbstractLightEntity>& lightEntity = this->localLightEntities[lightIndex];
         transDev->SetViewTransform(lightEntity->GetInvTransform());
         transDev->SetProjTransform(lightEntity->GetProjTransform());
 
         // perform visibility resolve for current light
         visResolver->BeginResolve();
-        const Array<Ptr<GraphicsEntity> >& visLinks = lightEntity->GetLinks(GraphicsEntity::LightLink);
+        const Array<Ptr<InternalGraphicsEntity> >& visLinks = lightEntity->GetLinks(InternalGraphicsEntity::LightLink);
         IndexT linkIndex;
         for (linkIndex = 0; linkIndex < visLinks.Size(); linkIndex++)
         {
-            const Ptr<GraphicsEntity>& curEntity = visLinks[linkIndex];
-            n_assert(GraphicsEntity::ModelType == curEntity->GetType());
-            const Ptr<ModelEntity>& modelEntity = curEntity.downcast<ModelEntity>();
+            const Ptr<InternalGraphicsEntity>& curEntity = visLinks[linkIndex];
+            n_assert(InternalGraphicsEntityType::Model == curEntity->GetType());
+            const Ptr<InternalModelEntity>& modelEntity = curEntity.downcast<InternalModelEntity>();
             visResolver->AttachVisibleModelInstance(modelEntity->GetModelInstance());
         }
         visResolver->EndResolve();
@@ -247,18 +247,18 @@ SM30ShadowServer::UpdatePSSMShadowBuffers()
 
         // perform visibility resolve
         visResolver->BeginResolve();
-        const Array<Ptr<GraphicsEntity> >& visLinks = this->globalLightEntity->GetLinks(GraphicsEntity::LightLink);
+        const Array<Ptr<InternalGraphicsEntity> >& visLinks = this->globalLightEntity->GetLinks(InternalGraphicsEntity::LightLink);
         IndexT linkIndex;
         for (linkIndex = 0; linkIndex < visLinks.Size(); linkIndex++)
         {
-            const Ptr<GraphicsEntity>& curEntity = visLinks[linkIndex];
-            n_assert(GraphicsEntity::ModelType == curEntity->GetType());
+            const Ptr<InternalGraphicsEntity>& curEntity = visLinks[linkIndex];
+            n_assert(InternalGraphicsEntityType::Model == curEntity->GetType());
 
             // test if the current graphics entity falls into the current split volume
             // (FIXME: need to check against extruded shadow bounding box!)
             if (curEntity->GetGlobalBoundingBox().clipstatus(splitLightProjMatrix) != ClipStatus::Outside)
             {
-                const Ptr<ModelEntity>& modelEntity = curEntity.downcast<ModelEntity>();
+                const Ptr<InternalModelEntity>& modelEntity = curEntity.downcast<InternalModelEntity>();
                 visResolver->AttachVisibleModelInstance(modelEntity->GetModelInstance());
             }
         }

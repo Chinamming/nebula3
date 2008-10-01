@@ -4,15 +4,15 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "graphics/cameraentity.h"
-#include "coregraphics/displaydevice.h"
-#include "graphics/view.h"
+#include "graphics/display.h"
+#include "graphics/stage.h"
 
 namespace Graphics
 {
-ImplementClass(Graphics::CameraEntity, 'CMRE', Graphics::GraphicsEntity);
+ImplementClass(Graphics::CameraEntity, 'GCET', Graphics::GraphicsEntity);
 
+using namespace Util;
 using namespace Math;
-using namespace CoreGraphics;
 
 //------------------------------------------------------------------------------
 /**
@@ -20,8 +20,8 @@ using namespace CoreGraphics;
 CameraEntity::CameraEntity() :
     viewProjDirty(true)
 {
-    this->SetType(CameraType);
-    float aspectRatio = DisplayDevice::Instance()->GetDisplayMode().GetAspectRatio();
+    this->SetType(GraphicsEntityType::Camera);
+    float aspectRatio = Display::Instance()->GetDisplayMode().GetAspectRatio();
     this->SetupPerspectiveFov(n_deg2rad(60.0f), aspectRatio, 0.01f, 1000.0f);
     this->viewMatrix = matrix44::identity();
     this->viewProjMatrix = matrix44::identity();
@@ -37,50 +37,53 @@ CameraEntity::~CameraEntity()
 
 //------------------------------------------------------------------------------
 /**
+    Setup the server-side camera entity.
 */
-bool
-CameraEntity::IsAttachedToView() const
+void
+CameraEntity::Setup(const Ptr<Stage>& stage_)
 {
-    return this->view.isvalid();
+    GraphicsEntity::Setup(stage_);
+
+    // send off an entity creation message
+    Ptr<CreateCameraEntity> msg = CreateCameraEntity::Create();
+    msg->SetStageName(this->stage->GetName());
+    msg->SetTransform(this->transform);
+    msg->SetVisible(this->isVisible);
+    msg->SetIsPerspective(this->isPersp);
+    msg->SetNearPlane(this->zNear);
+    msg->SetFarPlane(this->zFar);
+    if (this->isPersp)
+    {
+        msg->SetPerspFieldOfView(this->fov);
+        msg->SetPerspAspectRatio(this->aspect);
+    }
+    else
+    {
+        msg->SetOrthoWidth(this->nearWidth);
+        msg->SetOrthoHeight(this->nearHeight);
+    }
+    this->SendCreateMsg(msg.cast<CreateGraphicsEntity>());
 }
 
 //------------------------------------------------------------------------------
 /**
+    Property remove from view if we are attached to a view.
 */
 void
-CameraEntity::OnAttachToView(const Ptr<View>& v)
+CameraEntity::Discard()
 {
-    n_assert(!this->view.isvalid());
-    this->view = v;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-CameraEntity::OnRemoveFromView(const Ptr<View>& v)
-{
-    n_assert(this->view.isvalid() && this->view == v);
-    this->view = 0;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-CameraEntity::OnDeactivate()
-{
-    // if we're currently attached to a view, we need to detach first
     if (this->IsAttachedToView())
     {
         this->view->SetCameraEntity(0);
     }
-    GraphicsEntity::OnDeactivate();
+    // call parent
+    GraphicsEntity::Discard();
 }
 
 //------------------------------------------------------------------------------
 /**
     Setup camera as perspective projection.
+    NOTE: this method is a copy of CameraEntity::SetupPerspectiveFov()!
 */
 void
 CameraEntity::SetupPerspectiveFov(float fov_, float aspect_, float zNear_, float zFar_)
@@ -104,6 +107,7 @@ CameraEntity::SetupPerspectiveFov(float fov_, float aspect_, float zNear_, float
 //------------------------------------------------------------------------------
 /**
     Setup camera as orthogonal projection.
+    NOTE: this method is a copy of CameraEntity::SetupOrthogonal()!
 */
 void
 CameraEntity::SetupOrthogonal(float w, float h, float zNear_, float zFar_)
@@ -132,18 +136,32 @@ CameraEntity::OnTransformChanged()
 {
     this->viewMatrix = matrix44::inverse(this->GetTransform());
     this->viewProjDirty = true;
+    GraphicsEntity::OnTransformChanged();
 }
 
 //------------------------------------------------------------------------------
 /**
-    Computes the clip status of a bounding box in global space against
-    the view volume of this camera entity.
-*/    
-ClipStatus::Type
-CameraEntity::ComputeClipStatus(const bbox& box)
+*/
+void
+CameraEntity::OnAttachToView(const Ptr<View>& view_)
 {
-    ClipStatus::Type clipStatus = box.clipstatus(this->GetViewProjTransform());
-    return clipStatus;
+    this->view = view_;
+    Ptr<AttachCameraToView> msg = AttachCameraToView::Create();
+    msg->SetViewName(this->view->GetName());
+    this->SendMsg(msg.cast<GraphicsEntityMsg>());
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+CameraEntity::OnRemoveFromView(const Ptr<View>& view_)
+{
+    n_assert(this->view == view_);
+    Ptr<RemoveCameraFromView> msg = RemoveCameraFromView::Create();
+    msg->SetViewName(this->view->GetName());
+    this->SendMsg(msg.cast<GraphicsEntityMsg>());
+    this->view = 0;
 }
 
 //------------------------------------------------------------------------------

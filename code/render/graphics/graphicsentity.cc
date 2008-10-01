@@ -4,30 +4,25 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "graphics/graphicsentity.h"
+#include "graphics/graphicsinterface.h"
 #include "graphics/stage.h"
-#include "graphics/cell.h"
 
 namespace Graphics
 {
-ImplementClass(Graphics::GraphicsEntity, 'GREN', Core::RefCounted);
+ImplementClass(Graphics::GraphicsEntity, 'GREP', Core::RefCounted);
 
-using namespace Util;
 using namespace Math;
+using namespace Messaging;
 
 //------------------------------------------------------------------------------
 /**
 */
 GraphicsEntity::GraphicsEntity() :
-    type(InvalidType),
-    isActive(false),
-    isValid(false),
+    transform(matrix44::identity()),
+    type(GraphicsEntityType::InvalidType),
     isVisible(true),
-    globalBoxDirty(true),
-    boundingBoxChanged(false),
-    transformChanged(false),
-    transform(matrix44::identity())
+    graphicsEntityHandle(0)
 {
-    this->links.SetSize(NumLinkTypes);
     // empty
 }
 
@@ -36,245 +31,16 @@ GraphicsEntity::GraphicsEntity() :
 */
 GraphicsEntity::~GraphicsEntity()
 {
-    n_assert(!this->IsActive());
-}
-
-//------------------------------------------------------------------------------
-/**
-    Activate the entity. This method is called when the entity
-    is created an attached to the graphics server. During OnActivate()
-    the entity should perform any one-time initializations.
-*/
-void
-GraphicsEntity::OnActivate()
-{
-    n_assert(!this->IsActive());
-    this->isActive = true;
-    this->isValid = true;
-}
-
-//------------------------------------------------------------------------------
-/**
-    Deactivate the entity, this method is called when the entity
-    is removed from the graphics server. Any initialization done
-    in OnActivate() should be undone here.
-*/
-void
-GraphicsEntity::OnDeactivate()
-{
-    n_assert(this->IsActive());
-    if (this->IsAttachedToStage())
-    {
-        this->stage->RemoveEntity(this);
-    }
-    n_assert(!this->IsAttachedToStage());
-    n_assert(!this->IsAttachedToCell());
-    IndexT i;
-    for (i = 0; i < NumLinkTypes; i++)
-    {
-        n_assert(this->links[i].IsEmpty());
-    }
-    this->isActive = false;
-}
-
-//------------------------------------------------------------------------------
-/**
-    This method is called when the graphics entity is attached to a stage. An
-    entity may only be attached to one stage at any time, but can be
-    attached to different stages during its lifetime. Attachging an entity
-    to a stage may be relatively slow because the entity must be inserted
-    into the cell hierarchy.
-*/
-void
-GraphicsEntity::OnAttachToStage(const Ptr<Stage>& s)
-{
-    n_assert(this->IsActive());
-    n_assert(!this->IsAttachedToStage());
-    n_assert(!this->IsAttachedToCell());
-    IndexT i;
-    for (i = 0; i < NumLinkTypes; i++)
-    {
-        n_assert(this->links[i].IsEmpty());
-    }
-    this->stage = s;
-}
-
-//------------------------------------------------------------------------------
-/**
-    This method is called when the graphics entity is removed from a stage.
-*/
-void
-GraphicsEntity::OnRemoveFromStage()
-{
-    n_assert(this->IsActive());
-    n_assert(this->IsAttachedToStage());
-    n_assert(!this->IsAttachedToCell());
-    this->ClearLinks(CameraLink);
-    this->ClearLinks(LightLink);
-    this->stage = 0;
-}
-
-//------------------------------------------------------------------------------
-/**
-    This method is called when the graphics entity is attached to a cell inside
-    a stage. When entity travel through the graphics world, they will be remove
-    and attached themselves from and to Cells as they cross Cell borders.
-*/
-void
-GraphicsEntity::OnAttachToCell(const Ptr<Cell>& c)
-{
-    n_assert(this->IsActive());
-    n_assert(this->IsAttachedToStage());
-    n_assert(!this->IsAttachedToCell());
-    this->cell = c;
-}
-
-//------------------------------------------------------------------------------
-/**
-    Called when the graphics entity is removed from a cell inside a
-    stage.
-*/
-void
-GraphicsEntity::OnRemoveFromCell()
-{
-    n_assert(this->IsActive());
-    n_assert(this->IsAttachedToStage());
-    n_assert(this->IsAttachedToCell());
-    this->cell = 0;
-}
-
-//------------------------------------------------------------------------------
-/**
-    This method is called from the SetVisible() method when the entity 
-    changes from invisible to visible state.
-*/
-void
-GraphicsEntity::OnShow()
-{
-    // empty
-}
-
-//------------------------------------------------------------------------------
-/**
-    This method is called from the SetVisible() method when the entity
-    changes from visible to invisible state.
-*/
-void
-GraphicsEntity::OnHide()
-{
-    // empty
-}
-
-//------------------------------------------------------------------------------
-/**
-    This method is called on the graphics entity to update itself,
-    for instance to implement hierarchy animation or particle 
-    updates.
-*/
-void
-GraphicsEntity::OnUpdate()
-{
-    // if our transformation or bounding box has changed
-    // we need to update our position in the cell tree
-    if (this->transformChanged || this->boundingBoxChanged)
-    {
-        this->transformChanged = false;
-        this->boundingBoxChanged = false;
-        this->UpdatePositionInCellTree();
-    }
-}
-
-//------------------------------------------------------------------------------
-/**
-    This method is called on the graphics entity to render itself. This method
-    will only be called if the entity is visible through the camera of the 
-    currently rendered View.
-*/
-void
-GraphicsEntity::OnRender()
-{
-    // empty
-}
-
-//------------------------------------------------------------------------------
-/**
-    This method is called whenever the transformation matrix has changed
-    by a call to SetTransform(). Override this method in a subclass if
-    it wants to be informed about changes to the transformation matrix.
-*/
-void
-GraphicsEntity::OnTransformChanged()
-{
-    // empty
-}
-
-//------------------------------------------------------------------------------
-/**
-    This method is called on the graphics entity to render a debug 
-    visualization of itself.
-*/
-void
-GraphicsEntity::OnRenderDebug()
-{
-    // empty
-}
-
-//------------------------------------------------------------------------------
-/**
-    This method is called to create an exact clone of this graphics entity.
-    The new entity will not be attached to a stage.
-*/
-Ptr<GraphicsEntity>
-GraphicsEntity::CreateClone() const
-{
-    Ptr<GraphicsEntity> clone = (GraphicsEntity*) this->GetRtti()->Create();
-    clone->SetTransform(this->transform);
-    clone->SetLocalBoundingBox(this->localBox);
-    return clone;
+    n_assert(!this->IsValid());
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-void
-GraphicsEntity::ClearLinks(LinkType linkType)
+bool
+GraphicsEntity::IsValid() const
 {
-    this->links[linkType].Clear();
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-GraphicsEntity::UpdateGlobalBoundingBox()
-{
-    n_assert(this->globalBoxDirty);
-    this->globalBox = this->localBox;
-    this->globalBox.transform(this->transform);
-    this->globalBoxDirty = false;
-}
-
-//------------------------------------------------------------------------------
-/**
-    This method is called from OnUpdate() when either the 
-    entity's transformation or bounding box has changed. It checks if the
-    entity still fits into its current cell, and if not, moves the entity
-    in a new cell.
-*/
-void
-GraphicsEntity::UpdatePositionInCellTree()
-{
-    // see if we need to move from one cell to another
-    if (this->cell.isvalid())
-    {
-        Ptr<GraphicsEntity> thisPtr(this);
-        const Ptr<Cell>& newCell = this->cell->FindEntityContainmentCell(thisPtr);
-        if (this->cell != newCell)
-        {
-            this->cell->RemoveEntity(thisPtr);
-            newCell->AttachEntity(thisPtr);
-        }
-    }
+    return this->stage.isvalid();
 }
 
 //------------------------------------------------------------------------------
@@ -288,40 +54,175 @@ GraphicsEntity::GetStage() const
 
 //------------------------------------------------------------------------------
 /**
+    Setup the graphics entity. Subclasses must send a specific
+    creation message in this method. This method is called from
+    StageProxy::AttachEntityProxy().
 */
-bool
-GraphicsEntity::IsAttachedToStage() const
+void
+GraphicsEntity::Setup(const Ptr<Stage>& stage_)
 {
-    return this->stage.isvalid();
+    n_assert(!this->IsValid());
+    n_assert(stage_.isvalid());
+    n_assert(!this->IsEntityHandleValid());
+    this->stage = stage_;
+}
+
+//------------------------------------------------------------------------------
+/**
+    Discard the server-side graphics entity. This method is called from
+    StageProxy::RemoveEntityProxy(). If the server-side entity hasn't been
+    created yet, this method needs to wait for completion, since the
+    entity handle won't be available yet!
+*/
+void
+GraphicsEntity::Discard()
+{
+    n_assert(this->IsValid());
+    this->stage = 0;
+
+    // first check if we need to wait for completion of the create message
+    if (!this->IsEntityHandleValid())
+    {
+        n_assert(this->pendingCreateMsg.isvalid());
+        
+        // first cancel all pending messages, they are no longer needed
+        this->pendingMessages.Clear();
+
+        // now wait for the render thread to create the entity
+        this->ValidateEntityHandle(true);
+        n_assert(this->IsEntityHandleValid());
+    }
+
+    // alright, create and send off the Discard message
+    Ptr<DiscardGraphicsEntity> msg = DiscardGraphicsEntity::Create();
+    msg->SetEntityHandle(this->graphicsEntityHandle);
+    GraphicsInterface::Instance()->Send(msg.cast<Message>());
+}
+
+//------------------------------------------------------------------------------
+/**
+    Tries to validate the entity handle by checking whether the 
+    pending creation message has already been handled by the server side.
+    If the wait flag is true, the method will wait until the entity
+    has been created on the server side. The default is to NOT wait.
+    If the graphics entity handle becomes valid, all pending messages
+    will be sent off to the server-side entity.
+*/
+void
+GraphicsEntity::ValidateEntityHandle(bool wait)
+{
+    if (!this->IsEntityHandleValid())
+    {
+        // need to wait for the server-side creation? this should
+        // only be the case for the final discard message
+        if (wait && (!this->pendingCreateMsg->Handled()))
+        {
+            GraphicsInterface::Instance()->Wait(this->pendingCreateMsg.cast<Message>());
+            n_assert(this->pendingCreateMsg->Handled());
+        }
+        
+        // if render thread has created our entity, read handle from
+        // message, delete message and send off any pending messages
+        if (this->pendingCreateMsg->Handled())
+        {
+            this->graphicsEntityHandle = this->pendingCreateMsg->GetEntityHandle();
+            n_assert(this->IsEntityHandleValid());
+            this->pendingCreateMsg = 0;
+
+            // send off any pending messages which have been created before
+            // the server-side entity was created
+            IndexT i;
+            for (i = 0; i < this->pendingMessages.Size(); i++)
+            {
+                this->pendingMessages[i]->SetEntityHandle(this->graphicsEntityHandle);
+                GraphicsInterface::Instance()->Send(this->pendingMessages[i].cast<Message>());
+            }
+            this->pendingMessages.Clear();
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+    Send a generic GraphicsEntityMsg to the server-side entity. Do not
+    initialize the entity handle of the message before calling this method,
+    since the server-side entity doesn't have to exist yet. In this case,
+    the message will be queued up and sent off as soon as the server-side
+    entity becomes valid.
+*/
+void
+GraphicsEntity::SendMsg(const Ptr<GraphicsEntityMsg>& msg)
+{
+    // try to validate the entity handle, do not wait for completion!
+    this->ValidateEntityHandle(false);
+
+    // if the entity handle is valid, we can directly send off the message,
+    // otherwise we need to queue up the message for later execution
+    if (this->IsEntityHandleValid())
+    {
+        msg->SetEntityHandle(this->graphicsEntityHandle);
+        GraphicsInterface::Instance()->Send(msg.cast<Message>());
+    }
+    else
+    {
+        // need to queue the message for later execution
+        this->pendingMessages.Append(msg);
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+    This method must be called from the Setup() method of a subclass to
+    send off a specific creation message. The message will be stored
+    in the proxy to get the entity handle back later when the server-side
+    graphics entity has been created.
+*/
+void
+GraphicsEntity::SendCreateMsg(const Ptr<CreateGraphicsEntity>& msg)
+{
+    n_assert(!this->pendingCreateMsg.isvalid());
+    n_assert(!this->IsEntityHandleValid());
+    this->pendingCreateMsg = msg;
+    GraphicsInterface::Instance()->Send(msg.cast<Message>());
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-const Ptr<Cell>&
-GraphicsEntity::GetCell() const
+void
+GraphicsEntity::SetTransform(const matrix44& m)
 {
-    return this->cell;
+    this->transform = m;
+    this->OnTransformChanged();
+}
+
+//------------------------------------------------------------------------------
+/**
+    Called by SetTransform(). This gives subclasses a chance to react
+    to changes on the transformation matrix.
+*/
+void
+GraphicsEntity::OnTransformChanged()
+{
+    // may need to notify server-side entity about transform change
+    if (this->IsValid())
+    {
+        Ptr<Graphics::UpdateTransform> msg = Graphics::UpdateTransform::Create();
+        msg->SetTransform(this->transform);
+        this->SendMsg(msg.cast<GraphicsEntityMsg>());
+    }
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-bool
-GraphicsEntity::IsAttachedToCell() const
+void
+GraphicsEntity::SetVisible(bool b)
 {
-    return this->cell.isvalid();
-}
-
-//------------------------------------------------------------------------------
-/**
-    Compute the clip status between this entity and a bounding box in
-    global space. This method must be overwritten in a derived class.
-*/
-ClipStatus::Type
-GraphicsEntity::ComputeClipStatus(const bbox& box)
-{
-    return ClipStatus::Outside;
+    this->isVisible = b;
+    Ptr<Graphics::SetVisibility> msg = Graphics::SetVisibility::Create();
+    msg->SetVisible(b);
+    this->SendMsg(msg.cast<GraphicsEntityMsg>());
 }
 
 } // namespace Graphics

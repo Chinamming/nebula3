@@ -2,6 +2,8 @@
 #define APPGAME_APPCONFIG_H
 //------------------------------------------------------------------------------
 /**
+    @file appgame/appconfig.h
+
     Configuration header.
 
     (C) 2007 Radon Labs GmbH
@@ -14,7 +16,6 @@
 #define __REMOTE_ACTIVE__ (1)
 #define __USE_XACT_AUDIO__ (1)
 #define __DISABLE_AUDIO__ (0)
-#define DEFAULT_VIEW_NAME "Default"
 #if __USE_XACT_AUDIO__ && __DISABLE_AUDIO__
 #error  Only one define allowed!!!
 #endif
@@ -25,9 +26,7 @@
 #define __SOFT_ASSERT_WITH_INGAME_MESSAGES_FOR_DIALOG_SUBSYSTEM__ (1)
 #define __SOFT_ASSERT_WITH_INGAME_MESSAGES_FOR_QUEST_SUBSYSTEM__ (1)
 
-#define __USE_PHYSICS__ (1)
-#define __USE_HTTP__ (1)
-#define __USE_SCRIPTING__ (1)
+#define __USE_PHYSICS__ (!__WII__ && !__XBOX360__)
 
 //------------------------------------------------------------------------------
 #endif    

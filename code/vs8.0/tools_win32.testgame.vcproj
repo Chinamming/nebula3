@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="testgame"
-	ProjectGUID="{506359C3-EAFC-475B-A048-2D7FAC6ACD2E}"
+	ProjectGUID="{1BDCB4B2-1596-439D-98D0-5B065B22FBF7}"
 	>
 	<Platforms>
 		<Platform

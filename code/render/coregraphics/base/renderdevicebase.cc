@@ -28,6 +28,7 @@ RenderDeviceBase::RenderDeviceBase() :
     inBeginBatch(false)
 {
     ConstructSingleton;
+    _setup_counter(RenderDeviceNumPrimitives);
 }
 
 //------------------------------------------------------------------------------
@@ -37,6 +38,9 @@ RenderDeviceBase::~RenderDeviceBase()
 {
     n_assert(!this->IsOpen());
     n_assert(this->eventHandlers.IsEmpty());
+
+    _discard_counter(RenderDeviceNumPrimitives);
+    
     DestructSingleton;
 }
 
@@ -209,6 +213,8 @@ RenderDeviceBase::BeginFrame()
     n_assert(!this->vertexBuffer.isvalid());
     n_assert(!this->indexBuffer.isvalid());
 
+    _begin_counter(RenderDeviceNumPrimitives);
+
     this->inBeginFrame = true;
     return true;
 }
@@ -312,6 +318,9 @@ void
 RenderDeviceBase::EndFrame()
 {
     n_assert(this->inBeginFrame);
+
+    _end_counter(RenderDeviceNumPrimitives);
+    
     this->inBeginFrame = false;
     this->vertexBuffer = 0;
     this->indexBuffer = 0;

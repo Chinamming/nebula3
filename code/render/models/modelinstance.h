@@ -17,9 +17,9 @@
 #include "models/model.h"
 #include "models/modelnodeinstance.h"
 
-namespace Graphics
+namespace InternalGraphics
 {
-    class ModelEntity;
+    class InternalModelEntity;
 }
 
 //------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ public:
     /// get the Model this instance was created from
     const Ptr<Model>& GetModel() const;
     /// get the ModelEntity which owns this instance
-    const Ptr<Graphics::ModelEntity>& GetModelEntity() const;
+    const Ptr<InternalGraphics::InternalModelEntity>& GetModelEntity() const;
     /// set world space transform of the instance
     void SetTransform(const Math::matrix44& m);
     /// get world space transform
@@ -73,10 +73,10 @@ public:
 protected:
     friend class Model;
     friend class VisResolver;
-    friend class Graphics::ModelEntity;
+    friend class InternalGraphics::InternalModelEntity;
 
     /// set pointer to ModelEntity which owns this instance
-    void SetModelEntity(const Ptr<Graphics::ModelEntity>& mdlEntity);
+    void SetModelEntity(const Ptr<InternalGraphics::InternalModelEntity>& mdlEntity);
     /// notify the model instance that it is currently visible
     void NotifyVisible(IndexT frameIndex);
     /// called when attached to Model
@@ -86,7 +86,7 @@ protected:
 
     Ptr<Model> model;
     Ptr<ModelNode> modelNode;
-    Ptr<Graphics::ModelEntity> modelEntity;
+    Ptr<InternalGraphics::InternalModelEntity> modelEntity;
     Math::matrix44 transform;
     Timing::Time time;
     Util::Array<Ptr<ModelNodeInstance> > nodeInstances;

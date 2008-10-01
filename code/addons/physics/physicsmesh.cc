@@ -6,8 +6,6 @@
 #include "physics/physicsmesh.h"
 #include "coregraphics/legacy/nvx2streamreader.h"
 #include "io/ioserver.h"
-#include "coregraphics/cpumemoryvertexbufferloader.h"
-#include "coregraphics/cpumemoryindexbufferloader.h"
 
 using namespace Math;
 
@@ -19,8 +17,13 @@ ImplementClass(Physics::PhysicsMesh, 'PMSH', Core::RefCounted);
 /**
 */
 PhysicsMesh::PhysicsMesh() :
-    isLoaded(false),
-    inAppend(false)
+    numVertices(0),
+    numIndices(0),
+    vertexByteSize(0),
+    vertexNumFloats(0),
+    vertexData(0),
+    indexData(0),
+    isLoaded(false)
 {
     // empty
 }
@@ -44,24 +47,12 @@ PhysicsMesh::Load()
 {
     n_assert(!this->isLoaded);
     n_assert(this->filename.IsValid());
-    n_assert(!this->vertexBuffer.isvalid());
-    n_assert(!this->indexBuffer.isvalid());
+    n_assert(0 == this->vertexData);
+    n_assert(0 == this->indexData);
 
     // create a mesh loader
     Ptr<Legacy::Nvx2StreamReader> meshLoader = Legacy::Nvx2StreamReader::Create();
-
-    // create and set main memory cpu accessable vertex and index buffers
-    this->vertexBuffer = CoreGraphics::CPUVertexBuffer::Create();
-    this->indexBuffer = CoreGraphics::CPUIndexBuffer::Create();
-    // set index depth, Opcodes ICE uses 32 bit indices, not our 16bit
-    this->indexBuffer->SetIndexBufferDepth(CoreGraphics::IndexType::Index32);
-
-    Ptr<CoreGraphics::CPUMemoryVertexBufferLoader> vertexBufferLoader = CoreGraphics::CPUMemoryVertexBufferLoader::Create();    
-    Ptr<CoreGraphics::CPUMemoryIndexBufferLoader> indexBufferLoader = CoreGraphics::CPUMemoryIndexBufferLoader::Create();
-
-    meshLoader->SetVertexBuffer(vertexBuffer.upcast<Base::VertexBufferBase>(), vertexBufferLoader.upcast<Base::MemoryVertexBufferLoaderBase>());
-    meshLoader->SetIndexBuffer(indexBuffer.upcast<Base::IndexBufferBase>(), indexBufferLoader.upcast<Base::MemoryIndexBufferLoaderBase>());
-   
+    meshLoader->SetRawMode(true);   
     if (this->filename.CheckFileExtension("n3d2"))
     {
         n_error("n3d2 files not supported!");
@@ -81,14 +72,29 @@ PhysicsMesh::Load()
         n_error("Physics::PhysicsMesh:Load()(): Failed to open mesh file '%s'!", this->filename.AsCharPtr());
         return false;
     }
-
     this->isLoaded = true;
     
-    // copy over mesh groups
+    // get loaded mesh data
+    this->meshGroups = meshLoader->GetPrimitiveGroups();
+    this->numVertices = meshLoader->GetNumVertices();
+    this->numIndices = meshLoader->GetNumIndices();
+    this->vertexByteSize = meshLoader->GetVertexWidth() * sizeof(float);
+    this->vertexNumFloats = meshLoader->GetVertexWidth();
+
+    // copy over vertices
+    this->vertexData = (float*) Memory::Alloc(Memory::ResourceHeap, this->numVertices * this->vertexByteSize);
+    Memory::Copy(meshLoader->GetVertexData(), this->vertexData, this->numVertices * this->vertexByteSize);
+
+    // copy over indices, need to expand to 32 bit
+    ushort* srcIndexData = meshLoader->GetIndexData();
+    this->indexData = (int*) Memory::Alloc(Memory::ResourceHeap, this->numIndices * sizeof(int));
+    IndexT i;
+    for (i = 0; i < this->numIndices; i++)
+    {
+        this->indexData[i] = (int) srcIndexData[i];
+    }
     this->meshGroups = meshLoader->GetPrimitiveGroups();
     this->UpdateGroupBoundingBoxes(this->GetVertexPointer(), this->GetIndexPointer());
-    this->vertexBuffer->Unmap();
-    this->indexBuffer->Unmap();
 
     // cleanup mesh loader
     meshLoader->Close();
@@ -103,128 +109,13 @@ void
 PhysicsMesh::Unload()
 {
     n_assert(this->isLoaded);
-    FreeBuffer();
+    n_assert(0 != this->vertexData);
+    n_assert(0 != this->indexData);
+    Memory::Free(Memory::ResourceHeap, this->vertexData);
+    this->vertexData = 0;
+    Memory::Free(Memory::ResourceHeap, this->indexData);
+    this->indexData = 0;
     this->isLoaded = false;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-PhysicsMesh::FreeBuffer()
-{
-    n_assert(this->vertexBuffer.isvalid());
-    n_assert(this->indexBuffer.isvalid());  
-    this->vertexBuffer->Unload();
-    this->vertexBuffer = 0;
-    this->indexBuffer->Unload();
-    this->indexBuffer = 0;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-PhysicsMesh::BeginAppendMesh(int numVertices, int numIndices, int vertexWidth)
-{
-    n_assert(!this->isLoaded);
-    n_assert(!this->inAppend);
-    n_assert(!this->vertexBuffer.isvalid());
-    n_assert(!this->indexBuffer.isvalid());
-    this->inAppend = true;
-
-    this->vertexBuffer = CoreGraphics::CPUVertexBuffer::Create();
-    this->indexBuffer = CoreGraphics::CPUIndexBuffer::Create();
-
-    Ptr<CoreGraphics::CPUMemoryVertexBufferLoader> vertexBufferLoader = CoreGraphics::CPUMemoryVertexBufferLoader::Create();    
-    Ptr<CoreGraphics::CPUMemoryIndexBufferLoader> indexBufferLoader = CoreGraphics::CPUMemoryIndexBufferLoader::Create();
-
-    CoreGraphics::VertexComponent vertexLayout(CoreGraphics::VertexComponent::Position,0, CoreGraphics::VertexComponent::Float3); 
-    Util::Array<CoreGraphics::VertexComponent> vertexComps;
-    vertexComps.Append(vertexLayout);
-    vertexBufferLoader->Setup(vertexComps, numVertices, this->vertexBuffer->Map(Base::ResourceBase::MapWrite), numVertices * 3 * sizeof(float));
-    vertexBufferLoader->OnLoadRequested();
-
-    indexBufferLoader->Setup(CoreGraphics::IndexType::Index32, numIndices, this->indexBuffer->Map(Base::ResourceBase::MapWrite), numIndices * sizeof(uint));
-    indexBufferLoader->OnLoadRequested();     
-
-    // allocate vertex and index buffer
-    vertexIndex = 0;
-    indicesIndex = 0;
-
-    // create one meshgroup
-    CoreGraphics::PrimitiveGroup mGroup;
-    mGroup.SetBaseIndex(0);
-    mGroup.SetBaseVertex(0);    
-    this->meshGroups.Append(mGroup);
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-PhysicsMesh::EndAppendMesh()
-{
-    n_assert(!this->isLoaded);
-    n_assert(this->inAppend);
-
-    n_assert(this->vertexIndex == this->vertexBuffer->GetNumVertices());
-    n_assert(this->indicesIndex == this->indexBuffer->GetNumIndices());
-
-    this->vertexBuffer->Unmap();
-    this->indexBuffer->Unmap();
-
-    vertexIndex = 0;
-    indicesIndex = 0;
-
-    this->inAppend = false;
-    this->isLoaded = true;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-PhysicsMesh::AppendMesh(const Ptr<PhysicsMesh>& mesh, const Math::matrix44& transform)
-{
-    // copy vertex, and transform position
-    int vertexIndex;
-    float* srcMeshPtr = mesh->GetVertexPointer();
-    int vertexWidth = this->vertexBuffer->GetVertexLayout()->GetVertexByteSize();
-    float* destMeshPtr = this->GetVertexPointer() + this->vertexIndex * vertexWidth;
-    for (vertexIndex = 0; vertexIndex < mesh->GetNumVertices() * vertexWidth; vertexIndex += vertexWidth)
-    {
-        Math::vector position(srcMeshPtr[vertexIndex], srcMeshPtr[vertexIndex + 1], srcMeshPtr[vertexIndex + 2]);
-        position = vector::transform(position, transform);
-
-        destMeshPtr[vertexIndex] = position.x();
-        destMeshPtr[vertexIndex + 1] = position.y();
-        destMeshPtr[vertexIndex + 2] = position.z();
-        // copy rest of vertex
-        int i;
-        for(i = 3; i < vertexWidth; i++)
-        {
-            destMeshPtr[vertexIndex + i] =  srcMeshPtr[vertexIndex + i];
-        }
-    }
-    this->vertexIndex += mesh->GetNumVertices();
-
-    // copy indices with offset
-    int i;
-    int* srcIndexPtr = mesh->GetIndexPointer();
-    int* destIndexPtr = this->GetIndexPointer() + this->indicesIndex;
-    int vertexOffset = this->meshGroups[0].GetNumVertices();
-    for (i = 0; i < mesh->GetNumIndices(); i ++)
-    {
-        destIndexPtr[i] = srcIndexPtr[i] + vertexOffset;    
-    }
-    this->indicesIndex += mesh->GetNumIndices();
-
-    this->meshGroups[0].SetNumIndices(this->meshGroups[0].GetNumIndices() + mesh->GetNumIndices());
-    this->meshGroups[0].SetNumVertices(this->meshGroups[0].GetNumVertices() + mesh->GetNumVertices());
-    this->UpdateGroupBoundingBoxes(this->GetVertexPointer(), this->GetIndexPointer());
-
-    return true;
 }
 
 //------------------------------------------------------------------------------
@@ -255,7 +146,7 @@ PhysicsMesh::GetGroupVertexPointer(int groupIndex) const
 {
     n_assert(this->isLoaded);
     int firstVertex = this->meshGroups[groupIndex].GetBaseVertex();
-    float* ptr = this->GetVertexPointer() + firstVertex * this->vertexBuffer->GetVertexLayout()->GetVertexByteSize();
+    float* ptr = this->GetVertexPointer() + firstVertex * this->vertexNumFloats;
     return ptr;
 }
 
@@ -292,13 +183,11 @@ PhysicsMesh::UpdateGroupBoundingBoxes(float* vertexBufferData, int* indexBufferD
         uint i;
         for (i = 0; i < group.GetNumIndices(); i++)
         {
-            int vertexWidth = this->vertexBuffer->GetVertexLayout()->GetVertexByteSize() / 4;
-            float* vertexPointer = vertexBufferData + (indexPointer[i] * vertexWidth);
+            float* vertexPointer = vertexBufferData + (indexPointer[i] * this->vertexNumFloats);
             groupBox.extend(point(vertexPointer[0], vertexPointer[1], vertexPointer[2]));
         }
         group.SetBoundingBox(groupBox);
     }
 }
-
 
 } // namespace Physics

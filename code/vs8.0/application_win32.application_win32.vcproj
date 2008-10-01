@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="application_win32"
-	ProjectGUID="{DC03E1FE-24C0-4CAF-8253-F0EBE2CAF458}"
+	ProjectGUID="{D5806B20-6125-43D8-803B-38C5786C4BFB}"
 	>
 	<Platforms>
 		<Platform
@@ -249,6 +249,14 @@
 				RelativePath="..\application\basegamefeature\basegamefeatureunit.h"
 				>
 			</File>
+			<File
+				RelativePath="..\application\basegamefeature\basegameprotocol.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\application\basegamefeature\basegameprotocol.h"
+				>
+			</File>
 			<Filter
 				Name="basegameattr"
 				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
@@ -304,6 +312,19 @@
 				</File>
 				<File
 					RelativePath="..\application\basegamefeature/basegametiming\timesource.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="debug"
+				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
+				>
+				<File
+					RelativePath="..\application\basegamefeature/debug\objectinspectorhandler.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\application\basegamefeature/debug\objectinspectorhandler.h"
 					>
 				</File>
 			</Filter>
@@ -422,83 +443,6 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="msg"
-				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
-				>
-				<File
-					RelativePath="..\application\basegamefeature/msg\movedirection.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\movedirection.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\movefollow.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\movefollow.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\movegoto.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\movegoto.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\moverotate.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\moverotate.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\movesetvelocity.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\movesetvelocity.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\movestop.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\movestop.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\moveturn.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\moveturn.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\settransform.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\settransform.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\updatetransform.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\basegamefeature/msg\updatetransform.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="properties"
 				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 				>
@@ -583,11 +527,23 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 			>
 			<File
+				RelativePath="..\application\graphicsfeature\graphicsfeatureproperties.h"
+				>
+			</File>
+			<File
 				RelativePath="..\application\graphicsfeature\graphicsfeatureunit.cc"
 				>
 			</File>
 			<File
 				RelativePath="..\application\graphicsfeature\graphicsfeatureunit.h"
+				>
+			</File>
+			<File
+				RelativePath="..\application\graphicsfeature\graphicsprotocol.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\application\graphicsfeature\graphicsprotocol.h"
 				>
 			</File>
 			<Filter
@@ -608,14 +564,6 @@
 				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 				>
 				<File
-					RelativePath="..\application\graphicsfeature/graphicsutil\charenhancementutil.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/graphicsutil\charenhancementutil.h"
-					>
-				</File>
-				<File
 					RelativePath="..\application\graphicsfeature/graphicsutil\lightflickerutil.cc"
 					>
 				</File>
@@ -633,214 +581,9 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="msg"
-				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
-				>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\addattachment.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\addattachment.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\addskin.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\addskin.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\animationhotspottriggered.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\animationhotspottriggered.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\cameradistance.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\cameradistance.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\camerafocus.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\camerafocus.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\cameraorbit.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\cameraorbit.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\camerareset.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\camerareset.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\fadeanimation.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\fadeanimation.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\getactiveanimation.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\getactiveanimation.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\getanimationinfo.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\getanimationinfo.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\getattachmententities.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\getattachmententities.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\getgraphicsentities.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\getgraphicsentities.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\gethotspottime.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\gethotspottime.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\getjointmatrix.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\getjointmatrix.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\hasattachment.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\hasattachment.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\hideattachment.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\hideattachment.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\inputfocus.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\inputfocus.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\remattachment.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\remattachment.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\remskin.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\remskin.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\setanimation.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\setanimation.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\setfadeanimationmix.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\setfadeanimationmix.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\setvisible.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\setvisible.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\showattachment.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\showattachment.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\updateattachments.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/msg\updateattachments.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="properties"
 				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 				>
-				<File
-					RelativePath="..\application\graphicsfeature/properties\actorgraphicsproperty.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/properties\actorgraphicsproperty.h"
-					>
-				</File>
 				<File
 					RelativePath="..\application\graphicsfeature/properties\cameraproperty.cc"
 					>
@@ -890,19 +633,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\application\graphicsfeature/properties\pointnclickinputproperty.cc"
+					RelativePath="..\application\graphicsfeature/properties\mayacameraproperty.cc"
 					>
 				</File>
 				<File
-					RelativePath="..\application\graphicsfeature/properties\pointnclickinputproperty.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/properties\simplemoveproperty.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\graphicsfeature/properties\simplemoveproperty.h"
+					RelativePath="..\application\graphicsfeature/properties\mayacameraproperty.h"
 					>
 				</File>
 			</Filter>
@@ -919,27 +654,14 @@
 				RelativePath="..\application\physicsfeature\physicsfeatureunit.h"
 				>
 			</File>
-			<Filter
-				Name="msg"
-				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
+			<File
+				RelativePath="..\application\physicsfeature\physicsprotocol.cc"
 				>
-				<File
-					RelativePath="..\application\physicsfeature/msg\applyimpulseatpos.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\physicsfeature/msg\applyimpulseatpos.h"
-					>
-				</File>
-				<File
-					RelativePath="..\application\physicsfeature/msg\getphysicsentity.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\application\physicsfeature/msg\getphysicsentity.h"
-					>
-				</File>
-			</Filter>
+			</File>
+			<File
+				RelativePath="..\application\physicsfeature\physicsprotocol.h"
+				>
+			</File>
 			<Filter
 				Name="physicsattr"
 				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"

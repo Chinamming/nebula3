@@ -8,8 +8,7 @@
 #include "properties/cameraproperty.h"
 #include "managers/entitymanager.h"
 #include "game/entity.h"
-#include "msg/camerafocus.h"
-#include "msg/inputfocus.h"
+#include "graphicsprotocol.h"
 
 namespace BaseGameFeature
 {

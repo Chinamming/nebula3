@@ -44,8 +44,8 @@ GamePadBase::OnAttach()
 
     // need to reset our state
     ButtonState initialButtonState;
-    this->buttonStates.Clear(initialButtonState);
-    this->axisValues.Clear(0.0f);
+    this->buttonStates.Fill(initialButtonState);
+    this->axisValues.Fill(0.0f);
 }
 
 //------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ GamePadBase::OnReset()
         btnState.down = false;
         btnState.pressed = false;
     }
-    this->axisValues.Clear(0.0f);
+    this->axisValues.Fill(0.0f);
 }
 
 } // namespace Base

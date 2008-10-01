@@ -267,6 +267,7 @@ EnvQueryManager::OnFrame()
 Math::line 
 EnvQueryManager::ComputeMouseWorldRay(const float2& mousePos, float length, const Ptr<Graphics::View>& view) const
 {    
+    // FIXME: ComputeWorldMouseRay() must not be a feature of GraphicsServer!!!
     const Ptr<Graphics::CameraEntity>& cam = view->GetCameraEntity();
     n_assert(cam.isvalid());
     const matrix44& invView = matrix44::inverse(cam->GetViewTransform());
@@ -274,4 +275,4 @@ EnvQueryManager::ComputeMouseWorldRay(const float2& mousePos, float length, cons
     return Graphics::GraphicsServer::Instance()->ComputeWorldMouseRay(mousePos, length, invView, invProj, cam->GetZNear());    
 }
 
-}; // namespace Game
+} // namespace Game

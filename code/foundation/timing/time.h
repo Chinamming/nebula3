@@ -16,6 +16,28 @@ namespace Timing
 {
 /// the time datatype
 typedef double Time;
+/// the tick datatype (one tick == 1 millisecond)
+typedef int Tick;
+
+//------------------------------------------------------------------------------
+/**
+    Convert ticks to seconds.
+*/
+inline Time
+TicksToSeconds(Tick ticks)
+{
+    return ticks * 0.001;
+}
+
+//------------------------------------------------------------------------------
+/**
+    Convert seconds to ticks
+*/
+inline Tick
+SecondsToTicks(Time t)
+{
+    return Tick(t * 1000.0);
+}
 
 //------------------------------------------------------------------------------
 /**

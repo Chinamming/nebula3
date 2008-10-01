@@ -9,9 +9,7 @@
 #include "game/entity.h"
 #include "graphics/stage.h"
 #include "graphics/cameraentity.h"
-#include "msg/cameraorbit.h"
-#include "msg/camerareset.h"
-#include "msg/cameradistance.h"
+#include "graphicsprotocol.h"
 #include "math/quaternion.h"
 #include "io/console.h"
 

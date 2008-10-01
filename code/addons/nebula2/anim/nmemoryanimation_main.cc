@@ -8,6 +8,7 @@
 #include "io/streamreader.h"
 #include "math/quaternion.h"
 #include "memory/memory.h"
+#include "system/byteorder.h"
 
 ImplementClass(Nebula2::nMemoryAnimation, 'MEMA', Nebula2::nAnimation);
 
@@ -15,34 +16,6 @@ namespace Nebula2
 {
 
 using namespace Math;
-// structs for faster NAX loading
-#pragma pack(push, 1)
-struct NaxHeader
-{
-    int magic;
-    int numGroups;
-    int numKeys;
-};
-
-struct NaxGroup
-{
-    int numCurves;
-    int startKey;
-    int numKeys;
-    int keyStride;
-    float keyTime;
-    float fadeInFrames;
-    int loopType;
-    char metaData[256];
-};
-struct NaxCurve
-{
-    int ipolType;
-    int firstKeyIndex;
-    int isAnim;
-    Math::float4 collapsedKey;
-};
-#pragma pack(pop)
 
 //------------------------------------------------------------------------------
 /**
@@ -61,147 +34,6 @@ nMemoryAnimation::~nMemoryAnimation()
     {
         this->Unload();
     }
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-nMemoryAnimation::LoadResource()
-{
-    n_assert(!this->IsLoaded());
-
-    bool success = false;
-    Util::String filename = this->GetResourceId().Value().AsCharPtr();
-    if (filename.CheckFileExtension("nanim2"))
-    {
-        n_error("Loading of nanim2 file not supported! Use nax2 binary files!");
-    }
-    else if (filename.CheckFileExtension("nax2"))
-    {
-        success = this->LoadNax2(filename.AsCharPtr());
-    }
-    if (success)
-    {
-        this->SetState(Resources::Resource::Loaded);
-    }
-    return success;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-nMemoryAnimation::UnloadResource()
-{
-    if (this->IsLoaded())
-    {
-        nAnimation::UnloadResource();
-        this->keyArray.SetSize(0);
-        this->SetState(Resources::Resource::Initial);
-    }
-}
-
-//------------------------------------------------------------------------------
-/**
-    Loads animation data from a binary nax2 file.
-
-    - 30-Jun-04 floh    fixed assertion bug when number of keys in a curve is 0
-    - 22-Jun-07 floh    optimized loading (fewer file accesses), now does only
-                        do 4 reads instead of several thousands on big files
-*/
-bool
-nMemoryAnimation::LoadNax2(const char* filename)
-{
-    n_assert(!this->IsLoaded());
-
-    // TODO: use extra streamreader?
-    Ptr<IO::Stream> stream = IO::IoServer::Instance()->CreateStream(filename);
-    stream->SetAccessMode(IO::Stream::ReadAccess);
-    
-    // open the file
-    if (!stream->Open())
-    {
-        n_error("nMemoryAnimation::LoadNax2(): Could not open file %s!", filename);        
-        return false;
-    }
-
-    // read header
-    NaxHeader naxHeader;
-    stream->Read(&naxHeader, sizeof(naxHeader));
-    if (naxHeader.magic != 'NAX3')
-    {
-        n_error("nMemoryAnimation::LoadNax2(): File %s has obsolete file format!", filename);
-        stream->Close();        
-        return false;
-    }
-    if (0 == naxHeader.numGroups)
-    {
-        n_error("nMemoryAnimation::LoadNax2(): File %s has no groups! Invalid Export ?", filename);
-        stream->Close();        
-        return false;
-    }
-    this->SetNumGroups(naxHeader.numGroups);
-    this->keyArray.SetSize(naxHeader.numKeys);
-
-    // read groups
-    SizeT groupDataSize = sizeof(NaxGroup) * naxHeader.numGroups;
-    NaxGroup* groupData = (NaxGroup*) Memory::Alloc(groupDataSize);
-    stream->Read(groupData, groupDataSize);
-    IndexT groupIndex = 0;
-    SizeT numCurves = 0;
-    for (groupIndex = 0; groupIndex < (uint)naxHeader.numGroups; groupIndex++)
-    {
-        const NaxGroup& naxGroup = groupData[groupIndex];
-        Group& group = this->GetGroupAt(groupIndex);
-        group.SetNumCurves(naxGroup.numCurves);
-        group.SetStartKey(naxGroup.startKey);
-        group.SetNumKeys(naxGroup.numKeys);
-        group.SetKeyStride(naxGroup.keyStride);
-        group.SetKeyTime(naxGroup.keyTime);
-        group.SetFadeInFrames(naxGroup.fadeInFrames);
-        group.SetLoopType((Group::LoopType) naxGroup.loopType);
-        if (!group.SetMetaData(naxGroup.metaData))
-        {
-            n_error("MetaData error:\n String: %s\n Name: %s\n File: %s", naxGroup.metaData, "", this->GetResourceId().Value().AsCharPtr());
-        }
-        numCurves += group.GetNumCurves();
-    }
-    Memory::Free(groupData);
-    groupData = 0;
-
-    // read curves
-    SizeT curveDataSize = sizeof(NaxCurve) * numCurves;
-    NaxCurve* curveData = (NaxCurve*) Memory::Alloc(curveDataSize);
-    stream->Read(curveData, curveDataSize);
-    IndexT dataCurveIndex = 0;
-    for (groupIndex = 0; groupIndex < (uint)naxHeader.numGroups; groupIndex++)
-    {
-        Group& group = this->GetGroupAt(groupIndex);
-        IndexT curveIndex;
-        for (curveIndex = 0; curveIndex < (uint)group.GetNumCurves(); curveIndex++, dataCurveIndex++)
-        {
-            const NaxCurve& naxCurve = curveData[dataCurveIndex];
-            Curve& curve = group.GetCurveAt(curveIndex);
-            curve.SetIpolType((Curve::IpolType) naxCurve.ipolType);
-            curve.SetFirstKeyIndex(naxCurve.firstKeyIndex);
-            curve.SetIsAnimated(naxCurve.isAnim);
-            curve.SetConstValue(naxCurve.collapsedKey);
-        }
-    }
-    Memory::Free(curveData);
-    curveData = 0;
-
-    // read keys
-    if (naxHeader.numKeys > 0)
-    {
-        int keyArraySize = naxHeader.numKeys * sizeof(Math::float4);
-        stream->Read(&(this->keyArray[0]), keyArraySize);
-    }
-
-    // cleanup
-    stream->Close();    
-    return true;
 }
 
 //------------------------------------------------------------------------------

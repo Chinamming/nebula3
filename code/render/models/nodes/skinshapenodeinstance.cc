@@ -6,9 +6,11 @@
 #include "models/nodes/skinshapenodeinstance.h"
 #include "coregraphics/renderdevice.h"
 #include "coregraphics/shaderserver.h"
+#include "coregraphics/transformdevice.h"
 #include "models/nodes/SkinShapeNode.h"
 #include "models/modelinstance.h"
 #include "models/nodes/characternodeinstance.h"
+#include "addons/nebula2/character/characterrenderer.h"
 #include "timing/timer.h"
 
 namespace Models
@@ -17,7 +19,10 @@ ImplementClass(Models::SkinShapeNodeInstance, 'SSPI', Models::ShapeNodeInstance)
 
 using namespace CoreGraphics;
 using namespace Math;
+using namespace Char;
 
+int SkinShapeNodeInstance::curBuffer = 0;
+    
 //------------------------------------------------------------------------------
 /**
 */
@@ -37,16 +42,22 @@ SkinShapeNodeInstance::~SkinShapeNodeInstance()
 */
 void 
 SkinShapeNodeInstance::OnAttachToModelInstance(const Ptr<ModelInstance>& inst, const Ptr<ModelNode>& node, const Ptr<ModelNodeInstance>& parentNodeInst)
-{
-    n_assert(node->IsA(SkinShapeNode::RTTI));
-
+{    
     ShapeNodeInstance::OnAttachToModelInstance(inst, node, parentNodeInst);
-    
-    // create palette shader variable instance
-    ShaderVariable::Semantic paletteSemantic = ShaderVariable::Semantic("JointPalette");
-    this->CreateShaderVariableInstance(paletteSemantic);
-
+ 
     this->ValidateCharacter();
+
+    n_assert(node->IsA(SkinShapeNode::RTTI));
+    const Ptr<SkinShapeNode> skinNode = node.cast<SkinShapeNode>();        
+    ShaderVariable::Semantic paletteSemantic = ShaderVariable::Semantic("JointPalette");
+    Ptr<ShaderVariable> shdVar;
+    if  (skinNode->GetShaderInstance()->HasVariableBySemantic(paletteSemantic))
+    {        
+        shdVar = skinNode->GetShaderInstance()->GetVariableBySemantic(paletteSemantic);
+    }    
+    n_assert(!this->charRenderer.isvalid());
+    this->charRenderer = CharacterRenderer::Create();        
+    this->charRenderer->Setup(skinNode->GetManagedMesh()->GetMesh(), this->character, shdVar);    
 }
 
 //------------------------------------------------------------------------------
@@ -78,6 +89,7 @@ SkinShapeNodeInstance::ValidateCharacter()
         }
         n_assert2(parent->IsA(CharacterNodeInstance::RTTI), "No CharacterNodeInstance found as parent!");
         this->character = parent.downcast<CharacterNodeInstance>()->GetCharacter();
+        n_assert(this->character.isvalid());
     }
 }
 
@@ -87,7 +99,8 @@ SkinShapeNodeInstance::ValidateCharacter()
 void
 SkinShapeNodeInstance::OnRemoveFromModelInstance()
 {
-    this->character = 0;
+    this->charRenderer = 0;
+    this->character = 0;    
 
     ShapeNodeInstance::OnRemoveFromModelInstance();
 }
@@ -99,12 +112,12 @@ void
 SkinShapeNodeInstance::Render()
 {
     // is mesh loaded for skinning?
-    const Ptr<ShapeNode>& shapeNode = GetModelNode().downcast<ShapeNode>();
-    if (shapeNode->GetManagedMesh()->GetState() == Resources::Resource::Loaded)
+    const Ptr<SkinShapeNode>& skinShapeNode = GetModelNode().downcast<SkinShapeNode>();
+    if (skinShapeNode->GetManagedMesh()->GetState() == Resources::Resource::Loaded)
     {
         // render skinning
         StateNodeInstance::Render();
-        this->RenderSkinning();
+        this->charRenderer->RenderSkinning(skinShapeNode->GetFragmentArray());
     }
     else
     {
@@ -112,75 +125,6 @@ SkinShapeNodeInstance::Render()
         ShapeNodeInstance::Render();
     }
 }    
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-SkinShapeNodeInstance::RenderSkinning()
-{
-    const Ptr<SkinShapeNode>& charNode = this->GetModelNode().downcast<SkinShapeNode>();
-    int numFragments = charNode->GetNumFragments();
-    int fragIndex;
-    for (fragIndex = 0; fragIndex < numFragments; fragIndex++)
-    {
-        Char::CharFragment& fragment = charNode->GetFragmentArray()[fragIndex];
-        RenderFragment(fragment.GetMeshGroupIndex(), fragment.GetJointPalette());
-    }
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-SkinShapeNodeInstance::RenderFragment(int primGroupIndex, Char::CharJointPalette& jointPalette)
-{
-    static const int maxJointPaletteSize = 72;
-    static matrix44 jointArray[maxJointPaletteSize];
-    
-    // extract the current joint palette from the skeleton in the
-    // right format for the skinning shader
-    int paletteSize = jointPalette.GetNumJoints();
-    n_assert(paletteSize <= maxJointPaletteSize);
-
-    if (this->character.isvalid())
-    {
-        Char::CharSkeleton& skeleton = this->character->GetSkeleton();
-        int paletteIndex;
-        for (paletteIndex = 0; paletteIndex < paletteSize; paletteIndex++)
-        {
-            const Char::CharJoint& joint = skeleton.GetJointAt(jointPalette.GetJointIndexAt(paletteIndex));
-            jointArray[paletteIndex] = joint.GetSkinMatrix44();
-        }
-    }
-    else
-    {
-        int paletteIndex;
-        for (paletteIndex = 0; paletteIndex < paletteSize; paletteIndex++)
-        {            
-            jointArray[paletteIndex] = matrix44::identity();
-        }
-    }
-
-    // transfer the joint palette to the current shader        
-    ShaderVariable::Semantic paletteSemantic = ShaderVariable::Semantic("JointPalette");
-    const Ptr<CoreGraphics::ShaderVariableInstance>& shdVar = this->GetShaderVariableInstance(paletteSemantic);
-    n_assert(shdVar.isvalid());
-    shdVar->SetMatrixArray(jointArray, paletteSize);    
-    // apply shader variable
-    shdVar->Apply();
-
-    // commit shader variable changes
-    CoreGraphics::ShaderServer* shdServer = CoreGraphics::ShaderServer::Instance();
-    shdServer->GetActiveShaderInstance()->Commit();
-
-    // set current vertex and index range and draw mesh
-    RenderDevice* renderDevice = RenderDevice::Instance();    
-    const Ptr<SkinShapeNode>& charNode = this->GetModelNode().downcast<SkinShapeNode>();
-    const Ptr<Mesh>& mesh = charNode->GetManagedMesh()->GetMesh();
-    renderDevice->SetPrimitiveGroup(mesh->GetPrimitiveGroupAtIndex(primGroupIndex));
-    renderDevice->Draw();
-}
 
 //------------------------------------------------------------------------------
 /**
@@ -202,7 +146,7 @@ SkinShapeNodeInstance::OnNotifyVisible(IndexT frameIndex)
 inline void 
 SkinShapeNodeInstance::SetVisible(bool b)
 {
-    // TODO
+    // @todo:
     if (b && !this->IsVisible())
     {
         //this->GetModelNode().downcast<SkinShapeNode>()->RequestLoadResources();

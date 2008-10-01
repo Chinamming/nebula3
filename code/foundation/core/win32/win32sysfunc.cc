@@ -8,6 +8,8 @@
 #include "debug/minidump.h"
 #include "util/blob.h"
 #include "util/guid.h"
+#include "net/socket.h"
+#include "debug/minidump.h"
 
 namespace Win32
 {
@@ -28,10 +30,13 @@ SysFunc::Setup()
     if (!SetupCalled)
     {
         SetupCalled = true;
+        Memory::SetupHeaps();
         Memory::Heap::Setup();
         Blob::Setup();
         String::Setup();
         Guid::Setup();
+        Net::Socket::InitNetwork();
+        Debug::MiniDump::Setup();
     }
 }
 

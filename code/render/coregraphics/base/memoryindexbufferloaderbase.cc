@@ -38,12 +38,11 @@ MemoryIndexBufferLoaderBase::Setup(IndexType::Code type, SizeT num, void* ptr, S
     n_assert(num > 0);
     n_assert(numBytes == (IndexType::SizeOf(type) * num));
     n_assert(0 != ptr);
+
     this->indexType = type;
     this->numIndices = num;
     this->indexDataPtr = ptr;
     this->indexDataSize = numBytes;
-
-	//use default options
 	this->indexBufferUsage = CoreGraphics::IndexBuffer::UsageImmutable;
 	this->accessMode = CoreGraphics::IndexBuffer::AccessNone;
 }
@@ -53,23 +52,18 @@ MemoryIndexBufferLoaderBase::Setup(IndexType::Code type, SizeT num, void* ptr, S
 */
 
 void 
-MemoryIndexBufferLoaderBase::Setup(IndexType::Code type, SizeT num,  SizeT numBytes, 
-				CoreGraphics::IndexBuffer::Usage usage, CoreGraphics::IndexBuffer::Access access )
+MemoryIndexBufferLoaderBase::Setup(IndexType::Code type, SizeT num,  SizeT numBytes, CoreGraphics::IndexBuffer::Usage usage, CoreGraphics::IndexBuffer::Access access)
 {
 	n_assert((type == IndexType::Index16) || (type == IndexType::Index32));
     n_assert(num > 0);
     n_assert(numBytes == (IndexType::SizeOf(type) * num));
+
 	this->indexType = type;
     this->numIndices = num;
 	this->indexDataSize = numBytes;
-
-	//start as empty indexbuffer
     this->indexDataPtr = 0;
-		
 	this->indexBufferUsage = usage;
 	this->accessMode = accessMode;
-	
-
 }
 
 //------------------------------------------------------------------------------
@@ -78,8 +72,7 @@ MemoryIndexBufferLoaderBase::Setup(IndexType::Code type, SizeT num,  SizeT numBy
 */
 
 void 
-MemoryIndexBufferLoaderBase::Setup(IndexType::Code type, SizeT num, void* ptr, SizeT numBytes, 
-				CoreGraphics::IndexBuffer::Usage usage, CoreGraphics::IndexBuffer::Access access )
+MemoryIndexBufferLoaderBase::Setup(IndexType::Code type, SizeT num, void* ptr, SizeT numBytes, CoreGraphics::IndexBuffer::Usage usage, CoreGraphics::IndexBuffer::Access access)
 {
 	n_assert((type == IndexType::Index16) || (type == IndexType::Index32));
     n_assert(num > 0);
@@ -88,14 +81,10 @@ MemoryIndexBufferLoaderBase::Setup(IndexType::Code type, SizeT num, void* ptr, S
 	
 	this->indexType = type;
     this->numIndices = num;
-
     this->indexDataPtr = ptr;
     this->indexDataSize = numBytes;
-		
 	this->indexBufferUsage = usage;
 	this->accessMode = accessMode;
-	
-
 }
 
-}; // namespace Base
+} // namespace Base

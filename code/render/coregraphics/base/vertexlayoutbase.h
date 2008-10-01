@@ -49,9 +49,11 @@ public:
     SizeT GetVertexByteSize() const;
     /// get component offset from start of vertex
     IndexT GetComponentByteOffset(CoreGraphics::VertexComponent::SemanticName semName, IndexT semIndex) const;
+    /// get vertex components
+    const Util::Array<CoreGraphics::VertexComponent>& GetVertexComponents() const;    
         
 protected:
-    friend class CoreGraphics::VertexLayoutServer;
+    friend class VertexLayoutServerBase;
 
     /// discard the vertex layout object
     void Discard();
@@ -105,6 +107,16 @@ inline SizeT
 VertexLayoutBase::GetVertexByteSize() const
 {
     return this->vertexByteSize;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline
+const Util::Array<CoreGraphics::VertexComponent>& 
+VertexLayoutBase::GetVertexComponents() const
+{
+    return this->components;
 }
 
 } // namespace Base

@@ -1,7 +1,9 @@
-#ifndef PROPERTIES_CHASECAMERAPROPERTY_H
-#define PROPERTIES_CHASECAMERAPROPERTY_H
+#ifndef GRAPHICSFEATURE_CHASECAMERAPROPERTY_H
+#define GRAPHICSFEATURE_CHASECAMERAPROPERTY_H
 //------------------------------------------------------------------------------
 /**
+    @class GraphicsFeature::ChaseCameraProperty
+
     A chase camera for 3rd person camera control.
     
     (C) 2005 Radon Labs GmbH
@@ -82,6 +84,6 @@ protected:
 };
 RegisterClass(ChaseCameraProperty);
 
-}; // namespace Property
+}; // namespace GraphicsFeature
 //------------------------------------------------------------------------------
 #endif

@@ -18,7 +18,7 @@
 #include "core/sysfunc.h"
 #include "util/string.h"
 #include "util/fourcc.h"
-#include "memory/heap.h"
+#include "memory/memorypool.h"
 
 //------------------------------------------------------------------------------
 namespace Core
@@ -31,7 +31,7 @@ public:
     typedef RefCounted* (*Creator)();
 
     /// constructor
-    Rtti(const char* className, Util::FourCC fcc, Creator creatorFunc, const Core::Rtti* parentClass);
+    Rtti(const char* className, Util::FourCC fcc, Creator creatorFunc, const Core::Rtti* parentClass, SizeT instSize);
     /// equality operator
     bool operator==(const Rtti& rhs) const;
     /// inequality operator
@@ -42,6 +42,8 @@ public:
     Util::FourCC GetFourCC() const;
     /// get pointer to parent class
     const Core::Rtti* GetParent() const;
+    /// get instance size in bytes
+    SizeT GetInstanceSize() const;
     /// create an object of this class
     RefCounted* Create() const;
     /// return true if this rtti is equal or derived from to other rtti
@@ -50,12 +52,20 @@ public:
     bool IsDerivedFrom(const Util::String& otherClassName) const;
     /// return true if this rtti is equal or derived from to other rtti, by fourcc
     bool IsDerivedFrom(const Util::FourCC& otherClassFourCC) const;
+    /// allocate instance memory block (called by class new operator)
+    void* AllocInstanceMemory();
+    /// free instance memory block (called by class delete operator)
+    void FreeInstanceMemory(void* ptr);
 
 private:
     Util::String name;
     const Core::Rtti* parent;
     const Util::FourCC fourCC;
     const Creator creator;
+    SizeT instanceSize;
+    #if NEBULA3_REFCOUNTED_MEMORYPOOLS
+    Memory::MemoryPool memoryPool;
+    #endif
 };
 
 //------------------------------------------------------------------------------
@@ -103,6 +113,15 @@ Rtti::GetParent() const
     return this->parent;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+inline SizeT
+Rtti::GetInstanceSize() const
+{
+    return this->instanceSize;
+}
+
 }  // namespace Core
 
 //------------------------------------------------------------------------------
@@ -113,11 +132,12 @@ Rtti::GetParent() const
 public: \
     void* operator new(size_t size) \
     { \
-        return Memory::Alloc(size); \
+        n_assert(size == RTTI.GetInstanceSize()); \
+        return RTTI.AllocInstanceMemory(); \
     }; \
     void operator delete(void* p) \
     { \
-        Memory::Free(p); \
+        RTTI.FreeInstanceMemory(p); \
     }; \
     static Core::Rtti RTTI; \
     static Core::RefCounted* FactoryCreator(); \
@@ -149,7 +169,7 @@ private:
 */
 #if NEBULA3_DEBUG
 #define ImplementClass(type, fourcc, baseType) \
-    Core::Rtti type::RTTI(#type, fourcc, type::FactoryCreator, &baseType::RTTI); \
+    Core::Rtti type::RTTI(#type, fourcc, type::FactoryCreator, &baseType::RTTI, sizeof(type)); \
     Core::Rtti* type::GetRtti() const { return &this->RTTI; } \
     Core::RefCounted* type::FactoryCreator() { return type::Create(); } \
     type* type::Create() \
@@ -172,7 +192,7 @@ private:
     }
 #else
 #define ImplementClass(type, fourcc, baseType) \
-    Core::Rtti type::RTTI(#type, fourcc, type::FactoryCreator, &baseType::RTTI); \
+    Core::Rtti type::RTTI(#type, fourcc, type::FactoryCreator, &baseType::RTTI, sizeof(type)); \
     Core::Rtti* type::GetRtti() const { return &this->RTTI; } \
     Core::RefCounted* type::FactoryCreator() { return type::Create(); } \
     type* type::Create() \
@@ -191,7 +211,7 @@ private:
 #endif
 
 #define ImplementAbstractClass(type, fourcc, baseType) \
-    Core::Rtti type::RTTI(#type, fourcc, 0, &baseType::RTTI); \
+    Core::Rtti type::RTTI(#type, fourcc, 0, &baseType::RTTI, 0); \
     Core::Rtti* type::GetRtti() const { return &this->RTTI; }
 
 //------------------------------------------------------------------------------
@@ -200,7 +220,7 @@ private:
 */
 #if NEBULA3_DEBUG
 #define ImplementRootClass(type, fourcc) \
-    Core::Rtti type::RTTI(#type, fourcc, type::FactoryCreator, 0); \
+    Core::Rtti type::RTTI(#type, fourcc, type::FactoryCreator, 0, sizeof(type)); \
     Core::Rtti* type::GetRtti() const { return &this->RTTI; } \
     Core::RefCounted* type::FactoryCreator() { return type::Create(); } \
     type* type::Create() \
@@ -222,7 +242,7 @@ private:
     }
 #else
 #define ImplementRootClass(type, fourcc) \
-    Core::Rtti type::RTTI(#type, fourcc, type::FactoryCreator, 0); \
+    Core::Rtti type::RTTI(#type, fourcc, type::FactoryCreator, 0, sizeof(type)); \
     Core::Rtti* type::GetRtti() const { return &this->RTTI; } \
     Core::RefCounted* type::FactoryCreator() { return type::Create(); } \
     type* type::Create() \

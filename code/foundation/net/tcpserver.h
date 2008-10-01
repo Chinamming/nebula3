@@ -42,7 +42,7 @@ public:
     /// return true if server is open
     bool IsOpen() const;
     /// poll clients connections for received data, call this frequently!
-    Util::Array<Ptr<TcpClientConnection>> Recv();
+    Util::Array<Ptr<TcpClientConnection> > Recv();
 
 private:
     /// a private listener thread class
@@ -71,7 +71,7 @@ private:
     IpAddress ipAddress;
     Ptr<ListenerThread> listenerThread;
     bool isOpen;
-    Util::Array<Ptr<TcpClientConnection>> clientConnections;
+    Util::Array<Ptr<TcpClientConnection> > clientConnections;
     static Threading::CriticalSection connectionCritSect;
 };
 

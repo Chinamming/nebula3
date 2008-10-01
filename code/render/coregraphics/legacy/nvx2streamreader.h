@@ -34,22 +34,34 @@ public:
     Nvx2StreamReader();
     /// destructor
     virtual ~Nvx2StreamReader();
+    /// enable/disable raw mode (raw mode does not setup vertex/index buffers), default is false
+    void SetRawMode(bool b);
+    /// get raw mode flag
+    bool IsRawMode() const;
     /// begin reading from the stream, read entire data
     virtual bool Open();
     /// end reading from the stream, destroys loaded objects
     virtual void Close();
-    /// get vertex buffer
+    /// get vertex buffer (not valid in raw mode)
     const Ptr<Base::VertexBufferBase>& GetVertexBuffer() const;
-    /// get index buffer
+    /// get index buffer (not valid in raw mode)
     const Ptr<Base::IndexBufferBase>& GetIndexBuffer() const;
     /// get primitive groups
     const Util::Array<CoreGraphics::PrimitiveGroup>& GetPrimitiveGroups() const;
-
-    /// optional: set other vertex and index buffer and its loaders
-    /// set vertex buffer type and loader
-    void SetVertexBuffer(const Ptr<Base::VertexBufferBase>& vBuffer, const Ptr<Base::MemoryVertexBufferLoaderBase>& vBufferLoader);
-    /// set vertex buffer type and loader
-    void SetIndexBuffer(const Ptr<Base::IndexBufferBase>& iBuffer, const Ptr<Base::MemoryIndexBufferLoaderBase>& iBufferLoader);
+    /// get pointer to raw vertex data
+    float* GetVertexData() const;
+    /// get pointer to raw index data
+    ushort* GetIndexData() const;
+    /// get number of vertices
+    SizeT GetNumVertices() const;
+    /// get number of indices
+    SizeT GetNumIndices() const;
+    /// get vertex width
+    SizeT GetVertexWidth() const;
+    /// get number of edges
+    SizeT GetNumEdges() const;
+    /// get vertex components
+    const Util::Array<CoreGraphics::VertexComponent>& GetVertexComponents() const;
 
 private:
     /// read header data from stream
@@ -60,11 +72,43 @@ private:
     void SetupVertexComponents();
     /// update primitive group bounding boxes
     void UpdateGroupBoundingBoxes();
-    /// setup the vertex buffer object
+    /// setup the vertex buffer object (not called in raw mode)
     void SetupVertexBuffer();
-    /// setup the index buffer object
+    /// setup the index buffer object (not called in raw mode)
     void SetupIndexBuffer();
+    /// convert vertex buffer endianess
+    void ConvertVertexBufferEndianess(void* vertexPtr, SizeT numVertices, const Util::Array<CoreGraphics::VertexComponent>& vertexComps);
 
+    /// Nebula2 vertex components, see Nebula2's nMesh2 class for details
+    enum N2VertexComponent
+    {
+        N2Coord        = (1<<0),      // 3 floats
+        N2Normal       = (1<<1),      // 3 floats
+        N2NormalUB4N   = (1<<2),      // 4 unsigned bytes, normalized
+        N2Uv0          = (1<<3),      // 2 floats
+        N2Uv0S2        = (1<<4),      // 2 shorts, 4.12 fixed point
+        N2Uv1          = (1<<5),      // 2 floats
+        N2Uv1S2        = (1<<6),      // 2 shorts, 4.12 fixed point
+        N2Uv2          = (1<<7),      // 2 floats
+        N2Uv2S2        = (1<<8),      // 2 shorts, 4.12 fixed point
+        N2Uv3          = (1<<9),      // 2 floats
+        N2Uv3S2        = (1<<10),     // 2 shorts, 4.12 fixed point
+        N2Color        = (1<<11),     // 4 floats
+        N2ColorUB4N    = (1<<12),     // 4 unsigned bytes, normalized
+        N2Tangent      = (1<<13),     // 3 floats
+        N2TangentUB4N  = (1<<14),     // 4 unsigned bytes, normalized
+        N2Binormal     = (1<<15),     // 3 floats
+        N2BinormalUB4N = (1<<16),     // 4 unsigned bytes, normalized
+        N2Weights      = (1<<17),     // 4 floats
+        N2WeightsUB4N  = (1<<18),     // 4 unsigned bytes, normalized
+        N2JIndices     = (1<<19),     // 4 floats
+        N2JIndicesUB4  = (1<<20),     // 4 unsigned bytes
+
+        N2NumVertexComponents = 21,
+        N2AllComponents = ((1<<N2NumVertexComponents) - 1),
+    };
+
+    bool rawMode;
     Ptr<Base::VertexBufferBase> vertexBuffer;
     Ptr<Base::IndexBufferBase> indexBuffer;
     Ptr<Base::MemoryVertexBufferLoaderBase> vertexBufferLoader;    
@@ -92,9 +136,28 @@ private:
 //------------------------------------------------------------------------------
 /**
 */
+inline void
+Nvx2StreamReader::SetRawMode(bool b)
+{
+    this->rawMode = b;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline bool
+Nvx2StreamReader::IsRawMode() const
+{
+    return this->rawMode;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 inline const Ptr<Base::VertexBufferBase>&
 Nvx2StreamReader::GetVertexBuffer() const
 {
+    n_assert(!this->rawMode && this->vertexBuffer.isvalid());
     return this->vertexBuffer;
 }
 
@@ -104,6 +167,7 @@ Nvx2StreamReader::GetVertexBuffer() const
 inline const Ptr<Base::IndexBufferBase>&
 Nvx2StreamReader::GetIndexBuffer() const
 {
+    n_assert(!this->rawMode && this->indexBuffer.isvalid());
     return this->indexBuffer;
 }
 
@@ -119,21 +183,64 @@ Nvx2StreamReader::GetPrimitiveGroups() const
 //------------------------------------------------------------------------------
 /**
 */
-inline void 
-Nvx2StreamReader::SetVertexBuffer(const Ptr<Base::VertexBufferBase>& vBuffer, const Ptr<Base::MemoryVertexBufferLoaderBase>& vBufferLoader)
+inline float*
+Nvx2StreamReader::GetVertexData() const
 {
-    this->vertexBuffer = vBuffer;
-    this->vertexBufferLoader = vBufferLoader;
+    return (float*) this->vertexDataPtr;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-inline void 
-Nvx2StreamReader::SetIndexBuffer(const Ptr<Base::IndexBufferBase>& iBuffer, const Ptr<Base::MemoryIndexBufferLoaderBase>& iBufferLoader)
+inline ushort*
+Nvx2StreamReader::GetIndexData() const
 {
-    this->indexBuffer = iBuffer;
-    this->indexBufferLoader = iBufferLoader;
+    return (ushort*) this->indexDataPtr;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline SizeT
+Nvx2StreamReader::GetNumVertices() const
+{
+    return this->numVertices;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline SizeT
+Nvx2StreamReader::GetNumIndices() const
+{
+    return this->numIndices;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline SizeT
+Nvx2StreamReader::GetVertexWidth() const
+{
+    return this->vertexWidth;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline SizeT
+Nvx2StreamReader::GetNumEdges() const
+{
+    return this->numEdges;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline const Util::Array<CoreGraphics::VertexComponent>&
+Nvx2StreamReader::GetVertexComponents() const
+{
+    return this->vertexComponents;
 }
 
 } // namespace Legacy

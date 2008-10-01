@@ -57,7 +57,7 @@ KeyboardBase::OnAttach()
 {
     InputHandler::OnAttach();
     KeyState initialKeyState;
-    this->keyStates.Clear(initialKeyState);
+    this->keyStates.Fill(initialKeyState);
     this->charInput.Clear();
 }
 

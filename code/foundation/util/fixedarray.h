@@ -43,8 +43,12 @@ public:
     void SetSize(SizeT s);
     /// get number of elements
     SizeT Size() const;
-    /// clear the array with value
-    void Clear(const TYPE& val);
+    /// return true if array if empty (has no elements)
+    bool IsEmpty() const;
+    /// clear the array, free elements
+    void Clear();
+    /// fill the entire array with a value
+    void Fill(const TYPE& val);
     /// fill array range with element
     void Fill(IndexT first, SizeT num, const TYPE& val);
     /// get iterator to first element
@@ -86,8 +90,7 @@ FixedArray<TYPE>::FixedArray() :
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
 FixedArray<TYPE>::Delete()
 {
     if (this->elements)
@@ -101,11 +104,12 @@ FixedArray<TYPE>::Delete()
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
 FixedArray<TYPE>::Allocate(SizeT s)
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(0 == this->elements) 
+    #endif
     if (s > 0)
     {
         this->elements = n_new_array(TYPE, s);
@@ -117,8 +121,7 @@ FixedArray<TYPE>::Allocate(SizeT s)
 /**
     NOTE: only works on deleted array. This is intended.
 */
-template<class TYPE>
-void
+template<class TYPE> void
 FixedArray<TYPE>::Copy(const FixedArray<TYPE>& rhs)
 {
     if (this != &rhs)
@@ -152,7 +155,7 @@ FixedArray<TYPE>::FixedArray(SizeT s, const TYPE& initialValue) :
     elements(0)
 {
     this->Allocate(s);
-    this->Clear(initialValue);
+    this->Fill(initialValue);
 }
 
 //------------------------------------------------------------------------------
@@ -178,8 +181,7 @@ FixedArray<TYPE>::~FixedArray()
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
 FixedArray<TYPE>::operator=(const FixedArray<TYPE>& rhs)
 {
     this->Delete();
@@ -189,19 +191,19 @@ FixedArray<TYPE>::operator=(const FixedArray<TYPE>& rhs)
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-TYPE&
+template<class TYPE> TYPE&
 FixedArray<TYPE>::operator[](IndexT index) const
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(this->elements && (index < this->size));
+    #endif
     return this->elements[index];
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-bool
+template<class TYPE> bool
 FixedArray<TYPE>::operator==(const FixedArray<TYPE>& rhs) const
 {
     if (this->size != rhs.size)
@@ -210,7 +212,9 @@ FixedArray<TYPE>::operator==(const FixedArray<TYPE>& rhs) const
     }
     else
     {
+        #if NEBULA3_BOUNDSCHECKS
         n_assert(this->elements && rhs.elements);
+        #endif
         IndexT i;
         SizeT num = this->size;
         for (i = 0; i < num; i++)
@@ -227,8 +231,7 @@ FixedArray<TYPE>::operator==(const FixedArray<TYPE>& rhs) const
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-bool
+template<class TYPE> bool
 FixedArray<TYPE>::operator!=(const FixedArray<TYPE>& rhs) const
 {
     return !(*this == rhs);
@@ -237,8 +240,7 @@ FixedArray<TYPE>::operator!=(const FixedArray<TYPE>& rhs) const
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
 FixedArray<TYPE>::SetSize(SizeT s)
 {
     this->Delete();
@@ -248,8 +250,7 @@ FixedArray<TYPE>::SetSize(SizeT s)
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-SizeT
+template<class TYPE> SizeT
 FixedArray<TYPE>::Size() const
 {
     return this->size;
@@ -258,29 +259,47 @@ FixedArray<TYPE>::Size() const
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
-FixedArray<TYPE>::Clear(const TYPE& val)
+template<class TYPE> bool
+FixedArray<TYPE>::IsEmpty() const
 {
-    if (this->elements)
-    {
-        IndexT i;
-        for (i = 0; i < this->size; i++)
-        {
-            this->elements[i] = val;
-        }
-    }
+    return 0 == this->size;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
+FixedArray<TYPE>::Clear()
+{
+    this->Delete();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+template<class TYPE> void
+FixedArray<TYPE>::Fill(const TYPE& val)
+{
+    #if NEBULA3_BOUNDSCHECKS
+    n_assert(0 != this->elements);
+    #endif
+    IndexT i;
+    for (i = 0; i < this->size; i++)
+    {
+        this->elements[i] = val;
+    }
+}       
+
+//------------------------------------------------------------------------------
+/**
+*/
+template<class TYPE> void
 FixedArray<TYPE>::Fill(IndexT first, SizeT num, const TYPE& val)
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert((first + num) < this->size);
     n_assert(0 != this->elements);
+    #endif
     IndexT i;
     for (i = first; i < (first + num); i++)
     {
@@ -291,8 +310,7 @@ FixedArray<TYPE>::Fill(IndexT first, SizeT num, const TYPE& val)
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-typename FixedArray<TYPE>::Iterator
+template<class TYPE> typename FixedArray<TYPE>::Iterator
 FixedArray<TYPE>::Begin() const
 {
     return this->elements;
@@ -301,8 +319,7 @@ FixedArray<TYPE>::Begin() const
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-typename FixedArray<TYPE>::Iterator
+template<class TYPE> typename FixedArray<TYPE>::Iterator
 FixedArray<TYPE>::End() const
 {
     return this->elements + this->size;
@@ -311,8 +328,7 @@ FixedArray<TYPE>::End() const
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-typename FixedArray<TYPE>::Iterator
+template<class TYPE> typename FixedArray<TYPE>::Iterator
 FixedArray<TYPE>::Find(const TYPE& elm) const
 {
     IndexT i;
@@ -329,8 +345,7 @@ FixedArray<TYPE>::Find(const TYPE& elm) const
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-IndexT
+template<class TYPE> IndexT
 FixedArray<TYPE>::FindIndex(const TYPE& elm) const
 {
     IndexT i;
@@ -347,8 +362,7 @@ FixedArray<TYPE>::FindIndex(const TYPE& elm) const
 //------------------------------------------------------------------------------
 /**
 */
-template<class TYPE>
-void
+template<class TYPE> void
 FixedArray<TYPE>::Sort()
 {
     std::sort(this->Begin(), this->End());
@@ -358,8 +372,7 @@ FixedArray<TYPE>::Sort()
 /**
     @todo hmm, this is copy-pasted from Array...
 */
-template<class TYPE>
-IndexT
+template<class TYPE> IndexT
 FixedArray<TYPE>::BinarySearchIndex(const TYPE& elm) const
 {
     SizeT num = this->Size();
@@ -409,6 +422,6 @@ FixedArray<TYPE>::BinarySearchIndex(const TYPE& elm) const
     return InvalidIndex;
 }
 
-}
+} // namespace Util
 //------------------------------------------------------------------------------
 #endif

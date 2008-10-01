@@ -21,6 +21,7 @@
 #include "io/uri.h"
 #include "io/stream.h"
 #include "util/string.h"
+#include "threading/safequeue.h"
 
 //------------------------------------------------------------------------------
 namespace Http
@@ -38,14 +39,19 @@ public:
     const Util::String& GetName() const;
     /// get a human readable description of the request handler
     const Util::String& GetDesc() const;
-    /// get a resource location path which is accepted by the handler (e.g. "/index.html")
+    /// get a resource location path which is accepted by the handler (e.g. "/display")
     const Util::String& GetRootLocation() const;
-    /// return true if the http request is accepted by the request handler
-    virtual bool AcceptsRequest(const Ptr<HttpRequest>& request);
-    /// handle a http request, the handler is expected to fill the content stream with response data
-    virtual void HandleRequest(const Ptr<HttpRequest>& request);
 
 protected:
+    friend class HttpServer;
+    friend class HttpServerProxy;
+
+    /// handle a http request, overwrite this method in you subclass
+    virtual void HandleRequest(const Ptr<HttpRequest>& request);
+    /// handle all pending requests, called by local-thread's HttpServerProxy
+    void HandlePendingRequests();
+    /// put a request to the pending queue, called by HttpServer thread
+    void PutRequest(const Ptr<HttpRequest>& httpRequest);
     /// set human readable name of the request handler
     void SetName(const Util::String& n);
     /// set human readable description
@@ -56,6 +62,7 @@ protected:
     Util::String name;
     Util::String desc;
     Util::String rootLocation;
+    Threading::SafeQueue<Ptr<HttpRequest> > pendingRequests;
 };
 
 //------------------------------------------------------------------------------

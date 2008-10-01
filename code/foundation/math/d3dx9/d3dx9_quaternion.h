@@ -11,6 +11,7 @@
 */    
 #include "core/types.h"
 #include "math/d3dx9/d3dx9_scalar.h"
+#include "math/d3dx9/d3dx9_float4.h"
 
 //------------------------------------------------------------------------------
 namespace Math
@@ -45,6 +46,8 @@ public:
 
     /// set content
     void set(scalar x, scalar y, scalar z, scalar w);
+    /// set from float4
+    void set(const float4& f4);
     /// read/write access to x component
     scalar& x();
     /// read/write access to y component
@@ -238,6 +241,18 @@ quaternion::set(scalar x, scalar y, scalar z, scalar w)
     this->Y = y;
     this->Z = z;
     this->W = w;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline void
+quaternion::set(const float4& f4)
+{
+    this->X = f4.X;
+    this->Y = f4.Y;
+    this->Z = f4.Z;
+    this->W = f4.W;
 }
 
 //------------------------------------------------------------------------------

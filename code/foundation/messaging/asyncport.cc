@@ -53,7 +53,7 @@ AsyncPort::Open()
     this->OnCreateHandlers();
     
     // start the handler thread
-    this->thread->waitForMessages = this->waitForMessages;
+    this->thread->SetWaitForMessages(this->waitForMessages);
     this->thread->Start();
 
     this->isOpen = true;
@@ -195,6 +195,16 @@ AsyncPort::HandlerThread::HandlerThread() :
     waitForMessages(true)
 {
     // empty
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+AsyncPort::HandlerThread::SetWaitForMessages(bool b)
+{
+    this->waitForMessages = b;
+    this->msgQueue.SetSignalOnEnqueueEnabled(b);
 }
 
 //------------------------------------------------------------------------------

@@ -37,12 +37,6 @@ public:
     void SetKeyArray(const Util::FixedArray<Math::float4>& kArray);
 
 protected:
-    /// load the resource (sets the valid flag)
-    virtual bool LoadResource();
-    /// unload the resource (clears the valid flag)
-    virtual void UnloadResource();
-    /// load curve group from binary nax2 file
-    bool LoadNax2(const char* filename);
 
     Util::FixedArray<Math::float4> keyArray;
 };

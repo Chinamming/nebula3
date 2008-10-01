@@ -33,6 +33,9 @@ main()
     runner->Run();
     
     // shutdown Nebula3 runtime
+    runner = 0;
+    ioServer = 0;
     coreServer->Close();
+    coreServer = 0;
     SysFunc::Exit(0);
 }

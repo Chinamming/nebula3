@@ -11,7 +11,7 @@ struct vsInputSkinnedDepth
 {
     float4 position : POSITION;
     float4 weights  : BLENDWEIGHT;
-    float4 indices  : BLENDINDICES;
+    uint4 indices   : BLENDINDICES;
 };
 
 struct vsVSMPassOutput
@@ -27,7 +27,7 @@ struct vsColorPassInputSkinned
     float3 tangent  : TANGENT;
     float3 binormal : BINORMAL;    
     float4 weights  : BLENDWEIGHT;
-    float4 indices  : BLENDINDICES;
+    uint4 indices   : BLENDINDICES;
     float2 uv0      : TEXCOORD0;
 };
 
@@ -56,7 +56,7 @@ struct vsColorPassOutput
     @return                 the skinned position
 */
 float4
-skinnedPosition(const float4 inPos, const float4 weights, const float4 indices, const matrix<float,4,3> jointPalette[72])
+skinnedPosition(const float4 inPos, const float4 weights, const uint4 indices, const matrix<float,4,3> jointPalette[72])
 {    
     float3 pos[4];
     pos[0] = (mul(inPos, jointPalette[indices[0]])) * weights[0];
@@ -79,7 +79,7 @@ skinnedPosition(const float4 inPos, const float4 weights, const float4 indices, 
     @return                 the skinned normal
 */
 float3
-skinnedNormal(const float3 inNormal, const float4 weights, const float4 indices, const matrix<float,4,3> jointPalette[72])
+skinnedNormal(const float3 inNormal, const float4 weights, const uint4 indices, const matrix<float,4,3> jointPalette[72])
 {
     float3 normal[4];
     normal[0] = mul(inNormal, (matrix<float,3,3>)jointPalette[indices[0]]) * weights[0];
@@ -95,7 +95,8 @@ skinnedNormal(const float3 inNormal, const float4 weights, const float4 indices,
 */
 float4 DepthPassVertexShaderSkinned(const vsInputSkinnedDepth vsIn) : POSITION
 {
-    float4 skinPos = skinnedPosition(vsIn.position, vsIn.weights, vsIn.indices, jPalette);
+    float4 weights = UnpackWeights(vsIn.weights);
+    float4 skinPos = skinnedPosition(vsIn.position, weights, vsIn.indices, jPalette);
     skinPos = mul(skinPos, mvp);    
     return skinPos;
 }
@@ -108,7 +109,9 @@ vsVSMPassOutput
 VSMPassVertexShaderSkinned(const vsInputSkinnedDepth vsIn)
 {
     vsVSMPassOutput vsOut;
-    float4 skinPos = skinnedPosition(vsIn.position, vsIn.weights, vsIn.indices, jPalette);    
+    float4 weights = UnpackWeights(vsIn.weights);
+    float4 skinPos = skinnedPosition(vsIn.position, weights, vsIn.indices, jPalette);    
+
     vsOut.position = mul(skinPos, mvp);   
     vsOut.depth = vsOut.position.z;
     return vsOut;
@@ -133,16 +136,19 @@ vsColorPassOutput
 ColorPassVertexShaderSkinned(const vsColorPassInputSkinned vsIn)
 {
     vsColorPassOutput vsOut;
-    float4 skinPos = skinnedPosition(vsIn.position, vsIn.weights, vsIn.indices, jPalette);  
-    vsOut.position    = mul(skinPos, mvp);
-    vsOut.projPos     = vsOut.position;    
-    vsOut.worldPos    = mul(skinPos, model);    
-    vsOut.worldEyeVec = normalize(eyePos - vsOut.worldPos);
-    float3 skinNormal = skinnedNormal(vsIn.normal, vsIn.weights, vsIn.indices, jPalette);
+    float4 weights = UnpackWeights(vsIn.weights);
+    float4 skinPos = skinnedPosition(vsIn.position, weights, vsIn.indices, jPalette);  
+    vsOut.position     = mul(skinPos, mvp);
+    vsOut.projPos      = vsOut.position;    
+    vsOut.worldPos     = mul(skinPos, model);    
+    vsOut.worldEyeVec  = normalize(eyePos - vsOut.worldPos);    
+    float3 skinNormal   = skinnedNormal(UnpackNormal(vsIn.normal), weights, vsIn.indices, jPalette);
+    float3 skinTangent  = skinnedNormal(UnpackNormal(vsIn.tangent), weights, vsIn.indices, jPalette);
+    float3 skinBinormal = skinnedNormal(UnpackNormal(vsIn.binormal), weights, vsIn.indices, jPalette);
     vsOut.normal      = normalize(mul(skinNormal, model));
-    vsOut.tangent     = normalize(mul(vsIn.tangent, model));
-    vsOut.binormal    = normalize(mul(vsIn.binormal, model));
-    vsOut.uv0 = vsIn.uv0;
+    vsOut.tangent     = normalize(mul(skinTangent, model));
+    vsOut.binormal    = normalize(mul(skinBinormal, model));
+    vsOut.uv0 = UnpackUv(vsIn.uv0);
     return vsOut;
 }
 

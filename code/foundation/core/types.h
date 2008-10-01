@@ -26,6 +26,7 @@ typedef unsigned long  ulong;
 typedef unsigned int   uint;
 typedef unsigned short ushort;
 typedef unsigned char  uchar;
+typedef unsigned char  ubyte;
 
 typedef unsigned int IndexT;    // the index type
 typedef unsigned int SizeT;     // the size type

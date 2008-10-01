@@ -16,6 +16,10 @@ namespace CoreGraphics
 ImplementClass(CoreGraphics::StreamTextureSaver, 'STXS', Xbox360::Xbox360StreamTextureSaver);
 }
 #elif __WII__
+namespace CoreGraphics
+{
+ImplementClass(CoreGraphics::StreamTextureSaver, 'STXS', Wii::WiiStreamTextureSaver);
+}
 #else
 #error "StreamTextureSaver class not implemented on this platform!"
 #endif

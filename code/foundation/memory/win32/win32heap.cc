@@ -17,8 +17,8 @@ CriticalSection* Win32Heap::criticalSection = 0;
 
 //------------------------------------------------------------------------------
 /**
-    This method must be called at the beginning of the application because
-    any threads are spawned (usually called by Util::Setup().
+    This method must be called at the beginning of the application before
+    any threads are spawned.
 */
 void
 Win32Heap::Setup()

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2006 sp2 U (http://www.altova.com) by Andre Weissflog (Radon Labs GmbH) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="Nebula3">
+		<xs:annotation>
+			<xs:documentation>All Nebula3 XML files have a Nebula3 root element</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

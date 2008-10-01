@@ -9,8 +9,8 @@
 #include "physics/level.h"
 #include "physicsattr/physicsattributes.h"
 #include "core/factory.h"
-#include "msg/settransform.h"
-#include "msg/applyimpulseatpos.h"
+#include "basegameprotocol.h"
+#include "physicsprotocol.h"
 
 namespace PhysicsFeature
 {

@@ -127,7 +127,7 @@ ZipFileStream::Open()
                     // read content of zip file entry into private buffer
                     this->size = entry->GetFileSize();
                     this->position = 0;
-                    this->buffer = (unsigned char*) Memory::Alloc(this->size);
+                    this->buffer = (unsigned char*) Memory::Alloc(Memory::StreamDataHeap, this->size);
                     n_assert(0 != this->buffer);
                     bool success = entry->Read(this->buffer, this->size, pwd);
                     if (success)
@@ -153,7 +153,7 @@ ZipFileStream::Close()
     Stream::Close();
     if (0 != this->buffer)
     {
-        Memory::Free(this->buffer);
+        Memory::Free(Memory::StreamDataHeap, this->buffer);
         this->buffer = 0;
     }
     this->position = 0;

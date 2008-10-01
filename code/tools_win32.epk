@@ -72,6 +72,17 @@ begintarget testviewer
     setlibs_win32 $Win32Libs
 endtarget
 #-------------------------------------------------------------------------------
+begintarget testremoteviewer
+    settype exe
+    setbasedir tools
+    setprecompiledheader stdneb    
+    setincpath_win32 "../foundation;../render;../extlibs;../tools;../addons"    
+    setclusters { testremoteviewer }
+    setlibs_win32_release "$Win32ReleaseLibs nebula2_win32.lib db_win32.lib sqlite_win32.lib"
+    setlibs_win32_debug "$Win32DebugLibs d_nebula2_win32.lib d_db_win32.lib d_sqlite_win32.lib"
+    setlibs_win32 $Win32Libs
+endtarget
+#-------------------------------------------------------------------------------
 begintarget testgame
     settype exe
     setbasedir tools
@@ -83,14 +94,15 @@ begintarget testgame
     setlibs_win32 $Win32Libs
 endtarget
 #-------------------------------------------------------------------------------
-begintarget testasyncviewer
+begintarget genrandtable
     settype exe
     setbasedir tools
     setprecompiledheader stdneb    
-    setincpath_win32 "../foundation;../render;../extlibs;../tools;../addons"    
-    setclusters { testasyncviewer }
-    setlibs_win32_release "$Win32ReleaseLibs nebula2_win32.lib"
-    setlibs_win32_debug "$Win32DebugLibs d_nebula2_win32.lib"
+    setincpath_win32 "../foundation;../extlibs;../tools"    
+    setlibpath_win32 "../extlibs/raknet/Lib"
+    setclusters { genrandtable }
+    setlibs_win32_release $Win32ReleaseLibs
+    setlibs_win32_debug $Win32DebugLibs
     setlibs_win32 $Win32Libs
 endtarget
 #-------------------------------------------------------------------------------
@@ -104,7 +116,8 @@ begintarget tools_win32
         nsc3
         nviewer3        
         testviewer
+        testremoteviewer
         testgame
-        testasyncviewer
+        genrandtable
     }
 endtarget

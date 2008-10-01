@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="benchmarkbase_win32"
-	ProjectGUID="{1F6BA7BE-DEE9-4C62-A0AB-F063B0BFB53A}"
+	ProjectGUID="{642F490C-8C03-40E6-B12F-3009BB6B3A68}"
 	>
 	<Platforms>
 		<Platform

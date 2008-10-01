@@ -31,7 +31,6 @@ D3D9MemoryVertexBufferLoader::OnLoadRequested()
     n_assert(this->resource.isvalid());
     n_assert(!this->resource->IsAsyncEnabled());
     
-
     IDirect3DDevice9* d3d9Device = D3D9RenderDevice::Instance()->GetDirect3DDevice();
     n_assert(0 != d3d9Device);
 
@@ -47,7 +46,7 @@ D3D9MemoryVertexBufferLoader::OnLoadRequested()
     n_assert(0 != d3dVertexBuffer);
 
 	// check if there is any data to write into the buffer
-	if (0 != vertexDataPtr)
+	if (0 != this->vertexDataPtr)
 	{
 		// copy vertex data to vertex buffer
 		void* dstPtr = 0;

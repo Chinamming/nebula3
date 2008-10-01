@@ -10,7 +10,7 @@ namespace Lighting
 ImplementClass(Lighting::LightServerBase, 'LISB', Core::RefCounted);
 ImplementSingleton(Lighting::LightServerBase);
 
-using namespace Graphics;
+using namespace InternalGraphics;
 
 //------------------------------------------------------------------------------
 /**
@@ -65,7 +65,7 @@ LightServerBase::Close()
 /**
 */
 void
-LightServerBase::BeginFrame(const Ptr<CameraEntity>& camEntity)
+LightServerBase::BeginFrame(const Ptr<InternalCameraEntity>& camEntity)
 {
     n_assert(this->isOpen);
     n_assert(!this->inBeginFrame);
@@ -109,12 +109,12 @@ LightServerBase::BeginAttachVisibleLights()
 /**
 */
 void
-LightServerBase::AttachVisibleLight(const Ptr<AbstractLightEntity>& lightEntity)
+LightServerBase::AttachVisibleLight(const Ptr<InternalAbstractLightEntity>& lightEntity)
 {
     n_assert(this->inBeginAttach);
     if (lightEntity->GetLightType() == LightType::Global)
     {
-        this->globalLightEntity = lightEntity.downcast<GlobalLightEntity>();
+        this->globalLightEntity = lightEntity.downcast<InternalGlobalLightEntity>();
     }
     else
     {
@@ -140,7 +140,7 @@ LightServerBase::EndAttachVisibleLights()
     to the provided ModelEntity.
 */
 void
-LightServerBase::ApplyModelEntityLights(const Ptr<ModelEntity>& modelEntity)
+LightServerBase::ApplyModelEntityLights(const Ptr<InternalModelEntity>& modelEntity)
 {
     // empty, override in subclass
 }

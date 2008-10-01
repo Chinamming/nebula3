@@ -13,9 +13,9 @@
 */
 #include "core/refcounted.h"
 #include "core/singleton.h"
-#include "graphics/cameraentity.h"
-#include "graphics/modelentity.h"
-#include "lighting/globallightentity.h"
+#include "internalgraphics/internalcameraentity.h"
+#include "internalgraphics/internalmodelentity.h"
+#include "lighting/internalgloballightentity.h"
 
 //------------------------------------------------------------------------------
 namespace Lighting
@@ -38,24 +38,24 @@ public:
     bool IsOpen() const;
 
     /// begin lighting frame
-    void BeginFrame(const Ptr<Graphics::CameraEntity>& cameraEntity);
+    void BeginFrame(const Ptr<InternalGraphics::InternalCameraEntity>& cameraEntity);
     /// begin attaching visible light sources
     void BeginAttachVisibleLights();
     /// attach a visible light source
-    void AttachVisibleLight(const Ptr<AbstractLightEntity>& lightEntity);
+    void AttachVisibleLight(const Ptr<InternalAbstractLightEntity>& lightEntity);
     /// end attaching visible light sources
     void EndAttachVisibleLights();
     /// apply lighting parameters for a visible model entity 
-    void ApplyModelEntityLights(const Ptr<Graphics::ModelEntity>& modelEntity);
+    void ApplyModelEntityLights(const Ptr<InternalGraphics::InternalModelEntity>& modelEntity);
     /// end lighting frame
     void EndFrame();
 
     bool isOpen;
     bool inBeginFrame;
     bool inBeginAttach;
-    Ptr<Graphics::CameraEntity> cameraEntity;
-    Ptr<GlobalLightEntity> globalLightEntity;
-    Util::Array<Ptr<AbstractLightEntity> > visibleLightEntities;
+    Ptr<InternalGraphics::InternalCameraEntity> cameraEntity;
+    Ptr<InternalGlobalLightEntity> globalLightEntity;
+    Util::Array<Ptr<InternalAbstractLightEntity> > visibleLightEntities;
 };
 
 //------------------------------------------------------------------------------

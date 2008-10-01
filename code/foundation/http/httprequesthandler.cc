@@ -25,18 +25,36 @@ HttpRequestHandler::HttpRequestHandler()
 */
 HttpRequestHandler::~HttpRequestHandler()
 {
-    // empty
+    this->pendingRequests.SetSignalOnEnqueueEnabled(false);
 }
 
 //------------------------------------------------------------------------------
 /**
-    Overwrite this method in your subclass and decide if you want
-    to react on the request or not.
+    Put a http request into the request handlers message queue. This method
+    is meant to be called from another thread.
 */
-bool
-HttpRequestHandler::AcceptsRequest(const Ptr<HttpRequest>& request)
+void
+HttpRequestHandler::PutRequest(const Ptr<HttpRequest>& httpRequest)
 {
-    return false;
+    this->pendingRequests.Enqueue(httpRequest);
+}
+
+//------------------------------------------------------------------------------
+/**
+    Handle all pending http requests in the pending queue. This method
+    must be called frequently from the thread which created this
+    request handler.
+*/
+void
+HttpRequestHandler::HandlePendingRequests()
+{
+    Array<Ptr<HttpRequest> > requests = this->pendingRequests.DequeueAll();
+    IndexT i;
+    for (i = 0; i < requests.Size(); i++)
+    {
+        this->HandleRequest(requests[i]);
+        requests[i]->SetHandled(true);
+    }
 }
 
 //------------------------------------------------------------------------------

@@ -6,7 +6,7 @@ begintarget render_nidls_win32
     settype lib
     setbasedir render
     setnidlclusters {
-        asyncgraphics
+        graphics
     }
 endtarget
 
@@ -20,15 +20,18 @@ begintarget render_win32
     }
     setclusters {
         apprender
+        debugrender
         coregraphics coregraphics/base coregraphics/win32 coregraphics/d3d9 coregraphics/legacy coregraphics/debug
         input input/base input/win32 input/xinput
         models models/load models/save models/nodes
         preshaders
         frame
         resources
-        graphics
+        internalgraphics
         lighting lighting/base lighting/sm30
         renderutil
-        asyncgraphics
+        graphics
+        coreanimation
+        animation
     }
 endtarget            

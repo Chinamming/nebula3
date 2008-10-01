@@ -9,14 +9,14 @@
 #include "models/visresolver.h"
 #include "models/model.h"
 #include "models/modelnodeinstance.h"
-#include "graphics/modelentity.h"
+#include "internalgraphics/internalmodelentity.h"
 #include "lighting/lightserver.h"
 
 namespace Frame
 {
 ImplementClass(Frame::FrameBatch, 'FBTH', Core::RefCounted);
 
-using namespace Graphics;
+using namespace InternalGraphics;
 using namespace CoreGraphics;
 using namespace Models;
 using namespace Util;
@@ -133,7 +133,7 @@ FrameBatch::RenderBatch()
                     // setup lighting render states
                     // NOTE: this may change the shader feature bit mask which may select
                     // a different shader variation per entity
-                    const Ptr<ModelEntity>& modelEntity = nodeInstance->GetModelInstance()->GetModelEntity();
+                    const Ptr<InternalGraphics::InternalModelEntity>& modelEntity = nodeInstance->GetModelInstance()->GetModelEntity();
                     lightServer->ApplyModelEntityLights(modelEntity);
                     shaderInst->SelectActiveVariation(shaderServer->GetFeatureBits());
                     SizeT numPasses = shaderInst->Begin();

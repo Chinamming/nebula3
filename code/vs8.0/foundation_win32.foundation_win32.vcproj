@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="foundation_win32"
-	ProjectGUID="{644EFE92-A26C-40AB-B173-5E7B80E29EEF}"
+	ProjectGUID="{30562C23-988D-42D3-850F-8B07CFC28644}"
 	>
 	<Platforms>
 		<Platform
@@ -443,6 +443,54 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 			>
 			<File
+				RelativePath="..\foundation\debug\debugcounter.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\debug\debugcounter.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\debug\debughandler.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\debug\debughandler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\debug\debuginterface.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\debug\debuginterface.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\debug\debugpagehandler.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\debug\debugpagehandler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\debug\debugserver.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\debug\debugserver.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\debug\debugtimer.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\debug\debugtimer.h"
+				>
+			</File>
+			<File
 				RelativePath="..\foundation\debug\minidump.h"
 				>
 			</File>
@@ -481,23 +529,31 @@
 				>
 			</File>
 			<File
-				RelativePath="..\foundation\http\htmlelement.cc"
+				RelativePath="..\foundation\http\httpinterface.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\foundation\http\htmlelement.h"
+				RelativePath="..\foundation\http\httpinterface.h"
 				>
 			</File>
 			<File
-				RelativePath="..\foundation\http\htmlpagewriter.cc"
+				RelativePath="..\foundation\http\httpmessagehandler.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\foundation\http\htmlpagewriter.h"
+				RelativePath="..\foundation\http\httpmessagehandler.h"
 				>
 			</File>
 			<File
 				RelativePath="..\foundation\http\httpmethod.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\http\httpprotocol.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\http\httpprotocol.h"
 				>
 			</File>
 			<File
@@ -541,6 +597,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\foundation\http\httpserverproxy.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\http\httpserverproxy.h"
+				>
+			</File>
+			<File
 				RelativePath="..\foundation\http\httpstatus.cc"
 				>
 			</File>
@@ -548,11 +612,74 @@
 				RelativePath="..\foundation\http\httpstatus.h"
 				>
 			</File>
+			<Filter
+				Name="debug"
+				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
+				>
+				<File
+					RelativePath="..\foundation\http/debug\svgtestpagehandler.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\http/debug\svgtestpagehandler.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="html"
+				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
+				>
+				<File
+					RelativePath="..\foundation\http/html\htmlelement.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\http/html\htmlelement.h"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\http/html\htmlpagewriter.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\http/html\htmlpagewriter.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="svg"
+				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
+				>
+				<File
+					RelativePath="..\foundation\http/svg\svglinechartwriter.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\http/svg\svglinechartwriter.h"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\http/svg\svgpagewriter.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\http/svg\svgpagewriter.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="interface"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 			>
+			<File
+				RelativePath="..\foundation\interface\interfaceprotocol.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\interface\interfaceprotocol.h"
+				>
+			</File>
 			<File
 				RelativePath="..\foundation\interface\iointerface.cc"
 				>
@@ -579,75 +706,6 @@
 				</File>
 				<File
 					RelativePath="..\foundation\interface/base\iointerfacehandlerbase.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="iomsg"
-				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
-				>
-				<File
-					RelativePath="..\foundation\interface/iomsg\copyfile.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\copyfile.h"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\createdirectory.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\createdirectory.h"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\deletedirectory.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\deletedirectory.h"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\deletefile.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\deletefile.h"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\iomessage.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\iomessage.h"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\mountziparchive.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\mountziparchive.h"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\readstream.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\readstream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\writestream.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\interface/iomsg\writestream.h"
 					>
 				</File>
 			</Filter>
@@ -1030,6 +1088,22 @@
 				RelativePath="..\foundation\memory\memory.h"
 				>
 			</File>
+			<File
+				RelativePath="..\foundation\memory\memorypool.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\memory\memorypool.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\memory\memorypoolpage.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\memory\memorypoolpage.h"
+				>
+			</File>
 			<Filter
 				Name="debug"
 				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
@@ -1061,6 +1135,14 @@
 				</File>
 				<File
 					RelativePath="..\foundation\memory/win32\win32memory.h"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\memory/win32\win32memoryconfig.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\memory/win32\win32memoryconfig.h"
 					>
 				</File>
 			</Filter>
@@ -1191,6 +1273,99 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="remote"
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
+			>
+			<File
+				RelativePath="..\foundation\remote\defaultremoterequesthandler.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\defaultremoterequesthandler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remotecontrol.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remotecontrol.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remotecontrolproxy.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remotecontrolproxy.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remoteinterface.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remoteinterface.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remotemessagehandler.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remotemessagehandler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remoteprotocol.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remoteprotocol.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remoterequest.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remoterequest.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remoterequesthandler.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remoterequesthandler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remoterequestreader.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remoterequestreader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remoteresponsewriter.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remoteresponsewriter.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remotestatus.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\remote\remotestatus.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="scripting"
@@ -1484,6 +1659,18 @@
 			</File>
 			<File
 				RelativePath="..\foundation\util\queue.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\util\ringbuffer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\util\runlengthcodec.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\util\runlengthcodec.h"
 				>
 			</File>
 			<File

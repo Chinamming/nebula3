@@ -83,14 +83,6 @@ public:
     bool HasSharedVariableByName(const CoreGraphics::ShaderVariable::Name& name) const;
     /// return true if a shared variable exists by semantic
     bool HasSharedVariableBySemantic(const CoreGraphics::ShaderVariable::Semantic& sem) const;
-    /// get number of shared variables
-    SizeT GetNumSharedVariables() const;
-    /// get a shared variable by index
-    const Ptr<CoreGraphics::ShaderVariable>& GetSharedVariableByIndex(IndexT i) const;
-    /// get a shared variable by name
-    const Ptr<CoreGraphics::ShaderVariable>& GetSharedVariableByName(const CoreGraphics::ShaderVariable::Name& name) const;
-    /// get a shared variable by semantic
-    const Ptr<CoreGraphics::ShaderVariable>& GetSharedVariableBySemantic(const CoreGraphics::ShaderVariable::Semantic& sem) const;
 
 private:
     CoreGraphics::ShaderFeature shaderFeature;

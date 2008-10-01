@@ -26,12 +26,9 @@ public:
     /// setup index buffer data, must remain valid until OnLoadRequested() is called!
     void Setup(CoreGraphics::IndexType::Code indexType, SizeT numIndices, void* ptr, SizeT numBytes);
 	/// setup a empty index buffer
-	void Setup(CoreGraphics::IndexType::Code indexType, SizeT numIndices,SizeT numBytes, 
-		CoreGraphics::IndexBuffer::Usage usage, CoreGraphics::IndexBuffer::Access access);
+	void Setup(CoreGraphics::IndexType::Code indexType, SizeT numIndices,SizeT numBytes, CoreGraphics::IndexBuffer::Usage usage, CoreGraphics::IndexBuffer::Access access);
 	/// setup index buffer data, must remain valid until OnLoadRequested() is called!
-	void Setup(CoreGraphics::IndexType::Code type, SizeT num, void* ptr, SizeT numBytes, 
-				CoreGraphics::IndexBuffer::Usage usage, CoreGraphics::IndexBuffer::Access access); 
-	
+	void Setup(CoreGraphics::IndexType::Code type, SizeT num, void* ptr, SizeT numBytes, CoreGraphics::IndexBuffer::Usage usage, CoreGraphics::IndexBuffer::Access access); 
 
 protected:
     CoreGraphics::IndexType::Code indexType;

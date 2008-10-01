@@ -2,11 +2,11 @@
 #   foundation_win32.epk
 #   (C) 2006 Radon Labs GmbH
 #-------------------------------------------------------------------------------
-begintarget nidls_win32
+begintarget foundation_nidls_win32
     settype lib
     setbasedir foundation
     setnidlclusters {
-        commands
+        commands http interface remote
     }
 endtarget
 
@@ -16,14 +16,14 @@ begintarget foundation_win32
     setprecompiledheader stdneb
     setincpath_win32 "../foundation;../extlibs"
     setdepends {
-        nidls_win32
+        foundation_nidls_win32
     }
     setclusters {
         core core/win32 core/debug
         memory memory/win32 memory/debug
         debug debug/win32
         util util/win32
-        interface interface/base interface/iomsg
+        interface interface/base
         io io/win32 io/zipfs io/debug
         math math/d3dx9
         messaging
@@ -35,6 +35,7 @@ begintarget foundation_win32
         system system/win32
         app
         commands
-        http
+        http http/debug http/html http/svg
+        remote
     }
 endtarget            

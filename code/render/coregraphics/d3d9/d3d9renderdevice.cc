@@ -9,6 +9,7 @@
 #include "coregraphics/vertexbuffer.h"
 #include "coregraphics/indexbuffer.h"
 #include "coregraphics/d3d9/d3d9types.h"
+#include "coregraphics/debugtextrenderer.h"
 
 #include <dxerr9.h>
 
@@ -476,12 +477,18 @@ D3D9RenderDevice::BeginFrame()
 
 //------------------------------------------------------------------------------
 /**
-    End a complete frame. Call this once per frame after rendering and
-    presentation has happened, and only if BeginFrame() returns true.
+    End a complete frame. Call this once per frame after rendering
+    has happened and before Present(), and only if BeginFrame() returns true.
 */
 void
 D3D9RenderDevice::EndFrame()
 {
+    // render any debug txt
+    if (!DebugTextRenderer::Instance()->IsTextBufferEmpty())
+    {
+        DebugTextRenderer::Instance()->RenderTextBuffer();
+    }
+
     RenderDeviceBase::EndFrame();
     HRESULT hr = this->d3d9Device->EndScene();
     n_assert(SUCCEEDED(hr));
@@ -491,7 +498,7 @@ D3D9RenderDevice::EndFrame()
 //------------------------------------------------------------------------------
 /**
     End the current rendering pass. This will flush all texture stages
-    in order to keep the d3d9 resource reference consistent without too
+    in order to keep the d3d9 resource reference counts consistent without too
     much hassle.
 */
 void
@@ -609,6 +616,9 @@ D3D9RenderDevice::Draw()
                 this->primitiveGroup.GetNumPrimitives());           // PrimitiveCount
         n_assert(SUCCEEDED(hr));
     }
+
+    // update debug stats
+    _incr_counter(RenderDeviceNumPrimitives, this->primitiveGroup.GetNumPrimitives());
 }
 
 //------------------------------------------------------------------------------

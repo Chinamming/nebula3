@@ -46,7 +46,7 @@ ZipFSTest::Run()
         ZipFileEntry* fileEntry = archive->FindFileEntry("testarchive/bla.txt");
         Stream::Size size = fileEntry->GetFileSize();
         this->Verify(size > 0);
-        void* buf = Memory::Alloc(size);
+        void* buf = Memory::Alloc(Memory::ScratchHeap, size);
         this->Verify(fileEntry->Read(buf, size));
 
         Ptr<Stream> outFile = ioServer->CreateStream("temp:bla.txt");
@@ -56,7 +56,7 @@ ZipFSTest::Run()
             outFile->Write(buf, size);
             outFile->Close();
         }
-        Memory::Free(buf);
+        Memory::Free(Memory::ScratchHeap, buf);
 
         Array<String> files = archive->ListFiles("testarchive", "*");
         this->Verify(files.Size() == 2);

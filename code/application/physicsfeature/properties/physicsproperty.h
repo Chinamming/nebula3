@@ -14,7 +14,7 @@
     Attr::Transform
     Attr::Velocity
   
-    (C) 2005 Radon Labs GmbH
+    (C) 2008 Radon Labs GmbH
 */
 #include "properties/transformableproperty.h"
 #include "physics/physicsentity.h"

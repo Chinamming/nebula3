@@ -27,15 +27,17 @@ main()
 
     // setup and run benchmarks
     Ptr<BenchmarkRunner> runner = BenchmarkRunner::Create();    
-    runner->AttachBenchmark(Matrix44Multiply::Create());
-    runner->AttachBenchmark(Matrix44Inverse::Create());
-    runner->AttachBenchmark(Float4Math::Create());
+//    runner->AttachBenchmark(Matrix44Multiply::Create());
+//    runner->AttachBenchmark(Matrix44Inverse::Create());
+//    runner->AttachBenchmark(Float4Math::Create());
     runner->AttachBenchmark(CreateObjects::Create());
-    runner->AttachBenchmark(CreateObjectsByFourCC::Create());
-    runner->AttachBenchmark(CreateObjectsByClassName::Create());
+//    runner->AttachBenchmark(CreateObjectsByFourCC::Create());
+//    runner->AttachBenchmark(CreateObjectsByClassName::Create());
     runner->Run();
     
     // shutdown Nebula3 runtime
+    runner = 0;
     coreServer->Close();
+    coreServer = 0;
     SysFunc::Exit(0);
 }

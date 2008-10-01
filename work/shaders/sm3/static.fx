@@ -78,10 +78,10 @@ ColorPassVertexShader(const vsColorPassInput vsIn)
     vsOut.projPos     = vsOut.position;
     vsOut.worldPos    = mul(vsIn.position, model);
     vsOut.worldEyeVec = normalize(eyePos - vsOut.worldPos);
-    vsOut.normal      = normalize(mul(vsIn.normal, model));
-    vsOut.tangent     = normalize(mul(vsIn.tangent, model));
-    vsOut.binormal    = normalize(mul(vsIn.binormal, model));
-    vsOut.uv0 = vsIn.uv0;
+    vsOut.normal      = normalize(mul(UnpackNormal(vsIn.normal), model));
+    vsOut.tangent     = normalize(mul(UnpackNormal(vsIn.tangent), model));
+    vsOut.binormal    = normalize(mul(UnpackNormal(vsIn.binormal), model));
+    vsOut.uv0 = UnpackUv(vsIn.uv0);
     return vsOut;
 }
 

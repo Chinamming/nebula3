@@ -36,6 +36,8 @@ LevelLoader::Load(const Util::String& levelName)
     //loaderServer->SetProgressText("Query Database...");
     //loaderServer->UpdateProgressDisplay();
 
+    GraphicsFeature::GraphicsFeatureUnit::Instance()->SetupDefaultGraphicsWorld();
+    
     // query level instance attributes from database
     Ptr<Db::Reader> dbReader = Db::Reader::Create();
     dbReader->SetDatabase(Db::DbServer::Instance()->GetGameDatabase());
@@ -61,8 +63,6 @@ LevelLoader::Load(const Util::String& levelName)
 	Ptr<Physics::Level> physicsLevel = Physics::Level::Create();
     Physics::PhysicsServer::Instance()->SetLevel(physicsLevel);
     #endif
-
-    GraphicsFeature::GraphicsFeatureUnit::Instance()->CreateDefaultGraphicsWorld();
 
     // get the active layers from the level
     Util::Array<Util::String> activeLayers = dbReader->GetString(Attr::_Layers).Tokenize(";");

@@ -374,13 +374,13 @@ IoServer::CopyFile(const URI& fromUri, const URI& toUri) const
         {
             // allocate a buffer, and copy contents in a loop
             const int bufSize = (1<<16);
-            void* buffer = Memory::Alloc(bufSize);
+            void* buffer = Memory::Alloc(Memory::ScratchHeap, bufSize);
             while (!srcStream->Eof())
             {
                 Stream::Size bytesRead = srcStream->Read(buffer, bufSize);
                 toStream->Write(buffer, bytesRead);
             }
-            Memory::Free(buffer);
+            Memory::Free(Memory::ScratchHeap, buffer);
             toStream->Close();
         }
         else
@@ -415,13 +415,13 @@ IoServer::ComputeFileCrc(const URI& uri) const
         Crc crc;
         crc.Begin();
         const int bufSize = (1<<16);
-        unsigned char* buffer = (unsigned char*) Memory::Alloc(bufSize);
+        unsigned char* buffer = (unsigned char*) Memory::Alloc(Memory::ScratchHeap, bufSize);
         while (!stream->Eof())
         {
             Stream::Size bytesRead = stream->Read(buffer, bufSize);
             crc.Compute(buffer, bytesRead);
         }
-        Memory::Free(buffer);
+        Memory::Free(Memory::ScratchHeap, buffer);
         crc.End();
         result = crc.GetResult();
         stream->Close();

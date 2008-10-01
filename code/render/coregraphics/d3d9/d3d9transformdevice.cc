@@ -18,7 +18,9 @@ using namespace CoreGraphics;
 //------------------------------------------------------------------------------
 /**
 */
-D3D9TransformDevice::D3D9TransformDevice() 
+D3D9TransformDevice::D3D9TransformDevice() :
+    mvpSemantic("ModelViewProjection"),
+    modelSemantic("Model")
 {
     // empty
 }
@@ -71,20 +73,18 @@ void
 D3D9TransformDevice::ApplyModelTransforms()
 {    
     const Ptr<ShaderInstance>& shaderInst = ShaderServer::Instance()->GetActiveShaderInstance();    
-    ShaderVariable::Semantic mvpSemantic = ShaderVariable::Semantic("ModelViewProjection");
-    n_assert(shaderInst->HasVariableBySemantic(mvpSemantic));
-    ShaderVariable::Semantic modelSemantic = ShaderVariable::Semantic("Model");
     
-    // apply transform state to shader 
+    // apply ModelViewProjection matrix to shader 
+    n_assert(shaderInst->HasVariableBySemantic(this->mvpSemantic));
     const Ptr<CoreGraphics::ShaderVariable>& modelViewProjMatrix = shaderInst->GetVariableBySemantic(mvpSemantic);       
     modelViewProjMatrix->SetMatrix(this->GetModelViewProjTransform());
 
+    // apply optional Model matrix to shader
     if (shaderInst->HasVariableBySemantic(modelSemantic))
     {
         const Ptr<CoreGraphics::ShaderVariable>& modelMatrix = shaderInst->GetVariableBySemantic(modelSemantic);
         modelMatrix->SetMatrix(this->GetModelTransform());
-    }
-    
+    }    
 }
 
 } // namespace Direct3D9

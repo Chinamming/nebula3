@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="render_win32"
-	ProjectGUID="{0B6D2FDD-ECB8-4649-A361-79938428CDFA}"
+	ProjectGUID="{23DF3BDE-4CAD-496C-9BEF-C1CC4B7F5757}"
 	>
 	<Platforms>
 		<Platform
@@ -205,25 +205,38 @@
 			</FileConfiguration>
 		</File>
 		<Filter
-			Name="apprender"
+			Name="animation"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 			>
 			<File
-				RelativePath="..\render\apprender\asyncrenderapplication.cc"
+				RelativePath="..\render\animation\animjob.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\apprender\asyncrenderapplication.h"
+				RelativePath="..\render\animation\animjob.h"
 				>
 			</File>
 			<File
-				RelativePath="..\render\apprender\asyncviewerapplication.cc"
+				RelativePath="..\render\animation\animmapper.h"
 				>
 			</File>
 			<File
-				RelativePath="..\render\apprender\asyncviewerapplication.h"
+				RelativePath="..\render\animation\animsequencer.cc"
 				>
 			</File>
+			<File
+				RelativePath="..\render\animation\animsequencer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\animation\playclipjob.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="apprender"
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
+			>
 			<File
 				RelativePath="..\render\apprender\platformconfig.h"
 				>
@@ -246,83 +259,95 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="asyncgraphics"
+			Name="coreanimation"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 			>
 			<File
-				RelativePath="..\render\asyncgraphics\asyncgraphicshandler.cc"
+				RelativePath="..\render\coreanimation\animclip.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\asyncgraphicshandler.h"
+				RelativePath="..\render\coreanimation\animclip.h"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\asyncgraphicsinterface.cc"
+				RelativePath="..\render\coreanimation\animcurve.h"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\asyncgraphicsinterface.h"
+				RelativePath="..\render\coreanimation\animevent.h"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\cameraentityproxy.cc"
+				RelativePath="..\render\coreanimation\animkeybuffer.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\cameraentityproxy.h"
+				RelativePath="..\render\coreanimation\animkeybuffer.h"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\displayproxy.cc"
+				RelativePath="..\render\coreanimation\animmixer.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\displayproxy.h"
+				RelativePath="..\render\coreanimation\animmixer.h"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\graphicsentityproxy.cc"
+				RelativePath="..\render\coreanimation\animresource.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\graphicsentityproxy.h"
+				RelativePath="..\render\coreanimation\animresource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\graphicsserverproxy.cc"
+				RelativePath="..\render\coreanimation\animsamplebuffer.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\graphicsserverproxy.h"
+				RelativePath="..\render\coreanimation\animsamplebuffer.h"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\handle.h"
+				RelativePath="..\render\coreanimation\animsampler.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\protocol.cc"
+				RelativePath="..\render\coreanimation\animsampler.h"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\protocol.h"
+				RelativePath="..\render\coreanimation\curvetype.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\stageproxy.cc"
+				RelativePath="..\render\coreanimation\curvetype.h"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\stageproxy.h"
+				RelativePath="..\render\coreanimation\infinitytype.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\viewproxy.cc"
+				RelativePath="..\render\coreanimation\infinitytype.h"
 				>
 			</File>
 			<File
-				RelativePath="..\render\asyncgraphics\viewproxy.h"
+				RelativePath="..\render\coreanimation\sampletype.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\coreanimation\sampletype.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\coreanimation\streamanimationloader.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\coreanimation\streamanimationloader.h"
 				>
 			</File>
 		</Filter>
@@ -359,35 +384,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\render\coregraphics\cpuindexbuffer.cc"
+				RelativePath="..\render\coregraphics\debugtextrenderer.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\coregraphics\cpuindexbuffer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\render\coregraphics\cpumemoryindexbufferloader.cc"
-				>
-			</File>
-			<File
-				RelativePath="..\render\coregraphics\cpumemoryindexbufferloader.h"
-				>
-			</File>
-			<File
-				RelativePath="..\render\coregraphics\cpumemoryvertexbufferloader.cc"
-				>
-			</File>
-			<File
-				RelativePath="..\render\coregraphics\cpumemoryvertexbufferloader.h"
-				>
-			</File>
-			<File
-				RelativePath="..\render\coregraphics\cpuvertexbuffer.cc"
-				>
-			</File>
-			<File
-				RelativePath="..\render\coregraphics\cpuvertexbuffer.h"
+				RelativePath="..\render\coregraphics\debugtextrenderer.h"
 				>
 			</File>
 			<File
@@ -576,14 +577,6 @@
 			</File>
 			<File
 				RelativePath="..\render\coregraphics\shaperenderer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\render\coregraphics\streamanimationloader.cc"
-				>
-			</File>
-			<File
-				RelativePath="..\render\coregraphics\streamanimationloader.h"
 				>
 			</File>
 			<File
@@ -842,11 +835,27 @@
 					RelativePath="..\render\coregraphics/base\vertexlayoutbase.h"
 					>
 				</File>
+				<File
+					RelativePath="..\render\coregraphics/base\vertexlayoutserverbase.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\render\coregraphics/base\vertexlayoutserverbase.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="d3d9"
 				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 				>
+				<File
+					RelativePath="..\render\coregraphics/d3d9\d3d9debugtextrenderer.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\render\coregraphics/d3d9\d3d9debugtextrenderer.h"
+					>
+				</File>
 				<File
 					RelativePath="..\render\coregraphics/d3d9\d3d9displaydevice.cc"
 					>
@@ -941,6 +950,14 @@
 				</File>
 				<File
 					RelativePath="..\render\coregraphics/d3d9\d3d9shaperenderer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\render\coregraphics/d3d9\d3d9streammeshloader.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\render\coregraphics/d3d9\d3d9streammeshloader.h"
 					>
 				</File>
 				<File
@@ -1046,14 +1063,6 @@
 				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 				>
 				<File
-					RelativePath="..\render\coregraphics/legacy\nax2streamreader.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\render\coregraphics/legacy\nax2streamreader.h"
-					>
-				</File>
-				<File
 					RelativePath="..\render\coregraphics/legacy\nvx2streamreader.cc"
 					>
 				</File>
@@ -1075,6 +1084,15 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="debugrender"
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
+			>
+			<File
+				RelativePath="..\render\debugrender\debugrender.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="frame"
@@ -1150,11 +1168,11 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 			>
 			<File
-				RelativePath="..\render\graphics\actorentity.cc"
+				RelativePath="..\render\graphics\abstractlightentity.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\graphics\actorentity.h"
+				RelativePath="..\render\graphics\abstractlightentity.h"
 				>
 			</File>
 			<File
@@ -1166,11 +1184,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\render\graphics\cell.cc"
+				RelativePath="..\render\graphics\display.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\graphics\cell.h"
+				RelativePath="..\render\graphics\display.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\graphics\globallightentity.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\graphics\globallightentity.h"
 				>
 			</File>
 			<File
@@ -1182,11 +1208,43 @@
 				>
 			</File>
 			<File
+				RelativePath="..\render\graphics\graphicsentitytype.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\graphics\graphicshandler.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\graphics\graphicshandler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\graphics\graphicsinterface.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\graphics\graphicsinterface.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\graphics\graphicsprotocol.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\graphics\graphicsprotocol.h"
+				>
+			</File>
+			<File
 				RelativePath="..\render\graphics\graphicsserver.cc"
 				>
 			</File>
 			<File
 				RelativePath="..\render\graphics\graphicsserver.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\graphics\handle.h"
 				>
 			</File>
 			<File
@@ -1198,19 +1256,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\render\graphics\quadtreestagebuilder.cc"
+				RelativePath="..\render\graphics\spotlightentity.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\graphics\quadtreestagebuilder.h"
-				>
-			</File>
-			<File
-				RelativePath="..\render\graphics\simplestagebuilder.cc"
-				>
-			</File>
-			<File
-				RelativePath="..\render\graphics\simplestagebuilder.h"
+				RelativePath="..\render\graphics\spotlightentity.h"
 				>
 			</File>
 			<File
@@ -1222,11 +1272,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\render\graphics\stagebuilder.cc"
-				>
-			</File>
-			<File
-				RelativePath="..\render\graphics\stagebuilder.h"
+				RelativePath="..\render\graphics\stagebuilders.h"
 				>
 			</File>
 			<File
@@ -1391,23 +1437,128 @@
 			</Filter>
 		</Filter>
 		<Filter
+			Name="internalgraphics"
+			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
+			>
+			<File
+				RelativePath="..\render\internalgraphics\cell.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\cell.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalactorentity.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalactorentity.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalcameraentity.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalcameraentity.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalgraphicsentity.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalgraphicsentity.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalgraphicsentitytype.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalgraphicsserver.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalgraphicsserver.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalmodelentity.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalmodelentity.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalstage.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalstage.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalview.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\internalview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\quadtreestagebuilder.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\quadtreestagebuilder.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\simplestagebuilder.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\simplestagebuilder.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\stagebuilder.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\internalgraphics\stagebuilder.h"
+				>
+			</File>
+		</Filter>
+		<Filter
 			Name="lighting"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 			>
 			<File
-				RelativePath="..\render\lighting\abstractlightentity.cc"
+				RelativePath="..\render\lighting\internalabstractlightentity.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\lighting\abstractlightentity.h"
+				RelativePath="..\render\lighting\internalabstractlightentity.h"
 				>
 			</File>
 			<File
-				RelativePath="..\render\lighting\globallightentity.cc"
+				RelativePath="..\render\lighting\internalgloballightentity.cc"
 				>
 			</File>
 			<File
-				RelativePath="..\render\lighting\globallightentity.h"
+				RelativePath="..\render\lighting\internalgloballightentity.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\lighting\internalspotlightentity.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\lighting\internalspotlightentity.h"
 				>
 			</File>
 			<File
@@ -1428,14 +1579,6 @@
 			</File>
 			<File
 				RelativePath="..\render\lighting\shadowserver.h"
-				>
-			</File>
-			<File
-				RelativePath="..\render\lighting\spotlightentity.cc"
-				>
-			</File>
-			<File
-				RelativePath="..\render\lighting\spotlightentity.h"
 				>
 			</File>
 			<Filter
@@ -1635,22 +1778,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\render\models/nodes\particlesystemnode.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\render\models/nodes\particlesystemnode.h"
-					>
-				</File>
-				<File
-					RelativePath="..\render\models/nodes\particlesystemnodeinstance.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\render\models/nodes\particlesystemnodeinstance.h"
-					>
-				</File>
-				<File
 					RelativePath="..\render\models/nodes\shapenode.cc"
 					>
 				</File>
@@ -1788,14 +1915,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 			>
 			<File
-				RelativePath="..\render\resources\dynamicmeshresourceloader.cc"
-				>
-			</File>
-			<File
-				RelativePath="..\render\resources\dynamicmeshresourceloader.h"
-				>
-			</File>
-			<File
 				RelativePath="..\render\resources\managedmesh.cc"
 				>
 			</File>
@@ -1877,6 +1996,14 @@
 			</File>
 			<File
 				RelativePath="..\render\resources\simpleresourcemapper.h"
+				>
+			</File>
+			<File
+				RelativePath="..\render\resources\streamresourceloader.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\render\resources\streamresourceloader.h"
 				>
 			</File>
 		</Filter>

@@ -14,8 +14,8 @@
 ;   Defines
     
     !define COMPANY "Radon Labs GmbH"
-    !define PRODUCT "Nebula3 SDK (Feb 2008)"
-    !define SETUP   "N3SDK_Feb2008"
+    !define PRODUCT "Nebula3 SDK (Aug 2008)"
+    !define SETUP   "N3SDK_Aug2008"
     !define SRCDIR "..\.."
     !define STARTMENU "$SMPROGRAMS\${PRODUCT}"
 

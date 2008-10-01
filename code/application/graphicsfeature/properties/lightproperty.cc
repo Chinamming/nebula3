@@ -9,11 +9,10 @@
 #include "basegameattr/basegameattributes.h"
 #include "graphics/graphicsserver.h"
 #include "graphics/stage.h"
-#include "msg/updatetransform.h"
-//#include "msg/attributesupdated.h"
+#include "basegameprotocol.h"
 #include "graphicsfeature/graphicsfeatureunit.h"
-#include "lighting/spotlightentity.h"
-#include "lighting/globallightentity.h"
+#include "graphics/spotlightentity.h"
+#include "graphics/globallightentity.h"
 
 namespace Attr
 {
@@ -36,11 +35,10 @@ ImplementClass(GraphicsFeature::LightProperty, 'LIPR', Game::Property);
 
 using namespace Game;
 using namespace Messaging;
-using namespace Lighting;
+using namespace Graphics;
 using namespace Math;
 using namespace BaseGameFeature;
 
-bool LightProperty::globalLightExists = false;
 //------------------------------------------------------------------------------
 /**
 */
@@ -112,24 +110,22 @@ LightProperty::OnActivate()
 
     switch ((Lighting::LightType::Code)lightCode)
     {
-    case Lighting::LightType::Global:
-        {
-            // only one global light should exists at one time
-            n_assert(!globalLightExists);
-            Ptr<Lighting::GlobalLightEntity> globalLight = Lighting::GlobalLightEntity::Create();
-            globalLight->SetBackLightColor(GetEntity()->GetFloat4(Attr::LightOppositeColor));
-            this->lightEntity = globalLight;
-            globalLightExists = true;
-        }
-        break;
-    case Lighting::LightType::Spot:
-        {
-            this->lightEntity = Lighting::SpotLightEntity::Create();
-        }
-        break;
-    case Lighting::LightType::Point:
-        // no pointlights yet
-        break;
+        case Lighting::LightType::Global:
+            {
+                // only one global light should exists at one time
+                Ptr<GlobalLightEntity> globalLight = GlobalLightEntity::Create();
+                globalLight->SetBackLightColor(GetEntity()->GetFloat4(Attr::LightOppositeColor));
+                this->lightEntity = globalLight;
+            }
+            break;
+        case Lighting::LightType::Spot:
+            {
+                this->lightEntity = SpotLightEntity::Create();
+            }
+            break;
+        case Lighting::LightType::Point:
+            // no pointlights yet
+            break;
     }	
     this->UpdateLightFromAttributes();    
 
@@ -157,10 +153,6 @@ LightProperty::OnActivate()
 void
 LightProperty::OnDeactivate()
 {
-    if (this->lightEntity->IsA(Lighting::GlobalLightEntity::RTTI))
-    {
-        globalLightExists = false;
-    }
     // cleanup graphics light property
     Graphics::Stage* stage = GraphicsFeature::GraphicsFeatureUnit::Instance()->GetDefaultStage();
     stage->RemoveEntity(this->lightEntity.upcast<Graphics::GraphicsEntity>());
@@ -185,7 +177,7 @@ LightProperty::OnRender()
 void
 LightProperty::SetupAcceptedMessages()
 {
-    this->RegisterMessage(UpdateTransform::Id);
+    this->RegisterMessage(BaseGameFeature::UpdateTransform::Id);
     //this->RegisterMessage(AttributesUpdated::Id);
     Property::SetupAcceptedMessages();
 }
@@ -197,9 +189,9 @@ void
 LightProperty::HandleMessage(const Ptr<Message>& msg)
 {
     n_assert(msg);
-    if (msg->CheckId(UpdateTransform::Id))
+    if (msg->CheckId(BaseGameFeature::UpdateTransform::Id))
     {
-        UpdateTransform* updTransform = msg.downcast<UpdateTransform>();
+        const Ptr<BaseGameFeature::UpdateTransform>& updTransform = msg.cast<BaseGameFeature::UpdateTransform>();
         point lightPos(updTransform->GetMatrix().getpos_component());
         vector lightDir(updTransform->GetMatrix().getz_component());
         point lookAt = lightPos + lightDir;

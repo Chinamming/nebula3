@@ -15,53 +15,37 @@
     
     (C) 2007 Radon Labs GmbH
 */
-#include "core/refcounted.h"
-#include "core/singleton.h"
-#include "coregraphics/vertexcomponent.h"
-#include "util/stringatom.h"
-
-//------------------------------------------------------------------------------
+#if __WIN32__
+#include "coregraphics/base/vertexlayoutserverbase.h"
 namespace CoreGraphics
 {
-class VertexLayout;
-
-class VertexLayoutServer : public Core::RefCounted
+class VertexLayoutServer : public Base::VertexLayoutServerBase
 {
     DeclareClass(VertexLayoutServer);
-    DeclareSingleton(VertexLayoutServer);
-public:
-    /// constructor
-    VertexLayoutServer();
-    /// destructor
-    virtual ~VertexLayoutServer();
-    
-    /// open the server
-    void Open();
-    /// close the server
-    void Close();
-    /// return true if open
-    bool IsOpen() const;
-    
-    /// create shared vertex layout object
-    Ptr<VertexLayout> CreateSharedVertexLayout(const Util::Array<VertexComponent>& vertexComponents);
-
-private:
-    bool isOpen;
-    Util::Dictionary<Util::StringAtom, Ptr<VertexLayout> > vertexLayouts;
 };
-
-//------------------------------------------------------------------------------
-/**
-*/
-inline bool
-VertexLayoutServer::IsOpen() const
-{
-    return this->isOpen;
 }
+#elif __XBOX360__
+#include "coregraphics/base/vertexlayoutserverbase.h"
+namespace CoreGraphics
+{
+class VertexLayoutServer : public Base::VertexLayoutServerBase
+{
+    DeclareClass(VertexLayoutServer);
+};
+}
+#elif __WII__
+#include "coregraphics/wii/wiivertexlayoutserver.h"
+namespace CoreGraphics
+{
+class VertexLayoutServer : public Wii::WiiVertexLayoutServer
+{
+    DeclareClass(VertexLayoutServer);
+};
+}
+#else
+#error "VertexLayoutServer class not implemented on this platform!"
+#endif
 
-} // namespace VertexLayoutServer
 //------------------------------------------------------------------------------
 #endif
 
-
-    

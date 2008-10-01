@@ -16,8 +16,8 @@
 #include "managers/entitymanager.h"
 #include "basegametiming/inputtimesource.h"
 //#include "navigation/server.h"
-#include "msg/movesetvelocity.h"
-#include "msg/getphysicsentity.h"
+#include "basegameprotocol.h"
+#include "physicsprotocol.h"
 
 namespace Attr
 {
