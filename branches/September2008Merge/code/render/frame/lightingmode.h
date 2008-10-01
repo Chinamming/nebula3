@@ -1,0 +1,36 @@
+#pragma once
+#ifndef FRAME_LIGHTINGMODE_H
+#define FRAME_LIGHTINGMODE_H
+//------------------------------------------------------------------------------
+/**
+    @class Frame::LightingMode
+    
+    The lighting mode to perform when rendering a frame batch.
+    
+    (C) 2007 Radon Labs GmbH
+*/
+#include "util/string.h"
+    
+//------------------------------------------------------------------------------
+namespace Frame
+{
+class LightingMode
+{
+public:
+    /// lighting mode enum
+    enum Code
+    {
+        None,           // no lighting
+        SinglePass,     // one-pass-lighting
+        MultiPass,      // pass-per-light
+    };
+
+    /// convert from string
+    static Code FromString(const Util::String& str);
+    /// convert to string
+    static Util::String ToString(Code c);
+};
+
+} // namespace Frame
+//------------------------------------------------------------------------------
+#endif    
