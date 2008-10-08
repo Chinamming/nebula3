@@ -36,7 +36,8 @@ TicksToSeconds(Tick ticks)
 inline Tick
 SecondsToTicks(Time t)
 {
-    return Tick(t * 1000.0);
+    // perform correct rounding
+    return Tick((t * 1000.0) + 0.5);
 }
 
 //------------------------------------------------------------------------------

@@ -11,8 +11,8 @@
 
 namespace Scripting
 {
-ImplementClass(Scripting::LuaServer, 'LUAS', Scripting::ScriptServer);
-ImplementSingleton(Scripting::LuaServer);
+__ImplementClass(Scripting::LuaServer, 'LUAS', Scripting::ScriptServer);
+__ImplementSingleton(Scripting::LuaServer);
 
 using namespace Util;
 using namespace IO;
@@ -23,7 +23,7 @@ using namespace IO;
 LuaServer::LuaServer() :
     luaState(0)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ LuaServer::~LuaServer()
     {
         this->Close();
     }
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

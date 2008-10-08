@@ -23,8 +23,8 @@ class LevelLoader;
 
 class LoaderServer : public Core::RefCounted
 {
-    DeclareSingleton(LoaderServer);
-	DeclareClass(LoaderServer);
+    __DeclareSingleton(LoaderServer);
+	__DeclareClass(LoaderServer);
 public:
     /// constructor
     LoaderServer();

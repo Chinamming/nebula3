@@ -1,12 +1,10 @@
 #pragma once
-#ifndef CORE_RTTI_H
-#define CORE_RTTI_H
 //------------------------------------------------------------------------------
 /**
     @class Core::Rtti
 
     Nebula3's runtime type information for one class. Every class derived
-    from Core::RefCounted should use the macros DeclareClass and ImplementClass
+    from Core::RefCounted should use the macros __DeclareClass and __ImplementClass
     to properly initialize the runtime type information for the class. This
     will also automatically register the class with the Core::Factory object
     to implement object construction from class name string or fourcc code.
@@ -122,141 +120,7 @@ Rtti::GetInstanceSize() const
     return this->instanceSize;
 }
 
+#include "core/rttimacros.h"
+
 }  // namespace Core
-
 //------------------------------------------------------------------------------
-/**
-    Declaration macro. Put this into the class declaration.
-*/
-#define DeclareClass(type) \
-public: \
-    void* operator new(size_t size) \
-    { \
-        n_assert(size == RTTI.GetInstanceSize()); \
-        return RTTI.AllocInstanceMemory(); \
-    }; \
-    void operator delete(void* p) \
-    { \
-        RTTI.FreeInstanceMemory(p); \
-    }; \
-    static Core::Rtti RTTI; \
-    static Core::RefCounted* FactoryCreator(); \
-    static type* Create(); \
-    static bool RegisterWithFactory(); \
-    virtual Core::Rtti* GetRtti() const; \
-private:
-
-#define DeclareAbstractClass(class_name) \
-public: \
-    static Core::Rtti RTTI; \
-    virtual Core::Rtti* GetRtti() const; \
-private:
-
-//------------------------------------------------------------------------------
-/**
-    Register a class with the factory. This is only necessary for classes
-    which can create objects by name or fourcc.
-*/
-#ifdef RegisterClass
-#undef RegisterClass
-#endif
-#define RegisterClass(type) \
-    static const bool type##_registered = type::RegisterWithFactory(); \
-
-//------------------------------------------------------------------------------
-/**
-    Implementation macro. Put this into the source file.
-*/
-#if NEBULA3_DEBUG
-#define ImplementClass(type, fourcc, baseType) \
-    Core::Rtti type::RTTI(#type, fourcc, type::FactoryCreator, &baseType::RTTI, sizeof(type)); \
-    Core::Rtti* type::GetRtti() const { return &this->RTTI; } \
-    Core::RefCounted* type::FactoryCreator() { return type::Create(); } \
-    type* type::Create() \
-    { \
-        RefCounted::criticalSection.Enter(); \
-        RefCounted::isInCreate = true; \
-        type* newObject = n_new(type); \
-        RefCounted::isInCreate = false; \
-        RefCounted::criticalSection.Leave(); \
-        return newObject; \
-    }\
-    bool type::RegisterWithFactory() \
-    { \
-        Core::SysFunc::Setup(); \
-        if (!Core::Factory::Instance()->ClassExists(#type)) \
-        { \
-            Core::Factory::Instance()->Register(&type::RTTI, #type, fourcc); \
-        } \
-        return true; \
-    }
-#else
-#define ImplementClass(type, fourcc, baseType) \
-    Core::Rtti type::RTTI(#type, fourcc, type::FactoryCreator, &baseType::RTTI, sizeof(type)); \
-    Core::Rtti* type::GetRtti() const { return &this->RTTI; } \
-    Core::RefCounted* type::FactoryCreator() { return type::Create(); } \
-    type* type::Create() \
-    { \
-        return n_new(type); \
-    }\
-    bool type::RegisterWithFactory() \
-    { \
-        Core::SysFunc::Setup(); \
-        if (!Core::Factory::Instance()->ClassExists(#type)) \
-        { \
-            Core::Factory::Instance()->Register(&type::RTTI, #type, fourcc); \
-        } \
-        return true; \
-    }
-#endif
-
-#define ImplementAbstractClass(type, fourcc, baseType) \
-    Core::Rtti type::RTTI(#type, fourcc, 0, &baseType::RTTI, 0); \
-    Core::Rtti* type::GetRtti() const { return &this->RTTI; }
-
-//------------------------------------------------------------------------------
-/**
-    Type implementation of topmost type in inheritance hierarchy (source file).
-*/
-#if NEBULA3_DEBUG
-#define ImplementRootClass(type, fourcc) \
-    Core::Rtti type::RTTI(#type, fourcc, type::FactoryCreator, 0, sizeof(type)); \
-    Core::Rtti* type::GetRtti() const { return &this->RTTI; } \
-    Core::RefCounted* type::FactoryCreator() { return type::Create(); } \
-    type* type::Create() \
-    { \
-        RefCounted::criticalSection.Enter(); \
-        RefCounted::isInCreate = true; \
-        type* newObject = n_new(type); \
-        RefCounted::isInCreate = false; \
-        RefCounted::criticalSection.Leave(); \
-        return newObject; \
-    }\
-    bool type::RegisterWithFactory() \
-    { \
-        if (!Core::Factory::Instance()->ClassExists(#type)) \
-        { \
-            Core::Factory::Instance()->Register(&type::RTTI, #type, fourcc); \
-        } \
-        return true; \
-    }
-#else
-#define ImplementRootClass(type, fourcc) \
-    Core::Rtti type::RTTI(#type, fourcc, type::FactoryCreator, 0, sizeof(type)); \
-    Core::Rtti* type::GetRtti() const { return &this->RTTI; } \
-    Core::RefCounted* type::FactoryCreator() { return type::Create(); } \
-    type* type::Create() \
-    { \
-        return n_new(type); \
-    }\
-    bool type::RegisterWithFactory() \
-    { \
-        if (!Core::Factory::Instance()->ClassExists(#type)) \
-        { \
-            Core::Factory::Instance()->Register(&type::RTTI, #type, fourcc); \
-        } \
-        return true; \
-    }
-#endif
-//------------------------------------------------------------------------------
-#endif

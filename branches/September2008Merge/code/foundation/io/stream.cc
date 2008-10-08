@@ -7,7 +7,7 @@
 
 namespace IO
 {
-ImplementClass(IO::Stream, 'STRM', Core::RefCounted);
+__ImplementClass(IO::Stream, 'STRM', Core::RefCounted);
 
 using namespace Util;
 

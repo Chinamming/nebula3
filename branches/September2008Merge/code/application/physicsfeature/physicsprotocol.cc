@@ -6,10 +6,16 @@
 
 namespace PhysicsFeature
 {
-    ImplementClass(PhysicsFeature::ApplyImpulseAtPos, 'MAPI', Messaging::Message);
+    __ImplementClass(PhysicsFeature::ApplyImpulseAtPos, 'MAPI', Messaging::Message);
     ImplementMsgId(ApplyImpulseAtPos);
-    ImplementClass(PhysicsFeature::GetPhysicsEntity, 'MGPE', Messaging::Message);
+    __ImplementClass(PhysicsFeature::GetPhysicsEntity, 'MGPE', Messaging::Message);
     ImplementMsgId(GetPhysicsEntity);
+    __ImplementClass(PhysicsFeature::SetTriggerActive, 'STAC', Messaging::Message);
+    ImplementMsgId(SetTriggerActive);
+    __ImplementClass(PhysicsFeature::IsTriggerActive, 'ISTA', Messaging::Message);
+    ImplementMsgId(IsTriggerActive);
+    __ImplementClass(PhysicsFeature::SetTriggerScale, 'STSC', Messaging::Message);
+    ImplementMsgId(SetTriggerScale);
 } // PhysicsFeature
 
 namespace Commands

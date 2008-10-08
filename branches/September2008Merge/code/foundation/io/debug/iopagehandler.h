@@ -16,7 +16,7 @@ namespace Debug
 {
 class IoPageHandler : public Http::HttpRequestHandler
 {
-    DeclareClass(IoPageHandler);
+    __DeclareClass(IoPageHandler);
 public:
     /// constructor
     IoPageHandler();

@@ -7,7 +7,7 @@
 
 namespace Attr
 {
-ImplementClass(Attr::AttributeTable, 'ATTT', Core::RefCounted);
+__ImplementClass(Attr::AttributeTable, 'ATTT', Core::RefCounted);
 
 using namespace Util;
 using namespace Math;
@@ -259,7 +259,7 @@ AttributeTable::Clear()
     the new buffer.
 */
 void
-AttributeTable::Reallocate(SizeT newPitch, SizeT newAllocRows)
+AttributeTable::Realloc(SizeT newPitch, SizeT newAllocRows)
 {
     n_assert(newAllocRows >= this->numRows);
     n_assert(newPitch >= this->rowPitch);
@@ -446,7 +446,7 @@ AttributeTable::EndAddColumns()
         SizeT newPitch = this->UpdateColumnOffsets();
         if (this->numRows > 0)
         {
-            this->Reallocate(newPitch, this->numRows);
+            this->Realloc(newPitch, this->numRows);
         }
         else
         {
@@ -486,7 +486,7 @@ AttributeTable::AddColumn(const AttrId& id, bool recordAsNewColumn)
 	    // if necessary, re-allocate value buffer
 	    if (this->numRows > 0)
 	    {
-	        this->Reallocate(newPitch, this->numRows);
+	        this->Realloc(newPitch, this->numRows);
 	    }
 	    else
 	    {
@@ -668,7 +668,7 @@ void
 AttributeTable::ReserveRows(SizeT num)
 {
     n_assert(num > 0);
-    this->Reallocate(this->rowPitch, this->allocatedRows + num);
+    this->Realloc(this->rowPitch, this->allocatedRows + num);
 }
 
 //------------------------------------------------------------------------------
@@ -692,7 +692,7 @@ AttributeTable::AddRow()
         {
             newNumRows = 10;
         }
-        this->Reallocate(this->rowPitch, newNumRows);
+        this->Realloc(this->rowPitch, newNumRows);
     }
     if (this->trackModifications)
     {

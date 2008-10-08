@@ -64,18 +64,24 @@ set headerPrefix "../inc/"
 #   tar(i,libpath_win32)            - additional lib paths for Win32
 #   tar(i,preBuildStepCommandLine)  - optional pre build step commandline
 #   tar(i,preBuildStepDescription)  - optional pre build step description
+#
+#   sln(i,name)     - name of solution
+#   sln(i,targets)  - list of targets in the solution
 #--------------------------------------------------------------------
 
 global mod
 global tar
+global sln
 global num_mods
 global num_tars
+global num_slns
 
 global GroupFilter
 set GroupFilter 0
 
 set num_mods 0
 set num_tars 0
+set num_slns 0
 
 #--------------------------------------------------------------------
 #   procs
@@ -146,6 +152,23 @@ proc findtargetbyname {name} {
 }
 
 #--------------------------------------------------------------------
+#   findsolutionbyname $name
+#   Find solution index by name.
+#   04-Mar-00   floh    created
+#--------------------------------------------------------------------
+proc findsolutionbyname {name} {
+    global sln
+    global num_slns
+    for {set i 0} {$i < $num_slns} {incr i} {
+        if {$name == $sln($i,name)} {
+            return $i
+        }
+    }
+    puts "ERROR: solution '$name' not defined!"
+    exit
+}
+
+#--------------------------------------------------------------------
 #   gen_filelists $module
 #   Generate source and object file name lists for a given module.
 #   04-Mar-00   floh    created
@@ -188,6 +211,20 @@ proc gen_filelists {module} {
 #====================================================================
 #   .PAK FILE PARSING PROCEDURES
 #====================================================================
+
+#--------------------------------------------------------------------
+#   import_target "path" "name" "depends"
+#   Define an external project.
+#--------------------------------------------------------------------
+proc import_target {path name depends} {
+    global num_tars
+    global tar
+    set tar($num_tars,name) $name
+    set tar($num_tars,type) "import"
+    set tar($num_tars,import_path) $path
+    set tar($num_tars,depends) $depends
+    incr num_tars
+}
 
 #--------------------------------------------------------------------
 #   beginmodule $name
@@ -748,6 +785,41 @@ proc dumptargets { } {
 }
 
 #====================================================================
+#   SOLUTION FUNCTIONS
+#====================================================================
+
+#--------------------------------------------------------------------
+#   beginsolution
+#   Begin a new solution definition.
+#--------------------------------------------------------------------
+proc beginsolution {name platform} {
+    global num_slns
+    global sln
+    set sln($num_slns,name) $name
+    set sln($num_slns,targets) ""
+    set sln($num_slns,platform) $platform    
+}
+
+#--------------------------------------------------------------------
+#   settargets
+#   Define targets in solution.
+#--------------------------------------------------------------------
+proc settargets {targets} {
+    global num_slns
+    global sln
+    set sln($num_slns,targets) $targets
+}
+
+#--------------------------------------------------------------------
+#   endsolution
+#   Finish a solution definition.
+#--------------------------------------------------------------------
+proc endsolution {} {
+    global num_slns
+    incr num_slns
+}
+
+#====================================================================
 #   PACKAGE HELPER FUNCTIONS
 #====================================================================
 
@@ -831,6 +903,42 @@ proc extract_libs {targetName libType} {
     }
     # puts "extract_libs: result=$libList"    
     return $libList
+}
+
+#--------------------------------------------------------------------
+#   writetargetguids
+#   For each target, writes a small file with it's guid.
+#--------------------------------------------------------------------
+proc writetargetguids {solution_name} {
+    global tar
+    global num_tars
+    global sln
+    global vstudio8Prefix
+
+    set s [findsolutionbyname $solution_name]   
+    set target_list $sln($s,targets)
+    for {set i 0} {$i < [llength $target_list]} {incr i} {
+        set t [findtargetbyname [lindex $target_list $i]]
+        if {$tar($t,type) != "import"} {
+            set cid [open "$vstudio8Prefix/$solution_name.$tar($t,name).guid" w]
+            puts $cid $tar($t,uuid)
+            close $cid
+        }            
+    }
+}
+
+#--------------------------------------------------------------------
+#   readtargetguids
+#   Reads a specific target guid, this is for imported targets.
+#--------------------------------------------------------------------
+proc readtargetguid {target_name} {
+    global tar
+    global vstudio8Prefix
+    set t [findtargetbyname $target_name]
+    set cid [open "$tar($t,import_path).guid" r]
+    set result [gets $cid]
+    close $cid
+    return $result
 }
 
 #====================================================================

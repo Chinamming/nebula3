@@ -4,18 +4,16 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "debug/debughandler.h"
-#if __NEBULA3_HTTP__ 
 #include "debug/debugpagehandler.h"
-#endif
+#include "timing/time.h"
 
 namespace Debug
 {
-ImplementClass(Debug::DebugHandler, 'DBGH', Messaging::Handler);
+__ImplementClass(Debug::DebugHandler, 'DBGH', Messaging::Handler);
 
 using namespace Util;
-#if __NEBULA3_HTTP__ 
 using namespace Http;
-#endif
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -49,11 +47,9 @@ DebugHandler::Open()
     this->debugServer = DebugServer::Create();
     this->debugServer->Open();
 
-#if __NEBULA3_HTTP__ 
     this->httpServerProxy = HttpServerProxy::Create();
     this->httpServerProxy->Open();
     this->httpServerProxy->AttachRequestHandler(Debug::DebugPageHandler::Create());
-#endif
 }
 
 //------------------------------------------------------------------------------
@@ -64,10 +60,9 @@ DebugHandler::Close()
 {
     n_assert(this->IsOpen());
 
-#if __NEBULA3_HTTP__    
     this->httpServerProxy->Close();
     this->httpServerProxy = 0;
-#endif    
+
     this->debugServer->Close();
     this->debugServer = 0;
     this->ioConsole->Close();
@@ -85,11 +80,8 @@ void
 DebugHandler::DoWork()
 {
     n_assert(this->IsOpen());
-
-#if __NEBULA3_HTTP__ 
     this->httpServerProxy->HandlePendingRequests();
-#endif
-    n_sleep(0.1);
+    Timing::Sleep(0.1);
 }
 
 } // namespace Debug

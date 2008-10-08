@@ -13,16 +13,14 @@
 #include "messaging/handler.h"
 #include "io/console.h"
 #include "debug/debugserver.h"
-
-#if __NEBULA3_HTTP__ 
 #include "http/httpserverproxy.h"
-#endif
+
 //------------------------------------------------------------------------------
 namespace Debug
 {
 class DebugHandler : public Messaging::Handler
 {
-    DeclareClass(DebugHandler);
+    __DeclareClass(DebugHandler);
 public:
     /// constructor
     DebugHandler();
@@ -39,9 +37,7 @@ public:
 private:
     Ptr<IO::Console> ioConsole;
     Ptr<DebugServer> debugServer;
-#if __NEBULA3_HTTP__ 
     Ptr<Http::HttpServerProxy> httpServerProxy;
-#endif
 };
 
 } // namespace Debug

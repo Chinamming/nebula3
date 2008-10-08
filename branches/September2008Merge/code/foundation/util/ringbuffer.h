@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_RINGBUFFER_H
-#define UTIL_RINGBUFFER_H
 //------------------------------------------------------------------------------
 /**
     @class Util::RingBuffer
@@ -313,4 +311,3 @@ RingBuffer<TYPE>::AsArray() const
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif

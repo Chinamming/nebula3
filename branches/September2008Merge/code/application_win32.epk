@@ -3,7 +3,7 @@
 #   (C) 2007 Radon Labs GmbH
 #-------------------------------------------------------------------------------
 begintarget application_nidls_win32
-    settype lib
+    settype nidl
     setbasedir application
     setnidlclusters {
         graphicsfeature physicsfeature basegamefeature
@@ -14,16 +14,24 @@ begintarget application_win32
     settype lib
     setbasedir application
     setprecompiledheader stdneb
-    setincpath_win32 "../foundation;../application;../application/basegamefeature;../application/corefeature;../application/graphicsfeature;../application/physicsfeature;../render;../extlibs;../addons;../extlibs/ode;"
+    setincpath_win32 "../foundation;../application;../application/basegamefeature;../application/graphicsfeature;../application/physicsfeature;../application/networkfeature;../addons/network;../render;../extlibs;../addons;../extlibs/ode;"
     setdepends {
         application_nidls_win32
     }
     setclusters {
         appgame
         game
-        corefeature
         basegamefeature basegamefeature/managers basegamefeature/basegametiming basegamefeature/loader basegamefeature/properties basegamefeature/basegameattr basegamefeature/debug
         graphicsfeature graphicsfeature/properties graphicsfeature/graphicsattr graphicsfeature/graphicsutil
         physicsfeature physicsfeature/properties physicsfeature/physicsattr
+        networkfeature networkfeature/networkmanagers
+        uifeature uifeature/elements
     }
-endtarget            
+endtarget         
+
+beginsolution application_win32 win32
+    settargets {
+        application_nidls_win32
+        application_win32                
+    }
+endsolution   

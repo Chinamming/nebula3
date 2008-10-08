@@ -21,7 +21,7 @@ namespace Attr
 
 namespace GraphicsFeature
 {
-ImplementClass(GraphicsFeature::InputProperty, 'INPR', Game::Property);
+__ImplementClass(GraphicsFeature::InputProperty, 'INPR', Game::Property);
 
 using namespace Math;
 using namespace Game;
@@ -50,7 +50,7 @@ InputProperty::~InputProperty()
 void
 InputProperty::SetupCallbacks()
 {
-    this->entity->RegisterPropertyCallback(this, BeginFrame);
+    //this->entity->RegisterPropertyCallback(this, BeginFrame);
 }
 
 //------------------------------------------------------------------------------
@@ -164,7 +164,7 @@ InputProperty::HasFocus() const
 */
 void
 InputProperty::OnBeginFrame()
-{
+{/*
 #if __DEBUG_ACTIVE__
     // only do something if we have the input focus
     if (FocusManager::Instance()->GetInputFocusEntity() == this->entity)
@@ -291,14 +291,14 @@ InputProperty::OnBeginFrame()
         }
     #endif
     }
-#endif
+#endif*/
 }
 
 //------------------------------------------------------------------------------
 /**
     This sends a CameraDistance message if the user zooms in with the
     mouse wheel.
-*/
+
 void
 InputProperty::OnCameraZoomIn()
 {
@@ -311,7 +311,7 @@ InputProperty::OnCameraZoomIn()
 /**
     This sends a CameraDistance message if the user zooms out with the
     mouse wheel.
-*/
+
 void
 InputProperty::OnCameraZoomOut()
 {
@@ -319,5 +319,5 @@ InputProperty::OnCameraZoomOut()
     msg->SetRelativeDistanceChange(+1.0f);
     this->entity->SendSync(msg.upcast<Messaging::Message>());
 }
-
+*/
 }; // namespace GraphicsFeature

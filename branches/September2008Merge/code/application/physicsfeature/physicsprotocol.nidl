@@ -13,9 +13,25 @@
       <InArg name="Position" type="Math::vector"/>
       <InArg name="MultiplyByMass" type="bool"/>
     </Message>
+    
     <!-- Returns the Physics entity used by a game entity. -->
     <Message name="GetPhysicsEntity" fourcc="MGPE">
       <InArg name="Entity" type="Ptr<Physics::PhysicsEntity>"/>
+    </Message>
+    
+    <!-- Sets the trigger property active/inactive-->
+    <Message name="SetTriggerActive" fourcc="STAC">
+      <InArg name="Active" type="bool"/>
+    </Message>
+    
+    <!-- Returns the active/inactive state of the trigger-->
+    <Message name="IsTriggerActive" fourcc="ISTA">
+      <OutArg name="Active" type="bool"/>
+    </Message>
+    
+    <!-- Sets the trigger scale-->
+    <Message name="SetTriggerScale" fourcc="STSC">
+      <InArg name="Scale" type="Math::vector"/>
     </Message>
   </Protocol>
 

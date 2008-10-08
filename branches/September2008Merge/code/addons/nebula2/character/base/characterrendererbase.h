@@ -23,7 +23,7 @@ namespace Base
 {
 class CharacterRendererBase : public Core::RefCounted
 {
-    DeclareClass(CharacterRendererBase);
+    __DeclareClass(CharacterRendererBase);
 public:
     /// constructor
     CharacterRendererBase();

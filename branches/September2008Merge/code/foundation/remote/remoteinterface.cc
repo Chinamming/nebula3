@@ -8,15 +8,16 @@
 
 namespace Remote
 {
-ImplementClass(Remote::RemoteInterface, 'REIF', Messaging::AsyncPort);
-ImplementInterfaceSingleton(Remote::RemoteInterface);
+__ImplementClass(Remote::RemoteInterface, 'REIF', Messaging::AsyncPort);
+__ImplementInterfaceSingleton(Remote::RemoteInterface);
 
 //------------------------------------------------------------------------------
 /**
 */
 RemoteInterface::RemoteInterface()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
+    this->SetThreadCpuCoreId(System::Cpu::MiscThreadCore);
 }
 
 //------------------------------------------------------------------------------
@@ -24,7 +25,7 @@ RemoteInterface::RemoteInterface()
 */
 RemoteInterface::~RemoteInterface()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -33,8 +34,8 @@ RemoteInterface::~RemoteInterface()
 void
 RemoteInterface::Open()
 {
-    this->SetWaitForMessages(false);
-    this->SetName("RemoteInterface");
+    this->SetBehaviour(DoNotWait);
+    this->SetName("RemoteInterface Thread");
     AsyncPort::Open();
 }
 

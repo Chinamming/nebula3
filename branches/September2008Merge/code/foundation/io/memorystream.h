@@ -17,7 +17,7 @@ namespace IO
 {
 class MemoryStream : public Stream
 {
-    DeclareClass(MemoryStream);
+    __DeclareClass(MemoryStream);
 public:
     /// constructor
     MemoryStream();
@@ -53,10 +53,12 @@ public:
     virtual void* Map();
     /// unmap a mapped stream
     virtual void Unmap();
+    /// get a direct "raw" pointer to the data
+    void* GetRawPointer() const;
 
 private:
     /// re-allocate the memory buffer
-    void Reallocate(Size s);
+    void Realloc(Size s);
     /// return true if there's enough space for n more bytes
     bool HasRoom(Size numBytes) const;
     /// make room for at least n more bytes

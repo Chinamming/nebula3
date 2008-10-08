@@ -3,7 +3,7 @@
 #define PROPERTIES_ENVIRONMENTGRAPHICSPROPERTY_H
 //------------------------------------------------------------------------------
 /**
-    @class GraphicsFeature::EnvironmentGraphicsProperty
+    @class Properties::EnvironmentGraphicsProperty
 
     This is a specialized graphics property which handles all the static
     environment graphics. Probably 90% of all objects in a level will 
@@ -25,7 +25,7 @@ namespace GraphicsFeature
 {
 class EnvironmentGraphicsProperty : public Game::Property
 {
-	DeclareClass(EnvironmentGraphicsProperty);
+	__DeclareClass(EnvironmentGraphicsProperty);
 public:
     /// constructor
     EnvironmentGraphicsProperty();
@@ -52,7 +52,7 @@ private:
     };
     Util::Dictionary<Util::String, Entry> entries;
 };
-RegisterClass(EnvironmentGraphicsProperty);
+__RegisterClass(EnvironmentGraphicsProperty);
 
 }; // namespace GraphicsFeature
 //------------------------------------------------------------------------------

@@ -22,8 +22,8 @@ namespace Http
 {
 class HttpServerProxy : public Core::RefCounted
 {
-    DeclareClass(HttpServerProxy);
-    DeclareSingleton(HttpServerProxy);
+    __DeclareClass(HttpServerProxy);
+    __DeclareSingleton(HttpServerProxy);
 public:
     /// constructor
     HttpServerProxy();

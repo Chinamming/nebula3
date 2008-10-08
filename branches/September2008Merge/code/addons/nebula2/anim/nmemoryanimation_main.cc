@@ -10,7 +10,7 @@
 #include "memory/memory.h"
 #include "system/byteorder.h"
 
-ImplementClass(Nebula2::nMemoryAnimation, 'MEMA', Nebula2::nAnimation);
+__ImplementClass(Nebula2::nMemoryAnimation, 'MEMA', Nebula2::nAnimation);
 
 namespace Nebula2
 {
@@ -75,7 +75,6 @@ nMemoryAnimation::SampleCurves(Timing::Time time, int groupIndex, int firstCurve
     static Math::quaternion q0;
     static Math::quaternion q1;
     static Math::quaternion q;
-    int animCount = 0;
     for (i = 0; i < numCurves; i++)
     {
        Curve& curve = group.GetCurveAt(i + firstCurveIndex);

@@ -20,7 +20,7 @@ namespace IO
 {
 class StreamWriter : public Core::RefCounted
 {
-    DeclareClass(StreamWriter);
+    __DeclareClass(StreamWriter);
 public:
     /// constructor
     StreamWriter();

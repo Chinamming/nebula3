@@ -16,7 +16,7 @@ namespace Physics
 {
 class BallJoint : public Joint
 {
-	DeclareClass(BallJoint);
+	__DeclareClass(BallJoint);
 public:
     /// constructor
     BallJoint();

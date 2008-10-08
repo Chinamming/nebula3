@@ -20,7 +20,7 @@ namespace Http
 {
 class HtmlPageWriter : public IO::StreamWriter
 {
-    DeclareClass(HtmlPageWriter);
+    __DeclareClass(HtmlPageWriter);
 public:
     /// constructor
     HtmlPageWriter();

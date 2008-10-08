@@ -12,7 +12,7 @@ using namespace Math;
 
 namespace GraphicsFeature
 {
-ImplementClass(GraphicsFeature::EnvironmentGraphicsProperty, 'PENV', Game::Property);
+__ImplementClass(GraphicsFeature::EnvironmentGraphicsProperty, 'PENV', Game::Property);
 
 //------------------------------------------------------------------------------
 /**

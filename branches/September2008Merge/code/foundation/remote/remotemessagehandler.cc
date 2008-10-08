@@ -7,7 +7,7 @@
 
 namespace Remote
 {
-ImplementClass(Remote::RemoteMessageHandler, 'REMH', Messaging::Handler);
+__ImplementClass(Remote::RemoteMessageHandler, 'REMH', Messaging::Handler);
 
 using namespace Messaging;
 

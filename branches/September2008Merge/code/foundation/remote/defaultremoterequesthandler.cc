@@ -10,7 +10,7 @@
 
 namespace Remote
 {
-ImplementClass(Remote::DefaultRemoteRequestHandler, 'DRRH', Remote::RemoteRequestHandler);
+__ImplementClass(Remote::DefaultRemoteRequestHandler, 'DRRH', Remote::RemoteRequestHandler);
 
 using namespace Core;
 using namespace Util;

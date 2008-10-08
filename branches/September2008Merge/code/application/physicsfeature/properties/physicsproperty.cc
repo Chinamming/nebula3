@@ -19,7 +19,7 @@ using namespace Math;
 using namespace BaseGameFeature;
 using namespace PhysicsFeature;
 
-ImplementClass(PhysicsFeature::PhysicsProperty, 'PPRO', TransformableProperty);
+__ImplementClass(PhysicsFeature::PhysicsProperty, 'PPRO', TransformableProperty);
 
 //------------------------------------------------------------------------------
 /**
@@ -72,7 +72,7 @@ PhysicsProperty::OnDeactivate()
 /**
     Get pointer to physics entity. Note that this method may return 0!
 */
-Physics::PhysicsEntity*
+Ptr<Physics::PhysicsEntity>
 PhysicsProperty::GetPhysicsEntity() const
 {
     return this->physicsEntity.get_unsafe();
@@ -105,12 +105,12 @@ PhysicsProperty::SetupDefaultAttributes()
 void
 PhysicsProperty::OnMoveAfter()
 {
-    if (this->IsEnabled() && this->physicsEntity->HasTransformChanged())
+    if (this->IsEnabled() && this->GetPhysicsEntity()->HasTransformChanged())
     {
         Ptr<UpdateTransform> msg = UpdateTransform::Create();
-        msg->SetMatrix(this->physicsEntity->GetTransform());
+        msg->SetMatrix(this->GetPhysicsEntity()->GetTransform());
         this->entity->SendSync(msg.upcast<Messaging::Message>());
-        this->entity->SetFloat4(Attr::VelocityVector, this->physicsEntity->GetVelocity());
+        this->entity->SetFloat4(Attr::VelocityVector, this->GetPhysicsEntity()->GetVelocity());
     }
 }
 
@@ -138,7 +138,7 @@ PhysicsProperty::HandleMessage(const Ptr<Messaging::Message>& msg)
         {
             // set transform of physics entity
             SetTransform* transformMsg = (SetTransform*) msg.get();
-            this->physicsEntity->SetTransform(transformMsg->GetMatrix());
+            this->GetPhysicsEntity()->SetTransform(transformMsg->GetMatrix());
         }
         else if (msg->CheckId(ApplyImpulseAtPos::Id))
         {
@@ -228,10 +228,8 @@ PhysicsProperty::SetEnabled(bool setEnabled)
 void
 PhysicsProperty::ApplyImpulseAtPos(const Math::vector& impulse, const Math::vector& pos, bool multByMass)
 {
-    n_assert(this->physicsEntity.isvalid());
+    n_assert(this->GetPhysicsEntity() != 0);
     
     this->GetPhysicsEntity()->ApplyImpulseAtPos(impulse, pos, multByMass);
 }
-
-
 }; // namespace Properties

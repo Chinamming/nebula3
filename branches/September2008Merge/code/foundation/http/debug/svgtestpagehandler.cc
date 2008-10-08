@@ -9,7 +9,7 @@
 
 namespace Debug
 {
-ImplementClass(Debug::SvgTestPageHandler, 'SVTP', Http::HttpRequestHandler);
+__ImplementClass(Debug::SvgTestPageHandler, 'SVTP', Http::HttpRequestHandler);
 
 using namespace Http;
 using namespace Util;

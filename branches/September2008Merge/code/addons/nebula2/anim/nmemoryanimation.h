@@ -21,7 +21,7 @@ namespace Nebula2
 //------------------------------------------------------------------------------
 class nMemoryAnimation : public nAnimation
 {
-    DeclareClass(nMemoryAnimation);
+    __DeclareClass(nMemoryAnimation);
 public:
     /// constructor
     nMemoryAnimation();

@@ -54,6 +54,10 @@ ShellApplication::Run()
         while (running)
         {
             con->Print("> ");
+            while (!con->HasInput())
+            {
+                n_sleep(0.1);
+            }
             String cmd = con->GetInput();
             if (cmd.IsValid())
             {

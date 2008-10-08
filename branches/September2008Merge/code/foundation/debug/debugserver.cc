@@ -9,8 +9,8 @@
 
 namespace Debug
 {
-ImplementClass(Debug::DebugServer, 'DBGS', Core::RefCounted);
-ImplementInterfaceSingleton(Debug::DebugServer);
+__ImplementClass(Debug::DebugServer, 'DBGS', Core::RefCounted);
+__ImplementInterfaceSingleton(Debug::DebugServer);
 
 using namespace Util;
 
@@ -20,7 +20,7 @@ using namespace Util;
 DebugServer::DebugServer() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ DebugServer::DebugServer() :
 DebugServer::~DebugServer()
 {
     n_assert(!this->isOpen);
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

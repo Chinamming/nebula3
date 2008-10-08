@@ -21,7 +21,7 @@ class Command;
 
 class FilterSet : public Core::RefCounted
 {
-    DeclareClass(FilterSet);
+    __DeclareClass(FilterSet);
 public:
     /// constructor
     FilterSet();

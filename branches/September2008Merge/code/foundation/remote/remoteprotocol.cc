@@ -6,9 +6,9 @@
 
 namespace Remote
 {
-    ImplementClass(Remote::AttachRequestHandler, 'arrq', Messaging::Message);
+    __ImplementClass(Remote::AttachRequestHandler, 'arrq', Messaging::Message);
     ImplementMsgId(AttachRequestHandler);
-    ImplementClass(Remote::RemoveRequestHandler, 'rrrq', Messaging::Message);
+    __ImplementClass(Remote::RemoveRequestHandler, 'rrrq', Messaging::Message);
     ImplementMsgId(RemoveRequestHandler);
 } // Remote
 

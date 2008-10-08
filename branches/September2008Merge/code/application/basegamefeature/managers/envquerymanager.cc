@@ -13,8 +13,8 @@
 
 namespace BaseGameFeature
 {
-ImplementClass(EnvQueryManager, 'EVQM', Game::Manager);
-ImplementSingleton(EnvQueryManager);
+__ImplementClass(EnvQueryManager, 'EVQM', Game::Manager);
+__ImplementSingleton(EnvQueryManager);
 
 using namespace Game;
 using namespace Input;
@@ -28,7 +28,7 @@ EnvQueryManager::EnvQueryManager() :
     mouseIntersection(false),
     materialUnderMouse(Physics::InvalidMaterial)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ EnvQueryManager::EnvQueryManager() :
 */
 EnvQueryManager::~EnvQueryManager()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -223,6 +223,8 @@ EnvQueryManager::OnFrame()
   //          this->pickingEntities[i]->SendSync(beginPickingMsg);
   //      }
 
+    if (InputServer::HasInstance())
+    {
         float2 mousePos = InputServer::Instance()->GetDefaultMouse()->GetScreenPosition();
         float length = 1000;
         line worldRay = EnvQueryManager::Instance()->ComputeMouseWorldRay(mousePos, length, GraphicsFeature::GraphicsFeatureUnit::Instance()->GetDefaultView());
@@ -259,6 +261,7 @@ EnvQueryManager::OnFrame()
         //{
         //    this->pickingEntities[i]->SendSync(endPickingMsg);
         //}  
+    }
 }
 
 //------------------------------------------------------------------------------

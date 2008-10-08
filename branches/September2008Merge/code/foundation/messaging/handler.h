@@ -18,7 +18,7 @@ namespace Messaging
 {
 class Handler : public Core::RefCounted
 {
-    DeclareClass(Handler);
+    __DeclareClass(Handler);
 public:
     /// constructor
     Handler();

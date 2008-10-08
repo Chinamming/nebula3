@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="foundation_win32"
-	ProjectGUID="{30562C23-988D-42D3-850F-8B07CFC28644}"
+	ProjectGUID="{B8328592-1328-44CF-A371-99097496B6E8}"
 	>
 	<Platforms>
 		<Platform
@@ -392,6 +392,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\foundation\core\rttimacros.h"
+				>
+			</File>
+			<File
 				RelativePath="..\foundation\core\singleton.h"
 				>
 			</File>
@@ -401,6 +405,10 @@
 			</File>
 			<File
 				RelativePath="..\foundation\core\types.h"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\core\weakptr.h"
 				>
 			</File>
 			<Filter
@@ -751,6 +759,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\foundation\io\excelxmlreader.cc"
+				>
+			</File>
+			<File
+				RelativePath="..\foundation\io\excelxmlreader.h"
+				>
+			</File>
+			<File
 				RelativePath="..\foundation\io\filestream.cc"
 				>
 			</File>
@@ -883,16 +899,21 @@
 					RelativePath="..\foundation\io/win32\win32consolehandler.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="win360"
+				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
+				>
 				<File
-					RelativePath="..\foundation\io/win32\win32filetime.h"
+					RelativePath="..\foundation\io/win360\win360filetime.h"
 					>
 				</File>
 				<File
-					RelativePath="..\foundation\io/win32\win32fswrapper.cc"
+					RelativePath="..\foundation\io/win360\win360fswrapper.cc"
 					>
 				</File>
 				<File
-					RelativePath="..\foundation\io/win32\win32fswrapper.h"
+					RelativePath="..\foundation\io/win360\win360fswrapper.h"
 					>
 				</File>
 			</Filter>
@@ -1043,6 +1064,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\foundation\math/d3dx9\d3dx9_matrix44.cc"
+					>
+				</File>
+				<File
 					RelativePath="..\foundation\math/d3dx9\d3dx9_matrix44.h"
 					>
 				</File>
@@ -1068,10 +1093,6 @@
 				</File>
 				<File
 					RelativePath="..\foundation\math/d3dx9\d3dx9_vector.h"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\math/d3dx9\d3xd9_matrix44.cc"
 					>
 				</File>
 			</Filter>
@@ -1122,27 +1143,36 @@
 				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 				>
 				<File
-					RelativePath="..\foundation\memory/win32\win32heap.cc"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\memory/win32\win32heap.h"
-					>
-				</File>
-				<File
-					RelativePath="..\foundation\memory/win32\win32memory.cc"
-					>
-				</File>
-				<File
 					RelativePath="..\foundation\memory/win32\win32memory.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="win360"
+				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
+				>
 				<File
-					RelativePath="..\foundation\memory/win32\win32memoryconfig.cc"
+					RelativePath="..\foundation\memory/win360\win360heap.cc"
 					>
 				</File>
 				<File
-					RelativePath="..\foundation\memory/win32\win32memoryconfig.h"
+					RelativePath="..\foundation\memory/win360\win360heap.h"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\memory/win360\win360memory.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\memory/win360\win360memory.h"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\memory/win360\win360memoryconfig.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\memory/win360\win360memoryconfig.h"
 					>
 				</File>
 			</Filter>
@@ -1253,23 +1283,23 @@
 				>
 			</File>
 			<Filter
-				Name="win32"
+				Name="win360"
 				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 				>
 				<File
-					RelativePath="..\foundation\net/win32\win32ipaddress.cc"
+					RelativePath="..\foundation\net/win360\win360ipaddress.cc"
 					>
 				</File>
 				<File
-					RelativePath="..\foundation\net/win32\win32ipaddress.h"
+					RelativePath="..\foundation\net/win360\win360ipaddress.h"
 					>
 				</File>
 				<File
-					RelativePath="..\foundation\net/win32\win32socket.cc"
+					RelativePath="..\foundation\net/win360\win360socket.cc"
 					>
 				</File>
 				<File
-					RelativePath="..\foundation\net/win32\win32socket.h"
+					RelativePath="..\foundation\net/win360\win360socket.h"
 					>
 				</File>
 			</Filter>
@@ -1443,19 +1473,44 @@
 				>
 			</File>
 			<File
-				RelativePath="..\foundation\system\platform.h"
+				RelativePath="..\foundation\system\systeminfo.h"
 				>
 			</File>
+			<Filter
+				Name="base"
+				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
+				>
+				<File
+					RelativePath="..\foundation\system/base\systeminfobase.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\system/base\systeminfobase.h"
+					>
+				</File>
+			</Filter>
 			<Filter
 				Name="win32"
 				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 				>
+				<File
+					RelativePath="..\foundation\system/win32\win32cpu.h"
+					>
+				</File>
 				<File
 					RelativePath="..\foundation\system/win32\win32registry.cc"
 					>
 				</File>
 				<File
 					RelativePath="..\foundation\system/win32\win32registry.h"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\system/win32\win32systeminfo.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\system/win32\win32systeminfo.h"
 					>
 				</File>
 			</Filter>
@@ -1497,35 +1552,52 @@
 				>
 			</File>
 			<File
-				RelativePath="..\foundation\threading\threadlocalptr.h"
+				RelativePath="..\foundation\threading\threadid.h"
 				>
 			</File>
 			<Filter
-				Name="win32"
+				Name="debug"
 				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 				>
 				<File
-					RelativePath="..\foundation\threading/win32\win32barrier.h"
+					RelativePath="..\foundation\threading/debug\threadpagehandler.cc"
 					>
 				</File>
 				<File
-					RelativePath="..\foundation\threading/win32\win32criticalsection.h"
+					RelativePath="..\foundation\threading/debug\threadpagehandler.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="win360"
+				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
+				>
+				<File
+					RelativePath="..\foundation\threading/win360\win360barrier.h"
 					>
 				</File>
 				<File
-					RelativePath="..\foundation\threading/win32\win32event.h"
+					RelativePath="..\foundation\threading/win360\win360criticalsection.h"
 					>
 				</File>
 				<File
-					RelativePath="..\foundation\threading/win32\win32interlocked.h"
+					RelativePath="..\foundation\threading/win360\win360event.h"
 					>
 				</File>
 				<File
-					RelativePath="..\foundation\threading/win32\win32thread.cc"
+					RelativePath="..\foundation\threading/win360\win360interlocked.h"
 					>
 				</File>
 				<File
-					RelativePath="..\foundation\threading/win32\win32thread.h"
+					RelativePath="..\foundation\threading/win360\win360thread.cc"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\threading/win360\win360thread.h"
+					>
+				</File>
+				<File
+					RelativePath="..\foundation\threading/win360\win360threadid.h"
 					>
 				</File>
 			</Filter>
@@ -1560,23 +1632,23 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="win32"
+				Name="win360"
 				Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;cc"
 				>
 				<File
-					RelativePath="..\foundation\timing/win32\win32calendartime.cc"
+					RelativePath="..\foundation\timing/win360\win360calendartime.cc"
 					>
 				</File>
 				<File
-					RelativePath="..\foundation\timing/win32\win32calendartime.h"
+					RelativePath="..\foundation\timing/win360\win360calendartime.h"
 					>
 				</File>
 				<File
-					RelativePath="..\foundation\timing/win32\win32timer.cc"
+					RelativePath="..\foundation\timing/win360\win360timer.cc"
 					>
 				</File>
 				<File
-					RelativePath="..\foundation\timing/win32\win32timer.h"
+					RelativePath="..\foundation\timing/win360\win360timer.h"
 					>
 				</File>
 			</Filter>

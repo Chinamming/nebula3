@@ -8,7 +8,7 @@
 
 namespace Debug
 {
-ImplementClass(Debug::DebugCounter, 'DBGC', Core::RefCounted);
+__ImplementClass(Debug::DebugCounter, 'DBGC', Core::RefCounted);
 
 using namespace Util;
 

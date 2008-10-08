@@ -7,7 +7,7 @@
 
 namespace Http
 {
-ImplementClass(Http::HttpRequestHandler, 'HRHD', Core::RefCounted);
+__ImplementClass(Http::HttpRequestHandler, 'HRHD', Core::RefCounted);
 
 using namespace IO;
 using namespace Util;

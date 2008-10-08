@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_FIXEDARRAY_H
-#define UTIL_FIXEDARRAY_H
 //------------------------------------------------------------------------------
 /**
     @class Util::FixedArray
@@ -68,7 +66,7 @@ private:
     /// delete content
     void Delete();
     /// allocate array for given size
-    void Allocate(SizeT s);
+    void Alloc(SizeT s);
     /// copy content
     void Copy(const FixedArray<TYPE>& src);
 
@@ -105,7 +103,7 @@ FixedArray<TYPE>::Delete()
 /**
 */
 template<class TYPE> void
-FixedArray<TYPE>::Allocate(SizeT s)
+FixedArray<TYPE>::Alloc(SizeT s)
 {
     #if NEBULA3_BOUNDSCHECKS
     n_assert(0 == this->elements) 
@@ -126,7 +124,7 @@ FixedArray<TYPE>::Copy(const FixedArray<TYPE>& rhs)
 {
     if (this != &rhs)
     {
-        this->Allocate(rhs.size);
+        this->Alloc(rhs.size);
         IndexT i;
         for (i = 0; i < this->size; i++)
         {
@@ -143,7 +141,7 @@ FixedArray<TYPE>::FixedArray(SizeT s) :
     size(0),
     elements(0)
 {
-    this->Allocate(s);
+    this->Alloc(s);
 }
 
 //------------------------------------------------------------------------------
@@ -154,7 +152,7 @@ FixedArray<TYPE>::FixedArray(SizeT s, const TYPE& initialValue) :
     size(0),
     elements(0)
 {
-    this->Allocate(s);
+    this->Alloc(s);
     this->Fill(initialValue);
 }
 
@@ -244,7 +242,7 @@ template<class TYPE> void
 FixedArray<TYPE>::SetSize(SizeT s)
 {
     this->Delete();
-    this->Allocate(s);
+    this->Alloc(s);
 }
 
 //------------------------------------------------------------------------------
@@ -424,4 +422,3 @@ FixedArray<TYPE>::BinarySearchIndex(const TYPE& elm) const
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif

@@ -9,7 +9,7 @@
 
 namespace Debug
 {
-ImplementClass(Debug::MemoryPageHandler, 'MPGH', Http::HttpRequestHandler);
+__ImplementClass(Debug::MemoryPageHandler, 'MPGH', Http::HttpRequestHandler);
 
 using namespace IO;
 using namespace Http;

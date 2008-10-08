@@ -7,12 +7,10 @@
 
 namespace Char
 {
-#if __WIN32__
-ImplementClass(Char::CharacterRenderer, 'CHRE', Direct3D9::D3D9CharacterRenderer);
-#elif __XBOX360__
-ImplementClass(Char::CharacterRenderer, 'CHRE', Xbox360::Xbox360CharacterRenderer);
+#if (__WIN32__ || __XBOX360__)
+__ImplementClass(Char::CharacterRenderer, 'CHRE', Win360::D3D9CharacterRenderer);
 #elif __WII__
-ImplementClass(Char::CharacterRenderer, 'CHRE', Wii::WiiCharacterRenderer);
+__ImplementClass(Char::CharacterRenderer, 'CHRE', Wii::WiiCharacterRenderer);
 #else
 #error "CharacterRenderer class not implemented on this platform!"
 #endif

@@ -12,18 +12,11 @@
     
     (C) 2006 Radon Labs GmbH
 */
-#if __WIN32__
-#include "io/win32/win32fswrapper.h"
+#if (__WIN32__ || __XBOX360__)
+#include "io/win360/win360fswrapper.h"
 namespace Internal
 {
-class FSWrapper : public Win32::Win32FSWrapper
-{ };
-}
-#elif __XBOX360__
-#include "io/xbox360/xbox360fswrapper.h"
-namespace Internal
-{
-class FSWrapper : public Xbox360::Xbox360FSWrapper
+class FSWrapper : public Win360::Win360FSWrapper
 { };
 }
 #elif __WII__

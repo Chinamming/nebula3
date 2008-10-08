@@ -9,22 +9,13 @@
     
     (C) 2006 Radon Labs GmbH
 */
-#if __WIN32__
-#include "net/win32/win32socket.h"
+#if (__WIN32__ || __XBOX360__)
+#include "net/win360/win360socket.h"
 namespace Net
 {
-class Socket : public Win32::Win32Socket
+class Socket : public Win360::Win360Socket
 {
-    DeclareClass(Socket);
-};
-}
-#elif __XBOX360__
-#include "net/xbox360/xbox360socket.h"
-namespace Net
-{
-class Socket : public Xbox360::Xbox360Socket
-{ 
-    DeclareClass(Socket);
+    __DeclareClass(Socket);
 };
 }
 #elif __WII__
@@ -33,7 +24,7 @@ namespace Net
 {
 class Socket : public Wii::WiiSocket
 { 
-    DeclareClass(Socket);
+    __DeclareClass(Socket);
 };
 }
 #else

@@ -7,7 +7,7 @@
 
 namespace IO
 {
-ImplementClass(IO::TextReader, 'TXTR', IO::StreamReader);
+__ImplementClass(IO::TextReader, 'TXTR', IO::StreamReader);
 
 using namespace Util;
 

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_ARRAY_H
-#define UTIL_ARRAY_H
 //------------------------------------------------------------------------------
 /**
     @class Util::Array
@@ -108,7 +106,7 @@ public:
     /// fill array range with element
     void Fill(IndexT first, SizeT num, const TYPE& elm);
     /// clear contents and preallocate with new attributes
-    void Reallocate(SizeT capacity, SizeT grow);
+    void Realloc(SizeT capacity, SizeT grow);
     /// returns new array with elements which are not in rhs (slow!)
     Array<TYPE> Difference(const Array<TYPE>& rhs);
     /// sort the array
@@ -275,7 +273,7 @@ Array<TYPE>::~Array()
 /**
 */
 template<class TYPE> void
-Array<TYPE>::Reallocate(SizeT _capacity, SizeT _grow)
+Array<TYPE>::Realloc(SizeT _capacity, SizeT _grow)
 {
     this->Delete();
     this->grow = _grow;
@@ -992,13 +990,11 @@ Array<TYPE>::InsertSorted(const TYPE& elm)
         else
         {
             // can't happen(?)
-            n_assert(false);
         }
     }
-    n_assert(false);
+    // can't happen
     return true;
 }
 
 } // namespace Core
 //------------------------------------------------------------------------------
-#endif

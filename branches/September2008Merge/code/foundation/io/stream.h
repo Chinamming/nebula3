@@ -24,7 +24,7 @@ namespace IO
 {
 class Stream : public Core::RefCounted
 {
-    DeclareClass(Stream);
+    __DeclareClass(Stream);
 public:
     /// typedefs
     typedef int Position;       // DON'T DEFINE AS UNSIGNED!

@@ -16,7 +16,7 @@ namespace Debug
 {
 class SvgTestPageHandler : public Http::HttpRequestHandler
 {
-    DeclareClass(SvgTestPageHandler);
+    __DeclareClass(SvgTestPageHandler);
 public:
     /// constructor
     SvgTestPageHandler();

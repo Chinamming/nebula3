@@ -7,7 +7,7 @@
 
 namespace Messaging
 {
-ImplementClass(Messaging::Handler, 'MHDL', Core::RefCounted);
+__ImplementClass(Messaging::Handler, 'MHDL', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

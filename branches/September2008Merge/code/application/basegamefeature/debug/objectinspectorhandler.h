@@ -21,7 +21,7 @@ namespace Debug
 {
 class ObjectInspectorHandler : public Http::HttpRequestHandler
 {
-    DeclareClass(ObjectInspectorHandler);
+    __DeclareClass(ObjectInspectorHandler);
 public:
     /// constructor
     ObjectInspectorHandler();

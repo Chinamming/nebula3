@@ -20,7 +20,7 @@ using namespace Util;
 
 namespace Physics
 {
-ImplementClass(Physics::CharEntity, 'PCHE', Physics::PhysicsEntity);
+__ImplementClass(Physics::CharEntity, 'PCHE', Physics::PhysicsEntity);
 
 //------------------------------------------------------------------------------
 /**
@@ -173,11 +173,11 @@ void
 CharEntity::SetTransform(const matrix44& m)
 {
     matrix44 offsetMatrix(m);
-    float4 pos = offsetMatrix.getpos_component();
+    float4 pos = offsetMatrix.get_position();
     pos.y() += this->radius + this->hover;
-    offsetMatrix.setpos_component(pos);
+    offsetMatrix.set_position(pos);
     PhysicsEntity::SetTransform(offsetMatrix);
-    this->lookatDirection = -m.getz_component();
+    this->lookatDirection = -m.get_zaxis();
 }
 
 //------------------------------------------------------------------------------
@@ -198,11 +198,11 @@ CharEntity::GetTransform() const
     else
     {
         const matrix44& tmp = PhysicsEntity::GetTransform();        
-        matrix44 fixedTransform = matrix44::lookatrh(tmp.getpos_component(), tmp.getpos_component() + this->lookatDirection, vector::upvec());
-        vector translation(tmp.getpos_component()); 
-        float4 pos = fixedTransform.getpos_component();
+        matrix44 fixedTransform = matrix44::lookatrh(tmp.get_position(), tmp.get_position() + this->lookatDirection, vector::upvec());
+        vector translation(tmp.get_position()); 
+        float4 pos = fixedTransform.get_position();
         pos.y() -= this->radius + this->hover;
-        fixedTransform.setpos_component(pos);
+        fixedTransform.set_position(pos);
         return fixedTransform;
     }
 }
@@ -215,7 +215,7 @@ CharEntity::GetTransform() const
 bool
 CharEntity::CheckGround(float& dist)
 {
-    point pos = this->GetTransform().getpos_component();
+    point pos = this->GetTransform().get_position();
     point from(pos.x(), pos.y() + this->radius * 2.0f, pos.z());
     point dir(0.0f, -this->radius * 4.0f, 0.0f);
 

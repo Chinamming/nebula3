@@ -8,7 +8,7 @@
 
 namespace Benchmarking
 {
-ImplementClass(Benchmarking::CreateObjectsByFourCC, 'BCOF', Benchmarking::Benchmark);
+__ImplementClass(Benchmarking::CreateObjectsByFourCC, 'BCOF', Benchmarking::Benchmark);
 
 using namespace Core;
 using namespace Timing;

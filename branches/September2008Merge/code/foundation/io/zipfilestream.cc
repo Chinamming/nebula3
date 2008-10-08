@@ -10,9 +10,10 @@
 
 namespace IO
 {
-ImplementClass(IO::ZipFileStream, 'ZFST', IO::Stream);
+__ImplementClass(IO::ZipFileStream, 'ZFST', IO::Stream);
 
 using namespace Util;
+using namespace Math;
 
 //------------------------------------------------------------------------------
 /**

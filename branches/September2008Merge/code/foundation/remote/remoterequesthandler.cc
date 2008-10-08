@@ -7,7 +7,7 @@
 
 namespace Remote
 {
-ImplementClass(Remote::RemoteRequestHandler, 'RRHD', Core::RefCounted);
+__ImplementClass(Remote::RemoteRequestHandler, 'RRHD', Core::RefCounted);
 
 using namespace IO;
 using namespace Util;

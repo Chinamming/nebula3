@@ -8,6 +8,7 @@
 #include "graphics/cameraentity.h"
 #include "game/entity.h"
 #include "basegameprotocol.h"
+#include "graphicsprotocol.h"
 #include "input/keyboard.h"
 #include "input/mouse.h"
 #include "input/inputserver.h"
@@ -25,7 +26,7 @@ namespace GraphicsFeature
 using namespace Input;
 using namespace Math;
 
-ImplementClass(GraphicsFeature::MayaCameraProperty, 'MCAM', GraphicsFeature::CameraProperty);
+__ImplementClass(GraphicsFeature::MayaCameraProperty, 'MCAM', GraphicsFeature::CameraProperty);
 
 //------------------------------------------------------------------------------
 /**
@@ -71,7 +72,7 @@ void
 MayaCameraProperty::SetupAcceptedMessages()
 {
 	this->RegisterMessage(BaseGameFeature::UpdateTransform::Id);
-    CameraProperty::SetupAcceptedMessages();
+	CameraProperty::SetupAcceptedMessages();
 }
 
 //------------------------------------------------------------------------------
@@ -103,7 +104,7 @@ MayaCameraProperty::OnActivate()
     
 	// setup the camera util object
 	this->mayaCameraUtil.Setup(	this->entity->GetFloat4(Attr::MayaCameraCenterOfInterest), 
-								m.getpos_component(), 
+								m.get_position(), 
 								this->entity->GetFloat4(Attr::MayaCameraDefaultUpVec));
 }
 
@@ -177,7 +178,7 @@ MayaCameraProperty::OnRender()
 		//if (!(GetEntity()->HasAttr(Attr::AnimPath) && GetEntity()->GetString(Attr::AnimPath).IsValid()))
 		{
 			// only use the internal matrix if we are not animated
-			this->cameraEntity->SetTransform(this->mayaCameraUtil.GetCameraTransform());	
+			this->GetEntity()->SetMatrix44(Attr::Transform, this->mayaCameraUtil.GetCameraTransform());	
 		}
 	}
 

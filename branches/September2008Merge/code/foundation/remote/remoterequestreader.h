@@ -21,7 +21,7 @@ namespace Remote
 {
 class RemoteRequestReader : public IO::StreamReader
 {
-    DeclareClass(RemoteRequestReader);
+    __DeclareClass(RemoteRequestReader);
 public:
     /// constructor
     RemoteRequestReader();

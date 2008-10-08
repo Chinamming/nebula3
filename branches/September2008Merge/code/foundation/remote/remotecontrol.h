@@ -27,8 +27,8 @@ namespace Remote
 {
 class RemoteControl : public Core::RefCounted
 {
-    DeclareClass(RemoteControl);
-    DeclareSingleton(RemoteControl);
+    __DeclareClass(RemoteControl);
+    __DeclareSingleton(RemoteControl);
 public:
     /// constructor
     RemoteControl();

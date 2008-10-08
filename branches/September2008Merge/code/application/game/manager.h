@@ -27,7 +27,7 @@ namespace Game
 {
 class Manager : public Messaging::Dispatcher
 {
-    DeclareClass(Manager);
+    __DeclareClass(Manager);
 public:
     /// constructor
     Manager();

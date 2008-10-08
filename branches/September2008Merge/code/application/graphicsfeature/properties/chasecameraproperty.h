@@ -42,7 +42,7 @@ namespace GraphicsFeature
 
 class ChaseCameraProperty : public CameraProperty
 {
-	DeclareClass(ChaseCameraProperty);
+	__DeclareClass(ChaseCameraProperty);
 public:
     /// constructor
     ChaseCameraProperty();
@@ -82,7 +82,7 @@ protected:
     Math::PFeedbackLoop<Math::point> cameraPos;
     Math::PFeedbackLoop<Math::point> cameraLookat;
 };
-RegisterClass(ChaseCameraProperty);
+__RegisterClass(ChaseCameraProperty);
 
 }; // namespace GraphicsFeature
 //------------------------------------------------------------------------------

@@ -27,7 +27,7 @@ namespace Game
 
 class FeatureUnit : public Core::RefCounted    
 {
-    DeclareClass(FeatureUnit);
+    __DeclareClass(FeatureUnit);
 public:
     /// constructor
     FeatureUnit();
@@ -55,8 +55,12 @@ public:
     /// called at the end of the feature trigger cycle
     virtual void OnEndFrame();
 
+    /// start render debug
+    virtual void StartRenderDebug();
     /// called when game debug visualization is on
     virtual void OnRenderDebug();
+    /// stop render debug
+    virtual void StopRenderDebug();
 
     /// attach a manager to the game world
     virtual void AttachManager(const Ptr<Manager>& manager);
@@ -66,10 +70,16 @@ public:
     /// set command line args
     void SetCmdLineArgs(const Util::CmdLineArgs& a);
         
+	/// set flag for rendering debug information
+	void SetRenderDebug(bool b);
+	/// get flag for rendering debug information
+	bool HasRenderDebug() const;
+
 protected:
 
     Util::Array<Ptr<Manager> > managers;
 	bool active;
+	bool renderDebug;
 
     // cmdline args for configuration from cmdline
     Util::CmdLineArgs args;
@@ -78,6 +88,24 @@ protected:
     Util::Array<nProfiler> managerProfilers;
     #endif
 };
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+FeatureUnit::SetRenderDebug(bool b)
+{
+	this->renderDebug = b;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline bool
+FeatureUnit::HasRenderDebug() const
+{
+	return this->renderDebug;
+}
 
 //------------------------------------------------------------------------------
 /**

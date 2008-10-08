@@ -21,7 +21,7 @@ namespace IO
 {
 class ZipArchive : public Core::RefCounted
 {
-    DeclareClass(ZipArchive);
+    __DeclareClass(ZipArchive);
 public:
     /// constructor
     ZipArchive();

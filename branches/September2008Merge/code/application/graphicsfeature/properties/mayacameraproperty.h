@@ -26,7 +26,7 @@ namespace GraphicsFeature
 {
 class MayaCameraProperty : public CameraProperty
 {
-	DeclareClass(MayaCameraProperty);
+	__DeclareClass(MayaCameraProperty);
 public:
     /// constructor
     MayaCameraProperty();
@@ -51,7 +51,7 @@ private:
 	RenderUtil::MayaCameraUtil mayaCameraUtil;
 
 };
-RegisterClass(MayaCameraProperty);
+__RegisterClass(MayaCameraProperty);
 }; // namespace GraphicsFeature
 //------------------------------------------------------------------------------
 #endif    

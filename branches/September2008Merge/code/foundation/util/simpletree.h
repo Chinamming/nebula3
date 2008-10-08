@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_SIMPLETREE_H
-#define UTIL_SIMPLETREE_H
 //------------------------------------------------------------------------------
 /**
     @class Util::SimpleTree
@@ -367,5 +365,4 @@ SimpleTree<VALUETYPE>::Root() const
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif
     

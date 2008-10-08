@@ -7,14 +7,14 @@
 
 namespace Core
 {
-ImplementRootClass(Core::RefCounted, 'REFC');
+__ImplementRootClass(Core::RefCounted, 'REFC');
 
 #if NEBULA3_DEBUG
 using namespace Util;
 
+Threading::CriticalSection RefCounted::criticalSection;
 ThreadLocal bool RefCounted::isInCreate = false;
 RefCountedList RefCounted::list;
-Threading::CriticalSection RefCounted::criticalSection;
 #endif
 
 //------------------------------------------------------------------------------

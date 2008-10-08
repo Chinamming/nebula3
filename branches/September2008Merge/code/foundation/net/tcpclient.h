@@ -33,7 +33,7 @@ namespace Net
 {
 class TcpClient : public Core::RefCounted
 {
-    DeclareClass(TcpClient);
+    __DeclareClass(TcpClient);
 public:
     enum Result
     {

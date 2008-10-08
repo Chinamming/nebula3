@@ -9,7 +9,7 @@
 
 namespace Db
 {
-ImplementClass(Db::Sqlite3Command, 'S3CD', Core::RefCounted);    // skip virtual base class
+__ImplementClass(Db::Sqlite3Command, 'S3CD', Core::RefCounted);    // skip virtual base class
 
 using namespace Util;
 using namespace Math;

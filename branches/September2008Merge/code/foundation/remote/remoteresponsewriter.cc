@@ -8,7 +8,7 @@
 
 namespace Remote
 {
-ImplementClass(Remote::RemoteResponseWriter, 'RERW', IO::StreamWriter);
+__ImplementClass(Remote::RemoteResponseWriter, 'RERW', IO::StreamWriter);
 
 using namespace IO;
 

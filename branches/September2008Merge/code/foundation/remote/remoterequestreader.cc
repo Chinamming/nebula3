@@ -9,7 +9,7 @@
 
 namespace Remote
 {
-ImplementClass(Remote::RemoteRequestReader, 'RRQR', IO::StreamReader);
+__ImplementClass(Remote::RemoteRequestReader, 'RRQR', IO::StreamReader);
 
 using namespace Util;
 using namespace IO;

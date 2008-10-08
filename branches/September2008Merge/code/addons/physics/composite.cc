@@ -9,7 +9,9 @@
 
 namespace Physics
 {
-ImplementClass(Physics::Composite, 'PCOM', Core::RefCounted);
+__ImplementClass(Physics::Composite, 'PCOM', Core::RefCounted);
+
+using namespace Math;
 
 //------------------------------------------------------------------------------
 /**
@@ -449,10 +451,10 @@ Composite::OnFrameAfter()
         if (!this->transformChanged)
         {
             if (this->transformWasSet ||
-                (!float4::all(float4::nearequal(this->frameBeforeTransform.getx_component(), this->transform.getx_component(), float4(0.001f,0.001f,0.001f,0.001f)))) ||
-                (!float4::all(float4::nearequal(this->frameBeforeTransform.gety_component(), this->transform.gety_component(), float4(0.001f,0.001f,0.001f,0.001f)))) ||
-                (!float4::all(float4::nearequal(this->frameBeforeTransform.getz_component(), this->transform.getz_component(), float4(0.001f,0.001f,0.001f,0.001f)))) ||
-                (!float4::all(float4::nearequal(this->frameBeforeTransform.getpos_component(), this->transform.getpos_component(), float4(0.001f,0.001f,0.001f,0.001f)))))
+                (!float4::all(float4::nearequal(this->frameBeforeTransform.get_xaxis(), this->transform.get_xaxis(), float4(0.001f,0.001f,0.001f,0.001f)))) ||
+                (!float4::all(float4::nearequal(this->frameBeforeTransform.get_yaxis(), this->transform.get_yaxis(), float4(0.001f,0.001f,0.001f,0.001f)))) ||
+                (!float4::all(float4::nearequal(this->frameBeforeTransform.get_zaxis(), this->transform.get_zaxis(), float4(0.001f,0.001f,0.001f,0.001f)))) ||
+                (!float4::all(float4::nearequal(this->frameBeforeTransform.get_position(), this->transform.get_position(), float4(0.001f,0.001f,0.001f,0.001f)))))
             {
                 this->transformChanged = true;
             }

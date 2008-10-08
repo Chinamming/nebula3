@@ -11,8 +11,8 @@
 
 namespace Remote
 {
-ImplementClass(Remote::RemoteControl, 'RECO', Core::RefCounted);
-ImplementSingleton(Remote::RemoteControl);
+__ImplementClass(Remote::RemoteControl, 'RECO', Core::RefCounted);
+__ImplementSingleton(Remote::RemoteControl);
 
 using namespace Util;
 using namespace Net;
@@ -24,7 +24,7 @@ using namespace IO;
 RemoteControl::RemoteControl() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
     this->ipAddress.SetHostName("any");
     this->ipAddress.SetPort(2101);
 }
@@ -35,7 +35,7 @@ RemoteControl::RemoteControl() :
 RemoteControl::~RemoteControl()
 {
     n_assert(!this->IsOpen());
-    DestructSingleton;        
+    __DestructSingleton;        
 }
 
 //------------------------------------------------------------------------------

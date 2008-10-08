@@ -12,6 +12,7 @@
 #include "io/ioserver.h"
 #include "io/xmlreader.h"
 #include "basegamefeatureunit.h"
+#include "game/gameserver.h"
 
 //#include "story/and.h"
 //#include "story/not.h"
@@ -19,17 +20,19 @@
 
 namespace BaseGameFeature
 {
-ImplementClass(FactoryManager, 'MFAM', Game::Manager);
-ImplementSingleton(FactoryManager);
+__ImplementClass(FactoryManager, 'MFAM', Game::Manager);
+__ImplementSingleton(FactoryManager);
 
 using namespace Game;
+using namespace Util;
 
+Util::String FactoryManager::blueprintFilename("blueprints.xml");
 //------------------------------------------------------------------------------
 /**
 */
 FactoryManager::FactoryManager()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
     if (!this->ParseBluePrints())
     {
         n_error("Managers::FactoryManager: Error parsing data:tables/blueprints.xml!");
@@ -41,7 +44,7 @@ FactoryManager::FactoryManager()
 */
 FactoryManager::~FactoryManager()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -313,10 +316,13 @@ bool
 FactoryManager::ParseBluePrints()
 {
     // it is not an error here if blueprints.xml doesn't exist
-    if (IO::IoServer::Instance()->FileExists("data:tables/blueprints.xml"))
+    Util::String blueprintsPath("data:tables/");
+    blueprintsPath.Append(FactoryManager::blueprintFilename);
+
+    if (IO::IoServer::Instance()->FileExists(blueprintsPath))
     {        
         Ptr<IO::XmlReader> xmlReader = IO::XmlReader::Create();
-        xmlReader->SetStream(IO::IoServer::Instance()->CreateStream("data:tables/blueprints.xml"));
+        xmlReader->SetStream(IO::IoServer::Instance()->CreateStream(blueprintsPath));
         if (xmlReader->Open())
         {
             // make sure it's a BluePrints file
@@ -343,7 +349,7 @@ FactoryManager::ParseBluePrints()
         }
         else
         {
-            n_error("Managers::FactoryManager::ParseBluePrints(): could not open 'data:tables/blueprints.xml'!");
+            n_error("Managers::FactoryManager::ParseBluePrints(): could not open '%s'!", blueprintsPath.AsCharPtr());
             return false;
         }
     }
@@ -389,10 +395,33 @@ FactoryManager::AddProperties(const Ptr<Entity>& entity, const Util::String& cat
         int num = bluePrint.properties.Size();
         for (i = 0; i < num; i++)
         {
-            Ptr<Property> prop = this->CreateProperty(bluePrint.properties[i]);
-            entity->AttachProperty(prop);
+            // create property only if feature exists
+            String featureName(bluePrint.properties[i]);
+            featureName.Strip(":");
+            featureName.Append("Unit");
+            // check only for feature if this property is included in feature
+            if (!String::MatchPattern(featureName, "*Feature*") 
+                ||(Core::Factory::Instance()->ClassExists(featureName) 
+                   && GameServer::Instance()->IsFeatureAttached(featureName)))
+            {
+                Ptr<Property> prop = this->CreateProperty(bluePrint.properties[i]);
+                entity->AttachProperty(prop);
+            }
+            else
+            {
+                n_printf("Feature %s for property %s not active!\n", featureName.AsCharPtr(), bluePrint.properties[i].AsCharPtr());
+            }
         }
     }
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+void 
+FactoryManager::SetBlueprintsFilename(const Util::String& name)
+{
+    n_assert(name.IsValid());
+    blueprintFilename = name;
+}
 } // namespace Managers

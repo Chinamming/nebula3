@@ -31,7 +31,7 @@ namespace Attr
 
 namespace GraphicsFeature
 {
-ImplementClass(GraphicsFeature::LightProperty, 'LIPR', Game::Property);
+__ImplementClass(GraphicsFeature::LightProperty, 'LIPR', Game::Property);
 
 using namespace Game;
 using namespace Messaging;
@@ -108,6 +108,8 @@ LightProperty::OnActivate()
     lightCode = LightCodesSubstitute[lightCode];
 #endif
 
+    
+    vector lightDir(this->entity->GetMatrix44(Attr::Transform).get_zaxis());
     switch ((Lighting::LightType::Code)lightCode)
     {
         case Lighting::LightType::Global:
@@ -116,6 +118,8 @@ LightProperty::OnActivate()
                 Ptr<GlobalLightEntity> globalLight = GlobalLightEntity::Create();
                 globalLight->SetBackLightColor(GetEntity()->GetFloat4(Attr::LightOppositeColor));
                 this->lightEntity = globalLight;
+                // invert light direction for global lights, 
+                lightDir *= -1;
             }
             break;
         case Lighting::LightType::Spot:
@@ -129,8 +133,7 @@ LightProperty::OnActivate()
     }	
     this->UpdateLightFromAttributes();    
 
-    point lightPos(this->entity->GetMatrix44(Attr::Transform).getpos_component());
-    vector lightDir(this->entity->GetMatrix44(Attr::Transform).getz_component());
+    point lightPos(this->entity->GetMatrix44(Attr::Transform).get_position());    
     lightDir = float4::normalize(lightDir);
     point lookAt = lightPos + lightDir;
     float scale = n_max(GetEntity()->GetFloat(Attr::LightRange), 1.0f);
@@ -192,8 +195,8 @@ LightProperty::HandleMessage(const Ptr<Message>& msg)
     if (msg->CheckId(BaseGameFeature::UpdateTransform::Id))
     {
         const Ptr<BaseGameFeature::UpdateTransform>& updTransform = msg.cast<BaseGameFeature::UpdateTransform>();
-        point lightPos(updTransform->GetMatrix().getpos_component());
-        vector lightDir(updTransform->GetMatrix().getz_component());
+        point lightPos(updTransform->GetMatrix().get_position());
+        vector lightDir(updTransform->GetMatrix().get_zaxis());
         point lookAt = lightPos + lightDir;
         float scale = GetEntity()->GetFloat(Attr::LightRange);
         matrix44 lightTransform = matrix44::multiply(matrix44::scaling(scale, scale, scale), matrix44::lookatrh(lookAt, lightPos, vector::upvec()));

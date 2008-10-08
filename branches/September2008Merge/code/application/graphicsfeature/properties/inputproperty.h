@@ -2,7 +2,7 @@
 #define PROPERTIES_INPUTPROPERTY_H
 //------------------------------------------------------------------------------
 /**
-    @class GraphicsFeature::InputProperty
+    @class Properties::InputProperty
 
     An input property adds the ability to handle user input to an entity.
     If an InputProperty is attached to an entity it can become the input
@@ -30,7 +30,7 @@ namespace GraphicsFeature
 {
 class InputProperty : public Game::Property
 {	
-    DeclareClass(InputProperty);
+    __DeclareClass(InputProperty);
 public:
     /// constructor
     InputProperty();
@@ -56,12 +56,12 @@ public:
     virtual void OnBeginFrame();
     /// handle a single message
     virtual void HandleMessage(const Ptr<Messaging::Message>& msg);
-    /// handle camera zoom in
-    virtual void OnCameraZoomIn();
-    /// handle camera zoom out
-    virtual void OnCameraZoomOut();
+    // handle camera zoom in
+    //virtual void OnCameraZoomIn();
+    // handle camera zoom out
+    //virtual void OnCameraZoomOut();
 };
-RegisterClass(InputProperty);
+__RegisterClass(InputProperty);
 
 }; // namespace Property
 //------------------------------------------------------------------------------

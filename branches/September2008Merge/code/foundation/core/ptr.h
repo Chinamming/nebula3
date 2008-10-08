@@ -1,9 +1,7 @@
 #pragma once
-#ifndef CORE_PTR_H
-#define CORE_PTR_H
 //------------------------------------------------------------------------------
 /**
-    @class Core::Ptr
+    @class Ptr
 
     Nebula3's smart pointer class which manages the life time of RefCounted
     objects. Can be used like a normal C++ pointer in most cases.
@@ -14,7 +12,9 @@
     (C) 2006 RadonLabs GmbH
 */
 #include "core/types.h"
-
+#if ENABLE_NEBULA2_COMPATIBILITY
+#include "foundation/ptr.h"
+#else
 //------------------------------------------------------------------------------
 template<class TYPE>
 class Ptr
@@ -292,8 +292,8 @@ Ptr<TYPE>::get_unsafe() const
     return this->ptr;
 }
 
+#endif // ENABLE_NEBULA2_COMPATIBILITY
 //------------------------------------------------------------------------------
-#endif
 
 
 

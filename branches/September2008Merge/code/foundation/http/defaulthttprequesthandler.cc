@@ -11,7 +11,7 @@
 
 namespace Http
 {
-ImplementClass(Http::DefaultHttpRequestHandler, 'DHRH', Http::HttpRequestHandler);
+__ImplementClass(Http::DefaultHttpRequestHandler, 'DHRH', Http::HttpRequestHandler);
 
 using namespace Core;
 using namespace Util;

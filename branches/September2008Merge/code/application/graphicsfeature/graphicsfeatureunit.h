@@ -24,14 +24,16 @@
 #include "graphics/view.h"
 #include "graphics/cameraentity.h"
 #include "input/inputserver.h"
+#include "debugrender/debugshaperenderer.h"
+#include "debugrender/debugtextrenderer.h"
 
 //------------------------------------------------------------------------------
 namespace GraphicsFeature
 {
 class GraphicsFeatureUnit : public Game::FeatureUnit    
 {
-    DeclareClass(GraphicsFeatureUnit);
-    DeclareSingleton(GraphicsFeatureUnit);   
+    __DeclareClass(GraphicsFeatureUnit);
+    __DeclareSingleton(GraphicsFeatureUnit);   
 public:
     /// constructor
     GraphicsFeatureUnit();
@@ -50,6 +52,10 @@ public:
     virtual void OnFrame();        
     /// called at the end of the feature trigger cycle
     virtual void OnEndFrame();
+    /// start render debug
+    virtual void StartRenderDebug();
+    /// stop render debug
+    virtual void StopRenderDebug();
 
     /// create default stage, view and camera
     void SetupDefaultGraphicsWorld();  
@@ -73,6 +79,8 @@ protected:
     Ptr<Input::InputServer> inputServer;
     Ptr<Graphics::Stage> defaultStage;
     Ptr<Graphics::View> defaultView;
+    Ptr<Debug::DebugShapeRenderer> debugShapeRenderer;
+    Ptr<Debug::DebugTextRenderer> debugTextRenderer;
 };
 
 //------------------------------------------------------------------------------

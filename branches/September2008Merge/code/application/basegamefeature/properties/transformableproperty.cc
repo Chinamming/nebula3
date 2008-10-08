@@ -10,7 +10,7 @@
 
 namespace BaseGameFeature
 {
-ImplementClass(BaseGameFeature::TransformableProperty, 'TRPR', Game::Property);
+__ImplementClass(BaseGameFeature::TransformableProperty, 'TRPR', Game::Property);
 
 using namespace Game;
 

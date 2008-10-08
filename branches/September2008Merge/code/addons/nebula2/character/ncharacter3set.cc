@@ -14,7 +14,7 @@ namespace Nebula2
 using namespace Math;
 using namespace Util;
 
-ImplementClass(nCharacter3Set, 'CHA3', Core::RefCounted);
+__ImplementClass(nCharacter3Set, 'CHA3', Core::RefCounted);
 //------------------------------------------------------------------------------
 /**
 */
@@ -126,7 +126,7 @@ nCharacter3Set::Clear()
     this->variations.Clear();
     this->skinIndexMap.Clear();
     this->variationIndexMap.Clear();
-    this->currentVariationIndex = -1;    
+    this->currentVariationIndex = InvalidIndex;    
     IndexT catIndex;
     for (catIndex = 0; catIndex < this->skinTextures.Size(); catIndex++)
     {

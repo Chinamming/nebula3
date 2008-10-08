@@ -8,8 +8,8 @@
 
 namespace Interface
 {
-ImplementClass(Interface::IOInterface, 'IIOF', Messaging::AsyncPort);
-ImplementInterfaceSingleton(Interface::IOInterface);
+__ImplementClass(Interface::IOInterface, 'IIOF', Messaging::AsyncPort);
+__ImplementInterfaceSingleton(Interface::IOInterface);
 
 using namespace IO;
 using namespace Messaging;
@@ -19,7 +19,8 @@ using namespace Messaging;
 */
 IOInterface::IOInterface()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
+    this->SetThreadCpuCoreId(System::Cpu::IoThreadCore);
 }
 
 //------------------------------------------------------------------------------
@@ -27,7 +28,7 @@ IOInterface::IOInterface()
 */
 IOInterface::~IOInterface()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -36,7 +37,7 @@ IOInterface::~IOInterface()
 void
 IOInterface::Open()
 {
-    this->SetName("IOInterface");
+    this->SetName("IOInterface Thread");
     AsyncPort::Open();
 }
 

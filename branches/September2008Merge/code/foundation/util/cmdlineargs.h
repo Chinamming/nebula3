@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_CMDLINEARGS_H
-#define UTIL_CMDLINEARGS_H
 //------------------------------------------------------------------------------
 /**
     @class Util::CmdLineArgs
@@ -72,4 +70,3 @@ private:
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif

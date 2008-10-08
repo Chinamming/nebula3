@@ -19,7 +19,7 @@ namespace IO
 {
 class FileStream : public Stream
 {
-    DeclareClass(FileStream);
+    __DeclareClass(FileStream);
 public:
     /// constructor
     FileStream();

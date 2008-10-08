@@ -7,13 +7,14 @@
 #include "core/factory.h"
 #include "appgame/appconfig.h"
 #include "graphicsfeature/graphicsfeatureunit.h"
-#include "coregraphics/shaperenderer.h"
 #include "coregraphics/transformdevice.h"
+#include "input/keyboard.h"
+#include "debugrender/debugrender.h"
 
 namespace Game
 {
-ImplementClass(Game::GameServer, 'GMSV', Core::RefCounted);
-ImplementSingleton(Game::GameServer);
+__ImplementClass(Game::GameServer, 'GMSV', Core::RefCounted);
+__ImplementSingleton(Game::GameServer);
 
 //------------------------------------------------------------------------------
 /**
@@ -23,7 +24,8 @@ GameServer::GameServer() :
     isStarted(false),
     quitRequested(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
+    _setup_timer(GameServerOnFrame);
 }
 
 //------------------------------------------------------------------------------
@@ -32,7 +34,8 @@ GameServer::GameServer() :
 GameServer::~GameServer()
 {
     n_assert(!this->isOpen);
-    DestructSingleton;
+    _discard_timer(GameServerOnFrame);
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -46,8 +49,26 @@ GameServer::Open()
     n_assert(!this->isOpen);
     n_assert(!this->isStarted);
     this->isOpen = true;
-
     return true;
+}
+
+//------------------------------------------------------------------------------
+/**
+    Close the game server object.
+*/
+void
+GameServer::Close()
+{
+    n_assert(!this->isStarted);
+    n_assert(this->isOpen);
+    
+    // remove all gameFeatures
+    while (this->gameFeatures.Size() > 0)
+    {
+        this->gameFeatures[0]->OnDeactivate();
+        this->gameFeatures.EraseIndex(0);
+    }
+    this->isOpen = false;
 }
 
 //------------------------------------------------------------------------------
@@ -121,25 +142,6 @@ GameServer::Stop()
 
 //------------------------------------------------------------------------------
 /**
-    Close the game server object.
-*/
-void
-GameServer::Close()
-{
-    n_assert(!this->isStarted);
-    n_assert(this->isOpen);
-    
-    // remove all gameFeatures
-    while (this->gameFeatures.Size() > 0)
-    {
-        this->gameFeatures[0]->OnDeactivate();
-        this->gameFeatures.EraseIndex(0);
-    }
-    this->isOpen = false;
-}
-
-//------------------------------------------------------------------------------
-/**
     Trigger the game server. If your application introduces new or different
     manager objects, you may also want to override the Game::GameServer::Trigger()
     method if those gameFeatures need per-frame callbacks.
@@ -147,6 +149,8 @@ GameServer::Close()
 void
 GameServer::OnFrame()
 {
+    _start_timer(GameServerOnFrame);
+
     // call trigger functions on game features   
     int i;
     int num = this->gameFeatures.Size();
@@ -162,6 +166,66 @@ GameServer::OnFrame()
     {
         this->gameFeatures[i]->OnEndFrame();
     }   
+
+	// debug rendering stuff
+	this->CheckDebugRendering();
+	if(this->debugRenderFeature.isvalid())
+	{
+		// set render info
+		_debug_text(this->debugRenderFeature->GetRtti()->GetName(), Math::float2(0.5f, 0.004f), Math::float4(1.0f, 1.0f, 0.0f, 1.0f));
+		this->debugRenderFeature->OnRenderDebug();
+	}
+
+    _stop_timer(GameServerOnFrame);
+}
+
+//------------------------------------------------------------------------------
+/**    
+*/
+void
+GameServer::CheckDebugRendering()
+{
+    if (Input::InputServer::HasInstance())
+    {
+	    // first check input
+	    Ptr<Input::InputServer> inputServer = Input::InputServer::Instance();
+	    Ptr<Input::Keyboard> keyBoard = inputServer->GetDefaultKeyboard();
+
+	    if(keyBoard->KeyDown(Input::Key::F4))
+	    {
+		    // find current index
+		    IndexT index = InvalidIndex;
+		    if(this->debugRenderFeature.isvalid())
+		    {
+                this->debugRenderFeature->StopRenderDebug();
+			    index = this->gameFeatures.FindIndex(this->debugRenderFeature) + 1;
+		    }
+		    else
+		    {
+			    index = 0;
+		    }
+		    n_assert(index != InvalidIndex);
+
+		    // find next feature with render debug enabled
+		    bool noFeature = true;
+		    for((uint)index; index < this->gameFeatures.Size(); index++)
+		    {
+			    if(this->gameFeatures[index]->HasRenderDebug())
+			    {                
+				    this->debugRenderFeature = this->gameFeatures[index];
+                    this->debugRenderFeature->StartRenderDebug();
+				    noFeature = false;
+				    break;
+			    }
+		    }
+
+		    // check if no feature found
+		    if(noFeature)
+		    {
+			    this->debugRenderFeature = 0;
+		    }
+	    }
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -193,4 +257,21 @@ GameServer::NotifyGameSave()
     }
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+bool 
+GameServer::IsFeatureAttached(const Util::String& stringName) const
+{
+    int i;
+    int num = this->gameFeatures.Size();
+    for (i = 0; i < num; i++)
+    {
+        if (this->gameFeatures[i]->GetRtti()->GetName() == stringName)
+        {
+            return true;
+        }
+    }
+    return false;
+}
 } // namespace Game

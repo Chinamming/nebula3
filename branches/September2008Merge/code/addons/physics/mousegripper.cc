@@ -8,11 +8,14 @@
 #include "physics/rigidbody.h"
 #include "physics/composite.h"
 #include "math/line.h"
-#include "coregraphics/shaperenderer.h"
+#include "debugrender/debugshaperenderer.h"
 
 namespace Physics
 {
-ImplementClass(Physics::MouseGripper, 'PMOU', Core::RefCounted);
+__ImplementClass(Physics::MouseGripper, 'PMOU', Core::RefCounted);
+
+using namespace Math;
+using namespace Debug;
 
 const float MouseGripper::positionGain = -2.0f;
 const float MouseGripper::positionStepSize = 0.001f;
@@ -265,7 +268,7 @@ MouseGripper::UpdateGripPosition()
 void
 MouseGripper::RenderDebug()
 {
-    CoreGraphics::ShapeRenderer* gfxServer = CoreGraphics::ShapeRenderer::Instance();
+    DebugShapeRenderer* shapeRenderer = DebugShapeRenderer::Instance();
 
     Math::matrix44 gripTransform = Math::matrix44::identity();
     Math::float4 gripColor;
@@ -274,7 +277,7 @@ MouseGripper::RenderDebug()
 
     gripTransform.scale(Math::vector(0.1f, 0.1f, 0.1f));
     float4 pos = this->gripPosition.GetState();
-    gripTransform.setpos_component(pos);
+    gripTransform.set_position(pos);
     if (this->gripOpen)
     {
         gripColor.set(1.0f, 1.0f, 0.0f, 1.0f);
@@ -285,12 +288,12 @@ MouseGripper::RenderDebug()
         if (rigidBody)
         {
             bodyTransform.scale(Math::vector(0.1f, 0.1f, 0.1f));
-            bodyTransform.setpos_component(rigidBody->LocalToGlobalPoint(this->bodyGripPosition));
-            gfxServer->DrawShape(bodyTransform, CoreGraphics::ShapeRenderer::Sphere , bodyColor);
+            bodyTransform.set_position(rigidBody->LocalToGlobalPoint(this->bodyGripPosition));
+            shapeRenderer->DrawSphere(bodyTransform, bodyColor);
         }
         gripColor.set(1.0f, 0.0f, 1.0f, 1.0f);
     }
-    gfxServer->DrawShape(gripTransform, CoreGraphics::ShapeRenderer::Sphere, gripColor);
+    shapeRenderer->DrawSphere(gripTransform, gripColor);
 }
     
 //------------------------------------------------------------------------------

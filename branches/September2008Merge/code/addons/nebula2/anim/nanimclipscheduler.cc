@@ -7,7 +7,10 @@
 
 namespace Nebula2
 {
-ImplementClass(nAnimClipScheduler, 'CLSH', Core::RefCounted);
+__ImplementClass(nAnimClipScheduler, 'CLSH', Core::RefCounted);
+
+using namespace Math;
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -84,7 +87,7 @@ nAnimClipScheduler::Update(Timing::Time time)
             if(desiredRunTime > 0.0f)
             {
                 const Timing::Time duration = this->clipData[clipIndex].duration / this->clipData[clipIndex].timeFactor;
-                const Timing::Time fadeOutTime = n_min(duration, this->clipData[clipIndex].fadeOutTime);
+                const Timing::Time fadeOutTime = n_min(float(duration), float(this->clipData[clipIndex].fadeOutTime));
                 const Timing::Time currentRunTime = (this->GetClipTimeAt(clipIndex, time, true, false) / duration) + (fadeOutTime / duration);
                                 
                 if(FadeOut != fadeState && currentRunTime >= desiredRunTime)

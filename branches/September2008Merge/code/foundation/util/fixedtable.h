@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_FIXEDTABLE_H
-#define UTIL_FIXEDTABLE_H
 //------------------------------------------------------------------------------
 /**
     @class Util::FixedTable
@@ -312,6 +310,5 @@ FixedTable<TYPE>::At(IndexT x, IndexT y) const
     return this->elements[flatIndex];
 }
 
-}
+} // namespace Util
 //------------------------------------------------------------------------------
-#endif

@@ -33,7 +33,6 @@ RunLengthCodec::Encode(const uchar* srcPtr, SizeT srcNumBytes, uchar* dstPtr, Si
 
     const uchar* dstStore = dstPtr;
     const uchar* srcEndPtr = srcPtr + srcNumBytes;
-    const uchar* dstEndPtr = dstPtr + dstNumBytes;
 
     while (srcPtr < srcEndPtr)
     {
@@ -61,7 +60,7 @@ RunLengthCodec::ComputeDecodedSize(const uchar* srcPtr, SizeT srcNumBytes)
     while (srcPtr < srcEndPtr)
     {
         uchar num = *srcPtr++;
-        uchar val = *srcPtr++;
+        srcPtr++;
         decodedSize += num;
     }
     return decodedSize;

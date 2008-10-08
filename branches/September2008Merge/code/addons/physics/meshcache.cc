@@ -7,7 +7,7 @@
 
 namespace Physics
 {
-ImplementClass(Physics::MeshCache, 'MSHC', Core::RefCounted);
+__ImplementClass(Physics::MeshCache, 'MSHC', Core::RefCounted);
 MeshCache* MeshCache::Singleton = 0;
 
 //------------------------------------------------------------------------------

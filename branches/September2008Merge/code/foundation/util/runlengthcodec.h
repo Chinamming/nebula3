@@ -1,9 +1,7 @@
 #pragma once
-#ifndef UTIL_RUNLENGTHCODEC_H
-#define UTIL_RUNLENGTHCODEC_H
 //------------------------------------------------------------------------------
 /** 
-    @class Util::RunLengthEncoder
+    @class Util::RunLengthCodec
     
     A simple byte-based runlength encoder/decoder. Note that the encoded
     size may actually be bigger then the original size for random data!
@@ -30,4 +28,3 @@ public:
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif    

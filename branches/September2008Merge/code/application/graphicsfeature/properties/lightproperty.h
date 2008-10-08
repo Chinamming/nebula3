@@ -2,7 +2,7 @@
 #define PROPERTIES_LIGHTPROPERTY_H
 //------------------------------------------------------------------------------
 /**
-    @class GraphicsFeature::LightProperty
+    @class Properties::LightProperty
 
     A light property adds a light source object (Graphics::LightEntity) 
     to a game entity.
@@ -34,7 +34,7 @@ namespace GraphicsFeature
 {
 class LightProperty : public Game::Property
 {
-	DeclareClass(LightProperty);
+	__DeclareClass(LightProperty);
 public:
     /// constructor
     LightProperty();
@@ -64,7 +64,7 @@ private:
     Ptr<Graphics::AbstractLightEntity> lightEntity;
     LightFlickerUtil lightFlickerUtil;
 };
-RegisterClass(LightProperty);
+__RegisterClass(LightProperty);
 
 }; // namespace GraphicsFeature
 //------------------------------------------------------------------------------

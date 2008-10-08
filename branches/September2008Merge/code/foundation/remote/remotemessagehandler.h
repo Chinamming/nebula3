@@ -21,7 +21,7 @@ namespace Remote
 {
 class RemoteMessageHandler : public Messaging::Handler
 {
-    DeclareClass(RemoteMessageHandler);
+    __DeclareClass(RemoteMessageHandler);
 public:
     /// constructor
     RemoteMessageHandler();

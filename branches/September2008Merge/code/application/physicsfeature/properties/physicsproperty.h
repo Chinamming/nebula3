@@ -25,7 +25,7 @@ namespace PhysicsFeature
 {
 class PhysicsProperty : public BaseGameFeature::TransformableProperty
 {
-	DeclareClass(PhysicsProperty);
+	__DeclareClass(PhysicsProperty);
 public:
     /// constructor
     PhysicsProperty();
@@ -49,7 +49,7 @@ public:
     /// called after movement has happened
     virtual void OnMoveAfter();
     /// get a pointer to the physics entity
-    virtual Physics::PhysicsEntity* GetPhysicsEntity() const;
+    virtual Ptr<Physics::PhysicsEntity> GetPhysicsEntity() const;
 
     /// enable/disable physics
     void SetEnabled(bool enabled);
@@ -65,11 +65,11 @@ protected:
     /// apply a global impulse vector at the next time step at a global position
     void ApplyImpulseAtPos(const Math::vector& impulse, const Math::vector& pos, bool multByMass = false);
 
-private:
     bool enabled;
+
     Ptr<Physics::PhysicsEntity> physicsEntity;
 };
-RegisterClass(PhysicsProperty);
+__RegisterClass(PhysicsProperty);
 
 //------------------------------------------------------------------------------
 /**

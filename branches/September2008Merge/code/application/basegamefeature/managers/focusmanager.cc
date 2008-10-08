@@ -12,8 +12,8 @@
 
 namespace BaseGameFeature
 {
-ImplementClass(FocusManager, 'MFOC', Game::Manager);
-ImplementSingleton(FocusManager);
+__ImplementClass(FocusManager, 'MFOC', Game::Manager);
+__ImplementSingleton(FocusManager);
 
 using namespace Game;
 using namespace GraphicsFeature;
@@ -23,7 +23,7 @@ using namespace GraphicsFeature;
 */
 FocusManager::FocusManager()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ FocusManager::~FocusManager()
     n_assert(!this->cameraFocusEntity.isvalid());
     n_assert(!this->newInputFocusEntity.isvalid());
     n_assert(!this->newCameraFocusEntity.isvalid());
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

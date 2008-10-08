@@ -23,6 +23,7 @@
 */
 #include "game/featureunit.h"
 #include "physics/physicsserver.h"
+#include "debug/debugtimer.h"
 
 //------------------------------------------------------------------------------
 namespace PhysicsFeature
@@ -30,8 +31,8 @@ namespace PhysicsFeature
 
 class PhysicsFeatureUnit : public Game::FeatureUnit    
 {
-    DeclareClass(PhysicsFeatureUnit);
-    DeclareSingleton(PhysicsFeatureUnit);   
+    __DeclareClass(PhysicsFeatureUnit);
+    __DeclareSingleton(PhysicsFeatureUnit);   
 
 public:
 
@@ -61,6 +62,7 @@ public:
 
 protected:
     Ptr<Physics::PhysicsServer> physicsServer;
+    _declare_timer(PhysicsFeatureUpdatePhysics);
 };
 
 }; // namespace PhysicsFeature

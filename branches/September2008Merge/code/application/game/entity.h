@@ -46,7 +46,7 @@ namespace Game
 
 class Entity : public Core::RefCounted
 {
-	DeclareClass(Entity);
+	__DeclareClass(Entity);
 public:
     /// an Id type, used to identify entities
     typedef unsigned int EntityId;

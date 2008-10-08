@@ -25,7 +25,7 @@ struct nAnimation::Group::AnimHotspotInfo;
 
 class nCharacter2 : public Core::RefCounted
 {
-    DeclareClass(nCharacter2);
+    __DeclareClass(nCharacter2);
 public:
     static const int animFramesPerSecond;
     

@@ -9,8 +9,8 @@
 
 namespace Remote
 {
-ImplementClass(Remote::RemoteControlProxy, 'RECP', Core::RefCounted);
-ImplementSingleton(Remote::RemoteControlProxy);
+__ImplementClass(Remote::RemoteControlProxy, 'RECP', Core::RefCounted);
+__ImplementSingleton(Remote::RemoteControlProxy);
 
 //------------------------------------------------------------------------------
 /**
@@ -18,7 +18,7 @@ ImplementSingleton(Remote::RemoteControlProxy);
 RemoteControlProxy::RemoteControlProxy() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ RemoteControlProxy::RemoteControlProxy() :
 RemoteControlProxy::~RemoteControlProxy()
 {
     n_assert(!this->isOpen);
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

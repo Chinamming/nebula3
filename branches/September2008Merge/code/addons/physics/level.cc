@@ -11,12 +11,12 @@
 #include "physics/rigidbody.h"
 #include "input/inputserver.h"
 #include "core/factory.h"
-//#include "misc/nwatched.h"
-//#include "audio/server.h"
 
 namespace Physics
 {
-ImplementClass(Physics::Level, 'PLEV', Core::RefCounted);
+__ImplementClass(Physics::Level, 'PLEV', Core::RefCounted);
+
+using namespace Math;
 
 //------------------------------------------------------------------------------
 /**
@@ -330,6 +330,8 @@ Level::OdeNearCallback(void* data, dGeomID o1, dGeomID o2)
     n_assert(shape1 && shape2);
     n_assert(!((shape1->GetType() == Shape::Mesh) && (shape2->GetType() == Shape::Mesh)));
 
+    shape1->ClearContactPoints();
+    shape2->ClearContactPoints();
     //Server* server = Physics::PhysicsServer::Instance();
     //level->statsNumCollideCalled++;
 
@@ -363,12 +365,48 @@ Level::OdeNearCallback(void* data, dGeomID o1, dGeomID o2)
         {
             return;
         }
+        Util::Array<ContactPoint> contactPoints1;
+        Util::Array<ContactPoint> contactPoints2;
+        contactPoints1.Reserve(numColls);
+        contactPoints2.Reserve(numColls);
+        Math::vector contactPos;
+        Math::vector contactNormal;
         for (i = 0; i < numColls; i++)
         {  
             // create a contact for each collision
             dJointID jointId = dJointCreateContact(level->odeWorldId, level->contactJointGroup, &(contact[i]));
             dJointAttach(jointId, body1, body2);
+            ContactPoint contactPoint;
+            contactPos.set(contact[i].geom.pos[0], contact[i].geom.pos[1], contact[i].geom.pos[2]);
+            contactNormal.set(contact[i].geom.normal[0], contact[i].geom.normal[1], contact[i].geom.normal[2]);
+            contactPoint.SetPosition(contactPos);
+            contactPoint.SetUpVector(contactNormal);
+            PhysicsEntity* entity = shape2->GetEntity();
+            if (entity)
+            {
+                contactPoint.SetEntityId(entity->GetUniqueId());            
+            }
+            RigidBody* rigidBody = shape2->GetRigidBody();
+            if (rigidBody)
+            {
+                contactPoint.SetRigidBodyId(rigidBody->GetUniqueId());
+            }
+            contactPoints1.Append(contactPoint);
+
+            entity = shape1->GetEntity();
+            if (entity)
+            {
+                contactPoint.SetEntityId(entity->GetUniqueId());            
+            }
+            rigidBody = shape1->GetRigidBody();
+            if (rigidBody)
+            {
+                contactPoint.SetRigidBodyId(rigidBody->GetUniqueId());
+            }
+            contactPoints2.Append(contactPoint);
         }
+        shape1->SetContactPoints(contactPoints1);
+        shape2->SetContactPoints(contactPoints2);
     }
 
     // generate collide sounds

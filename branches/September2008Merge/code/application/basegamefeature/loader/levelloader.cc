@@ -36,7 +36,10 @@ LevelLoader::Load(const Util::String& levelName)
     //loaderServer->SetProgressText("Query Database...");
     //loaderServer->UpdateProgressDisplay();
 
-    GraphicsFeature::GraphicsFeatureUnit::Instance()->SetupDefaultGraphicsWorld();
+    if (GraphicsFeature::GraphicsFeatureUnit::HasInstance())
+    {
+        GraphicsFeature::GraphicsFeatureUnit::Instance()->SetupDefaultGraphicsWorld();
+    }    
     
     // query level instance attributes from database
     Ptr<Db::Reader> dbReader = Db::Reader::Create();

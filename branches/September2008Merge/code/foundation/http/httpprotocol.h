@@ -13,7 +13,7 @@ namespace Http
 //------------------------------------------------------------------------------
 class AttachRequestHandler : public Messaging::Message
 {
-    DeclareClass(AttachRequestHandler);
+    __DeclareClass(AttachRequestHandler);
     DeclareMsgId;
 public:
     AttachRequestHandler() 
@@ -34,7 +34,7 @@ private:
 //------------------------------------------------------------------------------
 class RemoveRequestHandler : public Messaging::Message
 {
-    DeclareClass(RemoveRequestHandler);
+    __DeclareClass(RemoveRequestHandler);
     DeclareMsgId;
 public:
     RemoveRequestHandler() 

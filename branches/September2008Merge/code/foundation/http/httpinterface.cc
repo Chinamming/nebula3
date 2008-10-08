@@ -8,15 +8,16 @@
 
 namespace Http
 {
-ImplementClass(Http::HttpInterface, 'HTIF', Messaging::AsyncPort);
-ImplementInterfaceSingleton(Http::HttpInterface);
+__ImplementClass(Http::HttpInterface, 'HTIF', Messaging::AsyncPort);
+__ImplementInterfaceSingleton(Http::HttpInterface);
 
 //------------------------------------------------------------------------------
 /**
 */
 HttpInterface::HttpInterface()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
+    this->SetThreadCpuCoreId(System::Cpu::MiscThreadCore);
 }
 
 //------------------------------------------------------------------------------
@@ -24,7 +25,7 @@ HttpInterface::HttpInterface()
 */
 HttpInterface::~HttpInterface()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -33,8 +34,8 @@ HttpInterface::~HttpInterface()
 void
 HttpInterface::Open()
 {
-    this->SetWaitForMessages(false);
-    this->SetName("HttpInterface");
+    this->SetBehaviour(DoNotWait);
+    this->SetName("HttpInterface Thread");
     AsyncPort::Open();
 }
 

@@ -16,7 +16,7 @@ namespace Attr
 
 namespace Db
 {
-ImplementClass(Db::Database, 'DBAS', Core::RefCounted);
+__ImplementClass(Db::Database, 'DBAS', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

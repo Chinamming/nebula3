@@ -16,15 +16,16 @@
 #include "game/entity.h"
 #include "basegameattr/basegameattributes.h"
 #include "basegameprotocol.h"
-#include "graphicsprotocol.h"
+#include "debugrender/debugrender.h"
 
 namespace GraphicsFeature
 {
-ImplementClass(GraphicsFeature::GraphicsProperty, 'GFXP', Game::Property);
+__ImplementClass(GraphicsFeature::GraphicsProperty, 'GFXP', Game::Property);
 
 using namespace Graphics;
 using namespace Game;
 using namespace Math;
+using namespace Util;
 using namespace BaseGameFeature;
 
 //------------------------------------------------------------------------------
@@ -90,6 +91,29 @@ GraphicsProperty::OnDeactivate()
 
 //------------------------------------------------------------------------------
 /**    
+*/
+void
+GraphicsProperty::SetupCallbacks()
+{    
+    this->entity->RegisterPropertyCallback(this, RenderDebug);
+}
+
+//------------------------------------------------------------------------------
+/**    
+*/
+void
+GraphicsProperty::OnRenderDebug()
+{    
+    String category(this->entity->GetCategory());
+    String guidTxt(this->entity->GetGuid(Attr::Guid).AsString());
+    category.Append(": ");
+    category.Append(guidTxt);
+    Math::point pos = this->GetEntity()->GetMatrix44(Attr::Transform).get_position();
+    _debug_text3D(category, pos, float4(0.5,1.0,0.5,1));
+}
+
+//------------------------------------------------------------------------------
+/**    
     Setup the graphics entities. You may override this method in a subclass
     if different setup is needed.
 */
@@ -132,6 +156,9 @@ GraphicsProperty::SetupAcceptedMessages()
     this->RegisterMessage(BaseGameFeature::UpdateTransform::Id);
     this->RegisterMessage(GraphicsFeature::SetVisibleMsg::Id);
     this->RegisterMessage(GraphicsFeature::GetGraphicsEntities::Id);
+    this->RegisterMessage(GraphicsFeature::SetOverwriteColor::Id);
+    this->RegisterMessage(GraphicsFeature::SetShaderVariable::Id);
+
     Property::SetupAcceptedMessages();
 }
 
@@ -154,9 +181,45 @@ GraphicsProperty::HandleMessage(const Ptr<Messaging::Message>& msg)
     {
         (msg.cast<GetGraphicsEntities>())->SetEntities(this->graphicsEntities);
     }
+    else if (msg->CheckId(GraphicsFeature::SetOverwriteColor::Id))
+    {
+        this->OnSetOverwriteColor(msg.cast<SetOverwriteColor>());
+    }
+    else if (msg->CheckId(GraphicsFeature::SetShaderVariable::Id))
+    {
+        this->OnSetShaderVariable(msg.cast<SetShaderVariable>());
+    }
     else
     {
         Property::HandleMessage(msg);
+    }
+}
+    
+//------------------------------------------------------------------------------
+/**    
+*/
+void
+GraphicsProperty::OnSetOverwriteColor(const Ptr<SetOverwriteColor>& msg)
+{
+    n_assert(this->graphicsEntities.Size() > 0);    
+    IndexT i;
+    for (i = 0; i < this->graphicsEntities.Size(); i++)
+    {
+        this->graphicsEntities[i]->SetShaderVariable(msg->GetNodeName(), "MaterialColor", Util::Variant(msg->GetColor()));
+    }
+}
+
+//------------------------------------------------------------------------------
+/**    
+*/
+void
+GraphicsProperty::OnSetShaderVariable(const Ptr<SetShaderVariable>& msg)
+{
+    n_assert(this->graphicsEntities.Size() > 0);    
+    IndexT i;
+    for (i = 0; i < this->graphicsEntities.Size(); i++)
+    {
+        this->graphicsEntities[i]->SetShaderVariable(msg->GetNodeName(), msg->GetShaderVarName(), msg->GetValue());
     }
 }
 

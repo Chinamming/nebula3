@@ -11,7 +11,7 @@ using namespace Math;
 
 namespace Physics
 {
-ImplementClass(Physics::PhysicsMesh, 'PMSH', Core::RefCounted);
+__ImplementClass(Physics::PhysicsMesh, 'PMSH', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**
@@ -108,14 +108,17 @@ PhysicsMesh::Load()
 void
 PhysicsMesh::Unload()
 {
-    n_assert(this->isLoaded);
-    n_assert(0 != this->vertexData);
-    n_assert(0 != this->indexData);
-    Memory::Free(Memory::ResourceHeap, this->vertexData);
-    this->vertexData = 0;
-    Memory::Free(Memory::ResourceHeap, this->indexData);
-    this->indexData = 0;
-    this->isLoaded = false;
+    if (this->GetRefCount() == 1)
+    {
+        n_assert(this->isLoaded);
+        n_assert(0 != this->vertexData);
+        n_assert(0 != this->indexData);
+        Memory::Free(Memory::ResourceHeap, this->vertexData);
+        this->vertexData = 0;
+        Memory::Free(Memory::ResourceHeap, this->indexData);
+        this->indexData = 0;
+        this->isLoaded = false;
+    }
 }
 
 //------------------------------------------------------------------------------

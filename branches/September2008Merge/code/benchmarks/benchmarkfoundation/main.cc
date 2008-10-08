@@ -31,8 +31,8 @@ main()
 //    runner->AttachBenchmark(Matrix44Inverse::Create());
 //    runner->AttachBenchmark(Float4Math::Create());
     runner->AttachBenchmark(CreateObjects::Create());
-//    runner->AttachBenchmark(CreateObjectsByFourCC::Create());
-//    runner->AttachBenchmark(CreateObjectsByClassName::Create());
+    runner->AttachBenchmark(CreateObjectsByFourCC::Create());
+    runner->AttachBenchmark(CreateObjectsByClassName::Create());
     runner->Run();
     
     // shutdown Nebula3 runtime

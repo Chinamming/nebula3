@@ -18,7 +18,7 @@ namespace Http
 {
 class SvgPageWriter : public IO::StreamWriter
 {
-    DeclareClass(SvgPageWriter);
+    __DeclareClass(SvgPageWriter);
 public:
     /// constructor
     SvgPageWriter();

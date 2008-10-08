@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_DICTIONARY_H
-#define UTIL_DICTIONARY_H
 //------------------------------------------------------------------------------
 /**
     @class Util::Dictionary
@@ -385,4 +383,3 @@ Dictionary<KEYTYPE, VALUETYPE>::KeysAsArray() const
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif

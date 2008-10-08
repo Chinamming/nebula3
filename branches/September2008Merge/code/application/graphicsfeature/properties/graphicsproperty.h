@@ -2,7 +2,7 @@
 #define PROPERTIES_GRAPHICSPROPERTY_H
 //------------------------------------------------------------------------------
 /**
-    @class GraphicsFeature::GraphicsProperty
+    @class Properties::GraphicsProperty
 
     This is the standard graphics property which adds visibility to a game 
     entity. 
@@ -17,6 +17,7 @@
 #include "game/property.h"
 #include "game/entity.h"
 #include "graphicsattr/graphicsattributes.h"
+#include "graphicsprotocol.h"
 
 //------------------------------------------------------------------------------
 namespace Graphics
@@ -28,7 +29,7 @@ namespace GraphicsFeature
 {
 class GraphicsProperty : public Game::Property
 {
-	DeclareClass(GraphicsProperty);
+	__DeclareClass(GraphicsProperty);
 public:
     /// constructor
     GraphicsProperty();
@@ -41,6 +42,8 @@ public:
     virtual void OnActivate();
     /// called from Entity::DeactivateProperties()
     virtual void OnDeactivate();
+    /// setup callbacks for this property, call by entity in OnActivate()
+    virtual void SetupCallbacks();
 
     /// override to register accepted messages
     virtual void SetupAcceptedMessages();
@@ -48,6 +51,8 @@ public:
     virtual void HandleMessage(const Ptr<Messaging::Message>& msg);   
     /// override to provide a self managed graphics resource (default is Attr::Graphics)
     virtual const Util::String& GetGraphicsResource() const;
+    /// called when game debug visualization is on
+    virtual void OnRenderDebug();
 
 protected:
     /// setup graphics entities
@@ -56,10 +61,14 @@ protected:
     virtual void UpdateTransform(const Math::matrix44& m, bool setDirectly=false);
     // shows or hides all attached graphics entities
     void SetVisible(bool visible);
+    /// on set overwrite color
+    void OnSetOverwriteColor(const Ptr<SetOverwriteColor>& msg);
+    /// set shader variable
+    void OnSetShaderVariable(const Ptr<SetShaderVariable>& msg);
 
     Util::Array<Ptr<Graphics::ModelEntity> > graphicsEntities;
 };
-RegisterClass(GraphicsProperty);
+__RegisterClass(GraphicsProperty);
 //------------------------------------------------------------------------------
 /**    
     Get the default graphics resource, which is Attr::Graphics.

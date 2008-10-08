@@ -17,7 +17,7 @@ namespace Nebula2
 {
 class ManagedAnimation : public Resources::ManagedResource
 {
-    DeclareClass(ManagedAnimation);
+    __DeclareClass(ManagedAnimation);
 public:
     /// get contained model resource
     const Ptr<nAnimation>& GetAnimation() const;

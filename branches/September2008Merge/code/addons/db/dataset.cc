@@ -9,7 +9,7 @@
 
 namespace Db
 {
-ImplementClass(Db::Dataset, 'DTST', Core::RefCounted);
+__ImplementClass(Db::Dataset, 'DTST', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

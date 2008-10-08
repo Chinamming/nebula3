@@ -41,7 +41,7 @@ namespace PhysicsFeature
 {
 class ActorPhysicsProperty : public PhysicsProperty
 {
-	DeclareClass(ActorPhysicsProperty);
+	__DeclareClass(ActorPhysicsProperty);
 public:
     /// constructor
     ActorPhysicsProperty();
@@ -67,7 +67,7 @@ public:
     virtual void OnLoseActivity();
     
     /// get a pointer to the physics entity
-    virtual Physics::PhysicsEntity* GetPhysicsEntity() const;
+    virtual Ptr<Physics::PhysicsEntity> GetPhysicsEntity() const;
     
     /// override to register accepted messages
     virtual void SetupAcceptedMessages();
@@ -112,7 +112,7 @@ protected:
     /// perform auto evade
     void AutoEvade(Math::vector& targetVec);
     /// create physics entity
-    virtual Physics::PhysicsEntity* CreatePhysicsEntity() const;
+    virtual Ptr<Physics::PhysicsEntity> CreatePhysicsEntity() const;
 
     Ptr<Physics::CharEntity> charPhysicsEntity;
 
@@ -138,7 +138,7 @@ protected:
     Math::point gotoDest;
     Util::String physicsMaterial;
 };
-RegisterClass(ActorPhysicsProperty);
+__RegisterClass(ActorPhysicsProperty);
 
 //------------------------------------------------------------------------------
 /**

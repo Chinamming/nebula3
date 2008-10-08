@@ -17,7 +17,9 @@ namespace Physics
 {
 enum CollideCategory
 {
-    Static = (1<<0),
+	None	= 0x00000000,
+	Trigger = 0x00000008,
+    Static	= (1<<0),
     Dynamic = (1<<1),
 
     All = 0xffffffff,

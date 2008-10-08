@@ -20,7 +20,7 @@ namespace Base
     
 class IOInterfaceHandlerBase : public Messaging::Handler
 {
-    DeclareClass(IOInterfaceHandlerBase);
+    __DeclareClass(IOInterfaceHandlerBase);
 public:
     /// constructor
     IOInterfaceHandlerBase();

@@ -12,7 +12,7 @@
 
 namespace Debug
 {
-ImplementClass(Debug::IoPageHandler, 'DIOP', Http::HttpRequestHandler);
+__ImplementClass(Debug::IoPageHandler, 'DIOP', Http::HttpRequestHandler);
 
 using namespace Http;
 using namespace IO;

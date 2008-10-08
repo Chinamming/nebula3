@@ -4,19 +4,31 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "appgame/gameapplication.h"
-#include "corefeature/corefeatureunit.h"
 #include "graphicsfeature/graphicsfeatureunit.h"
+#include "core/debug/corepagehandler.h"
+#include "threading/debug/threadpagehandler.h"
+#include "memory/debug/memorypagehandler.h"
+#include "io/debug/iopagehandler.h"
 
 namespace App
 {
-ImplementSingleton(App::GameApplication);
+using namespace Util;
+
+__ImplementSingleton(App::GameApplication);
+
+using namespace Util;
+using namespace Core;
+using namespace IO;
+using namespace Http;
+using namespace Interface;
+using namespace Debug;
 
 //------------------------------------------------------------------------------
 /**
 */
 GameApplication::GameApplication()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -25,7 +37,7 @@ GameApplication::GameApplication()
 GameApplication::~GameApplication()
 {
     n_assert(!this->IsOpen());
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -37,6 +49,41 @@ GameApplication::Open()
     n_assert(!this->IsOpen());
     if (Application::Open())
     {
+        // setup basic Nebula3 runtime system
+        this->coreServer = CoreServer::Create();
+        this->coreServer->SetCompanyName(Application::Instance()->GetCompanyName());
+        this->coreServer->SetAppName(Application::Instance()->GetAppName());
+        this->coreServer->Open();
+
+        // setup io subsystem
+        this->ioServer = IoServer::Create();
+        this->ioServer->RegisterStandardUriSchemes();
+        this->ioServer->SetupStandardAssigns();
+        this->ioServer->MountStandardZipArchives();
+
+        this->ioInterface = IOInterface::Create();
+        this->ioInterface->Open();
+
+        // setup http subsystem
+        this->httpInterface = Http::HttpInterface::Create();
+        this->httpInterface->Open();
+        this->httpServerProxy = Http::HttpServerProxy::Create();
+        this->httpServerProxy->Open();
+        this->httpServerProxy->AttachRequestHandler(Debug::CorePageHandler::Create());
+        this->httpServerProxy->AttachRequestHandler(Debug::ThreadPageHandler::Create());
+        this->httpServerProxy->AttachRequestHandler(Debug::MemoryPageHandler::Create());
+        this->httpServerProxy->AttachRequestHandler(Debug::IoPageHandler::Create());
+
+        // setup remote subsystem
+        this->remoteInterface = Remote::RemoteInterface::Create();
+        this->remoteInterface->Open();
+        this->remoteControlProxy = Remote::RemoteControlProxy::Create();
+        this->remoteControlProxy->Open();
+
+        // setup debug subsystem
+        this->debugInterface = DebugInterface::Create();
+        this->debugInterface->Open();
+
         // create our game server and open it
         this->gameServer = Game::GameServer::Create();
         this->gameServer->Open();
@@ -48,6 +95,9 @@ GameApplication::Open()
         this->curState.Clear();
         this->nextState.Clear();
         this->SetupStateHandlers();
+
+        // setup profiling stuff
+        _setup_timer(GameApplicationFrameTimeAll);
 
         return true;
     }
@@ -61,11 +111,34 @@ void
 GameApplication::Close()
 {
     n_assert(this->IsOpen());
-    
+
+    _discard_timer(GameApplicationFrameTimeAll);
+
     this->CleanupGameFeatures();
     this->CleanupStateHandlers();
     this->gameServer->Close();
     this->gameServer = 0;
+
+    this->debugInterface->Close();
+    this->debugInterface = 0;
+
+    this->remoteControlProxy->Close();
+    this->remoteControlProxy = 0;
+    this->remoteInterface->Close();
+    this->remoteInterface = 0;
+
+    // shutdown basic Nebula3 runtime
+    this->httpServerProxy->Close();
+    this->httpServerProxy = 0;
+    this->httpInterface->Close();
+    this->httpInterface = 0;
+        
+    this->ioInterface->Close();
+    this->ioInterface = 0;
+    this->ioServer = 0;
+
+    this->coreServer->Close();
+    this->coreServer = 0;
 
     Application::Close();
 }
@@ -118,6 +191,11 @@ GameApplication::Run()
 {
     while (this->GetCurrentState() != "Exit")
     {
+        _start_timer(GameApplicationFrameTimeAll)
+
+        this->httpServerProxy->HandlePendingRequests(); 
+        this->coreServer->Trigger();
+
         // first trigger our game server, which triggers all game features
         this->gameServer->OnFrame();
 
@@ -139,6 +217,7 @@ GameApplication::Run()
             // a normal state transition
             this->SetState(newState);
         }
+        _stop_timer(GameApplicationFrameTimeAll);
     }
 }
 
@@ -244,14 +323,10 @@ GameApplication::GetCurrentStateHandler() const
 void
 GameApplication::SetupGameFeatures()
 {
-    // create and attach core features
-    this->coreFeature = CoreFeature::CoreFeatureUnit::Create();
-    this->coreFeature->SetCmdLineArgs(this->GetCmdLineArgs());
-    this->gameServer->AttachGameFeature(this->coreFeature.upcast<Game::FeatureUnit>());
-
     // create and attach default graphic features
     this->graphicsFeature = GraphicsFeature::GraphicsFeatureUnit::Create();
     this->graphicsFeature->SetCmdLineArgs(this->GetCmdLineArgs());
+	this->graphicsFeature->SetRenderDebug(true);
     this->gameServer->AttachGameFeature(this->graphicsFeature.upcast<Game::FeatureUnit>());
 }
 
@@ -264,9 +339,6 @@ GameApplication::CleanupGameFeatures()
 {    
     this->gameServer->RemoveGameFeature(this->graphicsFeature.upcast<Game::FeatureUnit>());
     this->graphicsFeature = 0;
- 
-    this->gameServer->RemoveGameFeature(this->coreFeature.upcast<Game::FeatureUnit>());
-    this->coreFeature = 0;
 }
 
 }

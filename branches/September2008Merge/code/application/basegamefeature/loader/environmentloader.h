@@ -17,7 +17,7 @@ namespace BaseGameFeature
 {
 class EnvironmentLoader : public EntityLoaderBase
 {
-    DeclareClass(EnvironmentLoader);
+    __DeclareClass(EnvironmentLoader);
 public:
     /// load environment objects into the level
     virtual bool Load(const Util::Array<Util::String>& activeLayers);

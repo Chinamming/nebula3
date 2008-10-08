@@ -6,20 +6,24 @@
 
 namespace GraphicsFeature
 {
-    ImplementClass(GraphicsFeature::CameraDistance, 'MCAD', Messaging::Message);
+    __ImplementClass(GraphicsFeature::CameraDistance, 'MCAD', Messaging::Message);
     ImplementMsgId(CameraDistance);
-    ImplementClass(GraphicsFeature::CameraFocus, 'CAFC', Messaging::Message);
+    __ImplementClass(GraphicsFeature::CameraFocus, 'CAFC', Messaging::Message);
     ImplementMsgId(CameraFocus);
-    ImplementClass(GraphicsFeature::CameraOrbit, 'MCAO', Messaging::Message);
+    __ImplementClass(GraphicsFeature::CameraOrbit, 'MCAO', Messaging::Message);
     ImplementMsgId(CameraOrbit);
-    ImplementClass(GraphicsFeature::CameraReset, 'CARE', Messaging::Message);
+    __ImplementClass(GraphicsFeature::CameraReset, 'CARE', Messaging::Message);
     ImplementMsgId(CameraReset);
-    ImplementClass(GraphicsFeature::GetGraphicsEntities, 'GGEN', Messaging::Message);
+    __ImplementClass(GraphicsFeature::GetGraphicsEntities, 'GGEN', Messaging::Message);
     ImplementMsgId(GetGraphicsEntities);
-    ImplementClass(GraphicsFeature::InputFocus, 'INFC', Messaging::Message);
+    __ImplementClass(GraphicsFeature::InputFocus, 'INFC', Messaging::Message);
     ImplementMsgId(InputFocus);
-    ImplementClass(GraphicsFeature::SetVisibleMsg, 'MGFV', Messaging::Message);
+    __ImplementClass(GraphicsFeature::SetVisibleMsg, 'MGFV', Messaging::Message);
     ImplementMsgId(SetVisibleMsg);
+    __ImplementClass(GraphicsFeature::SetOverwriteColor, 'SEOC', Messaging::Message);
+    ImplementMsgId(SetOverwriteColor);
+    __ImplementClass(GraphicsFeature::SetShaderVariable, 'SSHV', Messaging::Message);
+    ImplementMsgId(SetShaderVariable);
 } // GraphicsFeature
 
 namespace Commands

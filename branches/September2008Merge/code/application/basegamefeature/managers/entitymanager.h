@@ -21,9 +21,7 @@
 #include "util/dictionary.h"
 #include "game/entity.h"
 #include "math/point.h"
-
-//#include "misc/nwatched.h"
-//#include "kernel/nprofiler.h"
+#include "debug/debugtimer.h"
 #include "appgame/appconfig.h"
 
 //------------------------------------------------------------------------------
@@ -31,8 +29,8 @@ namespace BaseGameFeature
 {
 class EntityManager : public Game::Manager
 {
-	DeclareClass(EntityManager);
-    DeclareSingleton(EntityManager);
+	__DeclareClass(EntityManager);
+    __DeclareSingleton(EntityManager);
 public:
     /// constructor
     EntityManager();
@@ -155,12 +153,12 @@ protected:
     Util::Dictionary<Core::Rtti*, nProfiler> entityProfilersByClass;
     #endif
 
-    //PROFILER_DECLARE(profOnBeginFrame);
-    //PROFILER_DECLARE(profOnMoveBefore);
-    //PROFILER_DECLARE(profPhysics);
-    //PROFILER_DECLARE(profOnMoveAfter);
-    //PROFILER_DECLARE(profOnRender);
-    //PROFILER_DECLARE(profUpdateRegistry);
+    // profiling stuff
+    _declare_timer(EntityManagerOnBeginFrame);
+    _declare_timer(EntityManagerOnMoveBefore);
+    _declare_timer(EntityManagerOnMoveAfter);
+    _declare_timer(EntityManagerOnRender);
+    _declare_timer(EntityManagerUpdateRegistry);
 };
 
 //------------------------------------------------------------------------------
