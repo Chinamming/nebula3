@@ -7,7 +7,7 @@
 
 namespace Remote
 {
-ImplementClass(Remote::RemoteRequest, 'RERQ', Messaging::Message);
+__ImplementClass(Remote::RemoteRequest, 'RERQ', Messaging::Message);
 ImplementMsgId(RemoteRequest);
 
 //------------------------------------------------------------------------------

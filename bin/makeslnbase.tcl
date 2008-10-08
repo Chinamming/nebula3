@@ -161,6 +161,8 @@ proc begin_config { project platform config type } {
         attr "IntermediateDirectory" ".\\$platform\\$config\\$project" 
         if {$type == "lib"} {        
             attr "ConfigurationType" "4"
+        } elseif {$type == "nidl"} {        
+            attr "ConfigurationType" "10"
         } elseif {$type == "exe"} {
             attr "ConfigurationType" "1"
         } elseif {$type == "dll"} {

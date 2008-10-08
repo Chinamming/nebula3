@@ -26,8 +26,16 @@ namespace Messaging
 {
 class AsyncPort : public Core::RefCounted
 {
-    DeclareClass(AsyncPort);
+    __DeclareClass(AsyncPort);
 public:
+    /// behaviour enum
+    enum Behaviour
+    {
+        WaitForMessage,             //> wait until message arrives
+        WaitForMessageOrTimeOut,    //> wait until message arrives, or time-out is triggered
+        DoNotWait,                  //> never wait for messages
+    };
+
     /// constructor
     AsyncPort();
     /// destructor
@@ -45,10 +53,18 @@ public:
     void SetThreadStackSize(unsigned int s);
     /// get optional thread stack size
     unsigned int GetThreadStackSize() const;
-    /// wait-for-messages or run-continously? (default is wait-for-message)
-    void SetWaitForMessages(bool b);
-    /// get wait-for-message mode
-    bool GetWaitForMessages() const;
+    /// set the thread cpu core id
+    void SetThreadCpuCoreId(System::Cpu::CoreId coreId);
+    /// get the thread cpu core id
+    System::Cpu::CoreId GetThreadCpuCoreId() const;
+    /// set the port's wait-behaviour (default is Wait)
+    void SetBehaviour(Behaviour b);
+    /// get the port's behaviour
+    Behaviour GetBehaviour() const;
+    /// set the time-out in milliseconds
+    void SetWaitTimeout(int ms);
+    /// get the time-out value
+    int GetWaitTimeout() const;
         
     /// attach a handler to the port (call before open!)
     void AttachHandler(const Ptr<Handler>& h);
@@ -83,12 +99,16 @@ private:
     /// handler thread class
     class HandlerThread : public Threading::Thread
     {
-        DeclareClass(HandlerThread);
+        __DeclareClass(HandlerThread);
     public:
         /// constructor
         HandlerThread();
-        /// set wait-for-message-mode
-        void SetWaitForMessages(bool b);
+        /// wait until handlers have been opened
+        void WaitForHandlersOpened();
+        /// set wait-for-message-behaviour
+        void SetBehaviour(Behaviour b);
+        /// set wait-timeout
+        void SetWaitTimeout(int ms);
         /// called if thread needs a wakeup call before stopping
         virtual void EmitWakeupSignal();
         /// this method runs in the thread context
@@ -106,7 +126,9 @@ private:
         /// wait for all pending messages to be handled
         void Flush();
 
-        bool waitForMessages;
+        Behaviour behaviour;
+        int waitTimeout;
+        Threading::Event handlersOpenedEvent;
         Threading::Event msgHandledEvent;
         Threading::SafeQueue<Ptr<Message> > msgQueue;
         Util::Array<Ptr<Handler> > handlers;
@@ -114,7 +136,8 @@ private:
 
     Ptr<HandlerThread> thread;
     bool isOpen;
-    bool waitForMessages;
+    Behaviour behaviour;
+    int waitTimeOut;
 };
 
 //------------------------------------------------------------------------------
@@ -184,18 +207,54 @@ AsyncPort::GetThreadStackSize() const
 /**
 */
 inline void
-AsyncPort::SetWaitForMessages(bool b)
+AsyncPort::SetThreadCpuCoreId(System::Cpu::CoreId coreId)
 {
-    this->waitForMessages = b;
+    this->thread->SetCoreId(coreId);
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-inline bool
-AsyncPort::GetWaitForMessages() const
+inline System::Cpu::CoreId
+AsyncPort::GetThreadCpuCoreId() const
 {
-    return this->waitForMessages;
+    return this->thread->GetCoreId();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+AsyncPort::SetBehaviour(Behaviour b)
+{
+    this->behaviour = b;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline AsyncPort::Behaviour
+AsyncPort::GetBehaviour() const
+{
+    return this->behaviour;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+AsyncPort::SetWaitTimeout(int ms)
+{
+    this->waitTimeOut = ms;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline int
+AsyncPort::GetWaitTimeout() const
+{
+    return this->waitTimeOut;
 }
 
 } // namespace Messaging

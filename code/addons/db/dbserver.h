@@ -18,8 +18,8 @@ namespace Db
 {
 class DbServer : public Core::RefCounted
 {
-    DeclareClass(DbServer);
-    DeclareSingleton(DbServer);
+    __DeclareClass(DbServer);
+    __DeclareSingleton(DbServer);
 public:
     /// constructor
     DbServer();

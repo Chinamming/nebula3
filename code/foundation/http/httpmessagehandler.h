@@ -21,7 +21,7 @@ namespace Http
 {
 class HttpMessageHandler : public Messaging::Handler
 {
-    DeclareClass(HttpMessageHandler);
+    __DeclareClass(HttpMessageHandler);
 public:
     /// constructor
     HttpMessageHandler();
@@ -36,6 +36,8 @@ public:
     virtual bool HandleMessage(const Ptr<Messaging::Message>& msg);
     /// do per-frame work
     virtual void DoWork();
+    /// set default tcp port of http server
+    static void SetDefaultTcpPort(ushort port);
 
 private:
     /// handle AttachRequestHandler message
@@ -43,6 +45,7 @@ private:
     /// handle RemoveRequestHandler message
     void OnRemoveRequestHandler(const Ptr<RemoveRequestHandler>& msg);
 
+    static ushort defaultTcpPort;
     Ptr<IO::Console> ioConsole;
     Ptr<HttpServer> httpServer;
 };

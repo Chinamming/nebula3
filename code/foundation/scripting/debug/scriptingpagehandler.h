@@ -16,7 +16,7 @@ namespace Debug
 {
 class ScriptingPageHandler : public Http::HttpRequestHandler
 {
-    DeclareClass(ScriptingPageHandler);
+    __DeclareClass(ScriptingPageHandler);
 public:
     /// constructor
     ScriptingPageHandler();

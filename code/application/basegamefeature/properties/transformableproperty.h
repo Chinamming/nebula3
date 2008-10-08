@@ -16,7 +16,7 @@ namespace BaseGameFeature
 {
 class TransformableProperty : public Game::Property
 {
-	DeclareClass(TransformableProperty);
+	__DeclareClass(TransformableProperty);
 public:
     /// constructor
     TransformableProperty();
@@ -31,7 +31,7 @@ public:
     /// handle a single message
     virtual void HandleMessage(const Ptr<Messaging::Message>& msg);
 };
-RegisterClass(TransformableProperty);
+__RegisterClass(TransformableProperty);
 }; // namespace Properties
 //------------------------------------------------------------------------------
 #endif

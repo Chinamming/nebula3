@@ -28,7 +28,7 @@ namespace Attr
 
 namespace PhysicsFeature
 {
-ImplementClass(PhysicsFeature::ActorPhysicsProperty, 'APHP', PhysicsProperty);
+__ImplementClass(PhysicsFeature::ActorPhysicsProperty, 'APHP', PhysicsProperty);
 
 using namespace Game;
 using namespace Messaging;
@@ -114,9 +114,9 @@ ActorPhysicsProperty::OnActivate()
     this->autoEvadeProbe = Physics::ProbeSphere::Create();
     n_assert(this->autoEvadeProbe.isvalid());
     matrix44 transform = this->GetEntity()->GetMatrix44(Attr::Transform);
-    float4 pos = transform.getpos_component();
+    float4 pos = transform.get_position();
     pos.y() += AutoEvadeProbeAboveGround + AutoEvadeProbeRadius;
-    transform.setpos_component(pos);
+    transform.set_position(pos);
 	this->autoEvadeProbe->SetTransform(transform);
 	this->autoEvadeProbe->SetPhysicsEntityToIgnore(physicsEntity);
 	this->autoEvadeProbe->SetRadius(AutoEvadeProbeRadius);
@@ -140,9 +140,9 @@ ActorPhysicsProperty::SetAutoEvadeEnable(bool b)
         this->autoEvadeProbe = Physics::ProbeSphere::Create();
         n_assert(this->autoEvadeProbe.isvalid());
         matrix44 transform = this->GetEntity()->GetMatrix44(Attr::Transform);
-        float4 pos = transform.getpos_component();
+        float4 pos = transform.get_position();
         pos.y() += AutoEvadeProbeAboveGround + AutoEvadeProbeRadius;
-        transform.setpos_component(pos);
+        transform.set_position(pos);
 	    this->autoEvadeProbe->SetTransform(transform);
 	    this->autoEvadeProbe->SetPhysicsEntityToIgnore(physicsEntity);
 	    this->autoEvadeProbe->SetRadius(AutoEvadeProbeRadius);
@@ -174,7 +174,7 @@ ActorPhysicsProperty::OnDeactivate()
 //------------------------------------------------------------------------------
 /**
 */
-Physics::PhysicsEntity* 
+Ptr<Physics::PhysicsEntity>
 ActorPhysicsProperty::CreatePhysicsEntity() const
 {
     return (Physics::PhysicsEntity*)Physics::CharEntity::Create();
@@ -190,7 +190,7 @@ ActorPhysicsProperty::EnablePhysics()
     n_assert(!this->IsEnabled());
     
     // create a char physics entity
-	this->charPhysicsEntity = (Physics::CharEntity*)CreatePhysicsEntity();
+	this->charPhysicsEntity = CreatePhysicsEntity().cast<Physics::CharEntity>();
     this->charPhysicsEntity->SetUserData(this->GetEntity()->GetUniqueId());
 
     if (physicsMaterial.IsValid())
@@ -228,13 +228,13 @@ ActorPhysicsProperty::EnablePhysics()
     // initialize feedback loops for motion smoothing
     Time time = GameTimeSource::Instance()->GetTime();
     matrix44 entityMatrix = this->GetEntity()->GetMatrix44(Attr::Transform);
-    this->smoothedPosition.Reset(time, 0.001f, this->positionGain, entityMatrix.getpos_component());
+    this->smoothedPosition.Reset(time, 0.001f, this->positionGain, entityMatrix.get_position());
 
-    polar headingAngle(entityMatrix.getz_component());
+    polar headingAngle(entityMatrix.get_zaxis());
     this->smoothedHeading.Reset(time, 0.001f, this->headingGain, headingAngle.rho);
 
     // add probe material to ground exclude set
-	Physics::CharEntity* physicsEntity = (Physics::CharEntity*) this->GetPhysicsEntity();
+	Physics::CharEntity* physicsEntity = this->GetPhysicsEntity().cast<Physics::CharEntity>();
 	n_assert(0 != physicsEntity && physicsEntity->IsA(Physics::CharEntity::RTTI));
 	physicsEntity->GetGroundExcludeSet().AddMaterialType(Physics::MaterialTable::StringToMaterialType("Probe"));
 
@@ -372,8 +372,8 @@ ActorPhysicsProperty::OnMoveAfter()
         vector physicsEntityVelocity = this->charPhysicsEntity->GetVelocity();
 
         // feed the feedback loops
-        polar headingAngles(physicsEntityTransform.getz_component());
-        this->smoothedPosition.SetGoal(physicsEntityTransform.getpos_component());   
+        polar headingAngles(physicsEntityTransform.get_zaxis());
+        this->smoothedPosition.SetGoal(physicsEntityTransform.get_position());   
         this->smoothedHeading.SetGoal(headingAngles.rho);
 
         // if current state and goal are already close to each other,
@@ -406,9 +406,9 @@ ActorPhysicsProperty::OnMoveAfter()
     {
         // update autoevadeprobe
         matrix44 transform = this->GetEntity()->GetMatrix44(Attr::Transform);
-        float4 pos = transform.getpos_component();
+        float4 pos = transform.get_position();
         pos.y() += AutoEvadeProbeAboveGround + AutoEvadeProbeRadius;
-        transform.setpos_component(pos);
+        transform.set_position(pos);
         this->autoEvadeProbe->SetTransform(transform);
     }
 }
@@ -467,7 +467,7 @@ ActorPhysicsProperty::HandleMoveDirection(MoveDirection* msg)
         Graphics::CameraEntity* camera = curView->GetCameraEntity();
         n_assert(camera);
         matrix44 camTransform = camera->GetTransform();
-        camTransform.setpos_component(float4(0.0f, 0.0f, 0.0f, 1.0f));
+        camTransform.set_position(float4(0.0f, 0.0f, 0.0f, 1.0f));
         dir = vector::transform(dir, camTransform);
     }
     dir.y() = 0.0f;
@@ -497,7 +497,7 @@ ActorPhysicsProperty::HandleMoveTurn(MoveTurn* msg)
         Graphics::CameraEntity* camera = curView->GetCameraEntity();
         n_assert(camera);
         matrix44 camTransform = camera->GetTransform();
-        camTransform.setpos_component(float4(0.0f, 0.0f, 0.0f, 1.0f));
+        camTransform.set_position(float4(0.0f, 0.0f, 0.0f, 1.0f));
         dir = vector::transform(dir, camTransform);
     }
     dir.y() = 0.0f;
@@ -534,7 +534,7 @@ ActorPhysicsProperty::HandleMoveGoto(MoveGoto* msg)
     this->Stop();
 
     //make a navigation path from current to target position
-    const point& from = this->GetEntity()->GetMatrix44(Attr::Transform).getpos_component();
+    const point& from = this->GetEntity()->GetMatrix44(Attr::Transform).get_position();
     const point& to = msg->GetPosition();
     this->gotoDest = msg->GetPosition();
 
@@ -580,8 +580,8 @@ ActorPhysicsProperty::HandleSetTransform(SetTransform* msg)
 
     // reset the feedback loops 
     Time time = GameTimeSource::Instance()->GetTime();
-    this->smoothedPosition.Reset(time, 0.001f, this->positionGain, msg->GetMatrix().getpos_component());
-    polar headingAngle(msg->GetMatrix().getz_component());
+    this->smoothedPosition.Reset(time, 0.001f, this->positionGain, msg->GetMatrix().get_position());
+    polar headingAngle(msg->GetMatrix().get_zaxis());
     this->smoothedHeading.Reset(time, 0.001f, this->headingGain, headingAngle.rho);
 }
 
@@ -858,7 +858,7 @@ ActorPhysicsProperty::ContinueGoto()
 
     //const Array<point>& gotoSegments = this->gotoPath->GetPoints();
 
-    point curPos = this->GetEntity()->GetMatrix44(Attr::Transform).getpos_component();
+    point curPos = this->GetEntity()->GetMatrix44(Attr::Transform).get_position();
     point curSegment = this->gotoDest;
 
     //FIXME: create a unsubstantial Array only for testing
@@ -987,10 +987,10 @@ ActorPhysicsProperty::ContinueFollow()
 //------------------------------------------------------------------------------
 /**
 */
-Physics::PhysicsEntity*
+Ptr<Physics::PhysicsEntity>
 ActorPhysicsProperty::GetPhysicsEntity() const
 {
-    return this->charPhysicsEntity;
+	return this->charPhysicsEntity.cast<Physics::PhysicsEntity>();
 }
 
 //------------------------------------------------------------------------------

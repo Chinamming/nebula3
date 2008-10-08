@@ -17,8 +17,8 @@ namespace Scripting
 {
 class LuaServer : public ScriptServer
 {
-    DeclareClass(LuaServer);
-    DeclareSingleton(LuaServer);
+    __DeclareClass(LuaServer);
+    __DeclareSingleton(LuaServer);
 public:
     /// constructor
     LuaServer();

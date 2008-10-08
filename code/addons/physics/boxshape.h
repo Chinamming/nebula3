@@ -16,7 +16,7 @@ namespace Physics
 {
 class BoxShape : public Shape
 {
-	DeclareClass(BoxShape);
+	__DeclareClass(BoxShape);
 public:
     /// constructor
     BoxShape();

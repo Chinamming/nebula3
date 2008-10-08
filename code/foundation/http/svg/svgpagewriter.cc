@@ -7,7 +7,7 @@
 
 namespace Http
 {
-ImplementClass(Http::SvgPageWriter, 'SVGW', IO::StreamWriter);
+__ImplementClass(Http::SvgPageWriter, 'SVGW', IO::StreamWriter);
 
 using namespace Util;
 using namespace IO;

@@ -7,7 +7,7 @@
 
 namespace Base
 {
-ImplementClass(Base::CharacterRendererBase, 'CHRB', Core::RefCounted);
+__ImplementClass(Base::CharacterRendererBase, 'CHRB', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

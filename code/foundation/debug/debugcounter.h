@@ -43,7 +43,7 @@ namespace Debug
 {
 class DebugCounter : public Core::RefCounted
 {
-    DeclareClass(DebugCounter);
+    __DeclareClass(DebugCounter);
 public:
     /// constructor
     DebugCounter();

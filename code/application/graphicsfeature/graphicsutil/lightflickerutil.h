@@ -3,7 +3,7 @@
 #define UTIL_LIGHTFLICKERUTIL_H
 //------------------------------------------------------------------------------
 /**
-    @class Util::LightFlickerUtil
+    @class GraphicsFeature::LightFlickerUtil
   
     Manipulate a light entity with position and intensity flickering.
     

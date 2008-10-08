@@ -7,7 +7,7 @@
 
 namespace Db
 {
-ImplementClass(Db::ValueTable, 'VALT', Attr::AttributeTable);
+__ImplementClass(Db::ValueTable, 'VALT', Attr::AttributeTable);
 
 //------------------------------------------------------------------------------
 /**

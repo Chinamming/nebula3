@@ -11,7 +11,7 @@
 
 namespace Benchmarking
 {
-ImplementClass(Benchmarking::DatabaseQuery, 'DBQR', Benchmarking::Benchmark);
+__ImplementClass(Benchmarking::DatabaseQuery, 'DBQR', Benchmarking::Benchmark);
 
 using namespace IO;
 using namespace Db;

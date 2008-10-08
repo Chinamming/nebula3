@@ -12,17 +12,21 @@
 #include "graphicsutil/segmentedgfxutil.h"
 #include "graphics/stage.h"
 #include "basegameprotocol.h"
+#include "game/gameserver.h"
+#include "graphicsfeature/graphicsfeatureunit.h"
 
 #if __USE_PHYSICS__
 #include "physics/collideshapeloader.h"
+#include "physicsfeature/physicsfeatureunit.h"
 #endif    
 
 namespace BaseGameFeature
 {
-ImplementClass(EnvEntityManager, 'MENV', Game::Manager);
-ImplementSingleton(EnvEntityManager);
+__ImplementClass(EnvEntityManager, 'MENV', Game::Manager);
+__ImplementSingleton(EnvEntityManager);
 
 using namespace GraphicsFeature;
+using namespace PhysicsFeature;
 using namespace Util;
 using namespace Math;
 using namespace Game;
@@ -32,7 +36,7 @@ using namespace Game;
 */
 EnvEntityManager::EnvEntityManager()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -40,7 +44,7 @@ EnvEntityManager::EnvEntityManager()
 */
 EnvEntityManager::~EnvEntityManager()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -90,8 +94,11 @@ EnvEntityManager::ValidateEnvEntity()
         this->envEntity->SetAttrTableRowIndex(dummyEntry.RowIndex());
         
         // create properties
-        this->envGraphicsProperty = EnvironmentGraphicsProperty::Create();
-        this->envEntity->AttachProperty(this->envGraphicsProperty.upcast<Game::Property>());
+        if (GraphicsFeatureUnit::HasInstance())
+        {
+            this->envGraphicsProperty = EnvironmentGraphicsProperty::Create();
+            this->envEntity->AttachProperty(this->envGraphicsProperty.upcast<Game::Property>());
+        }        
     #if __USE_PHYSICS__
         this->envCollideProperty = PhysicsFeature::EnvironmentCollideProperty::Create();
         this->envEntity->AttachProperty(this->envCollideProperty.upcast<Game::Property>());
@@ -169,7 +176,7 @@ EnvEntityManager::CreateEnvEntity(const Ptr<Db::ValueTable>& instTable, IndexT i
 #endif
 
     // create graphics entities (if not already created as a game entity)
-    if (!createdAsGameEntity)
+    if (!createdAsGameEntity && this->envGraphicsProperty.isvalid())
     {
         // create graphics entity(s) and attach to graphics property 
         Util::Array<Ptr<Graphics::ModelEntity> > gfxEntities = segGfxUtil.CreateAndSetupGraphicsEntities(resName, worldMatrix, false);
@@ -227,11 +234,18 @@ EnvEntityManager::CreatePhysicsEntity(const Ptr<Db::ValueTable>& instTable, Inde
     gameEntity->SetAttrTableRowIndex(instTableRowIndex);
 
     // attach required properties (NOTE: the order of attachment is
-    // important in this case)
-    Ptr<Property> physicsProperty  = factory->CreateProperty("PhysicsFeature::PhysicsProperty");
-    Ptr<Property> graphicsProperty = factory->CreateProperty("GraphicsFeature::GraphicsProperty");
-    gameEntity->AttachProperty(physicsProperty);
-    gameEntity->AttachProperty(graphicsProperty);
+    // important in this case)    
+    if (PhysicsFeatureUnit::HasInstance())
+    {
+        Ptr<Property> physicsProperty  = factory->CreateProperty("PhysicsFeature::PhysicsProperty");
+        gameEntity->AttachProperty(physicsProperty);
+    }
+    
+    if (GraphicsFeatureUnit::HasInstance())
+    {
+        Ptr<Property> graphicsProperty = factory->CreateProperty("GraphicsFeature::GraphicsProperty");    
+        gameEntity->AttachProperty(graphicsProperty);
+    }
 
     // attach game entity to world
     EntityManager::Instance()->AttachEntity(gameEntity);

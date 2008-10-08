@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_HASHTABLE_H
-#define UTIL_HASHTABLE_H
 //------------------------------------------------------------------------------
 /**
     @class Util::HashTable
@@ -285,4 +283,3 @@ HashTable<KEYTYPE, VALUETYPE>::Content() const
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif

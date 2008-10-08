@@ -8,7 +8,7 @@
 
 namespace Debug
 {
-ImplementClass(Debug::DebugTimer, 'DBGT', Core::RefCounted);
+__ImplementClass(Debug::DebugTimer, 'DBGT', Core::RefCounted);
 
 using namespace Util;
 

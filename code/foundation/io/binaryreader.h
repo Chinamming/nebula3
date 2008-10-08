@@ -25,7 +25,7 @@ namespace IO
 {
 class BinaryReader : public StreamReader
 {
-    DeclareClass(BinaryReader);
+    __DeclareClass(BinaryReader);
 public:
     /// constructor
     BinaryReader();
@@ -71,6 +71,8 @@ public:
     Util::Blob ReadBlob();
     /// read a guid
     Util::Guid ReadGuid();
+    /// read raw data
+    void ReadRawData(void* ptr, SizeT numBytes);
 
 public:
     bool enableMapping;

@@ -7,7 +7,7 @@
 
 namespace Http
 {
-ImplementClass(Http::HtmlPageWriter, 'HMPW', IO::StreamWriter);
+__ImplementClass(Http::HtmlPageWriter, 'HMPW', IO::StreamWriter);
 
 using namespace Util;
 using namespace IO;

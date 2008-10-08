@@ -979,7 +979,29 @@ ThreadData *sqlite3Nebula3ThreadSpecificData(int allocateFlag){
     TSD_COUNTER_DECR;
     pTsd = 0;
   }
-  #endif
+ #else   
+  static int key = 1;  // index 0 is already used for thread local singletons
+  static const ThreadData zeroData = {0};
+        
+  pTsd = (ThreadData*) OSGetThreadSpecific(key);
+  
+  if( allocateFlag>0 ){
+    if( !pTsd ){
+      pTsd = (ThreadData*)Memory::Alloc( sizeof(zeroData) );
+      if( pTsd ){
+        *pTsd = zeroData;
+        OSSetThreadSpecific(key, pTsd);
+        TSD_COUNTER_INCR;
+      }
+    }
+  }else if( pTsd!=0 && allocateFlag<0 
+              && memcmp(pTsd, &zeroData, sizeof(ThreadData))==0 ){
+    sqlite3OsFree(pTsd);
+    OSSetThreadSpecific(key, 0);
+    TSD_COUNTER_DECR;
+    pTsd = 0;
+  }  
+ #endif
   return pTsd;
 }
 

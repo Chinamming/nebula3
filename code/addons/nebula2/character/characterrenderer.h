@@ -15,27 +15,13 @@
 
     (C) 2008 Radon Labs GmbH
 */    
-#if __WIN32__
-#include "nebula2/character/d3d9/d3d9characterrenderer.h"
+#if (__WIN32__ || __XBOX360__)
+#include "nebula2/character/win360/d3d9characterrenderer.h"
 namespace Char
 {
-class CharacterRenderer : public Direct3D9::D3D9CharacterRenderer
+class CharacterRenderer : public Win360::D3D9CharacterRenderer
 {
-    DeclareClass(CharacterRenderer);
-public:
-    /// constructor
-    CharacterRenderer();
-    /// destructor
-    virtual ~CharacterRenderer();
-};
-} // namespace Char
-#elif __XBOX360__
-#include "nebula2/character/xbox360/xbox360characterrenderer.h"
-namespace Char
-{
-class CharacterRenderer : public Xbox360::Xbox360CharacterRenderer
-{
-    DeclareClass(CharacterRenderer);
+    __DeclareClass(CharacterRenderer);
 public:
     /// constructor
     CharacterRenderer();
@@ -49,7 +35,7 @@ namespace Char
 {
 class CharacterRenderer : public Wii::WiiCharacterRenderer
 {
-    DeclareClass(CharacterRenderer);
+    __DeclareClass(CharacterRenderer);
 public:
     /// constructor
     CharacterRenderer();

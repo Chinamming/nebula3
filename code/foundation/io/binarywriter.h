@@ -22,7 +22,7 @@ namespace IO
 {
 class BinaryWriter : public StreamWriter
 {
-    DeclareClass(BinaryWriter);
+    __DeclareClass(BinaryWriter);
 public:
     /// constructor
     BinaryWriter();
@@ -68,6 +68,8 @@ public:
     void WriteBlob(const Util::Blob& blob);
     /// write a guid
     void WriteGuid(const Util::Guid& guid);
+    /// write raw data
+    void WriteRawData(const void* ptr, SizeT numBytes);
 
 public:
     bool enableMapping;

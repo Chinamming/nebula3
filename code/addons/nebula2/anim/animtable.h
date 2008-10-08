@@ -22,8 +22,8 @@ class CharEntity;
 
 class AnimTable : public Core::RefCounted
 {
-	DeclareClass(AnimTable);
-    DeclareSingleton(AnimTable);
+	__DeclareClass(AnimTable);
+    __DeclareSingleton(AnimTable);
 public:
     /// constructor
     AnimTable();

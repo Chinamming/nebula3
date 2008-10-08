@@ -232,9 +232,9 @@ bbox::extend(const bbox& box)
 inline void
 bbox::transform(const matrix44& m)
 {
-    static Math::point temp;
-    static Math::point minP(0, 0, 0);
-    static Math::point maxP(0, 0, 0);        
+    Math::point temp;
+    Math::point minP(1000000, 1000000,1000000);
+    Math::point maxP(-1000000, -1000000, -1000000);        
     IndexT i; 
         
     for(i = 0; i < 8; ++i)

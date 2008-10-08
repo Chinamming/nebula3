@@ -17,7 +17,7 @@ namespace Remote
 {
 class RemoteResponseWriter : public IO::StreamWriter
 {
-    DeclareClass(RemoteResponseWriter);
+    __DeclareClass(RemoteResponseWriter);
 public:
     /// set status code
     void SetStatusCode(RemoteStatus::Code statusCode);

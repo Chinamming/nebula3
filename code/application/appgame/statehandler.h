@@ -22,7 +22,7 @@ namespace App
 {
 class StateHandler : public Core::RefCounted
 {
-    DeclareClass(StateHandler);
+    __DeclareClass(StateHandler);
 public:
     /// constructor
     StateHandler();

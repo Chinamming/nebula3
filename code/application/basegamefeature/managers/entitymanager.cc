@@ -13,11 +13,12 @@
 
 namespace BaseGameFeature
 {
-ImplementClass(EntityManager, 'MENT', Game::Manager);
-ImplementSingleton(EntityManager);
+__ImplementClass(EntityManager, 'MENT', Game::Manager);
+__ImplementSingleton(EntityManager);
 
 using namespace Game;
 using namespace Attr;
+using namespace Math;
 
 //------------------------------------------------------------------------------
 /**
@@ -31,13 +32,12 @@ EntityManager::EntityManager() :
     maxTriggerDistance(100.0f),
     activeEntitiesLocked(false)
 {
-    ConstructSingleton;/*
-    PROFILER_INIT(this->profOnBeginFrame, Util::String("profManga.Frame.Game.OnFrame." + this->GetRtti()->GetName() + ".OnFrame.Entities.OnBeginFrame").Get());
-    PROFILER_INIT(this->profOnMoveBefore, Util::String("profManga.Frame.Game.OnFrame." + this->GetRtti()->GetName() + ".OnFrame.Entities.OnMoveBefore").Get());
-    PROFILER_INIT(this->profPhysics, Util::String("profManga.Frame.Game.OnFrame." + this->GetRtti()->GetName() + ".OnFrame.Physics.Trigger").Get());
-    PROFILER_INIT(this->profOnMoveAfter, Util::String("profManga.Frame.Game.OnFrame." + this->GetRtti()->GetName() + ".OnFrame.Entities.OnMoveAfter").Get());
-    PROFILER_INIT(this->profOnRender,Util::String("profManga.Frame.Game.OnFrame." + this->GetRtti()->GetName() + ".OnFrame.Entities.OnRender").Get());
-    PROFILER_INIT(this->profUpdateRegistry, Util::String("profManga.Frame.Game.OnFrame." + this->GetRtti()->GetName() + ".OnFrame.UpdateRegistry").Get());*/
+    __ConstructSingleton;
+    _setup_timer(EntityManagerOnBeginFrame);
+    _setup_timer(EntityManagerOnMoveBefore);
+    _setup_timer(EntityManagerOnMoveAfter);
+    _setup_timer(EntityManagerOnRender);
+    _setup_timer(EntityManagerUpdateRegistry);
 }
 
 //------------------------------------------------------------------------------
@@ -48,7 +48,14 @@ EntityManager::~EntityManager()
     n_assert(0 == this->activeEntities.Size());
     n_assert(0 == this->entityRegistry.Size());
     n_assert(0 == this->delayedJobs.Size());
-    DestructSingleton;
+
+    _discard_timer(EntityManagerOnBeginFrame);
+    _discard_timer(EntityManagerOnMoveBefore);
+    _discard_timer(EntityManagerOnMoveAfter);
+    _discard_timer(EntityManagerOnRender);
+    _discard_timer(EntityManagerUpdateRegistry);
+
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -646,7 +653,7 @@ EntityManager::OnBeginFrame()
     #endif
 
     // invoke OnBeginFrame() on registered properties
-    //PROFILER_START(this->profOnBeginFrame);
+    _start_timer(EntityManagerOnBeginFrame);
     for (entityIndex = 0; entityIndex < this->triggeredEntities.Size(); entityIndex++)
     {
         if (this->triggeredEntities[entityIndex]->IsActive())
@@ -663,10 +670,10 @@ EntityManager::OnBeginFrame()
             #endif
         }
     }
-    //PROFILER_STOP(this->profOnBeginFrame);
+    _stop_timer(EntityManagerOnBeginFrame);
 
     // invoke OnMoveBefore() on all entities
-    //PROFILER_START(this->profOnMoveBefore);
+    _start_timer(EntityManagerOnMoveBefore);
     for (entityIndex = 0; entityIndex < this->triggeredEntities.Size(); entityIndex++)
     {
         if (this->triggeredEntities[entityIndex]->IsActive())
@@ -683,7 +690,7 @@ EntityManager::OnBeginFrame()
             #endif
         }
     }
-    //PROFILER_STOP(this->profOnMoveBefore);
+    _stop_timer(EntityManagerOnMoveBefore);
 }
 
 //------------------------------------------------------------------------------
@@ -696,8 +703,9 @@ EntityManager::OnEndFrame()
     n_assert(this->activeEntitiesLocked);
     
     IndexT entityIndex;
+    
     // invoke OnMoveAfter() on all entities
-    //PROFILER_START(this->profOnMoveAfter);
+    _start_timer(EntityManagerOnMoveAfter);
     for (entityIndex = 0; entityIndex < this->triggeredEntities.Size(); entityIndex++)
     {
         if (this->triggeredEntities[entityIndex]->IsActive())
@@ -714,10 +722,10 @@ EntityManager::OnEndFrame()
             #endif
         }
     }
-    //PROFILER_STOP(this->profOnMoveAfter);
+    _stop_timer(EntityManagerOnMoveAfter);
 
     // invoke OnRender() on all entities
-    //PROFILER_START(this->profOnRender);
+    _start_timer(EntityManagerOnRender);
     for (entityIndex = 0; entityIndex < this->triggeredEntities.Size(); entityIndex++)
     {
         if (this->triggeredEntities[entityIndex]->IsActive())
@@ -734,7 +742,7 @@ EntityManager::OnEndFrame()
             #endif
         }
     }
-    //PROFILER_STOP(this->profOnRender);
+    _stop_timer(EntityManagerOnRender);
 
     // unlock the active entities array
     n_assert(this->activeEntitiesLocked);
@@ -742,10 +750,10 @@ EntityManager::OnEndFrame()
 
     // handle all delayed jobs that have queued up during the frame
     // and cleanup internal arrays
-    //PROFILER_START(this->profUpdateRegistry);
+    _start_timer(EntityManagerUpdateRegistry);
     this->HandleDelayedJobs();
     this->RemoveNullEntriesFromArrays();
-    //PROFILER_STOP(this->profUpdateRegistry);
+    _stop_timer(EntityManagerUpdateRegistry);
 
     #if __ENTITY_STATS__
     // sum property profilers
@@ -828,7 +836,7 @@ EntityManager::GetEntitiesByAttrs(const Util::Array<Attribute>& attrs, bool only
 
     // get all category manager instances according to the parameters
     Util::Array<CategoryManager::Entry> catEntries;
-    catEntries = catManager->GetInstancesByAttrs(attrs, onlyFirstEntity, false);
+    catEntries = catManager->GetInstancesByAttrs(attrs, false, onlyFirstEntity);
 
     // update result, and create any missing entities
     IndexT i;

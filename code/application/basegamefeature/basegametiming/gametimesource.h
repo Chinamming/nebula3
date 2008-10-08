@@ -3,7 +3,7 @@
 #define TIMING_GAMETIMESOURCE_H
 //------------------------------------------------------------------------------
 /**
-    @class Timing::TimingTimeSource
+    @class BaseGameFeature::TimingTimeSource
     
     Provides timing information for the Timing logic.
     
@@ -17,8 +17,8 @@ namespace BaseGameFeature
 {
 class GameTimeSource : public TimeSource
 {
-    DeclareClass(GameTimeSource);
-    DeclareSingleton(GameTimeSource);
+    __DeclareClass(GameTimeSource);
+    __DeclareSingleton(GameTimeSource);
 
 public:
     /// constructor

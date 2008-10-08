@@ -9,8 +9,8 @@
 
 namespace BaseGameFeature
 {
-ImplementClass(LoaderServer, 'LOSV', Core::RefCounted);
-ImplementSingleton(LoaderServer);
+__ImplementClass(LoaderServer, 'LOSV', Core::RefCounted);
+__ImplementSingleton(LoaderServer);
 
 //------------------------------------------------------------------------------
 /**

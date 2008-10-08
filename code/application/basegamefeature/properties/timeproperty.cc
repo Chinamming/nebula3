@@ -10,7 +10,7 @@
 
 namespace BaseGameFeature
 {
-ImplementClass(BaseGameFeature::TimeProperty, 'TIMP', Game::Property);
+__ImplementClass(BaseGameFeature::TimeProperty, 'TIMP', Game::Property);
 
 using namespace Game;
 

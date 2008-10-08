@@ -8,6 +8,9 @@
 #include "io/fswrapper.h"
 #include "util/stack.h"
 #include "util/crc.h"
+#include "system/systeminfo.h"
+#include "io/filestream.h"
+#include "io/assign.h"
 
 #ifndef __NOZIP__
 #include "io/zipfs/ziparchive.h"
@@ -15,12 +18,10 @@
 #include "io/zipfilestream.h"
 #endif
 
-#include "io/assign.h"
-
 namespace IO
 {
-ImplementClass(IO::IoServer, 'IOSV', Core::RefCounted);
-ImplementSingleton(IO::IoServer);
+__ImplementClass(IO::IoServer, 'IOSV', Core::RefCounted);
+__ImplementSingleton(IO::IoServer);
 
 using namespace Core;
 using namespace Util;
@@ -31,7 +32,7 @@ using namespace Util;
 IoServer::IoServer() :
     zipFileSystemEnabled(true)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 
     // initialize standard assigns
     String homeLocation = Internal::FSWrapper::GetHomeDirectory();
@@ -71,7 +72,22 @@ IoServer::~IoServer()
     this->zipFileSystem = 0;
     #endif
     
-    DestructSingleton;
+    __DestructSingleton;
+}
+
+//------------------------------------------------------------------------------
+/**
+    Registers the standard URI schemes.
+*/
+void
+IoServer::RegisterStandardUriSchemes()
+{
+    #if __WII__        
+        this->RegisterUriScheme("file", IO::WiiDvdStream::RTTI);
+        this->RegisterUriScheme("dvd", IO::WiiDvdStream::RTTI);
+    #else        
+        this->RegisterUriScheme("file", FileStream::RTTI);
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -149,10 +165,10 @@ IoServer::CreateStream(const URI& uri) const
     }
 }
 
-#ifndef __NOZIP__
 //------------------------------------------------------------------------------
 /**
 */
+#ifndef __NOZIP__
 bool
 IoServer::MountZipArchive(const URI& uri)
 {
@@ -161,10 +177,10 @@ IoServer::MountZipArchive(const URI& uri)
 }
 #endif
 
-#ifndef __NOZIP__
 //------------------------------------------------------------------------------
 /**
 */
+#ifndef __NOZIP__
 void
 IoServer::UnmountZipArchive(const URI& uri)
 {
@@ -172,16 +188,95 @@ IoServer::UnmountZipArchive(const URI& uri)
 }
 #endif
 
-#ifndef __NOZIP__
 //------------------------------------------------------------------------------
 /**
 */
+#ifndef __NOZIP__
 bool
 IoServer::IsZipArchiveMounted(const URI& uri) const
 {
     return this->zipFileSystem->IsMounted(uri);
 }
 #endif
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+IoServer::MountStandardZipArchives()
+{
+    #ifndef __NOZIP__
+    // first load the platform specific archives, since platform specific
+    // files override any generic files
+    System::SystemInfo systemInfo;  
+    String platformString = System::SystemInfo::PlatformAsString(systemInfo.GetPlatform());
+    String platformArchivePath;
+    platformArchivePath.Format("home:export_%s.zip", platformString.AsCharPtr());
+    if (this->FileExists(platformArchivePath))
+    {
+        this->MountZipArchive(platformArchivePath);
+    }
+
+    // platform agnostic data zip archive
+    if (this->FileExists("home:export.zip"))
+    {
+        this->MountZipArchive("home:export.zip");
+    }
+    #endif
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+IoServer::UnmountStandardZipArchives()
+{
+    #ifndef __NOZIP__
+    System::SystemInfo systemInfo;  
+    String platformString = System::SystemInfo::PlatformAsString(systemInfo.GetPlatform());
+    String platformArchivePath;
+    platformArchivePath.Format("home:export_%s.zip", platformString.AsCharPtr());
+    if (this->IsZipArchiveMounted(platformArchivePath))
+    {
+        this->UnmountZipArchive(platformArchivePath);
+    }
+
+    // platform agnostic data zip archive
+    if (this->IsZipArchiveMounted("home:export.zip"))
+    {
+        this->UnmountZipArchive("home:export.zip");
+    }
+    #endif
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+IoServer::SetupStandardAssigns()
+{
+    this->SetAssign(Assign("shd", "home:export/shaders"));
+    this->SetAssign(Assign("frame", "home:export/frame"));
+    this->SetAssign(Assign("msh", "home:export/meshes"));
+    this->SetAssign(Assign("tex", "home:export/textures"));
+    this->SetAssign(Assign("ani", "home:export/anims"));
+    this->SetAssign(Assign("mdl", "home:export/gfxlib"));
+    this->SetAssign(Assign("audio", "home:export/audio"));
+    this->SetAssign(Assign("data", "home:export/data"));        
+    this->SetAssign(Assign("export", "home:export"));
+
+    // platform specific assigns
+    #if __WIN32__
+        this->SetAssign(Assign("stream", "home:export_win32/audio"));
+    #elif __XBOX360__
+        this->SetAssign(Assign("stream", "home:export_xbox360/audio"));
+    #endif
+
+    // Nebul2 backward compat assigns:
+    this->SetAssign(Assign("meshes", "home:export/meshes"));
+    this->SetAssign(Assign("textures", "home:export/textures"));
+    this->SetAssign(Assign("anims", "home:export/anims"));
+}
 
 //------------------------------------------------------------------------------
 /**

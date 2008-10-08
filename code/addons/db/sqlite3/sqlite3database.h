@@ -33,7 +33,7 @@ namespace Db
 {
 class Sqlite3Database : public Database
 {
-    DeclareClass(Sqlite3Database);
+    __DeclareClass(Sqlite3Database);
 public:
     /// temporary storage location
     enum TempStore

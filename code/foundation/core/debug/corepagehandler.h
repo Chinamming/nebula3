@@ -1,6 +1,4 @@
 #pragma once
-#ifndef DEBUG_COREPAGEHANDLER_H
-#define DEBUG_COREPAGEHANDLER_H
 //------------------------------------------------------------------------------
 /**
     @class Debug::CorePageHandler
@@ -16,7 +14,7 @@ namespace Debug
 {
 class CorePageHandler : public Http::HttpRequestHandler
 {
-    DeclareClass(CorePageHandler);
+    __DeclareClass(CorePageHandler);
 public:
     /// constructor
     CorePageHandler();
@@ -26,4 +24,3 @@ public:
 
 } // namespace Debug
 //------------------------------------------------------------------------------
-#endif

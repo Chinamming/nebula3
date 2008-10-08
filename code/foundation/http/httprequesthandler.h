@@ -28,7 +28,7 @@ namespace Http
 {
 class HttpRequestHandler : public Core::RefCounted
 {
-    DeclareClass(HttpRequestHandler);
+    __DeclareClass(HttpRequestHandler);
 public:
     /// constructor
     HttpRequestHandler();

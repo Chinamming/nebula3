@@ -17,7 +17,7 @@ namespace Physics
 {
 class PhysicsMesh : public Core::RefCounted
 {
-    DeclareClass(PhysicsMesh);
+    __DeclareClass(PhysicsMesh);
 public:
     /// constructor
     PhysicsMesh();

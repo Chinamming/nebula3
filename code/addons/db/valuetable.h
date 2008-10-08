@@ -18,7 +18,7 @@ namespace Db
 {
 class ValueTable : public Attr::AttributeTable
 {
-    DeclareClass(ValueTable);
+    __DeclareClass(ValueTable);
 public:
     /// constructor
     ValueTable();

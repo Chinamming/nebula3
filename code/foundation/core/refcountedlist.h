@@ -1,6 +1,4 @@
 #pragma once
-#ifndef CORE_REFCOUNTEDLIST_H
-#define CORE_REFCOUNTEDLIST_H
 //------------------------------------------------------------------------------
 /**
     @class Core::RefCountedList
@@ -28,4 +26,3 @@ public:
 
 }
 //------------------------------------------------------------------------------
-#endif

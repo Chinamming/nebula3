@@ -6,9 +6,9 @@
 
 namespace Http
 {
-    ImplementClass(Http::AttachRequestHandler, 'arqh', Messaging::Message);
+    __ImplementClass(Http::AttachRequestHandler, 'arqh', Messaging::Message);
     ImplementMsgId(AttachRequestHandler);
-    ImplementClass(Http::RemoveRequestHandler, 'rrqh', Messaging::Message);
+    __ImplementClass(Http::RemoveRequestHandler, 'rrqh', Messaging::Message);
     ImplementMsgId(RemoveRequestHandler);
 } // Http
 

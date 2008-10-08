@@ -29,8 +29,8 @@ namespace BaseGameFeature
 {
 class CategoryManager : public Game::Manager
 {
-    DeclareClass(CategoryManager);
-    DeclareSingleton(CategoryManager);
+    __DeclareClass(CategoryManager);
+    __DeclareSingleton(CategoryManager);
 public:
     /// describes a category
     class Category

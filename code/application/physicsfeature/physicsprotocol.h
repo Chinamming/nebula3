@@ -14,7 +14,7 @@ namespace PhysicsFeature
 //------------------------------------------------------------------------------
 class ApplyImpulseAtPos : public Messaging::Message
 {
-    DeclareClass(ApplyImpulseAtPos);
+    __DeclareClass(ApplyImpulseAtPos);
     DeclareMsgId;
 public:
     ApplyImpulseAtPos() 
@@ -59,7 +59,7 @@ private:
 //------------------------------------------------------------------------------
 class GetPhysicsEntity : public Messaging::Message
 {
-    DeclareClass(GetPhysicsEntity);
+    __DeclareClass(GetPhysicsEntity);
     DeclareMsgId;
 public:
     GetPhysicsEntity() 
@@ -76,6 +76,70 @@ public:
     };
 private:
     Ptr<Physics::PhysicsEntity> entity;
+};
+//------------------------------------------------------------------------------
+class SetTriggerActive : public Messaging::Message
+{
+    __DeclareClass(SetTriggerActive);
+    DeclareMsgId;
+public:
+    SetTriggerActive() 
+    { };
+public:
+    void SetActive(bool val)
+    {
+        n_assert(!this->handled);
+        this->active = val;
+    };
+    bool GetActive() const
+    {
+        return this->active;
+    };
+private:
+    bool active;
+};
+//------------------------------------------------------------------------------
+class IsTriggerActive : public Messaging::Message
+{
+    __DeclareClass(IsTriggerActive);
+    DeclareMsgId;
+public:
+    IsTriggerActive() 
+    { };
+public:
+    void SetActive(bool val)
+    {
+        n_assert(!this->handled);
+        this->active = val;
+    };
+    bool GetActive() const
+    {
+        n_assert(this->handled);
+        return this->active;
+    };
+private:
+    bool active;
+};
+//------------------------------------------------------------------------------
+class SetTriggerScale : public Messaging::Message
+{
+    __DeclareClass(SetTriggerScale);
+    DeclareMsgId;
+public:
+    SetTriggerScale() 
+    { };
+public:
+    void SetScale(const Math::vector& val)
+    {
+        n_assert(!this->handled);
+        this->scale = val;
+    };
+    const Math::vector& GetScale() const
+    {
+        return this->scale;
+    };
+private:
+    Math::vector scale;
 };
 } // namespace PhysicsFeature
 //------------------------------------------------------------------------------

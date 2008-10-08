@@ -4,33 +4,35 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "physicsfeatureunit.h"
-#include "corefeature/corefeatureunit.h"
 #include "graphicsfeature/graphicsfeatureunit.h"
 #include "game/gameserver.h"
 #include "basegametiming/systemtimesource.h"
 #include "physics/level.h"
 #include "physics/meshcache.h"
+#include "io/ioserver.h"
 
 // include all properties for known by managers::factorymanager
 #include "properties/physicsproperty.h"
 #include "properties/actorphysicsproperty.h"
 #include "properties/mousegripperproperty.h"
 #include "properties/environmentcollideproperty.h"
+#include "properties/triggerproperty.h"
 
 namespace PhysicsFeature
 {
-ImplementClass(PhysicsFeatureUnit, 'FPHY' , Game::FeatureUnit);
-ImplementSingleton(PhysicsFeatureUnit);
+__ImplementClass(PhysicsFeatureUnit, 'FPHY' , Game::FeatureUnit);
+__ImplementSingleton(PhysicsFeatureUnit);
 
 using namespace Physics;
 using namespace Game;
-using namespace CoreFeature;
+
 //------------------------------------------------------------------------------
 /**
 */
 PhysicsFeatureUnit::PhysicsFeatureUnit()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
+    _setup_timer(PhysicsFeatureUpdatePhysics);
 }
 
 //------------------------------------------------------------------------------
@@ -38,7 +40,8 @@ PhysicsFeatureUnit::PhysicsFeatureUnit()
 */
 PhysicsFeatureUnit::~PhysicsFeatureUnit()
 {
-    DestructSingleton;
+    _discard_timer(PhysicsFeatureUpdatePhysics);
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -51,10 +54,6 @@ PhysicsFeatureUnit::OnActivate()
 
     IO::IoServer::Instance()->SetAssign(IO::Assign("physics", "export:physics"));
 
-    // this feature needs the core feature
-    n_assert2(CoreFeatureUnit::HasInstance(), "PhysicsFeatureUnit needs the CoreFeature!");
-    n_assert(CoreFeatureUnit::Instance()->IsActive());
-    
     this->physicsServer = PhysicsServer::Create();
     this->physicsServer->Open();
 }
@@ -86,11 +85,15 @@ PhysicsFeatureUnit::OnLoad()
 void
 PhysicsFeatureUnit::OnFrame()
 {    
+    _start_timer(PhysicsFeatureUpdatePhysics);
+
     // update time in physics system
     Timing::Time time = BaseGameFeature::SystemTimeSource::Instance()->GetTime();
     this->physicsServer->SetTime(time);
     // trigger physics system, steps physics world etc.
     this->physicsServer->Trigger();
+
+    _stop_timer(PhysicsFeatureUpdatePhysics);
 }
 
 //------------------------------------------------------------------------------

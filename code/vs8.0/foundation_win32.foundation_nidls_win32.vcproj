@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="foundation_nidls_win32"
-	ProjectGUID="{B324EFAE-F480-46C4-B3BE-BB9B0FC9E769}"
+	ProjectGUID="{B6419E8F-CD70-425E-84E5-914AECF8F1BF}"
 	>
 	<Platforms>
 		<Platform
@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory=".\Win32\Debug"
 			IntermediateDirectory=".\Win32\Debug\foundation_nidls_win32"
-			ConfigurationType="4"
+			ConfigurationType="10"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -75,8 +75,19 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile=".\Win32\Debug\d_foundation_nidls_win32.lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies=""
+				OutputFile="..\..\bin\win32\foundation_nidls_win32.exe"
+				LinkIncremental="0"
+				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories=".\Win32\Debug,..\..\bin\win32,..\lib\win32_vc_i386;"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\..\bin\win32\foundation_nidls_win32.debug.pdb"
+				GenerateMapFile="true"
+				MapFileName="..\..\bin\win32\foundation_nidls_win32.debug.map"
+				MapExports="true"
+				TargetMachine="1"
+				GenerateManifest="false"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -98,7 +109,7 @@
 			Name="Release|Win32"
 			OutputDirectory=".\Win32\Release"
 			IntermediateDirectory=".\Win32\Release\foundation_nidls_win32"
-			ConfigurationType="4"
+			ConfigurationType="10"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			WholeProgramOptimization="1"
@@ -157,8 +168,19 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile=".\Win32\Release\foundation_nidls_win32.lib"
+				Name="VCLinkerTool"
+				AdditionalDependencies=""
+				OutputFile="..\..\bin\win32\foundation_nidls_win32.exe"
+				LinkIncremental="0"
+				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories=".\Win32\Release,..\..\bin\win32,..\lib\win32_vc_i386;"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="..\..\bin\win32\foundation_nidls_win32.release.pdb"
+				GenerateMapFile="true"
+				MapFileName="..\..\bin\win32\foundation_nidls_win32.release.map"
+				MapExports="true"
+				TargetMachine="1"
+				GenerateManifest="false"
 			/>
 			<Tool
 				Name="VCALinkTool"

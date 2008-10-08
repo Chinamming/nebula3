@@ -32,7 +32,9 @@
 
 namespace Physics
 {
-ImplementClass(Physics::PhysicsServer, 'PSRV', Core::RefCounted);
+__ImplementClass(Physics::PhysicsServer, 'PSRV', Core::RefCounted);
+
+using namespace Math;
 
 PhysicsServer* PhysicsServer::Singleton = 0;
 uint PhysicsServer::UniqueStamp = 0;
@@ -371,8 +373,15 @@ PhysicsServer::CreateAMotor() const
 BoxShape*
 PhysicsServer::CreateBoxShape(const Math::matrix44& m, MaterialType matType, const Math::vector& size) const
 {
+	// first remove scaling from transformation matrix
+	matrix44 pure = matrix44::identity();
+	pure.set_position(m.get_position());
+	pure.set_xaxis(float4::normalize(m.get_xaxis()));
+	pure.set_yaxis(float4::normalize(m.get_yaxis()));
+	pure.set_zaxis(float4::normalize(m.get_zaxis()));
+
     BoxShape* boxShape = BoxShape::Create();
-    boxShape->SetTransform(m);
+	boxShape->SetTransform(pure);
     boxShape->SetMaterialType(matType);
     boxShape->SetSize(size);
     return boxShape;
@@ -634,10 +643,10 @@ PhysicsServer::GetEntitiesInBox(const Math::vector& scale, const Math::matrix44&
 
     // create a box shape and perform collision check
     Math::matrix44 mNew = Math::matrix44::identity();
-    mNew.setx_component(m.getx_component() * (1/scale.x()));
-    mNew.sety_component(m.gety_component() * (1/scale.y()));
-    mNew.setz_component(m.getz_component() * (1/scale.z()));
-    mNew.setpos_component(m.getpos_component());
+    mNew.set_xaxis(m.get_xaxis() * (1/scale.x()));
+    mNew.set_yaxis(m.get_yaxis() * (1/scale.y()));
+    mNew.set_zaxis(m.get_zaxis() * (1/scale.z()));
+    mNew.set_position(m.get_position());
 
     Ptr<BoxShape> boxShape = this->CreateBoxShape(mNew, MaterialTable::StringToMaterialType("Wood"), scale);
     boxShape->Attach(this->GetLevel()->GetOdeDynamicSpaceId());

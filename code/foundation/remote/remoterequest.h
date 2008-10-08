@@ -18,7 +18,7 @@ namespace Remote
 {
 class RemoteRequest : public Messaging::Message
 {
-    DeclareClass(RemoteRequest);
+    __DeclareClass(RemoteRequest);
     DeclareMsgId;
 public:
     /// constructor

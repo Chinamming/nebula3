@@ -15,7 +15,7 @@ namespace Benchmarking
 {
 class CreateObjectsByFourCC : public Benchmark
 {
-    DeclareClass(CreateObjectsByFourCC);
+    __DeclareClass(CreateObjectsByFourCC);
 public:
     /// run the benchmark
     virtual void Run(Timing::Timer& timer);

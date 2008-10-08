@@ -23,8 +23,8 @@ class DebugTimer;
 
 class DebugServer : public Core::RefCounted
 {
-    DeclareClass(DebugServer);
-    DeclareInterfaceSingleton(DebugServer);
+    __DeclareClass(DebugServer);
+    __DeclareInterfaceSingleton(DebugServer);
 public:
     /// constructor
     DebugServer();

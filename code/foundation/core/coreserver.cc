@@ -7,8 +7,8 @@
 
 namespace Core
 {
-ImplementClass(Core::CoreServer, 'CORS', Core::RefCounted);
-ImplementSingleton(Core::CoreServer);
+__ImplementClass(Core::CoreServer, 'CORS', Core::RefCounted);
+__ImplementSingleton(Core::CoreServer);
 
 using namespace IO;
 
@@ -20,7 +20,7 @@ CoreServer::CoreServer() :
     appName("Nebula3"),
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ CoreServer::~CoreServer()
     {
         this->Close();
     }
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -63,4 +63,12 @@ CoreServer::Close()
     this->isOpen = false;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+void 
+CoreServer::Trigger()
+{
+    this->con->Update();
+}
 } // namespace Core

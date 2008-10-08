@@ -1,11 +1,11 @@
 #pragma once
-#ifndef UTIL_LIST_H
-#define UTIL_LIST_H
 //------------------------------------------------------------------------------
 /**
     @class Util::List
   
-    Implements a doubly linked list.
+    Implements a doubly linked list. Since list elements can be all over the
+    place in memory, dynamic arrays are often the better choice, unless 
+    insert/remove performance is more important then traversal performance.
     
     (C) 2006 Radon Labs GmbH
 */    
@@ -679,4 +679,3 @@ List<TYPE>::Find(const TYPE& e, Iterator start) const
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif

@@ -26,8 +26,8 @@ namespace Http
 {
 class HttpServer : public Core::RefCounted
 {
-    DeclareClass(HttpServer);
-    DeclareSingleton(HttpServer);
+    __DeclareClass(HttpServer);
+    __DeclareSingleton(HttpServer);
 public:
     /// constructor
     HttpServer();

@@ -4,6 +4,7 @@
 
     <!-- dependencies -->
     <Dependency header="graphics/modelentity.h"/>
+    <Dependency header="util/variant.h"/>
 
     <!-- Change the distance of a 3rd camera to its lookat point. -->
     <Message name="CameraDistance" fourcc="MCAD">
@@ -34,6 +35,19 @@
     <!-- Shows or hides all graphics entities of a game entity. -->
     <Message name="SetVisibleMsg" fourcc="MGFV">
       <InArg name="Visible" type="bool"/>
+    </Message>
+
+    <!-- Set an overwrite color -->
+    <Message name="SetOverwriteColor" fourcc="SEOC">
+      <InArg name="Color" type="Math::float4"/>
+      <InArg name="NodeName" type="Util::String"/>
+    </Message>
+
+    <!-- Set an overwrite color -->
+    <Message name="SetShaderVariable" fourcc="SSHV">      
+      <InArg name="ShaderVarName" type="Util::String"/>
+      <InArg name="Value" type="Util::Variant"/>
+      <InArg name="NodeName" type="Util::String"/>
     </Message>
 
   </Protocol>

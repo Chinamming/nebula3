@@ -6,6 +6,7 @@
 */
 #include "messaging/message.h"
 #include "graphics/modelentity.h"
+#include "util/variant.h"
 
 //------------------------------------------------------------------------------
 namespace GraphicsFeature
@@ -13,7 +14,7 @@ namespace GraphicsFeature
 //------------------------------------------------------------------------------
 class CameraDistance : public Messaging::Message
 {
-    DeclareClass(CameraDistance);
+    __DeclareClass(CameraDistance);
     DeclareMsgId;
 public:
     CameraDistance() :
@@ -35,7 +36,7 @@ private:
 //------------------------------------------------------------------------------
 class CameraFocus : public Messaging::Message
 {
-    DeclareClass(CameraFocus);
+    __DeclareClass(CameraFocus);
     DeclareMsgId;
 public:
     CameraFocus() 
@@ -56,7 +57,7 @@ private:
 //------------------------------------------------------------------------------
 class CameraOrbit : public Messaging::Message
 {
-    DeclareClass(CameraOrbit);
+    __DeclareClass(CameraOrbit);
     DeclareMsgId;
 public:
     CameraOrbit() :
@@ -91,7 +92,7 @@ private:
 //------------------------------------------------------------------------------
 class CameraReset : public Messaging::Message
 {
-    DeclareClass(CameraReset);
+    __DeclareClass(CameraReset);
     DeclareMsgId;
 public:
     CameraReset() 
@@ -100,7 +101,7 @@ public:
 //------------------------------------------------------------------------------
 class GetGraphicsEntities : public Messaging::Message
 {
-    DeclareClass(GetGraphicsEntities);
+    __DeclareClass(GetGraphicsEntities);
     DeclareMsgId;
 public:
     GetGraphicsEntities() 
@@ -133,7 +134,7 @@ private:
 //------------------------------------------------------------------------------
 class InputFocus : public Messaging::Message
 {
-    DeclareClass(InputFocus);
+    __DeclareClass(InputFocus);
     DeclareMsgId;
 public:
     InputFocus() :
@@ -155,7 +156,7 @@ private:
 //------------------------------------------------------------------------------
 class SetVisibleMsg : public Messaging::Message
 {
-    DeclareClass(SetVisibleMsg);
+    __DeclareClass(SetVisibleMsg);
     DeclareMsgId;
 public:
     SetVisibleMsg() 
@@ -172,6 +173,84 @@ public:
     };
 private:
     bool visible;
+};
+//------------------------------------------------------------------------------
+class SetOverwriteColor : public Messaging::Message
+{
+    __DeclareClass(SetOverwriteColor);
+    DeclareMsgId;
+public:
+    SetOverwriteColor() 
+    { };
+public:
+    void SetColor(const Math::float4& val)
+    {
+        n_assert(!this->handled);
+        this->color = val;
+    };
+    const Math::float4& GetColor() const
+    {
+        return this->color;
+    };
+private:
+    Math::float4 color;
+public:
+    void SetNodeName(const Util::String& val)
+    {
+        n_assert(!this->handled);
+        this->nodename = val;
+    };
+    const Util::String& GetNodeName() const
+    {
+        return this->nodename;
+    };
+private:
+    Util::String nodename;
+};
+//------------------------------------------------------------------------------
+class SetShaderVariable : public Messaging::Message
+{
+    __DeclareClass(SetShaderVariable);
+    DeclareMsgId;
+public:
+    SetShaderVariable() 
+    { };
+public:
+    void SetShaderVarName(const Util::String& val)
+    {
+        n_assert(!this->handled);
+        this->shadervarname = val;
+    };
+    const Util::String& GetShaderVarName() const
+    {
+        return this->shadervarname;
+    };
+private:
+    Util::String shadervarname;
+public:
+    void SetValue(const Util::Variant& val)
+    {
+        n_assert(!this->handled);
+        this->value = val;
+    };
+    const Util::Variant& GetValue() const
+    {
+        return this->value;
+    };
+private:
+    Util::Variant value;
+public:
+    void SetNodeName(const Util::String& val)
+    {
+        n_assert(!this->handled);
+        this->nodename = val;
+    };
+    const Util::String& GetNodeName() const
+    {
+        return this->nodename;
+    };
+private:
+    Util::String nodename;
 };
 } // namespace GraphicsFeature
 //------------------------------------------------------------------------------

@@ -7,7 +7,7 @@
 
 namespace Http
 {
-ImplementClass(Http::SvgLineChartWriter, 'SLCW', Http::SvgPageWriter);
+__ImplementClass(Http::SvgLineChartWriter, 'SLCW', Http::SvgPageWriter);
 
 using namespace Util;
 using namespace Math;
@@ -126,7 +126,7 @@ SvgLineChartWriter::Draw()
             // need to render points in chunks of 100 due to a limitation
             // in TinyXML(?), XML attribute values are limited to about 4096 characters
             float curValue;
-            float curY;
+            float curY = 0.0f;
             IndexT i;
             for (i = 0; (i < batchSize) && (valIndex < curTrack.values.Size()); i++)
             {

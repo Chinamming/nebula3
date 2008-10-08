@@ -8,15 +8,16 @@
 
 namespace Debug
 {
-ImplementClass(Debug::DebugInterface, 'DBIF', Messaging::AsyncPort);
-ImplementInterfaceSingleton(Debug::DebugInterface);
+__ImplementClass(Debug::DebugInterface, 'DBIF', Messaging::AsyncPort);
+__ImplementInterfaceSingleton(Debug::DebugInterface);
 
 //------------------------------------------------------------------------------
 /**
 */
 DebugInterface::DebugInterface()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
+    this->SetThreadCpuCoreId(System::Cpu::MiscThreadCore);
 }
 
 //------------------------------------------------------------------------------
@@ -24,7 +25,7 @@ DebugInterface::DebugInterface()
 */
 DebugInterface::~DebugInterface()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -33,8 +34,8 @@ DebugInterface::~DebugInterface()
 void
 DebugInterface::Open()
 {
-    this->SetWaitForMessages(false);
-    this->SetName("DebugInterface");
+    this->SetBehaviour(DoNotWait);
+    this->SetName("DebugInterface Thread");
     AsyncPort::Open();
 }
 

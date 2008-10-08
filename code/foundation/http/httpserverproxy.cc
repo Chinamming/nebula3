@@ -9,8 +9,8 @@
 
 namespace Http
 {
-ImplementClass(Http::HttpServerProxy, 'HTSP', Core::RefCounted);
-ImplementSingleton(Http::HttpServerProxy);
+__ImplementClass(Http::HttpServerProxy, 'HTSP', Core::RefCounted);
+__ImplementSingleton(Http::HttpServerProxy);
 
 //------------------------------------------------------------------------------
 /**
@@ -18,7 +18,7 @@ ImplementSingleton(Http::HttpServerProxy);
 HttpServerProxy::HttpServerProxy() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ HttpServerProxy::HttpServerProxy() :
 HttpServerProxy::~HttpServerProxy()
 {
     n_assert(!this->isOpen);
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

@@ -7,7 +7,7 @@
 
 namespace IO
 {
-ImplementClass(IO::BinaryReader, 'BINR', IO::StreamReader);
+__ImplementClass(IO::BinaryReader, 'BINR', IO::StreamReader);
 
 using namespace Util;
 using namespace System;
@@ -373,6 +373,25 @@ BinaryReader::ReadMatrix44()
     }
     this->byteOrder.Convert<Math::matrix44>(val);
     return val;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/ 
+void
+BinaryReader::ReadRawData(void* ptr, SizeT numBytes)
+{
+    n_assert((ptr != 0) && (numBytes > 0));
+    if (this->isMapped)
+    {
+        n_assert((this->mapCursor + numBytes) <= this->mapEnd);
+        Memory::Copy(this->mapCursor, ptr, numBytes);
+        this->mapCursor += numBytes;
+    }
+    else
+    {
+        this->stream->Read(ptr, numBytes);
+    }
 }
 
 } // namespace IO

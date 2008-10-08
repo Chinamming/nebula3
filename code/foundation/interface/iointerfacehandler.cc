@@ -8,11 +8,11 @@
 namespace Interface
 {
 #if __WII__
-ImplementClass(Interface::IOInterfaceHandler, 'IOIH', Wii::WiiIOInterfaceHandler);
-ImplementSingleton(Interface::IOInterfaceHandler);
+__ImplementClass(Interface::IOInterfaceHandler, 'IOIH', Wii::WiiIOInterfaceHandler);
+__ImplementSingleton(Interface::IOInterfaceHandler);
 #else
-ImplementClass(Interface::IOInterfaceHandler, 'IOIH', Base::IOInterfaceHandlerBase);
-ImplementSingleton(Interface::IOInterfaceHandler);
+__ImplementClass(Interface::IOInterfaceHandler, 'IOIH', Base::IOInterfaceHandlerBase);
+__ImplementSingleton(Interface::IOInterfaceHandler);
 #endif
 
 //------------------------------------------------------------------------------
@@ -20,7 +20,7 @@ ImplementSingleton(Interface::IOInterfaceHandler);
 */
 IOInterfaceHandler::IOInterfaceHandler()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ IOInterfaceHandler::IOInterfaceHandler()
 */
 IOInterfaceHandler::~IOInterfaceHandler()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 } // namespace Interface

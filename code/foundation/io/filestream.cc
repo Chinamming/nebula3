@@ -7,7 +7,7 @@
 
 namespace IO
 {
-ImplementClass(IO::FileStream, 'FSTR', IO::Stream);
+__ImplementClass(IO::FileStream, 'FSTR', IO::Stream);
 
 using namespace Util;
 using namespace Core;

@@ -7,7 +7,7 @@
 
 namespace Http
 {
-ImplementClass(Http::Base64Writer, 'B64W', IO::StreamWriter);
+__ImplementClass(Http::Base64Writer, 'B64W', IO::StreamWriter);
 
 //------------------------------------------------------------------------------
 /**

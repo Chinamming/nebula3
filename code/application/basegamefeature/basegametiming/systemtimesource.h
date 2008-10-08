@@ -2,7 +2,7 @@
 #define TIMING_SYSTEMTIMESOURCE_H
 //------------------------------------------------------------------------------
 /**
-    @class Timing::SystemTimeSource
+    @class BaseGameFeature::SystemTimeSource
     
     Provides the time for the various system features.
     These features has to get the time from this timesource.
@@ -21,8 +21,8 @@ namespace BaseGameFeature
 {
 class SystemTimeSource : public TimeSource
 {
-    DeclareClass(SystemTimeSource);
-    DeclareSingleton(SystemTimeSource);
+    __DeclareClass(SystemTimeSource);
+    __DeclareSingleton(SystemTimeSource);
 
 public:
     /// constructor

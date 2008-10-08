@@ -7,7 +7,7 @@
 
 namespace Benchmarking
 {
-ImplementClass(Benchmarking::Matrix44Multiply, 'M4ML', Benchmarking::Benchmark);
+__ImplementClass(Benchmarking::Matrix44Multiply, 'M4ML', Benchmarking::Benchmark);
 
 using namespace Timing;
 using namespace Math;

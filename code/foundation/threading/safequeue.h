@@ -53,6 +53,8 @@ public:
     TYPE Peek() const;
     /// wait until queue contains at least one element
     void Wait();
+    /// wait until queue contains at least one element, or time-out happens
+    void WaitTimeout(int ms);
     /// signal the internal event, so that Wait() will return
     void Signal();
     /// erase all matching elements
@@ -200,6 +202,18 @@ SafeQueue<TYPE>::Wait()
     if (this->signalOnEnqueueEnabled && (this->queueArray.Size() == 0))
     {
         this->enqueueEvent.Wait();
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+template<class TYPE> void
+SafeQueue<TYPE>::WaitTimeout(int ms)
+{
+    if (this->signalOnEnqueueEnabled && (this->queueArray.Size() == 0))
+    {
+        this->enqueueEvent.WaitTimeout(ms);
     }
 }
 

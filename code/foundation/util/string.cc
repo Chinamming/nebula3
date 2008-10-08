@@ -81,7 +81,7 @@ String::Set(const char* str, SizeT length)
     else
     {
         // need to allocate bigger heap buffer
-        this->Allocate(length + 1);
+        this->Alloc(length + 1);
         Memory::Copy(str, this->heapBuffer, length);
         this->heapBuffer[length] = 0;
         this->localBuffer[0] = 0;
@@ -119,7 +119,7 @@ String::AppendRange(const char* append, SizeT length)
         else
         {
             // need to re-allocate
-            this->Reallocate(newLength + newLength / 2);
+            this->Realloc(newLength + newLength / 2);
             Memory::Copy(append, this->heapBuffer + this->strLen, length);
             this->heapBuffer[newLength] = 0;
         }

@@ -20,7 +20,7 @@ namespace BaseGameFeature
 
 class EntityLoader : public EntityLoaderBase
 {
-    DeclareClass(EntityLoader);
+    __DeclareClass(EntityLoader);
 public:
     /// load entity objects into the level
     virtual bool Load(const Util::Array<Util::String>& activeLayers);

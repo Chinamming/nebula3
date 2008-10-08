@@ -19,7 +19,7 @@ namespace Db
 {
 class Writer : public Core::RefCounted
 {
-    DeclareClass(Writer);
+    __DeclareClass(Writer);
 public:
     /// constructor
     Writer();

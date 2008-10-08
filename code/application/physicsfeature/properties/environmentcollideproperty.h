@@ -29,7 +29,7 @@ namespace PhysicsFeature
 {
 class EnvironmentCollideProperty : public Game::Property
 {
-	DeclareClass(EnvironmentCollideProperty);
+	__DeclareClass(EnvironmentCollideProperty);
 public:
     /// constructor
     EnvironmentCollideProperty();
@@ -56,7 +56,7 @@ private:
     };
     Util::Dictionary<Util::String, Entry> entries;
 };
-RegisterClass(EnvironmentCollideProperty);
+__RegisterClass(EnvironmentCollideProperty);
 
 }; // namespace Properties
 //------------------------------------------------------------------------------

@@ -4,12 +4,15 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "physics/boxshape.h"
-#include "coregraphics/shaperenderer.h"
+#include "debugrender/debugshaperenderer.h"
 #include "physics/rigidbody.h"
 
 namespace Physics
 {
-ImplementClass(Physics::BoxShape, 'PSHA',Physics::Shape);
+__ImplementClass(Physics::BoxShape, 'PSHA',Physics::Shape);
+
+using namespace Math;
+using namespace Debug;
 
 //------------------------------------------------------------------------------
 /**
@@ -65,7 +68,7 @@ BoxShape::RenderDebug(const Math::matrix44& parentTransform)
         m.scale(this->size);
         m = matrix44::multiply(m, this->GetTransform());
         m = matrix44::multiply(m, parentTransform);
-        CoreGraphics::ShapeRenderer::Instance()->DrawShape(m, CoreGraphics::ShapeRenderer::Box, this->GetDebugVisualizationColor());
+        DebugShapeRenderer::Instance()->DrawBox(m, this->GetDebugVisualizationColor());
     }
 }
 

@@ -8,7 +8,7 @@
 
 namespace Db
 {
-ImplementClass(Db::Sqlite3FilterSet, 'SQFS', Db::FilterSet);
+__ImplementClass(Db::Sqlite3FilterSet, 'SQFS', Db::FilterSet);
 
 using namespace Util;
 

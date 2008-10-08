@@ -15,7 +15,7 @@ namespace BaseGameFeature
 using namespace Game;
 using namespace Util;
 
-ImplementClass(EnvironmentLoader, 'LENV', EntityLoaderBase);
+__ImplementClass(EnvironmentLoader, 'LENV', EntityLoaderBase);
 
 //------------------------------------------------------------------------------
 /**

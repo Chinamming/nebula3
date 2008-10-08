@@ -7,7 +7,7 @@
 
 namespace Benchmarking
 {
-ImplementClass(Benchmarking::Float4Math, 'F4MT', Benchmarking::Benchmark);
+__ImplementClass(Benchmarking::Float4Math, 'F4MT', Benchmarking::Benchmark);
 
 using namespace Timing;
 using namespace Math;

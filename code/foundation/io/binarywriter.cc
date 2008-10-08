@@ -7,7 +7,7 @@
 
 namespace IO
 {
-ImplementClass(IO::BinaryWriter, 'BINW', IO::StreamWriter);
+__ImplementClass(IO::BinaryWriter, 'BINW', IO::StreamWriter);
 
 using namespace Util;
 using namespace System;
@@ -341,6 +341,25 @@ BinaryWriter::WriteMatrix44(const matrix44& m)
     else
     {
         this->stream->Write(&val, sizeof(val));
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+BinaryWriter::WriteRawData(const void* ptr, SizeT numBytes)
+{
+    n_assert((ptr != 0) && (numBytes > 0));
+    if (this->isMapped)
+    {
+        n_assert((this->mapCursor + numBytes) <= this->mapEnd);
+        Memory::Copy(ptr, this->mapCursor, numBytes);
+        this->mapCursor += numBytes;
+    }
+    else
+    {
+        this->stream->Write(ptr, numBytes);
     }
 }
 

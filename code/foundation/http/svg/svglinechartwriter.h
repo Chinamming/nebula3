@@ -16,7 +16,7 @@ namespace Http
 {
 class SvgLineChartWriter : public SvgPageWriter
 {
-    DeclareClass(SvgLineChartWriter);
+    __DeclareClass(SvgLineChartWriter);
 public:
     /// constructor
     SvgLineChartWriter();

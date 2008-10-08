@@ -30,7 +30,7 @@ namespace Messaging
 {
 class Port : public Core::RefCounted
 {
-    DeclareClass(Port);
+    __DeclareClass(Port);
 public:
     /// override to register accepted messages
     virtual void SetupAcceptedMessages();

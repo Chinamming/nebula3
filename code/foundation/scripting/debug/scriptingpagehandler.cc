@@ -10,7 +10,7 @@
 
 namespace Debug
 {
-ImplementClass(Debug::ScriptingPageHandler, 'DSPH', Http::HttpRequestHandler);
+__ImplementClass(Debug::ScriptingPageHandler, 'DSPH', Http::HttpRequestHandler);
 
 using namespace Scripting;
 using namespace Http;

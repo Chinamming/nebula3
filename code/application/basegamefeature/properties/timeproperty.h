@@ -18,7 +18,7 @@ namespace BaseGameFeature
 {
 class TimeProperty : public Game::Property
 {
-	DeclareClass(TimeProperty);
+	__DeclareClass(TimeProperty);
 public:
     /// constructor
     TimeProperty();
@@ -36,7 +36,7 @@ public:
 private:
     Timing::Time attachTime;
 };
-RegisterClass(TimeProperty);
+__RegisterClass(TimeProperty);
 }; // namespace Property
 //------------------------------------------------------------------------------
 #endif

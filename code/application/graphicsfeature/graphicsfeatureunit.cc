@@ -5,29 +5,30 @@
 #include "stdneb.h"
 #include "graphicsfeature/graphicsfeatureunit.h"
 #include "graphicsfeature/graphicsfeatureproperties.h"
-#include "corefeature/corefeatureunit.h"
 #include "graphics/stagebuilders.h"
 #include "internalgraphics/internalview.h"  // FIXME! should have to use InternalGraphics!
 #include "apprender/platformconfig.h"
 #include "game/gameserver.h"
+#include "debugrender/debugrenderprotocol.h"
+#include "threading/thread.h"
 
 namespace GraphicsFeature
 {
-ImplementClass(GraphicsFeatureUnit, 'FGFX' , Game::FeatureUnit);
-ImplementSingleton(GraphicsFeatureUnit);
+__ImplementClass(GraphicsFeatureUnit, 'FGFX' , Game::FeatureUnit);
+__ImplementSingleton(GraphicsFeatureUnit);
 
 using namespace CoreGraphics;
-using namespace CoreFeature;
 using namespace Graphics;
 using namespace Input;
 using namespace Resources;
+using namespace Threading;
 
 //------------------------------------------------------------------------------
 /**
 */
 GraphicsFeatureUnit::GraphicsFeatureUnit()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -35,7 +36,7 @@ GraphicsFeatureUnit::GraphicsFeatureUnit()
 */
 GraphicsFeatureUnit::~GraphicsFeatureUnit()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -51,10 +52,6 @@ GraphicsFeatureUnit::OnActivate()
     // call parent class
     FeatureUnit::OnActivate();
 
-    // check feature dependencies
-    n_assert2(CoreFeatureUnit::HasInstance(), "GraphicsFeatureUnit needs the CoreFeature!");
-    n_assert(CoreFeatureUnit::Instance()->IsActive());
-    
     // setup the graphics subsystem
     this->graphicsInterface = GraphicsInterface::Create();
     this->graphicsInterface->Open();
@@ -63,6 +60,8 @@ GraphicsFeatureUnit::OnActivate()
     this->display->Open();
     this->graphicsServer = GraphicsServer::Create();
     this->graphicsServer->Open();
+	this->debugShapeRenderer = Debug::DebugShapeRenderer::Create();
+    this->debugTextRenderer = Debug::DebugTextRenderer::Create();
 
     // setup input subsystem
     this->inputServer = InputServer::Create();
@@ -88,6 +87,8 @@ GraphicsFeatureUnit::OnDeactivate()
     this->display = 0;
     this->graphicsInterface->Close();
     this->graphicsInterface = 0;
+	this->debugShapeRenderer = 0;
+    this->debugTextRenderer = 0;
 
     FeatureUnit::OnDeactivate();
 }
@@ -168,6 +169,8 @@ GraphicsFeatureUnit::OnBeginFrame()
 void
 GraphicsFeatureUnit::OnFrame()
 {    
+	this->debugShapeRenderer->OnFrame();
+    this->debugTextRenderer->OnFrame();
     GraphicsServer::Instance()->OnFrame();
 }
 
@@ -188,6 +191,30 @@ GraphicsFeatureUnit::OnEndFrame()
     {
         Core::SysFunc::Sleep(0.0);
     }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+GraphicsFeatureUnit::StartRenderDebug()
+{   
+    Ptr<Debug::RenderDebugView> renderDebugMsg = Debug::RenderDebugView::Create();
+    renderDebugMsg->SetThreadId(Thread::GetMyThreadId());
+    renderDebugMsg->SetEnableDebugRendering(true);
+    Graphics::GraphicsInterface::Instance()->Send(renderDebugMsg.cast<Messaging::Message>());
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+GraphicsFeatureUnit::StopRenderDebug()
+{   
+    Ptr<Debug::RenderDebugView> renderDebugMsg = Debug::RenderDebugView::Create();
+    renderDebugMsg->SetThreadId(Thread::GetMyThreadId());
+    renderDebugMsg->SetEnableDebugRendering(false);    
+    Graphics::GraphicsInterface::Instance()->Send(renderDebugMsg.cast<Messaging::Message>());
 }
 
 //------------------------------------------------------------------------------

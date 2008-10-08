@@ -39,7 +39,7 @@ namespace GraphicsFeature
 {
 class CameraProperty : public Game::Property
 {
-	DeclareClass(CameraProperty);
+	__DeclareClass(CameraProperty);
 public:
     /// constructor
     CameraProperty();
@@ -71,7 +71,7 @@ protected:
     Ptr<Graphics::View> defaultView;
     Ptr<Graphics::Stage> defaultStage;
 };
-RegisterClass(CameraProperty);
+__RegisterClass(CameraProperty);
 
 }; // namespace GraphicsFeature
 //------------------------------------------------------------------------------

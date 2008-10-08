@@ -12,7 +12,7 @@ namespace Interface
 //------------------------------------------------------------------------------
 class CopyFile : public Messaging::Message
 {
-    DeclareClass(CopyFile);
+    __DeclareClass(CopyFile);
     DeclareMsgId;
 public:
     CopyFile() :
@@ -58,7 +58,7 @@ private:
 //------------------------------------------------------------------------------
 class IOMessage : public Messaging::Message
 {
-    DeclareClass(IOMessage);
+    __DeclareClass(IOMessage);
     DeclareMsgId;
 public:
     IOMessage() :
@@ -92,7 +92,7 @@ private:
 //------------------------------------------------------------------------------
 class CreateDirectory : public IOMessage
 {
-    DeclareClass(CreateDirectory);
+    __DeclareClass(CreateDirectory);
     DeclareMsgId;
 public:
     CreateDirectory() 
@@ -101,7 +101,7 @@ public:
 //------------------------------------------------------------------------------
 class DeleteDirectory : public IOMessage
 {
-    DeclareClass(DeleteDirectory);
+    __DeclareClass(DeleteDirectory);
     DeclareMsgId;
 public:
     DeleteDirectory() 
@@ -110,7 +110,7 @@ public:
 //------------------------------------------------------------------------------
 class DeleteFile : public IOMessage
 {
-    DeclareClass(DeleteFile);
+    __DeclareClass(DeleteFile);
     DeclareMsgId;
 public:
     DeleteFile() 
@@ -119,7 +119,7 @@ public:
 //------------------------------------------------------------------------------
 class MountZipArchive : public IOMessage
 {
-    DeclareClass(MountZipArchive);
+    __DeclareClass(MountZipArchive);
     DeclareMsgId;
 public:
     MountZipArchive() 
@@ -128,7 +128,7 @@ public:
 //------------------------------------------------------------------------------
 class ReadStream : public IOMessage
 {
-    DeclareClass(ReadStream);
+    __DeclareClass(ReadStream);
     DeclareMsgId;
 public:
     ReadStream() 
@@ -149,7 +149,7 @@ private:
 //------------------------------------------------------------------------------
 class WriteStream : public IOMessage
 {
-    DeclareClass(WriteStream);
+    __DeclareClass(WriteStream);
     DeclareMsgId;
 public:
     WriteStream() 

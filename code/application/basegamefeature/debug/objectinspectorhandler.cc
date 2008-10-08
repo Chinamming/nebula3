@@ -11,7 +11,7 @@
 
 namespace Debug
 {
-ImplementClass(Debug::ObjectInspectorHandler, 'OBIH', Http::HttpRequestHandler);
+__ImplementClass(Debug::ObjectInspectorHandler, 'OBIH', Http::HttpRequestHandler);
 
 using namespace BaseGameFeature;
 using namespace Http;

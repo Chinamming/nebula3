@@ -12,11 +12,12 @@
 
 namespace Debug
 {
-ImplementClass(Debug::DebugPageHandler, 'DBPH', Http::HttpRequestHandler);
+__ImplementClass(Debug::DebugPageHandler, 'DBPH', Http::HttpRequestHandler);
 
 using namespace Http;
 using namespace Util;
 using namespace Timing;
+using namespace Math;
 
 //------------------------------------------------------------------------------
 /**
@@ -160,8 +161,8 @@ DebugPageHandler::ComputeMinMaxAvgTimes(const Array<Time>& times, Time& outMin, 
         IndexT i;
         for (i = 0; i < times.Size(); i++)
         {
-            outMin = n_min(outMin, times[i]);
-            outMax = n_max(outMax, times[i]);
+            outMin = n_min(float(outMin), float(times[i]));
+            outMax = n_max(float(outMax), float(times[i]));
             outAvg += times[i];
         }
         outAvg /= times.Size();

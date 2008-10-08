@@ -18,8 +18,8 @@ namespace Remote
 {
 class RemoteInterface : public Messaging::AsyncPort
 {
-    DeclareClass(RemoteInterface);
-    DeclareInterfaceSingleton(RemoteInterface);
+    __DeclareClass(RemoteInterface);
+    __DeclareInterfaceSingleton(RemoteInterface);
 public:
     /// constructor
     RemoteInterface();

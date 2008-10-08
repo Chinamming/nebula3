@@ -7,15 +7,15 @@
 
 namespace BaseGameFeature
 {
-ImplementClass(GameTimeSource, 'TSRC', TimeSource);
-ImplementSingleton(GameTimeSource);
+__ImplementClass(GameTimeSource, 'TSRC', TimeSource);
+__ImplementSingleton(GameTimeSource);
 
 //------------------------------------------------------------------------------
 /**
 */
 GameTimeSource::GameTimeSource()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ GameTimeSource::GameTimeSource()
 */
 GameTimeSource::~GameTimeSource()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 }; // namespace Timing

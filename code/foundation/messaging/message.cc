@@ -8,7 +8,7 @@
 
 namespace Messaging
 {
-ImplementClass(Messaging::Message, 'MSG_', Core::RefCounted);
+__ImplementClass(Messaging::Message, 'MSG_', Core::RefCounted);
 ImplementMsgId(Message);
 
 //------------------------------------------------------------------------------

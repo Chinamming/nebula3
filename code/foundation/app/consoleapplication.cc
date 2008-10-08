@@ -47,8 +47,8 @@ ConsoleApplication::Open()
 
         // initialize io subsystem
         this->ioServer = IO::IoServer::Create();
-        this->ioServer->RegisterUriScheme("file", IO::FileStream::RTTI);
-        this->ioServer->RegisterUriScheme("mem", IO::MemoryStream::RTTI);
+        this->ioServer->RegisterStandardUriSchemes();
+        this->ioServer->SetupStandardAssigns();
 
         // initialize scripting subsystem and register command libs
         this->scriptServer = Scripting::LuaServer::Create();

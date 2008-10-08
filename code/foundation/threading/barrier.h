@@ -16,10 +16,8 @@
     
     (C) 2007 Radon Labs GmbH
 */    
-#if __WIN32__
-#include "threading/win32/win32barrier.h"
-#elif __XBOX360__
-#include "threading/xbox360/xbox360barrier.h"
+#if (__WIN32__ || __XBOX360__)
+#include "threading/win360/win360barrier.h"
 #elif __WII__
 #include "threading/wii/wiibarrier.h"
 #else

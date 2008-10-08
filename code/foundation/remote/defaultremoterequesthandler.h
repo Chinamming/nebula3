@@ -18,7 +18,7 @@ namespace Remote
 {
 class DefaultRemoteRequestHandler : public RemoteRequestHandler
 {
-    DeclareClass(DefaultRemoteRequestHandler);
+    __DeclareClass(DefaultRemoteRequestHandler);
 public:
     /// handle a remote request, the handler is expected to fill the content stream with response data
     virtual void HandleRequest(const Ptr<RemoteRequest>& request);

@@ -18,8 +18,8 @@ namespace Debug
 {
 class DebugInterface : public Messaging::AsyncPort
 {
-    DeclareClass(DebugInterface);
-    DeclareInterfaceSingleton(DebugInterface);
+    __DeclareClass(DebugInterface);
+    __DeclareInterfaceSingleton(DebugInterface);
 public:
     /// constructor
     DebugInterface();

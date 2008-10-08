@@ -22,8 +22,8 @@ namespace Remote
 {
 class RemoteControlProxy : public Core::RefCounted
 {
-    DeclareClass(RemoteControlProxy);
-    DeclareSingleton(RemoteControlProxy);
+    __DeclareClass(RemoteControlProxy);
+    __DeclareSingleton(RemoteControlProxy);
 public:
     /// constructor
     RemoteControlProxy();

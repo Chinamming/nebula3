@@ -16,7 +16,7 @@ namespace Debug
 {
 class MemoryPageHandler : public Http::HttpRequestHandler
 {
-    DeclareClass(MemoryPageHandler);
+    __DeclareClass(MemoryPageHandler);
 public:
     /// constructor
     MemoryPageHandler();

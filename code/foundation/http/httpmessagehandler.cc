@@ -7,9 +7,11 @@
 
 namespace Http
 {
-ImplementClass(Http::HttpMessageHandler, 'HTMH', Messaging::Handler);
+__ImplementClass(Http::HttpMessageHandler, 'HTMH', Messaging::Handler);
 
 using namespace Messaging;
+
+ushort HttpMessageHandler::defaultTcpPort = 2100;
 
 //------------------------------------------------------------------------------
 /**
@@ -40,6 +42,7 @@ HttpMessageHandler::Open()
     this->ioConsole = IO::Console::Create();
     this->ioConsole->Open();
     this->httpServer = HttpServer::Create();
+    this->httpServer->SetPort(HttpMessageHandler::defaultTcpPort);
     this->httpServer->Open();
 }
 
@@ -119,4 +122,12 @@ HttpMessageHandler::OnRemoveRequestHandler(const Ptr<RemoveRequestHandler>& msg)
     this->httpServer->RemoveRequestHandler(msg->GetRequestHandler());
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+void
+HttpMessageHandler::SetDefaultTcpPort(ushort port)
+{
+    HttpMessageHandler::defaultTcpPort = port;
+}
 } // namespace Http

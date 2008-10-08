@@ -7,7 +7,7 @@
 
 namespace Game
 {
-ImplementClass(Game::Manager, 'GAMA', Messaging::Port);
+__ImplementClass(Game::Manager, 'GAMA', Messaging::Port);
 
 //------------------------------------------------------------------------------
 /**

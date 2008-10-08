@@ -201,7 +201,7 @@ proc write_config_win32 { project platform config type additionalIncPaths additi
 #   gen_lib_vcproj8_win32
 #   Generate a static link lib project for VStudio8
 #-------------------------------------------------------------------------------
-proc gen_lib_vcproj8_win32 { filename maintarget_name name guid } {
+proc gen_lib_vcproj8_win32 { filename solution_name name guid subtype} {
 
     global cid
     global tar
@@ -211,7 +211,7 @@ proc gen_lib_vcproj8_win32 { filename maintarget_name name guid } {
     global vstudio8Prefix
     global indent_level    
 
-    puts "-> VS8.0: $maintarget_name.$name.vcproj"
+    puts "-> VS8.0: $solution_name.$name.vcproj"
     
     set i [findtargetbyname $name]
     set platform $tar($i,platform)
@@ -229,8 +229,9 @@ proc gen_lib_vcproj8_win32 { filename maintarget_name name guid } {
     # write XML stuff
     begin_project_win32 $name $guid
         begin_configurations
-            write_config_win32 $name "Win32" "Debug" "lib" $additionalIncPaths $additionalDefines $additionalOptions $additionalLibPaths ""
-            write_config_win32 $name "Win32" "Release" "lib" $additionalIncPaths $additionalDefines $additionalOptions $additionalLibPaths ""
+            # note: subtype can be "lib" or "nidl"
+            write_config_win32 $name "Win32" "Debug" $subtype $additionalIncPaths $additionalDefines $additionalOptions $additionalLibPaths ""
+            write_config_win32 $name "Win32" "Release" $subtype $additionalIncPaths $additionalDefines $additionalOptions $additionalLibPaths ""
         end_configurations
         write_files {"Release|Win32" "Debug|Win32"} "VCCLCompilerTool" $name $module_list    
     end_project
@@ -243,7 +244,7 @@ proc gen_lib_vcproj8_win32 { filename maintarget_name name guid } {
 #   gen_exe_vcproj8_win32
 #   Generate an executable project for VStudio8
 #-------------------------------------------------------------------------------
-proc gen_exe_vcproj8_win32 { filename maintarget_name name guid } {
+proc gen_exe_vcproj8_win32 { filename solution_name name guid } {
 
     global cid
     global tar
@@ -253,7 +254,7 @@ proc gen_exe_vcproj8_win32 { filename maintarget_name name guid } {
     global vstudio8Prefix
     global indent_level
 
-    puts "-> VS8.0: $maintarget_name.$name.vcproj"
+    puts "-> VS8.0: $solution_name.$name.vcproj"
     
     set component_list [gen_component_list $name]    
     set i [findtargetbyname $name]
@@ -292,7 +293,7 @@ proc gen_exe_vcproj8_win32 { filename maintarget_name name guid } {
 #   gen_dll_vcproj8_win32
 #   Generate an executable project for VStudio8
 #-------------------------------------------------------------------------------
-proc gen_dll_vcproj8_win32 { filename maintarget_name name guid ext } {
+proc gen_dll_vcproj8_win32 { filename solution_name name guid ext } {
 
     global cid
     global tar
@@ -302,7 +303,7 @@ proc gen_dll_vcproj8_win32 { filename maintarget_name name guid ext } {
     global vstudio8Prefix
     global indent_level
 
-    puts "-> VS8.0: $maintarget_name.$name.vcproj"
+    puts "-> VS8.0: $solution_name.$name.vcproj"
     
     set component_list [gen_component_list $name]
     set i [findtargetbyname $name]
@@ -380,48 +381,84 @@ proc gen_dll_vcproj8_win32 { filename maintarget_name name guid ext } {
 #   gen_solution8_win32
 #   Generate complete solution file.
 #--------------------------------------------------------------------
-proc gen_solution8_win32 {main_target} {
+proc gen_solution8_win32 {sln_name} {
     global tar
     global num_tars
+    global sln
+    global num_slns
     global vstudio8Prefix
     
-    puts "=> VS8.0: $main_target.sln"
-	
+    set s [findsolutionbyname $sln_name]   
+    puts "=> VS8.0: $sln($s,name).sln"	
     file mkdir $vstudio8Prefix
 
-    # find the main target, and generate the complete target list
-    # from its dependencies
-    set component_list [gen_component_list $main_target]
-	set main_t [findtargetbyname $main_target]	
+    # get all targets in the solution
+    set target_list $sln($s,targets)
 
     # write .sln file
-    set sln_cid [open $vstudio8Prefix/$main_target.sln w]
+    set sln_cid [open $vstudio8Prefix/$sln($s,name).sln w]
 
     puts $sln_cid "Microsoft Visual Studio Solution File, Format Version 9.00"
     puts $sln_cid "# Visual Studio 2005"
     
-    # first, generate guids for each project
-    for {set i 0} {$i < [llength $component_list]} {incr i} {
-        set t [findtargetbyname [lindex $component_list $i]]
-        set tar($t,uuid) [string toupper [exec uuidgen]] 
-    }            
+    # first, generate guids for each target
+    writetargetguids $sln_name
 
-    # for each project...
-    for {set i 0} {$i < [llength $component_list]} {incr i} {
-        set t [findtargetbyname [lindex $component_list $i]]
+    # count the different module types in the solution (NIDLs, Libs, Targets)
+    set numNIDLs 0
+    set numLibs 0
+    set numTargets 0
+    set numImports 0
+    for {set i 0} {$i < [llength $target_list]} {incr i} {
+        set tname [lindex $target_list $i]
+        set t [findtargetbyname $tname]
+        if {$tar($t,type) == "nidl"} {
+            incr numNIDLs
+        } elseif {$tar($t,type) == "lib"} {
+            incr numLibs
+        } elseif {$tar($t,type) == "import"} {
+            incr numImports        
+        } else {
+            incr numTargets
+        }                    
+    }
+
+    # build toplevel folders for each project type
+    if {$numNIDLs > 0} {
+        puts $sln_cid "Project(\"{2150E333-8FDC-42A3-9474-1A3956D46DE8}\") = \"NIDLs\", \"NIDLs\", \"{798777e9-b38c-4974-bee3-b1cd45f6a1e6}\""
+        puts $sln_cid "EndProject"
+    }
+    if {$numLibs > 0} {
+        puts $sln_cid "Project(\"{2150E333-8FDC-42A3-9474-1A3956D46DE8}\") = \"Libs\", \"Libs\", \"{832A854F-2030-4EA4-86FE-EDEEC017E78E}\""
+        puts $sln_cid "EndProject"
+    }
+    if {$numImports > 0} {
+        puts $sln_cid "Project(\"{2150E333-8FDC-42A3-9474-1A3956D46DE8}\") = \"Imports\", \"Imports\", \"{366466BC-0D1F-4F03-B10B-B800B81D0A93}\""
+        puts $sln_cid "EndProject"
+    }
+    if {$numTargets > 0} {
+        puts $sln_cid "Project(\"{2150E333-8FDC-42A3-9474-1A3956D46DE8}\") = \"Exes\", \"Exes\", \"{3B2AD919-B940-473D-A9CC-62428540DEC5}\""
+        puts $sln_cid "EndProject"
+    }
+    
+    # for each internal project...
+    for {set i 0} {$i < [llength $target_list]} {incr i} {
+        set t [findtargetbyname [lindex $target_list $i]]
 
         # vcproj filename
-        set vcproj_filename "$tar($main_t,name).$tar($t,name).vcproj"
+        set vcproj_filename "$sln($s,name).$tar($t,name).vcproj"
 
         # write project file
         if {$tar($t,type) == "dll"} {
-            gen_dll_vcproj8_win32 $vcproj_filename $tar($main_t,name) $tar($t,name) $tar($t,uuid) "dll"
+            gen_dll_vcproj8_win32 $vcproj_filename $sln($s,name) $tar($t,name) $tar($t,uuid) "dll"
         } elseif {$tar($t,type) == "exe"} {
-            gen_exe_vcproj8_win32 $vcproj_filename $tar($main_t,name) $tar($t,name) $tar($t,uuid)
+            gen_exe_vcproj8_win32 $vcproj_filename $sln($s,name) $tar($t,name) $tar($t,uuid)
         } elseif {$tar($t,type) == "mll"} {
-            gen_dll_vcproj8_win32 $vcproj_filename $tar($main_t,name) $tar($t,name) $tar($t,uuid) "mll"
-        } elseif {$tar($t,type) == "lib"} {
-            gen_lib_vcproj8_win32 $vcproj_filename $tar($main_t,name) $tar($t,name) $tar($t,uuid)
+            gen_dll_vcproj8_win32 $vcproj_filename $sln($s,name) $tar($t,name) $tar($t,uuid) "mll"
+        } elseif {($tar($t,type) == "lib") || ($tar($t,type) == "nidl")} {
+            gen_lib_vcproj8_win32 $vcproj_filename $sln($s,name) $tar($t,name) $tar($t,uuid) $tar($t,type)
+        } elseif {$tar($t,type) == "import"} {
+            set vcproj_filename "$tar($t,import_path).vcproj"
         } else {
             puts "ERROR: UNKNOWN TARGET TYPE '$tar($t,type)'"
             exit
@@ -443,14 +480,15 @@ proc gen_solution8_win32 {main_target} {
         puts $sln_cid "EndProject"
     }
     
+    # global settings
     puts $sln_cid "Global"
     puts $sln_cid "\tGlobalSection(SolutionConfigurationPlatforms) = preSolution"
     puts $sln_cid "\t\tDebug|Win32 = Debug|Win32"
     puts $sln_cid "\t\tRelease|Win32 = Release|Win32"
     puts $sln_cid "\tEndGlobalSection"
     puts $sln_cid "\tGlobalSection(ProjectConfigurationPlatforms) = postSolution"
-    for {set i 0} {$i < [llength $component_list]} {incr i} {
-        set t [findtargetbyname [lindex $component_list $i]]
+    for {set i 0} {$i < [llength $target_list]} {incr i} {
+        set t [findtargetbyname [lindex $target_list $i]]
         puts $sln_cid "\t\t{$tar($t,uuid)}.Debug|Win32.ActiveCfg = Debug|Win32"
         puts $sln_cid "\t\t{$tar($t,uuid)}.Debug|Win32.Build.0 = Debug|Win32"
         puts $sln_cid "\t\t{$tar($t,uuid)}.Release|Win32.ActiveCfg = Release|Win32"
@@ -460,6 +498,55 @@ proc gen_solution8_win32 {main_target} {
     puts $sln_cid "\tGlobalSection(SolutionProperties) = preSolution"
     puts $sln_cid "\t\tHideSolutionNode = FALSE"
     puts $sln_cid "\tEndGlobalSection"
+
+    # write nested projects
+    puts $sln_cid "\tGlobalSection(NestedProjects) = preSolution"
+    for {set i 0} {$i < [llength $target_list]} {incr i} {
+        set tname [lindex $target_list $i]
+        set t [findtargetbyname $tname]
+        if {$tar($t,type) == "nidl"} {
+            # note: the NIDLs group is hardwired
+            puts $sln_cid "\t\t{$tar($t,uuid)} = {798777e9-b38c-4974-bee3-b1cd45f6a1e6}"
+        } elseif {$tar($t,type) == "lib"} {
+            # note: the Lib group GUID is hardwired
+            puts $sln_cid "\t\t{$tar($t,uuid)} = {832A854F-2030-4EA4-86FE-EDEEC017E78E}"
+        } elseif {$tar($t,type) == "import"} {
+            puts $sln_cid "\t\t{$tar($t,uuid)} = {366466BC-0D1F-4F03-B10B-B800B81D0A93}"
+        } else {
+            # note: the Target group GUID is hardwired
+            puts $sln_cid "\t\t{$tar($t,uuid)} = {3B2AD919-B940-473D-A9CC-62428540DEC5}"
+        }                    
+    }
+    puts $sln_cid "\tEndGlobalSection"
     puts $sln_cid "EndGlobal"
     close $sln_cid
 }
+
+#--------------------------------------------------------------------
+#   gen_allsolutions8_win32
+#   Generate all solutions 
+#--------------------------------------------------------------------
+proc gen_allsolutions8_win32 {} {
+    global sln
+    global num_slns
+    global tar
+    global num_tars
+
+    # first generate UUIDs for each target    
+    for {set i 0} {$i < $num_tars} {incr i} {
+        if {$tar($i,type) != "import"} {
+            set tar($i,uuid) [string toupper [exec uuidgen]] 
+        } else {
+            set tar($i,uuid) [readtargetguid $tar($i,name)]
+        }        
+    }          
+    
+    # then generate solutions
+    for {set i 0} {$i < $num_slns} {incr i} {
+        if {$sln($i,platform) == "win32"} {
+            puts ">>> $sln($i,name)"
+            gen_solution8_win32 $sln($i,name)    
+        }            
+    }
+}
+

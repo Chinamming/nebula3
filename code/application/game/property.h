@@ -23,7 +23,7 @@ class Entity;
 
 class Property : public Messaging::Port
 {
-    DeclareClass(Property);
+    __DeclareClass(Property);
 public:
     /// callback types
     enum CallbackType

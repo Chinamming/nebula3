@@ -9,8 +9,8 @@
 
 namespace Http
 {
-ImplementClass(Http::HttpServer, 'HTPS', Core::RefCounted);
-ImplementSingleton(Http::HttpServer);
+__ImplementClass(Http::HttpServer, 'HTPS', Core::RefCounted);
+__ImplementSingleton(Http::HttpServer);
 
 using namespace Util;
 using namespace Net;
@@ -22,7 +22,7 @@ using namespace IO;
 HttpServer::HttpServer() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
     this->ipAddress.SetHostName("any");
     this->ipAddress.SetPort(2100);
 }
@@ -33,7 +33,7 @@ HttpServer::HttpServer() :
 HttpServer::~HttpServer()
 {
     n_assert(!this->IsOpen());
-    DestructSingleton;        
+    __DestructSingleton;        
 }
 
 //------------------------------------------------------------------------------

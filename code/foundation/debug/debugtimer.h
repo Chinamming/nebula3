@@ -37,7 +37,7 @@ namespace Debug
 {
 class DebugTimer : public Core::RefCounted
 {
-    DeclareClass(DebugTimer);
+    __DeclareClass(DebugTimer);
 public:
     /// constructor
     DebugTimer();

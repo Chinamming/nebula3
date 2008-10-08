@@ -8,7 +8,7 @@
 
 namespace Db
 {
-ImplementClass(Db::Reader, 'DBRE', Core::RefCounted);
+__ImplementClass(Db::Reader, 'DBRE', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

@@ -8,7 +8,7 @@
 
 namespace Benchmarking
 {
-ImplementClass(Benchmarking::CreateObjectsByClassName, 'BCCN', Benchmarking::Benchmark);
+__ImplementClass(Benchmarking::CreateObjectsByClassName, 'BCCN', Benchmarking::Benchmark);
 
 using namespace Core;
 using namespace Timing;

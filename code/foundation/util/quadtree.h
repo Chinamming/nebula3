@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_QUADTREE_H
-#define UTIL_QUADTREE_H
 //------------------------------------------------------------------------------
 /**
     @class QuadTree
@@ -430,4 +428,3 @@ QuadTree<TYPE>::Node::FindContainmentNode(const Math::bbox& checkBox)
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif

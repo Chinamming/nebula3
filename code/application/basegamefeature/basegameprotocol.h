@@ -15,7 +15,7 @@ namespace BaseGameFeature
 //------------------------------------------------------------------------------
 class MoveDirection : public Messaging::Message
 {
-    DeclareClass(MoveDirection);
+    __DeclareClass(MoveDirection);
     DeclareMsgId;
 public:
     MoveDirection() :
@@ -63,7 +63,7 @@ private:
 //------------------------------------------------------------------------------
 class MoveFollow : public Messaging::Message
 {
-    DeclareClass(MoveFollow);
+    __DeclareClass(MoveFollow);
     DeclareMsgId;
 public:
     MoveFollow() :
@@ -98,7 +98,7 @@ private:
 //------------------------------------------------------------------------------
 class MoveGoto : public Messaging::Message
 {
-    DeclareClass(MoveGoto);
+    __DeclareClass(MoveGoto);
     DeclareMsgId;
 public:
     MoveGoto() :
@@ -132,7 +132,7 @@ private:
 //------------------------------------------------------------------------------
 class MoveRotate : public Messaging::Message
 {
-    DeclareClass(MoveRotate);
+    __DeclareClass(MoveRotate);
     DeclareMsgId;
 public:
     MoveRotate() :
@@ -154,7 +154,7 @@ private:
 //------------------------------------------------------------------------------
 class MoveSetVelocity : public Messaging::Message
 {
-    DeclareClass(MoveSetVelocity);
+    __DeclareClass(MoveSetVelocity);
     DeclareMsgId;
 public:
     MoveSetVelocity() :
@@ -176,7 +176,7 @@ private:
 //------------------------------------------------------------------------------
 class MoveStop : public Messaging::Message
 {
-    DeclareClass(MoveStop);
+    __DeclareClass(MoveStop);
     DeclareMsgId;
 public:
     MoveStop() 
@@ -185,7 +185,7 @@ public:
 //------------------------------------------------------------------------------
 class MoveTurn : public Messaging::Message
 {
-    DeclareClass(MoveTurn);
+    __DeclareClass(MoveTurn);
     DeclareMsgId;
 public:
     MoveTurn() :
@@ -232,7 +232,7 @@ private:
 //------------------------------------------------------------------------------
 class UpdateTransform : public Messaging::Message
 {
-    DeclareClass(UpdateTransform);
+    __DeclareClass(UpdateTransform);
     DeclareMsgId;
 public:
     UpdateTransform() :
@@ -266,7 +266,7 @@ private:
 //------------------------------------------------------------------------------
 class SetTransform : public UpdateTransform
 {
-    DeclareClass(SetTransform);
+    __DeclareClass(SetTransform);
     DeclareMsgId;
 public:
     SetTransform() 

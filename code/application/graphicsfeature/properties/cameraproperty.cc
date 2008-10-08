@@ -22,7 +22,7 @@ namespace Attr
 
 namespace GraphicsFeature
 {
-ImplementClass(GraphicsFeature::CameraProperty, 'CAMP', Game::Property);
+__ImplementClass(GraphicsFeature::CameraProperty, 'CAMP', Game::Property);
 
 using namespace Game;
 using namespace Math;

@@ -27,7 +27,7 @@ namespace Remote
 {
 class RemoteRequestHandler : public Core::RefCounted
 {
-    DeclareClass(RemoteRequestHandler);
+    __DeclareClass(RemoteRequestHandler);
 public:
     /// constructor
     RemoteRequestHandler();

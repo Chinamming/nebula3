@@ -7,7 +7,7 @@
 
 namespace Messaging
 {
-ImplementClass(Messaging::Port, 'PORT', Core::RefCounted);
+__ImplementClass(Messaging::Port, 'PORT', Core::RefCounted);
 
 using namespace Util;
 

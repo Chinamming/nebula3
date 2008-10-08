@@ -11,7 +11,7 @@
 
 namespace Benchmarking
 {
-ImplementClass(Benchmarking::DatabaseInsert, 'DBIS', Benchmarking::Benchmark);
+__ImplementClass(Benchmarking::DatabaseInsert, 'DBIS', Benchmarking::Benchmark);
 
 using namespace IO;
 using namespace Db;

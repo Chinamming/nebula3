@@ -25,8 +25,8 @@ namespace Interface
 {
 class IOInterface : public Messaging::AsyncPort
 {
-    DeclareClass(IOInterface);
-    DeclareInterfaceSingleton(IOInterface);
+    __DeclareClass(IOInterface);
+    __DeclareInterfaceSingleton(IOInterface);
 public:
     /// constructor
     IOInterface();

@@ -20,8 +20,8 @@ namespace Attr
 
 namespace BaseGameFeature
 {
-ImplementClass(CategoryManager, 'MCAT', Game::Manager);
-ImplementSingleton(CategoryManager);
+__ImplementClass(CategoryManager, 'MCAT', Game::Manager);
+__ImplementSingleton(CategoryManager);
 
 using namespace Db;
 using namespace Attr;
@@ -34,7 +34,7 @@ CategoryManager::CategoryManager() :
     inBeginAddCategoryAttrs(false),
     addAttrCategoryIndex(InvalidIndex)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ CategoryManager::CategoryManager() :
 CategoryManager::~CategoryManager()
 {
     n_assert(!this->IsActive());
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

@@ -25,7 +25,7 @@ namespace Net
 {
 class TcpServer : public Core::RefCounted
 {
-    DeclareClass(TcpServer);
+    __DeclareClass(TcpServer);
 public:
     /// constructor
     TcpServer();
@@ -48,7 +48,7 @@ private:
     /// a private listener thread class
     class ListenerThread : public Threading::Thread
     {
-        DeclareClass(ListenerThread);
+        __DeclareClass(ListenerThread);
     public:
         /// set pointer to parent tcp server
         void SetTcpServer(TcpServer* tcpServer);

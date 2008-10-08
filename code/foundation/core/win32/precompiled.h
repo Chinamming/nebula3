@@ -1,6 +1,4 @@
 #pragma once
-#ifndef CORE_WIN32_PRECOMPILED_H
-#define CORE_WIN32_PRECOMPILED_H
 //------------------------------------------------------------------------------
 /**
     @file core/win32/precompiled.h
@@ -59,7 +57,8 @@
 #include <d3dx9.h>
 #include <dxerr9.h>
 #include <xinput.h>
+#include <xact3.h>
+#include <xact3d3.h>
 //------------------------------------------------------------------------------
-#endif
 
 

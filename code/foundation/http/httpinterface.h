@@ -18,8 +18,8 @@ namespace Http
 {
 class HttpInterface : public Messaging::AsyncPort
 {
-    DeclareClass(HttpInterface);
-    DeclareInterfaceSingleton(HttpInterface);
+    __DeclareClass(HttpInterface);
+    __DeclareInterfaceSingleton(HttpInterface);
 public:
     /// constructor
     HttpInterface();
