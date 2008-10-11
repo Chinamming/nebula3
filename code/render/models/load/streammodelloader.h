@@ -21,7 +21,7 @@ namespace Models
 {
 class StreamModelLoader : public Resources::ResourceLoader
 {
-    DeclareClass(StreamModelLoader);
+    __DeclareClass(StreamModelLoader);
 public:
     /// constructor
     StreamModelLoader();

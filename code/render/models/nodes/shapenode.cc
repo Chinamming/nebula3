@@ -11,7 +11,7 @@
 
 namespace Models
 {
-ImplementClass(Models::ShapeNode, 'SPND', Models::StateNode);
+__ImplementClass(Models::ShapeNode, 'SPND', Models::StateNode);
 
 using namespace Util;
 using namespace Attr;

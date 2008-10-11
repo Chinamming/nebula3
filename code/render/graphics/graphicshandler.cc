@@ -9,6 +9,7 @@
 #include "resources/simpleresourcemapper.h"
 #include "coregraphics/streamtextureloader.h"
 #include "coregraphics/streammeshloader.h"
+#include "coregraphics/shaperenderer.h"
 #include "resources/managedtexture.h"
 #include "resources/managedmesh.h"
 #include "coreanimation/streamanimationloader.h"
@@ -17,21 +18,16 @@
 #include "internalgraphics/internalview.h"
 #include "lighting/internalspotlightentity.h"
 #include "apprender/platformconfig.h"
-
-#if __NEBULA3_HTTP__     
+#include "debugrender/debugshaperenderer.h"
+#include "models/nodes/statenodeinstance.h"
 #include "coregraphics/debug/displaypagehandler.h"
 #include "coregraphics/debug/texturepagehandler.h"
 #include "coregraphics/debug/meshpagehandler.h"
 #include "coregraphics/debug/shaderpagehandler.h"
-#endif
-
-#if __WII__
-#include "io/wii/wiidvdstream.h"
-#endif
 
 namespace Graphics
 {
-ImplementClass(Graphics::GraphicsHandler, 'GHDL', Messaging::Handler);
+__ImplementClass(Graphics::GraphicsHandler, 'GHDL', Messaging::Handler);
 
 using namespace IO;
 using namespace CoreGraphics;
@@ -44,6 +40,7 @@ using namespace Frame;
 using namespace Anim;
 using namespace Messaging;
 using namespace Util;
+using namespace Debug;
 
 //------------------------------------------------------------------------------
 /**
@@ -76,36 +73,10 @@ GraphicsHandler::Open()
     this->ioConsole = IO::Console::Create();
     this->ioConsole->Open();
     this->ioServer = IO::IoServer::Create();
+    this->ioServer->RegisterStandardUriSchemes();
+    this->ioServer->SetupStandardAssigns();
+    this->ioServer->MountStandardZipArchives();
 
-    // register URI schemes and defines 
-    // FIXME: redundant! IoInterface should be sole IO-Server-Replacement!
-#if __WII__        
-    this->ioServer->RegisterUriScheme("file", IO::WiiDvdStream::RTTI);
-    this->ioServer->RegisterUriScheme("dvd", IO::WiiDvdStream::RTTI);
-#else        
-    this->ioServer->RegisterUriScheme("file", FileStream::RTTI);
-#endif
-    this->ioServer->SetAssign(Assign("shd", "home:export/shaders"));
-    this->ioServer->SetAssign(Assign("frame", "home:export/frame"));
-    this->ioServer->SetAssign(Assign("msh", "home:export/meshes"));
-    this->ioServer->SetAssign(Assign("tex", "home:export/textures"));
-    this->ioServer->SetAssign(Assign("ani", "home:export/anims"));
-    this->ioServer->SetAssign(Assign("mdl", "home:export/gfxlib"));        
-
-    // Nebula2 backward compat assigns:
-    // FIXME: redundant! IoInterface should be sole IO-Server-Replacement!
-    this->ioServer->SetAssign(Assign("meshes", "home:export/meshes"));
-    this->ioServer->SetAssign(Assign("textures", "home:export/textures"));
-    this->ioServer->SetAssign(Assign("anims", "home:export/anims"));
-
-    // mount asset zip archives
-    // FIXME: redundant! IoInterface should be sole IO-Server-Replacement!
-    if (IoServer::Instance()->FileExists("home:export.zip"))
-    {
-        this->ioServer->MountZipArchive("home:export.zip");
-    }
-
-#if __NEBULA3_HTTP__
     // setup http page handlers
     this->httpServerProxy = Http::HttpServerProxy::Create();
     this->httpServerProxy->Open();
@@ -113,7 +84,6 @@ GraphicsHandler::Open()
     this->httpServerProxy->AttachRequestHandler(Debug::MeshPageHandler::Create());
     this->httpServerProxy->AttachRequestHandler(Debug::ShaderPageHandler::Create());
     this->httpServerProxy->AttachRequestHandler(Debug::TexturePageHandler::Create());
-#endif
 
     // setup the required objects, but do not open them, this will
     // happen at a later time when the SetupGrapics message is received
@@ -122,6 +92,7 @@ GraphicsHandler::Open()
     this->transformDevice = TransformDevice::Create();
     this->shaderServer = ShaderServer::Create();
     this->shapeRenderer = ShapeRenderer::Create();
+    this->textRenderer = TextRenderer::Create();
     this->vertexLayoutServer = VertexLayoutServer::Create();
     this->sharedResourceServer = SharedResourceServer::Create();
     this->resourceManager = ResourceManager::Create();
@@ -131,8 +102,6 @@ GraphicsHandler::Open()
     this->shadowServer = ShadowServer::Create();
     this->frameServer = FrameServer::Create();
     this->animationServer = AnimationServer::Create();
-
-    this->debugTextRenderer = DebugTextRenderer::Create();
 
     // setup timer
     this->timer.Start();
@@ -169,12 +138,10 @@ GraphicsHandler::Close()
     this->displayDevice = 0;
     this->renderDevice = 0;
     this->animationServer = 0;
-    this->debugTextRenderer = 0;
+    this->textRenderer = 0;
     
-#if __NEBULA3_HTTP__    
     this->httpServerProxy->Close();
     this->httpServerProxy = 0;
-#endif    
 
     this->ioServer = 0;
     this->ioConsole = 0;
@@ -221,7 +188,7 @@ GraphicsHandler::SetupGraphicsRuntime()
     this->sharedResourceServer->Open();
     this->resourceManager->Open();
     this->frameServer->Open();
-    this->debugTextRenderer->Open();
+    this->textRenderer->Open();
 
     // setup resource mapper for textures
     // FIXME: should be configurable!
@@ -266,9 +233,9 @@ void
 GraphicsHandler::ShutdownGraphicsRuntime()
 {
     n_assert(this->isGraphicsRuntimeValid);
-    this->isGraphicsRuntimeValid = 0;
+    this->isGraphicsRuntimeValid = false;
 
-    this->debugTextRenderer->Close();
+    this->textRenderer->Close();
     this->shadowServer->Close();
     this->lightServer->Close();
     this->graphicsServer->Close();
@@ -378,9 +345,9 @@ GraphicsHandler::HandleMessage(const Ptr<Message>& msg)
     {
         this->OnSetVisibility(msg.cast<SetVisibility>());
     }
-    else if (msg->CheckId(RenderDebugText::Id))
+    else if (msg->CheckId(Graphics::UpdateInstanceShaderVariable::Id))
     {
-        this->OnRenderDebugText(msg.cast<RenderDebugText>());
+        this->pendingGfxMessages.Append(msg);        
     }
     else
     {
@@ -398,22 +365,26 @@ GraphicsHandler::HandleMessage(const Ptr<Message>& msg)
 void
 GraphicsHandler::DoWork()
 {
-    _start_timer(GraphicsFrameTime);
-    n_assert(this->IsOpen());
+    if (this->isGraphicsRuntimeValid)
+    {
+        _start_timer(GraphicsFrameTime);
+        n_assert(this->IsOpen());
 
-    // first signal the global frameEvent, to notify other threads
-    // that we are finished with message processing
-    GraphicsInterface::Instance()->SignalFrameEvent();
+        // first signal the global frameEvent, to notify other threads
+        // that we are finished with message processing
+        GraphicsInterface::Instance()->SignalFrameEvent();
 
-#if __NEBULA3_HTTP__
+        // handle pending messages
+        this->HandlePendingMessages();
+
+        // finally, render the frame
+        this->graphicsServer->OnFrame(this->timer.GetTime());
+
+        _stop_timer(GraphicsFrameTime);
+    }
+
     // allow render-thread HttpRequests to be processed
     this->httpServerProxy->HandlePendingRequests();
-#endif 
-
-    // finally, render the frame
-    this->graphicsServer->OnFrame(this->timer.GetTime());
-
-    _stop_timer(GraphicsFrameTime);
 }
 
 //------------------------------------------------------------------------------
@@ -422,7 +393,6 @@ GraphicsHandler::DoWork()
 void
 GraphicsHandler::OnSetupGraphics(const Ptr<SetupGraphics>& msg)
 {
-    n_printf("GraphicsHandler::OnSetupGraphics() called!\n");
     n_assert(!this->isGraphicsRuntimeValid);
 
     // configure the display device and setup the graphics runtime
@@ -445,7 +415,6 @@ GraphicsHandler::OnSetupGraphics(const Ptr<SetupGraphics>& msg)
 void
 GraphicsHandler::OnAdapterExists(const Ptr<AdapterExists>& msg)
 {
-    n_printf("GraphicsHandler::OnAdapterExists() called!\n");
     msg->SetResult(this->displayDevice->AdapterExists(msg->GetAdapter()));
 }
 
@@ -455,7 +424,6 @@ GraphicsHandler::OnAdapterExists(const Ptr<AdapterExists>& msg)
 void
 GraphicsHandler::OnGetAvailableDisplayModes(const Ptr<GetAvailableDisplayModes>& msg)
 {
-    n_printf("GraphicsHandler::OnGetAvailableDisplayModes() called!\n");
     Adapter::Code adapter = msg->GetAdapter();
     PixelFormat::Code pixelFormat = msg->GetPixelFormat();
     msg->SetResult(this->displayDevice->GetAvailableDisplayModes(adapter, pixelFormat));
@@ -467,7 +435,6 @@ GraphicsHandler::OnGetAvailableDisplayModes(const Ptr<GetAvailableDisplayModes>&
 void
 GraphicsHandler::OnGetCurrentAdapterDisplayMode(const Ptr<GetCurrentAdapterDisplayMode>& msg)
 {
-    n_printf("GraphicsHandler::OnGetCurrentAdapterDisplayMode() called!\n");
     Adapter::Code adapter = msg->GetAdapter();
     msg->SetResult(this->displayDevice->GetCurrentAdapterDisplayMode(adapter));
 }
@@ -478,7 +445,6 @@ GraphicsHandler::OnGetCurrentAdapterDisplayMode(const Ptr<GetCurrentAdapterDispl
 void
 GraphicsHandler::OnGetAdapterInfo(const Ptr<GetAdapterInfo>& msg)
 {
-    n_printf("GraphicsHandler::OnGetAdapterInfo() called!\n");
     Adapter::Code adapter = msg->GetAdapter();
     msg->SetResult(this->displayDevice->GetAdapterInfo(adapter));
 }
@@ -489,7 +455,6 @@ GraphicsHandler::OnGetAdapterInfo(const Ptr<GetAdapterInfo>& msg)
 void
 GraphicsHandler::OnAttachDisplayEventHandler(const Ptr<AttachDisplayEventHandler>& msg)
 {
-    n_printf("GraphicsHandler::OnAttachDisplayEventHandler() called!\n");
     this->displayDevice->AttachEventHandler(msg->GetHandler().upcast<DisplayEventHandler>());
 }
 
@@ -499,7 +464,6 @@ GraphicsHandler::OnAttachDisplayEventHandler(const Ptr<AttachDisplayEventHandler
 void
 GraphicsHandler::OnRemoveDisplayEventHandler(const Ptr<RemoveDisplayEventHandler>& msg)
 {
-    n_printf("GraphicsHandler::OnRemoveDisplayEventHandler() called!\n");
     this->displayDevice->RemoveEventHandler(msg->GetHandler().upcast<DisplayEventHandler>());
 }
 
@@ -509,7 +473,6 @@ GraphicsHandler::OnRemoveDisplayEventHandler(const Ptr<RemoveDisplayEventHandler
 void
 GraphicsHandler::OnAttachRenderEventHandler(const Ptr<AttachRenderEventHandler>& msg)
 {
-    n_printf("GraphicsHandler::OnAttachRenderEventHandler() called!\n");
     this->renderDevice->AttachEventHandler(msg->GetHandler().upcast<RenderEventHandler>());
 }
 
@@ -519,7 +482,6 @@ GraphicsHandler::OnAttachRenderEventHandler(const Ptr<AttachRenderEventHandler>&
 void
 GraphicsHandler::OnRemoveRenderEventHandler(const Ptr<RemoveRenderEventHandler>& msg)
 {
-    n_printf("GraphicsHandler::OnRemoveRenderEventHandler() called!\n");
     this->renderDevice->RemoveEventHandler(msg->GetHandler().upcast<RenderEventHandler>());
 }
 
@@ -529,7 +491,6 @@ GraphicsHandler::OnRemoveRenderEventHandler(const Ptr<RemoveRenderEventHandler>&
 void
 GraphicsHandler::OnCreateGraphicsStage(const Ptr<CreateGraphicsStage>& msg)
 {
-    n_printf("GraphicsHandler::OnCreateGraphicsStage() called!\n");
     const StringAtom& name = msg->GetName();
     const Core::Rtti* stageBuilderClass = msg->GetStageBuilderClass();
     n_assert(stageBuilderClass && stageBuilderClass->IsDerivedFrom(StageBuilder::RTTI));
@@ -546,7 +507,6 @@ GraphicsHandler::OnCreateGraphicsStage(const Ptr<CreateGraphicsStage>& msg)
 void
 GraphicsHandler::OnDiscardGraphicsStage(const Ptr<DiscardGraphicsStage>& msg)
 {
-    n_printf("GraphicsHandler::OnDiscardGraphicsStage() called!\n");
     Ptr<InternalStage> stage = (InternalStage*) msg->GetStageHandle();
     n_assert(stage.isvalid() && stage->IsA(InternalStage::RTTI));
     InternalGraphicsServer::Instance()->DiscardStage(stage);
@@ -558,8 +518,6 @@ GraphicsHandler::OnDiscardGraphicsStage(const Ptr<DiscardGraphicsStage>& msg)
 void
 GraphicsHandler::OnCreateGraphicsView(const Ptr<CreateGraphicsView>& msg)
 {
-    n_printf("GraphicsHandler::OnCreateGraphicsView() called!\n");
-    
     const Core::Rtti* viewClass = msg->GetViewClass();
     n_assert(viewClass && viewClass->IsDerivedFrom(InternalView::RTTI));
     const StringAtom& viewName = msg->GetName();
@@ -582,8 +540,6 @@ GraphicsHandler::OnCreateGraphicsView(const Ptr<CreateGraphicsView>& msg)
 void
 GraphicsHandler::OnDiscardGraphicsView(const Ptr<DiscardGraphicsView>& msg)
 {
-    n_printf("GraphicsHandler::OnDiscardGraphicsView() called!\n");
-
     Ptr<InternalView> view = (InternalView*) msg->GetViewHandle();
     n_assert(view.isvalid() && view->IsA(InternalView::RTTI));
     InternalGraphicsServer::Instance()->DiscardView(view);
@@ -595,8 +551,6 @@ GraphicsHandler::OnDiscardGraphicsView(const Ptr<DiscardGraphicsView>& msg)
 void
 GraphicsHandler::OnCreateCameraEntity(const Ptr<CreateCameraEntity>& msg)
 {
-    n_printf("GraphicsHandler::OnCreateCameraEntity() called!\n");
-
     Ptr<InternalCameraEntity> cameraEntity = InternalCameraEntity::Create();
     cameraEntity->SetTransform(msg->GetTransform());
     cameraEntity->SetVisible(msg->GetVisible());
@@ -629,8 +583,6 @@ GraphicsHandler::OnCreateCameraEntity(const Ptr<CreateCameraEntity>& msg)
 void
 GraphicsHandler::OnDiscardGraphicsEntity(const Ptr<DiscardGraphicsEntity>& msg)
 {
-    n_printf("GraphicsHandler::OnDiscardGraphicsEntity() called!\n");
-
     Ptr<InternalGraphicsEntity> entity = (InternalGraphicsEntity*) msg->GetEntityHandle();
     n_assert(entity.isvalid() && entity->IsA(InternalGraphicsEntity::RTTI));
     Ptr<InternalStage> stage = entity->GetStage();
@@ -644,8 +596,6 @@ GraphicsHandler::OnDiscardGraphicsEntity(const Ptr<DiscardGraphicsEntity>& msg)
 void
 GraphicsHandler::OnCreateModelEntity(const Ptr<CreateModelEntity>& msg)
 {
-    n_printf("GraphicsHandler::OnCreateModelEntity() called!\n");
-
     // create a new model entity
     Ptr<InternalModelEntity> modelEntity = InternalModelEntity::Create();
     modelEntity->SetTransform(msg->GetTransform());
@@ -666,8 +616,6 @@ GraphicsHandler::OnCreateModelEntity(const Ptr<CreateModelEntity>& msg)
 void
 GraphicsHandler::OnCreateGlobalLightEntity(const Ptr<CreateGlobalLightEntity>& msg)
 {
-    n_printf("GraphicsHandler::OnCreateGlobalLightEntity() called!\n");
-
     // create a new global light entity
     Ptr<Lighting::InternalGlobalLightEntity> lightEntity = Lighting::InternalGlobalLightEntity::Create();
     lightEntity->SetTransform(msg->GetTransform());
@@ -691,8 +639,6 @@ GraphicsHandler::OnCreateGlobalLightEntity(const Ptr<CreateGlobalLightEntity>& m
 void
 GraphicsHandler::OnCreateSpotLightEntity(const Ptr<CreateSpotLightEntity>& msg)
 {
-    n_printf("GraphicsHandler::OnCreateSpotLightEntity() called!\n");
-
     // create a new spotlight entity
     Ptr<Lighting::InternalSpotLightEntity> lightEntity = Lighting::InternalSpotLightEntity::Create();
     lightEntity->SetTransform(msg->GetTransform());
@@ -762,12 +708,66 @@ GraphicsHandler::OnRemoveCameraFromView(const Ptr<RemoveCameraFromView>& msg)
 //------------------------------------------------------------------------------
 /**
 */
-void
-GraphicsHandler::OnRenderDebugText(const Ptr<RenderDebugText>& msg)
+bool
+GraphicsHandler::OnUpdateInstanceShaderVariable(const Ptr<Graphics::UpdateInstanceShaderVariable>& msg)
 {
-    n_assert(CoreGraphics::DebugTextRenderer::HasInstance());
-    
-    DebugTextRenderer::Instance()->DrawText(msg->GetText(), msg->GetColor(), msg->GetPosition());
+    Ptr<InternalGraphicsEntity> entity = (InternalGraphicsEntity*) msg->GetEntityHandle();
+    n_assert(entity.isvalid() && entity->IsA(InternalGraphicsEntity::RTTI));
+    n_assert(entity->GetType() == InternalGraphics::InternalGraphicsEntityType::Model);
+    Ptr<InternalModelEntity> modelEntity = entity.cast<InternalModelEntity>();
+    // is modelentity deleted, and msg out-of-date, return handled = true to remove msg from list
+    if (!modelEntity->IsActive())
+    {
+        return true;
+    }
+
+    if (modelEntity->GetModelResourceState() == Resources::Resource::Loaded)
+    {
+        const Ptr<ModelInstance>& modelInst =  modelEntity->GetModelInstance();    
+        if (modelInst.isvalid())
+        {
+            const Util::StringAtom& name = msg->GetNodeInstanceName();
+            const Ptr<ModelNodeInstance>& nodeInst = modelInst->LookupNodeInstance(name);
+            n_assert(nodeInst->IsA(StateNodeInstance::RTTI));
+            const Ptr<StateNodeInstance>& stateNodeInst = nodeInst.cast<StateNodeInstance>();
+            Ptr<CoreGraphics::ShaderVariableInstance> var;
+            if (stateNodeInst->HasShaderVariableInstance(ShaderVariable::Semantic(msg->GetSemantic())))
+            {
+                var = stateNodeInst->GetShaderVariableInstance(ShaderVariable::Semantic(msg->GetSemantic()));        
+            }
+            else
+            {
+                var = stateNodeInst->CreateShaderVariableInstance(ShaderVariable::Semantic(msg->GetSemantic()));
+            }
+
+            const Util::Variant& value = msg->GetValue();
+            var->SetValue(value);   
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+GraphicsHandler::HandlePendingMessages()
+{
+    IndexT i;
+    for (i = 0; i < this->pendingGfxMessages.Size(); i++)
+    {
+        if (this->pendingGfxMessages[i]->CheckId(Graphics::UpdateInstanceShaderVariable::Id))
+        {
+            if (this->OnUpdateInstanceShaderVariable(this->pendingGfxMessages[i].cast<Graphics::UpdateInstanceShaderVariable>()))
+            {
+                this->pendingGfxMessages.EraseIndex(i);
+                i--;
+            }
+        }
+    }
 }
 
 } // namespace Graphics

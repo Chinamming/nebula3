@@ -28,7 +28,7 @@ namespace Graphics
 {
 class Stage : public Core::RefCounted
 {
-    DeclareClass(Stage);
+    __DeclareClass(Stage);
 public:
     /// constructor
     Stage();

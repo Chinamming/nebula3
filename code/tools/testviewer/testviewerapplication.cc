@@ -5,6 +5,8 @@
 #include "stdneb.h"
 #include "tools/testviewer/testviewerapplication.h"
 #include "debugrender/debugrender.h"
+#include "debugrender/debugshaperenderer.h"
+#include "math/quaternion.h"
 
 namespace Tools
 {
@@ -14,6 +16,7 @@ using namespace Math;
 using namespace Util;
 using namespace Resources;
 using namespace Timing;
+using namespace Debug;
 
 //------------------------------------------------------------------------------
 /**
@@ -56,7 +59,7 @@ TestViewerApplication::Open()
         this->localLight0 = SpotLightEntity::Create();
         this->localLight0->SetTransform(lightTransform);
         this->localLight0->SetColor(float4(1.0f, 1.0f, 1.0f, 0.0f));        
-        this->localLight0->SetCastShadows(true);
+        this->localLight0->SetCastShadows(false);
         this->stage->AttachEntity(this->localLight0.cast<GraphicsEntity>());
 
         // setup models
@@ -108,11 +111,24 @@ TestViewerApplication::OnUpdateFrame()
     matrix44 lightTransform = matrix44::multiply(matrix44::scaling(75.0f, 75.0f, 100.0f), matrix44::lookatrh(pos, lookatPos, vector::upvec()));
     this->localLight0->SetTransform(lightTransform);
 
+    // test text rendering
     float frameTime = (float)this->GetFrameTime();
     Util::String fpsTxt;
-    fpsTxt.Format("FPS: %.2f", 1/frameTime);
+    fpsTxt.Format("Game FPS: %.2f", 1/frameTime);
     _debug_text(fpsTxt, Math::float2(0.0,0.0), Math::float4(1,1,1,1))
 
+    // render a few debug shapes
+    IndexT x;
+    for (x = 0; x < 10; x++)
+    {
+        IndexT y;
+        for (y = 0; y < 10; y++)
+        {
+            quaternion rot = quaternion::rotationyawpitchroll(0.0f, curTime, 0.0f);
+            matrix44 m = matrix44::affinetransformation(1.0f, vector::nullvec(), rot, point(x * 2.0f, 1.0f, y * 2.0f));
+            DebugShapeRenderer::Instance()->DrawBox(m, float4(1.0f, 0.0f, 0.0f, 0.5f));
+        }
+    }
     ViewerApplication::OnUpdateFrame();
 }
 

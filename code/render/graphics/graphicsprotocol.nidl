@@ -180,11 +180,11 @@
             <InArg name="ViewName" type="Util::StringAtom"/>
         </Message>
 
-        <!-- render text string on screen for debugging -->
-        <Message name="RenderDebugText" fourcc="rdtx">
-          <InArg name="Text" type="Util::String"/>
-          <InArg name="Color" type="Math::float4"/>
-          <InArg name="Position" type="Math::float2"/>
+        <!-- update shader variable instance -->
+        <Message name="UpdateInstanceShaderVariable" fourcc="uisv" derivedFrom="GraphicsEntityMsg">
+          <InArg name="NodeInstanceName" type="Util::StringAtom"/>
+          <InArg name="Semantic" type="Util::StringAtom"/>
+          <InArg name="Value" type="Util::Variant"/>
         </Message>
         
     </Protocol>    

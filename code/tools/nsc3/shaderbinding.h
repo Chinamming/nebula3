@@ -27,7 +27,7 @@ namespace Tools
 {
 class ShaderBinding : public Core::RefCounted
 {
-    DeclareClass(ShaderBinding);
+    __DeclareClass(ShaderBinding);
 public:
     /// constructor
     ShaderBinding();

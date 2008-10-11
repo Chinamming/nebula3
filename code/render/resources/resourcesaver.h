@@ -20,7 +20,7 @@ class Resource;
 
 class ResourceSaver : public Core::RefCounted
 {
-    DeclareClass(ResourceSaver);
+    __DeclareClass(ResourceSaver);
 public:
     /// constructor
     ResourceSaver();

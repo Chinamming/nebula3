@@ -9,7 +9,7 @@
 
 namespace Graphics
 {
-ImplementClass(Graphics::CameraEntity, 'GCET', Graphics::GraphicsEntity);
+__ImplementClass(Graphics::CameraEntity, 'GCET', Graphics::GraphicsEntity);
 
 using namespace Util;
 using namespace Math;

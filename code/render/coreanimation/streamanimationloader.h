@@ -16,7 +16,7 @@ namespace CoreAnimation
 {
 class StreamAnimationLoader : public Resources::StreamResourceLoader
 {
-    DeclareClass(StreamAnimationLoader);
+    __DeclareClass(StreamAnimationLoader);
 public:
     #if NEBULA3_LEGACY_SUPPORT
     /// when loading from legacy NAX2 file format, caller needs to provide clip names!

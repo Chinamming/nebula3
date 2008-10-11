@@ -26,7 +26,7 @@ namespace Graphics
 //------------------------------------------------------------------------------
 class SetupGraphics : public Messaging::Message
 {
-    DeclareClass(SetupGraphics);
+    __DeclareClass(SetupGraphics);
     DeclareMsgId;
 public:
     SetupGraphics() 
@@ -156,7 +156,7 @@ private:
 //------------------------------------------------------------------------------
 class AdapterExists : public Messaging::Message
 {
-    DeclareClass(AdapterExists);
+    __DeclareClass(AdapterExists);
     DeclareMsgId;
 public:
     AdapterExists() 
@@ -190,7 +190,7 @@ private:
 //------------------------------------------------------------------------------
 class GetAvailableDisplayModes : public Messaging::Message
 {
-    DeclareClass(GetAvailableDisplayModes);
+    __DeclareClass(GetAvailableDisplayModes);
     DeclareMsgId;
 public:
     GetAvailableDisplayModes() 
@@ -236,7 +236,7 @@ private:
 //------------------------------------------------------------------------------
 class SupportsDisplayMode : public Messaging::Message
 {
-    DeclareClass(SupportsDisplayMode);
+    __DeclareClass(SupportsDisplayMode);
     DeclareMsgId;
 public:
     SupportsDisplayMode() 
@@ -282,7 +282,7 @@ private:
 //------------------------------------------------------------------------------
 class GetCurrentAdapterDisplayMode : public Messaging::Message
 {
-    DeclareClass(GetCurrentAdapterDisplayMode);
+    __DeclareClass(GetCurrentAdapterDisplayMode);
     DeclareMsgId;
 public:
     GetCurrentAdapterDisplayMode() 
@@ -316,7 +316,7 @@ private:
 //------------------------------------------------------------------------------
 class GetAdapterInfo : public Messaging::Message
 {
-    DeclareClass(GetAdapterInfo);
+    __DeclareClass(GetAdapterInfo);
     DeclareMsgId;
 public:
     GetAdapterInfo() 
@@ -350,7 +350,7 @@ private:
 //------------------------------------------------------------------------------
 class AttachDisplayEventHandler : public Messaging::Message
 {
-    DeclareClass(AttachDisplayEventHandler);
+    __DeclareClass(AttachDisplayEventHandler);
     DeclareMsgId;
 public:
     AttachDisplayEventHandler() 
@@ -371,7 +371,7 @@ private:
 //------------------------------------------------------------------------------
 class RemoveDisplayEventHandler : public Messaging::Message
 {
-    DeclareClass(RemoveDisplayEventHandler);
+    __DeclareClass(RemoveDisplayEventHandler);
     DeclareMsgId;
 public:
     RemoveDisplayEventHandler() 
@@ -392,7 +392,7 @@ private:
 //------------------------------------------------------------------------------
 class AttachRenderEventHandler : public Messaging::Message
 {
-    DeclareClass(AttachRenderEventHandler);
+    __DeclareClass(AttachRenderEventHandler);
     DeclareMsgId;
 public:
     AttachRenderEventHandler() 
@@ -413,7 +413,7 @@ private:
 //------------------------------------------------------------------------------
 class RemoveRenderEventHandler : public Messaging::Message
 {
-    DeclareClass(RemoveRenderEventHandler);
+    __DeclareClass(RemoveRenderEventHandler);
     DeclareMsgId;
 public:
     RemoveRenderEventHandler() 
@@ -434,7 +434,7 @@ private:
 //------------------------------------------------------------------------------
 class CreateGraphicsStage : public Messaging::Message
 {
-    DeclareClass(CreateGraphicsStage);
+    __DeclareClass(CreateGraphicsStage);
     DeclareMsgId;
 public:
     CreateGraphicsStage() :
@@ -493,7 +493,7 @@ private:
 //------------------------------------------------------------------------------
 class DiscardGraphicsStage : public Messaging::Message
 {
-    DeclareClass(DiscardGraphicsStage);
+    __DeclareClass(DiscardGraphicsStage);
     DeclareMsgId;
 public:
     DiscardGraphicsStage() 
@@ -514,7 +514,7 @@ private:
 //------------------------------------------------------------------------------
 class CreateGraphicsView : public Messaging::Message
 {
-    DeclareClass(CreateGraphicsView);
+    __DeclareClass(CreateGraphicsView);
     DeclareMsgId;
 public:
     CreateGraphicsView() :
@@ -598,7 +598,7 @@ private:
 //------------------------------------------------------------------------------
 class DiscardGraphicsView : public Messaging::Message
 {
-    DeclareClass(DiscardGraphicsView);
+    __DeclareClass(DiscardGraphicsView);
     DeclareMsgId;
 public:
     DiscardGraphicsView() 
@@ -619,7 +619,7 @@ private:
 //------------------------------------------------------------------------------
 class CreateGraphicsEntity : public Messaging::Message
 {
-    DeclareClass(CreateGraphicsEntity);
+    __DeclareClass(CreateGraphicsEntity);
     DeclareMsgId;
 public:
     CreateGraphicsEntity() :
@@ -678,7 +678,7 @@ private:
 //------------------------------------------------------------------------------
 class DiscardGraphicsEntity : public Messaging::Message
 {
-    DeclareClass(DiscardGraphicsEntity);
+    __DeclareClass(DiscardGraphicsEntity);
     DeclareMsgId;
 public:
     DiscardGraphicsEntity() 
@@ -699,7 +699,7 @@ private:
 //------------------------------------------------------------------------------
 class CreateModelEntity : public CreateGraphicsEntity
 {
-    DeclareClass(CreateModelEntity);
+    __DeclareClass(CreateModelEntity);
     DeclareMsgId;
 public:
     CreateModelEntity() 
@@ -720,7 +720,7 @@ private:
 //------------------------------------------------------------------------------
 class CreateCameraEntity : public CreateGraphicsEntity
 {
-    DeclareClass(CreateCameraEntity);
+    __DeclareClass(CreateCameraEntity);
     DeclareMsgId;
 public:
     CreateCameraEntity() :
@@ -818,7 +818,7 @@ private:
 //------------------------------------------------------------------------------
 class CreateGlobalLightEntity : public CreateGraphicsEntity
 {
-    DeclareClass(CreateGlobalLightEntity);
+    __DeclareClass(CreateGlobalLightEntity);
     DeclareMsgId;
 public:
     CreateGlobalLightEntity() 
@@ -875,7 +875,7 @@ private:
 //------------------------------------------------------------------------------
 class CreateSpotLightEntity : public CreateGraphicsEntity
 {
-    DeclareClass(CreateSpotLightEntity);
+    __DeclareClass(CreateSpotLightEntity);
     DeclareMsgId;
 public:
     CreateSpotLightEntity() 
@@ -920,7 +920,7 @@ private:
 //------------------------------------------------------------------------------
 class GraphicsEntityMsg : public Messaging::Message
 {
-    DeclareClass(GraphicsEntityMsg);
+    __DeclareClass(GraphicsEntityMsg);
     DeclareMsgId;
 public:
     GraphicsEntityMsg() 
@@ -941,7 +941,7 @@ private:
 //------------------------------------------------------------------------------
 class UpdateTransform : public GraphicsEntityMsg
 {
-    DeclareClass(UpdateTransform);
+    __DeclareClass(UpdateTransform);
     DeclareMsgId;
 public:
     UpdateTransform() 
@@ -962,7 +962,7 @@ private:
 //------------------------------------------------------------------------------
 class SetVisibility : public GraphicsEntityMsg
 {
-    DeclareClass(SetVisibility);
+    __DeclareClass(SetVisibility);
     DeclareMsgId;
 public:
     SetVisibility() 
@@ -983,7 +983,7 @@ private:
 //------------------------------------------------------------------------------
 class AttachCameraToView : public GraphicsEntityMsg
 {
-    DeclareClass(AttachCameraToView);
+    __DeclareClass(AttachCameraToView);
     DeclareMsgId;
 public:
     AttachCameraToView() 
@@ -1004,7 +1004,7 @@ private:
 //------------------------------------------------------------------------------
 class RemoveCameraFromView : public GraphicsEntityMsg
 {
-    DeclareClass(RemoveCameraFromView);
+    __DeclareClass(RemoveCameraFromView);
     DeclareMsgId;
 public:
     RemoveCameraFromView() 
@@ -1023,49 +1023,49 @@ private:
     Util::StringAtom viewname;
 };
 //------------------------------------------------------------------------------
-class RenderDebugText : public Messaging::Message
+class UpdateInstanceShaderVariable : public GraphicsEntityMsg
 {
-    DeclareClass(RenderDebugText);
+    __DeclareClass(UpdateInstanceShaderVariable);
     DeclareMsgId;
 public:
-    RenderDebugText() 
+    UpdateInstanceShaderVariable() 
     { };
 public:
-    void SetText(const Util::String& val)
+    void SetNodeInstanceName(const Util::StringAtom& val)
     {
         n_assert(!this->handled);
-        this->text = val;
+        this->nodeinstancename = val;
     };
-    const Util::String& GetText() const
+    const Util::StringAtom& GetNodeInstanceName() const
     {
-        return this->text;
+        return this->nodeinstancename;
     };
 private:
-    Util::String text;
+    Util::StringAtom nodeinstancename;
 public:
-    void SetColor(const Math::float4& val)
+    void SetSemantic(const Util::StringAtom& val)
     {
         n_assert(!this->handled);
-        this->color = val;
+        this->semantic = val;
     };
-    const Math::float4& GetColor() const
+    const Util::StringAtom& GetSemantic() const
     {
-        return this->color;
+        return this->semantic;
     };
 private:
-    Math::float4 color;
+    Util::StringAtom semantic;
 public:
-    void SetPosition(const Math::float2& val)
+    void SetValue(const Util::Variant& val)
     {
         n_assert(!this->handled);
-        this->position = val;
+        this->value = val;
     };
-    const Math::float2& GetPosition() const
+    const Util::Variant& GetValue() const
     {
-        return this->position;
+        return this->value;
     };
 private:
-    Math::float2 position;
+    Util::Variant value;
 };
 } // namespace Graphics
 //------------------------------------------------------------------------------

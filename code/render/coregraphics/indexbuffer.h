@@ -9,22 +9,13 @@
     
     (C) 2007 Radon Labs GmbH
 */
-#if __WIN32__
-#include "coregraphics/d3d9/d3d9indexbuffer.h"
+#if (__WIN32__ || __XBOX360__)
+#include "coregraphics/win360/d3d9indexbuffer.h"
 namespace CoreGraphics
 {
-class IndexBuffer : public Direct3D9::D3D9IndexBuffer
+class IndexBuffer : public Win360::D3D9IndexBuffer
 {
-    DeclareClass(IndexBuffer);
-};
-}
-#elif __XBOX360__
-#include "coregraphics/xbox360/xbox360indexbuffer.h"
-namespace CoreGraphics
-{
-class IndexBuffer : public Xbox360::Xbox360IndexBuffer
-{
-    DeclareClass(IndexBuffer);
+    __DeclareClass(IndexBuffer);
 };
 }
 #elif __WII__
@@ -33,7 +24,7 @@ namespace CoreGraphics
 {
 class IndexBuffer : public Wii::WiiIndexBuffer
 {
-    DeclareClass(IndexBuffer);
+    __DeclareClass(IndexBuffer);
 };
 }
 #else

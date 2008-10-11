@@ -9,22 +9,13 @@
     
     (C) 2008 Radon Labs GmbH
 */
-#if __WIN32__
-#include "coregraphics/d3d9/d3d9streammeshloader.h"
+#if (__WIN32__ || __XBOX360__)
+#include "coregraphics/win360/d3d9streammeshloader.h"
 namespace CoreGraphics
 {
-class StreamMeshLoader : public Direct3D9::D3D9StreamMeshLoader
+class StreamMeshLoader : public Win360::D3D9StreamMeshLoader
 {
-    DeclareClass(StreamMeshLoader);
-};
-}
-#elif __XBOX360__
-#include "coregraphics/xbox360/xbox360streammeshloader.h"
-namespace CoreGraphics
-{
-class StreamMeshLoader : public Xbox360::Xbox360StreamMeshLoader
-{
-    DeclareClass(StreamMeshLoader);
+    __DeclareClass(StreamMeshLoader);
 };
 }
 #elif __WII__
@@ -33,7 +24,7 @@ namespace CoreGraphics
 {
 class StreamMeshLoader : public Wii::WiiStreamMeshLoader
 {
-    DeclareClass(StreamMeshLoader);
+    __DeclareClass(StreamMeshLoader);
 };
 }
 #else

@@ -13,7 +13,7 @@
 
 namespace Debug
 {
-ImplementClass(Debug::TexturePageHandler, 'DTXH', Http::HttpRequestHandler);
+__ImplementClass(Debug::TexturePageHandler, 'DTXH', Http::HttpRequestHandler);
 
 using namespace IO;
 using namespace CoreGraphics;

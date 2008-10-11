@@ -7,8 +7,8 @@
 
 namespace Graphics
 {
-ImplementClass(Graphics::GraphicsServer, 'GSRV', Core::RefCounted);
-ImplementSingleton(Graphics::GraphicsServer);
+__ImplementClass(Graphics::GraphicsServer, 'GSRV', Core::RefCounted);
+__ImplementSingleton(Graphics::GraphicsServer);
 
 using namespace Util;
 using namespace Math;
@@ -19,7 +19,7 @@ using namespace Math;
 GraphicsServer::GraphicsServer() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ GraphicsServer::~GraphicsServer()
     n_assert(this->stageIndexMap.IsEmpty());
     n_assert(this->views.IsEmpty());
     n_assert(this->viewIndexMap.IsEmpty());
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -258,7 +258,7 @@ GraphicsServer::ComputeWorldMouseRay(const float2& mousePos, float length, const
     point localMousePos = viewCoord * nearPlane * 1.1f;
     localMousePos.y() = -1 * localMousePos.y();
     point worldMousePos = vector::transform(localMousePos, viewMatrix);
-    vector worldMouseDir = worldMousePos - point(viewMatrix.getpos_component());
+    vector worldMouseDir = worldMousePos - point(viewMatrix.get_position());
     worldMouseDir = vector::normalize(worldMouseDir);
     worldMouseDir *= length;
 

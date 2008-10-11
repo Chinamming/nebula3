@@ -7,17 +7,17 @@
 #if __WIN32__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::VertexLayoutServer, 'VLSV', Base::VertexLayoutServerBase);
+__ImplementClass(CoreGraphics::VertexLayoutServer, 'VLSV', Base::VertexLayoutServerBase);
 }
 #elif __XBOX360__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::VertexLayoutServer, 'VLSV', Base::VertexLayoutServerBase);
+__ImplementClass(CoreGraphics::VertexLayoutServer, 'VLSV', Base::VertexLayoutServerBase);
 }
 #elif __WII__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::VertexLayoutServer, 'VLSV', Wii::WiiVertexLayoutServer);
+__ImplementClass(CoreGraphics::VertexLayoutServer, 'VLSV', Wii::WiiVertexLayoutServer);
 }
 #else
 #error "VertexLayoutServer class not implemented on this platform!"

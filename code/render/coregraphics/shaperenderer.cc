@@ -7,23 +7,21 @@
 
 namespace CoreGraphics
 {
-#if __WIN32__
-ImplementClass(CoreGraphics::ShapeRenderer, 'SHPR', Direct3D9::D3D9ShapeRenderer);
-#elif __XBOX360__
-ImplementClass(CoreGraphics::ShapeRenderer, 'SHPR', Xbox360::Xbox360ShapeRenderer);
+#if (__WIN32__ || __XBOX360__)
+__ImplementClass(CoreGraphics::ShapeRenderer, 'SHPR', Win360::D3D9ShapeRenderer);
 #elif __WII__
-ImplementClass(CoreGraphics::ShapeRenderer, 'SHPR', Wii::WiiShapeRenderer);
+__ImplementClass(CoreGraphics::ShapeRenderer, 'SHPR', Wii::WiiShapeRenderer);
 #else
 #error "ShapeRenderer class not implemented on this platform!"
 #endif
-ImplementSingleton(CoreGraphics::ShapeRenderer);
+__ImplementSingleton(CoreGraphics::ShapeRenderer);
 
 //------------------------------------------------------------------------------
 /**
 */
 ShapeRenderer::ShapeRenderer()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -31,7 +29,7 @@ ShapeRenderer::ShapeRenderer()
 */
 ShapeRenderer::~ShapeRenderer()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 } // namespace CoreGraphics

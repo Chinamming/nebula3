@@ -9,7 +9,7 @@
 
 namespace Resources
 {
-ImplementClass(Resources::Resource, 'RSRC', Core::RefCounted);
+__ImplementClass(Resources::Resource, 'RSRC', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

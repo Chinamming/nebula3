@@ -7,7 +7,7 @@
 
 namespace Base
 {
-ImplementClass(Base::GamePadBase, 'IGPB', Input::InputHandler);
+__ImplementClass(Base::GamePadBase, 'IGPB', Input::InputHandler);
 
 using namespace Input;
 

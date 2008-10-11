@@ -28,7 +28,7 @@ namespace Legacy
 {
 class Nvx2StreamReader : public IO::StreamReader
 {
-    DeclareClass(Nvx2StreamReader);
+    __DeclareClass(Nvx2StreamReader);
 public:
     /// contructor
     Nvx2StreamReader();

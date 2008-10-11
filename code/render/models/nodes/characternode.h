@@ -31,7 +31,7 @@ namespace Models
 {
 class CharacterNode : public TransformNode
 {
-    DeclareClass(CharacterNode);
+    __DeclareClass(CharacterNode);
 public:
     /// constructor
     CharacterNode();

@@ -9,13 +9,10 @@
 */
 
 // debug text render macro
-#include "graphics/graphicsprotocol.h"
+#include "debugrender/debugrenderprotocol.h"
 #include "graphics/graphicsinterface.h"
+#include "debugrender/debugtextrenderer.h"
 
-#define _debug_text(txt, pos, color) { Ptr<Graphics::RenderDebugText> msg = Graphics::RenderDebugText::Create(); \
-                                       msg->SetText(txt);\
-                                       msg->SetPosition(pos);\
-                                       msg->SetColor(color);\
-                                       Graphics::GraphicsInterface::Instance()->Send(msg.cast<Messaging::Message>()); }
-
+#define _debug_text(txt, pos, color) { Debug::DebugTextRenderer::Instance()->DrawText(txt, color, pos); }
+#define _debug_text3D(txt, pos, color) { Debug::DebugTextRenderer::Instance()->DrawText3D(txt, color, pos); }
 #endif

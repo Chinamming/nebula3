@@ -16,6 +16,8 @@
 #include "graphics/view.h"
 #include "graphics/cameraentity.h"
 #include "renderutil/mayacamerautil.h"
+#include "debugrender/debugshaperenderer.h"
+#include "debugrender/debugtextrenderer.h"
 
 //------------------------------------------------------------------------------
 namespace App
@@ -32,13 +34,15 @@ public:
     /// close the application
     virtual void Close();
 
-protected:
+protected:    
     /// process input (called before rendering)
     virtual void OnProcessInput();
     /// update world 
     virtual void OnUpdateFrame();
 
     Ptr<Graphics::GraphicsServer> graphicsServer;
+    Ptr<Debug::DebugShapeRenderer> debugShapeRenderer;
+    Ptr<Debug::DebugTextRenderer> debugTextRenderer;
     Ptr<Graphics::Stage> stage;
     Ptr<Graphics::View> view;
     Ptr<Graphics::CameraEntity> camera;
@@ -49,3 +53,4 @@ protected:
 //------------------------------------------------------------------------------
 #endif
 
+    

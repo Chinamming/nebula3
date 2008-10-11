@@ -16,7 +16,7 @@ namespace Test
 {
 class RingBufferTest : public TestCase
 {
-    DeclareClass(RingBufferTest);
+    __DeclareClass(RingBufferTest);
 public:
     /// run the test
     virtual void Run();

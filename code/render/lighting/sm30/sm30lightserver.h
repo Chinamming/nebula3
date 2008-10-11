@@ -20,7 +20,7 @@ namespace Lighting
 {
 class SM30LightServer : public LightServerBase
 {
-    DeclareClass(SM30LightServer);
+    __DeclareClass(SM30LightServer);
 public:
     /// constructor
     SM30LightServer();

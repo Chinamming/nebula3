@@ -10,7 +10,7 @@
 
 namespace Test
 {
-ImplementClass(Test::SimpleMeshMapperTest, 'SMMT', Test::CoreGraphicsTest);
+__ImplementClass(Test::SimpleMeshMapperTest, 'SMMT', Test::CoreGraphicsTest);
 
 using namespace CoreGraphics;
 using namespace Resources;

@@ -8,7 +8,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::ShaderNode, 'SHDN', Core::RefCounted);
+__ImplementClass(Tools::ShaderNode, 'SHDN', Core::RefCounted);
 
 using namespace Util;
 using namespace IO;

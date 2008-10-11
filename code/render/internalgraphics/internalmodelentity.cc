@@ -6,11 +6,13 @@
 #include "internalgraphics/internalmodelentity.h"
 #include "models/modelserver.h"
 #include "coregraphics/shaperenderer.h"
+#include "threading/thread.h"
 
 namespace InternalGraphics
 {
-ImplementClass(InternalGraphics::InternalModelEntity, 'IMDE', InternalGraphics::InternalGraphicsEntity);
+__ImplementClass(InternalGraphics::InternalModelEntity, 'IMDE', InternalGraphics::InternalGraphicsEntity);
 
+using namespace Threading;
 using namespace CoreGraphics;
 using namespace Math;
 using namespace Models;
@@ -165,9 +167,7 @@ void
 InternalModelEntity::OnRenderDebug()
 {
     float4 color(1.0f, 0.0f, 0.0f, 0.5f);
-    matrix44 shapeTransform = this->globalBox.to_matrix44();
-    ShapeRenderer::Instance()->DrawShape(shapeTransform, ShapeRenderer::Box, color);
-
+    ShapeRenderer::Instance()->AddShape(Shape(Thread::GetMyThreadId(), Shape::Box, this->globalBox.to_matrix44(), color));
     this->GetModelInstance()->RenderDebug();
 }
 

@@ -15,7 +15,7 @@
 
 namespace Models
 {
-ImplementClass(Models::SkinShapeNodeInstance, 'SSPI', Models::ShapeNodeInstance);
+__ImplementClass(Models::SkinShapeNodeInstance, 'SSPI', Models::ShapeNodeInstance);
 
 using namespace CoreGraphics;
 using namespace Math;

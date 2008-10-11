@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="viewerstresstest_win32"
-	ProjectGUID="{81274816-6F7E-4729-A681-C3027E6CB850}"
+	ProjectGUID="{D1282DD1-44E4-46F8-A16F-87BAF1C157BF}"
 	>
 	<Platforms>
 		<Platform
@@ -78,7 +78,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dinput8.lib xinput.lib dxerr9.lib  d_foundation_win32.lib d_lua_win32.lib d_tinyxml_win32.lib d_zlib_win32.lib d_render_win32.lib d_testbase_win32.lib d_nebula2_win32.lib "
+				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dinput8.lib xinput.lib dxerr9.lib x3daudio.lib  "
 				OutputFile="..\..\bin\win32\viewerstresstest_win32.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
@@ -173,7 +173,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dinput8.lib xinput.lib dxerr9.lib  foundation_win32.lib lua_win32.lib tinyxml_win32.lib zlib_win32.lib render_win32.lib testbase_win32.lib nebula2_win32.lib "
+				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dinput8.lib xinput.lib dxerr9.lib x3daudio.lib  "
 				OutputFile="..\..\bin\win32\viewerstresstest_win32.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"

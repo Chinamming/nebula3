@@ -23,7 +23,7 @@ class Stage;
 
 class GraphicsEntity : public Core::RefCounted
 {
-    DeclareClass(GraphicsEntity);
+    __DeclareClass(GraphicsEntity);
 public:
     /// constructor
     GraphicsEntity();

@@ -18,7 +18,7 @@ namespace Base
 {
 class StreamTextureSaverBase : public Resources::ResourceSaver
 {
-    DeclareClass(StreamTextureSaverBase);
+    __DeclareClass(StreamTextureSaverBase);
 public:
     /// constructor
     StreamTextureSaverBase();

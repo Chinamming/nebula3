@@ -27,7 +27,7 @@ class Cell;
 
 class QuadtreeStageBuilder : public StageBuilder
 {
-    DeclareClass(QuadtreeStageBuilder);
+    __DeclareClass(QuadtreeStageBuilder);
 public:
     /// constructor
     QuadtreeStageBuilder();

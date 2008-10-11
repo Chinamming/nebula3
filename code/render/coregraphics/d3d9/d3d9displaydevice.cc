@@ -5,22 +5,23 @@
 #include "stdneb.h"
 #include "coregraphics/d3d9/d3d9displaydevice.h"
 #include "coregraphics/d3d9/d3d9renderdevice.h"
-#include "coregraphics/d3d9/d3d9types.h"
+#include "coregraphics/win360/d3d9types.h"
 
 namespace Direct3D9
 {
-ImplementClass(Direct3D9::D3D9DisplayDevice, 'D9DD', Win32::Win32DisplayDevice);
-ImplementSingleton(Direct3D9::D3D9DisplayDevice);
+__ImplementClass(Direct3D9::D3D9DisplayDevice, 'D9DD', Win32::Win32DisplayDevice);
+__ImplementSingleton(Direct3D9::D3D9DisplayDevice);
 
 using namespace Util;
 using namespace CoreGraphics;
+using namespace Win360;
 
 //------------------------------------------------------------------------------
 /**
 */
 D3D9DisplayDevice::D3D9DisplayDevice()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -28,7 +29,7 @@ D3D9DisplayDevice::D3D9DisplayDevice()
 */
 D3D9DisplayDevice::~D3D9DisplayDevice()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

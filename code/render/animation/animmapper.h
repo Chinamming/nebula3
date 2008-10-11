@@ -18,7 +18,7 @@ namespace Animation
 {
 class AnimMapper : public Core::RefCounted
 {
-    DeclareClass(AnimMapper);
+    __DeclareClass(AnimMapper);
 public:
     /// constructor
     AnimMapper();

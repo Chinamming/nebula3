@@ -8,7 +8,7 @@
 
 namespace Graphics
 {
-ImplementClass(Graphics::SpotLightEntity, 'ASLP', Graphics::AbstractLightEntity);
+__ImplementClass(Graphics::SpotLightEntity, 'ASLP', Graphics::AbstractLightEntity);
 
 //------------------------------------------------------------------------------
 /**

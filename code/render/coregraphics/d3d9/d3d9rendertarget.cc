@@ -6,14 +6,15 @@
 #include "coregraphics/config.h"
 #include "coregraphics/d3d9/d3d9rendertarget.h"
 #include "coregraphics/d3d9/d3d9renderdevice.h"
-#include "coregraphics/d3d9/d3d9types.h"
+#include "coregraphics/win360/d3d9types.h"
 #include "coregraphics/displaydevice.h"
 #include "resources/sharedresourceserver.h"
 
 namespace Direct3D9
 {
-ImplementClass(Direct3D9::D3D9RenderTarget, 'D9RT', Base::RenderTargetBase);
+__ImplementClass(Direct3D9::D3D9RenderTarget, 'D9RT', Base::RenderTargetBase);
 
+using namespace Win360;
 using namespace CoreGraphics;
 using namespace Resources;
 
@@ -153,7 +154,7 @@ D3D9RenderTarget::Setup()
                                     &(this->d3d9ResolveTexture),    // ppTexture
                                     NULL);                          // pSharedHandle
         n_assert(SUCCEEDED(hr));
-        n_assert(0 != this->d3d9RenderTarget);
+        n_assert(0 != this->d3d9ResolveTexture);
     }
 
     // create the depth/stencil buffer if needed

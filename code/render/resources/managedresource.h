@@ -26,7 +26,7 @@ namespace Resources
 {
 class ManagedResource : public Core::RefCounted
 {
-    DeclareClass(ManagedResource);
+    __DeclareClass(ManagedResource);
 public:
     /// priority levels
     enum Priority
@@ -75,6 +75,8 @@ public:
     Resource::State GetState() const;
     /// get contained resource (may return placeholder)
     const Ptr<Resource>& GetResource() const;
+    /// return true if the placeholder resource would be returned
+    bool IsPlaceholder() const;
     /// clear the contained resource
     void Clear();
 
@@ -229,6 +231,15 @@ inline void
 ManagedResource::SetPlaceholder(const Ptr<Resource>& p)
 {
     this->placeholder = p;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline bool
+ManagedResource::IsPlaceholder() const
+{
+    return !(this->resource.isvalid());
 }
 
 //------------------------------------------------------------------------------

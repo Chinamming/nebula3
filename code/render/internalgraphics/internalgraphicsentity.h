@@ -36,7 +36,7 @@ class Cell;
 
 class InternalGraphicsEntity : public Core::RefCounted
 {
-    DeclareClass(InternalGraphicsEntity);
+    __DeclareClass(InternalGraphicsEntity);
 public:
     /// visibility link types
     enum LinkType

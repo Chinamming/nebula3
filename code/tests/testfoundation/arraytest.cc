@@ -7,7 +7,7 @@
 
 namespace Test
 {
-ImplementClass(Test::ArrayTest, 'ARRT', Test::TestCase);
+__ImplementClass(Test::ArrayTest, 'ARRT', Test::TestCase);
 
 using namespace Util;
 

@@ -15,7 +15,7 @@ namespace Test
 {
 class ArrayTest : public TestCase
 {
-    DeclareClass(ArrayTest);
+    __DeclareClass(ArrayTest);
 public:
     /// run the test
     virtual void Run();

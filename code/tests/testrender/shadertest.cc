@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::ShaderTest, 'shdt', Test::CoreGraphicsTest);
+__ImplementClass(Test::ShaderTest, 'shdt', Test::CoreGraphicsTest);
 
 using namespace CoreGraphics;
 using namespace Resources;

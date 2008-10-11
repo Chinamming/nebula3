@@ -9,7 +9,7 @@
 
 namespace InternalGraphics
 {
-ImplementClass(InternalGraphics::SimpleStageBuilder, 'SSBL', InternalGraphics::StageBuilder);
+__ImplementClass(InternalGraphics::SimpleStageBuilder, 'SSBL', InternalGraphics::StageBuilder);
 
 using namespace Math;
 

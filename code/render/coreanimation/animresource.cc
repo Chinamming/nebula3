@@ -7,7 +7,7 @@
 
 namespace CoreAnimation
 {
-ImplementClass(AnimResource, 'ANRS', Resources::Resource);
+__ImplementClass(AnimResource, 'ANRS', Resources::Resource);
 
 using namespace Util;
 

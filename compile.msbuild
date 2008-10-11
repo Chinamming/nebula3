@@ -22,29 +22,10 @@
 
     <!-- define vstudio project files (order is important!) -->
     <ItemGroup>
-        <!-- interface definition files -->
-        <NidlProjects Include="code/vs8.0/foundation_win32.foundation_nidls_win32.vcproj"/>
-        <NidlProjects Include="code/vs8.0/render_win32.render_nidls_win32.vcproj"/>
-        <NidlProjects Include="code/vs8.0/application_win32.application_nidls_win32.vcproj"/>
-
         <!-- link libs -->
-        <Win32Targets Include="code/vs8.0/foundation_win32.sln"/>
-        <Win32Targets Include="code/vs8.0/render_win32.sln"/>
-        <Win32Targets Include="code/vs8.0/extlibs_win32.sln"/>
-        <Win32Targets Include="code/vs8.0/addons_win32.sln"/>
-        <Win32Targets Include="code/vs8.0/application_win32.sln"/>
         <Win32Targets Include="code/vs8.0/tools_win32.sln"/>
         <Win32Targets Include="code/vs8.0/tests_win32.sln"/>
         <Win32Targets Include="code/vs8.0/benchmarks_win32.sln"/>
-
-        <Xbox360Targets Include="code/vs8.0/foundation_xbox360.sln"/>
-        <Xbox360Targets Include="code/vs8.0/render_xbox360.sln"/>
-        <Xbox360Targets Include="code/vs8.0/extlibs_xbox360.sln"/>
-        <Xbox360Targets Include="code/vs8.0/addons_xbox360.sln"/>
-        <Xbox360Targets Include="code/vs8.0/application_xbox360.sln"/>
-        <Xbox360Targets Include="code/vs8.0/tools_xbox360.sln"/>
-        <Xbox360Targets Include="code/vs8.0/tests_xbox360.sln"/>
-        <Xbox360Targets Include="code/vs8.0/benchmarks_xbox360.sln"/>
     </ItemGroup>
 
     <!-- run CVS Update on entire project -->
@@ -61,8 +42,5 @@
     <Target Name="Win32Targets" DependsOnTargets="TclshUpdate">
         <MSBuild Projects="@(Win32Targets)" Properties="Configuration=$(Config);Rebuild=$(Rebuild)"/>
     </Target>
-    <Target Name="Xbox360Targets" DependsOnTargets="TclshUpdate">
-        <MSBuild Projects="@(Xbox360Targets)" Properties="Configuration=$(Config);Rebuild=$(Rebuild)"/>
-    </Target>
-    <Target Name="AllTargets" DependsOnTargets="Win32Targets;Xbox360Targets"/>
+    <Target Name="AllTargets" DependsOnTargets="Win32Targets"/>
 </Project>

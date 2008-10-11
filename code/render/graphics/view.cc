@@ -11,7 +11,7 @@
 
 namespace Graphics
 {
-ImplementClass(Graphics::View, 'GVIW', Core::RefCounted);
+__ImplementClass(Graphics::View, 'GVIW', Core::RefCounted);
 
 using namespace Messaging;
 using namespace Util;

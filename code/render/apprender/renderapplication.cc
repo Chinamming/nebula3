@@ -5,15 +5,11 @@
 #include "stdneb.h"
 #include "apprender/renderapplication.h"
 #include "io/filestream.h"
-
-#if !__WII__
 #include "memory/debug/memorypagehandler.h"
 #include "core/debug/corepagehandler.h"
 #include "io/debug/iopagehandler.h"
 #include "http/debug/svgtestpagehandler.h"
-#else
-#include "io/wii/wiidvdstream.h"
-#endif
+#include "threading/debug/threadpagehandler.h"
 
 namespace App
 {
@@ -63,55 +59,29 @@ RenderApplication::Open()
         // setup io subsystem
         // FIXME: REDUNDANT!!! 
         this->ioServer = IoServer::Create();
-    #if __WII__        
-        this->ioServer->RegisterUriScheme("file", IO::WiiDvdStream::RTTI);
-        this->ioServer->RegisterUriScheme("dvd", IO::WiiDvdStream::RTTI);
-    #else        
-        this->ioServer->RegisterUriScheme("file", FileStream::RTTI);
-    #endif  
-        this->ioServer->SetAssign(Assign("shd", "home:export/shaders"));
-        this->ioServer->SetAssign(Assign("frame", "home:export/frame"));
-        this->ioServer->SetAssign(Assign("msh", "home:export/meshes"));
-        this->ioServer->SetAssign(Assign("tex", "home:export/textures"));
-        this->ioServer->SetAssign(Assign("ani", "home:export/anims"));
-        this->ioServer->SetAssign(Assign("mdl", "home:export/gfxlib"));        
-
-        // Nebul2 backward compat assigns:
-        this->ioServer->SetAssign(Assign("meshes", "home:export/meshes"));
-        this->ioServer->SetAssign(Assign("textures", "home:export/textures"));
-        this->ioServer->SetAssign(Assign("anims", "home:export/anims"));
+        this->ioServer->RegisterStandardUriSchemes();
+        this->ioServer->SetupStandardAssigns();
+        this->ioServer->MountStandardZipArchives();
 
         this->ioInterface = IOInterface::Create();
         this->ioInterface->Open();
 
-        // mount asset zip archives
-        if (IoServer::Instance()->FileExists("home:export.zip"))
-        {
-            // main thread
-            this->ioServer->MountZipArchive("home:export.zip");
-
-            // io thread
-            Ptr<Interface::MountZipArchive> mountZipArchiveMsg = Interface::MountZipArchive::Create();
-            mountZipArchiveMsg->SetURI("home:export.zip");
-            this->ioInterface->Send(mountZipArchiveMsg.upcast<Messaging::Message>());
-        }
-
-    #if !__WII__
         // setup http subsystem
         this->httpInterface = Http::HttpInterface::Create();
         this->httpInterface->Open();
         this->httpServerProxy = Http::HttpServerProxy::Create();
         this->httpServerProxy->Open();
         this->httpServerProxy->AttachRequestHandler(Debug::CorePageHandler::Create());
+        this->httpServerProxy->AttachRequestHandler(Debug::ThreadPageHandler::Create());
         this->httpServerProxy->AttachRequestHandler(Debug::MemoryPageHandler::Create());
         this->httpServerProxy->AttachRequestHandler(Debug::IoPageHandler::Create());
         this->httpServerProxy->AttachRequestHandler(Debug::SvgTestPageHandler::Create());
-        // setup remote control supsystem
+
+        // setup remote subsystem
         this->remoteInterface = Remote::RemoteInterface::Create();
         this->remoteInterface->Open();
         this->remoteControlProxy = Remote::RemoteControlProxy::Create();
         this->remoteControlProxy->Open();
-    #endif
 
         // setup debug subsystem
         this->debugInterface = DebugInterface::Create();
@@ -185,6 +155,9 @@ RenderApplication::OnConfigureDisplay()
     {
         this->display->SetAntiAliasQuality(AntiAliasQuality::FromString(this->args.GetString("-aa")));
     }
+    #if __XBOX360__
+        this->display->SetAntiAliasQuality(AntiAliasQuality::Medium);
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -212,17 +185,15 @@ RenderApplication::Close()
     this->debugInterface->Close();
     this->debugInterface = 0;
 
-#if  !__WII__
-    this->httpServerProxy->Close();
-    this->httpServerProxy = 0;
-    this->httpInterface->Close();
-    this->httpInterface = 0;
-    // remote control clean up
     this->remoteControlProxy->Close();
     this->remoteControlProxy = 0;
     this->remoteInterface->Close();
     this->remoteInterface = 0;
-#endif    
+
+    this->httpServerProxy->Close();
+    this->httpServerProxy = 0;
+    this->httpInterface->Close();
+    this->httpInterface = 0;
 
     this->ioInterface->Close();
     this->ioInterface = 0;
@@ -251,12 +222,11 @@ RenderApplication::Run()
         GraphicsInterface::Instance()->WaitForFrameEvent();
         _stop_timer(MainThreadWaitForGraphicsFrame);
 
-    #if !__WII__
         // handle any http requests from the HttpServer thread
         this->httpServerProxy->HandlePendingRequests();
+
         // handle any remote requests from the RemoteControl thread
         this->remoteControlProxy->HandlePendingRequests();
-    #endif
     
         // process input
         this->inputServer->BeginFrame();

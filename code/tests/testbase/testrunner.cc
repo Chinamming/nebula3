@@ -7,7 +7,7 @@
 
 namespace Test
 {
-ImplementClass(Test::TestRunner, 'TSTR', Core::RefCounted);
+__ImplementClass(Test::TestRunner, 'TSTR', Core::RefCounted);
 
 using namespace Core;
 using namespace Util;

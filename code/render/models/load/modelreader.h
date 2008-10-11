@@ -22,7 +22,7 @@ namespace Models
 {
 class ModelReader : public IO::StreamReader
 {
-    DeclareAbstractClass(ModelReader);
+    __DeclareAbstractClass(ModelReader);
 public:
     /// destructor
     virtual ~ModelReader();

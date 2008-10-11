@@ -9,12 +9,14 @@
 #include "internalgraphics/stagebuilder.h"
 #include "resources/resourcemanager.h"
 #include "coregraphics/renderdevice.h"
+#include "coregraphics/shaderserver.h"
 #include "coregraphics/displaydevice.h"
+#include "coregraphics/shaperenderer.h"
 
 namespace InternalGraphics
 {
-ImplementClass(InternalGraphics::InternalGraphicsServer, 'IGFS', Core::RefCounted);
-ImplementSingleton(InternalGraphics::InternalGraphicsServer);
+__ImplementClass(InternalGraphics::InternalGraphicsServer, 'IGFS', Core::RefCounted);
+__ImplementSingleton(InternalGraphics::InternalGraphicsServer);
 
 using namespace Core;
 using namespace Util;
@@ -27,9 +29,10 @@ using namespace CoreGraphics;
 */
 InternalGraphicsServer::InternalGraphicsServer() :
     isOpen(false),
-    frameCount(0)
+    frameCount(0),
+    renderDebug(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -42,7 +45,7 @@ InternalGraphicsServer::~InternalGraphicsServer()
     n_assert(this->stageIndexMap.IsEmpty());
     n_assert(this->views.IsEmpty());
     n_assert(this->viewIndexMap.IsEmpty());
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -53,6 +56,10 @@ InternalGraphicsServer::Open()
 {
     n_assert(!this->isOpen);
     this->isOpen = true;
+    
+    // get time shader variable from shader server
+    this->timeShaderVar = ShaderServer::Instance()->GetSharedVariableBySemantic(ShaderVariable::Semantic("Time"));
+    n_assert(this->timeShaderVar.isvalid());
 }
 
 //------------------------------------------------------------------------------
@@ -62,6 +69,7 @@ void
 InternalGraphicsServer::Close()
 {
     n_assert(this->isOpen);
+    this->timeShaderVar = 0;
     this->DiscardAllViews();
     this->DiscardAllStages();
     this->isOpen = false;
@@ -275,8 +283,17 @@ InternalGraphicsServer::OnFrame(Timing::Time curTime)
             // update light linking for visible lights
             defaultStage->UpdateLightLinks();
 
+            // update time
+            this->timeShaderVar->SetFloat((float)curTime);
+
             // finally render the view
             this->defaultView->Render();
+
+            // render bounding boxes if debug rendering is enabled
+            if (this->renderDebug)
+            {
+                this->defaultView->RenderDebug();
+            }
         }
         else
         {

@@ -7,7 +7,7 @@
 
 namespace CoreAnimation
 {
-ImplementClass(CoreAnimation::AnimSampleBuffer, 'ASBF', Core::RefCounted);
+__ImplementClass(CoreAnimation::AnimSampleBuffer, 'ASBF', Core::RefCounted);
 
 using namespace Math;
 
@@ -16,8 +16,10 @@ using namespace Math;
 */
 AnimSampleBuffer::AnimSampleBuffer() :
     numSamples(0),
-    sampleValues(0),
-    sampleCounts(0)
+    samples(0),
+    sampleCounts(0),
+    samplesMapped(false),
+    sampleCountsMapped(false)
 {
     // empty
 }    
@@ -40,12 +42,14 @@ void
 AnimSampleBuffer::Setup(const Ptr<AnimResource>& animRes)
 {
     n_assert(!this->IsValid());
-    n_assert(0 == this->sampleValues);
+    n_assert(0 == this->samples);
     n_assert(0 == this->sampleCounts);
+    n_assert(!this->samplesMapped);
+    n_assert(!this->sampleCountsMapped);
 
     this->animResource = animRes;
     this->numSamples = this->animResource->GetClipByIndex(0).GetNumCurves();
-    this->sampleValues = (float4*) Memory::Alloc(Memory::ResourceHeap, this->numSamples * sizeof(float4));
+    this->samples      = (float4*) Memory::Alloc(Memory::ResourceHeap, this->numSamples * sizeof(float4));
     this->sampleCounts = (uchar*)  Memory::Alloc(Memory::ResourceHeap, this->numSamples * sizeof(uchar));
 }
 
@@ -56,14 +60,62 @@ void
 AnimSampleBuffer::Discard()
 {
     n_assert(this->IsValid());
-    n_assert(0 != this->sampleValues);
+    n_assert(0 != this->samples);
     n_assert(0 != this->sampleCounts);
+    n_assert(!this->samplesMapped);
+    n_assert(!this->sampleCountsMapped);
 
     this->animResource = 0;
-    Memory::Free(Memory::ResourceHeap, this->sampleValues);
+    Memory::Free(Memory::ResourceHeap, this->samples);
     Memory::Free(Memory::ResourceHeap, this->sampleCounts);
-    this->sampleValues = 0;
+    this->samples = 0;
     this->sampleCounts = 0;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+Math::float4*
+AnimSampleBuffer::MapSamples()
+{
+    n_assert(this->IsValid());
+    n_assert(!this->samplesMapped);
+    this->samplesMapped = true;
+    return this->samples;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+AnimSampleBuffer::UnmapSamples()
+{
+    n_assert(this->IsValid());
+    n_assert(this->samplesMapped);
+    this->samplesMapped = false;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+uchar*
+AnimSampleBuffer::MapSampleCounts()
+{
+    n_assert(this->IsValid());
+    n_assert(!this->sampleCountsMapped);
+    this->sampleCountsMapped = true;
+    return this->sampleCounts;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+AnimSampleBuffer::UnmapSampleCounts()
+{
+    n_assert(this->IsValid());
+    n_assert(this->sampleCountsMapped);
+    this->sampleCountsMapped = false;
 }
 
 } // namespace CoreAnimation

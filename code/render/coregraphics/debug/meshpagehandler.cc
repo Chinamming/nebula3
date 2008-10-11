@@ -11,7 +11,7 @@
 
 namespace Debug
 {
-ImplementClass(Debug::MeshPageHandler, 'DMSH', Http::HttpRequestHandler);
+__ImplementClass(Debug::MeshPageHandler, 'DMSH', Http::HttpRequestHandler);
 
 using namespace IO;
 using namespace CoreGraphics;

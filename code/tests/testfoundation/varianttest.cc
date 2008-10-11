@@ -9,7 +9,7 @@
 
 namespace Test
 {
-ImplementClass(Test::VariantTest, 'VART', Test::TestCase);
+__ImplementClass(Test::VariantTest, 'VART', Test::TestCase);
 
 using namespace Util;
 using namespace Math;

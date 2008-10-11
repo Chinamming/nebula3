@@ -31,8 +31,8 @@ namespace Base
 {
 class VertexLayoutServerBase : public Core::RefCounted
 {
-    DeclareClass(VertexLayoutServerBase);
-    DeclareSingleton(VertexLayoutServerBase);
+    __DeclareClass(VertexLayoutServerBase);
+    __DeclareSingleton(VertexLayoutServerBase);
 public:
     /// constructor
     VertexLayoutServerBase();

@@ -7,7 +7,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::IDLArg, 'ILAG', Core::RefCounted);
+__ImplementClass(Tools::IDLArg, 'ILAG', Core::RefCounted);
 
 using namespace Util;
 using namespace IO;
@@ -55,7 +55,7 @@ IDLArg::IsValidType(const Util::String& str)
         ||(str == "Float")
         ||(str == "Float4")
         ||(str == "Int")
-        ||(str == "UInt")
+        ||(str == "Uint")
         ||(str == "Bool")
         ||(str == "Matrix44")
         ||(str == "Double")

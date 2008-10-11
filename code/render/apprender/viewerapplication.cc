@@ -19,6 +19,7 @@ using namespace Graphics;
 using namespace Util;
 using namespace Resources;
 using namespace Input;
+using namespace Debug;
 
 //------------------------------------------------------------------------------
 /**
@@ -53,6 +54,8 @@ ViewerApplication::Open()
         // create a GraphicServer, Stage and View
         this->graphicsServer = GraphicsServer::Create();
         this->graphicsServer->Open();
+        this->debugShapeRenderer = DebugShapeRenderer::Create();
+        this->debugTextRenderer = DebugTextRenderer::Create();
 
         // create a default stage
         Attr::AttributeContainer stageBuilderAttrs;
@@ -94,6 +97,8 @@ ViewerApplication::Close()
     this->graphicsServer->DiscardStage(this->stage);
     this->stage = 0;
 
+    this->debugTextRenderer = 0;
+    this->debugShapeRenderer = 0;
     this->graphicsServer->Close();
     this->graphicsServer = 0;
 
@@ -128,6 +133,9 @@ ViewerApplication::OnProcessInput()
     float2 orbiting(0.0f, 0.0f);
     if (gamePad->IsConnected())
     {
+        const float gamePadZoomSpeed = 50.0f;
+        const float gamePadOrbitSpeed = 10.0f;
+        const float gamePadPanSpeed = 10.0f;
         if (gamePad->ButtonDown(GamePad::AButton))
         {
             this->mayaCameraUtil.Reset();
@@ -138,12 +146,12 @@ ViewerApplication::OnProcessInput()
             this->SetQuitRequested(true);
         }
         float frameTime = (float) this->GetFrameTime();
-        zoomIn       += gamePad->GetAxisValue(GamePad::RightTriggerAxis) * frameTime;
-        zoomOut      += gamePad->GetAxisValue(GamePad::LeftTriggerAxis) * frameTime;
-        panning.x()  += gamePad->GetAxisValue(GamePad::RightThumbXAxis) * frameTime;
-        panning.y()  += gamePad->GetAxisValue(GamePad::RightThumbYAxis) * frameTime;
-        orbiting.x() += gamePad->GetAxisValue(GamePad::LeftThumbXAxis) * frameTime;
-        orbiting.y() += gamePad->GetAxisValue(GamePad::LeftThumbYAxis) * frameTime;
+        zoomIn       += gamePad->GetAxisValue(GamePad::RightTriggerAxis) * frameTime * gamePadZoomSpeed;
+        zoomOut      += gamePad->GetAxisValue(GamePad::LeftTriggerAxis) * frameTime * gamePadZoomSpeed;
+        panning.x()  += gamePad->GetAxisValue(GamePad::RightThumbXAxis) * frameTime * gamePadPanSpeed;
+        panning.y()  += gamePad->GetAxisValue(GamePad::RightThumbYAxis) * frameTime * gamePadPanSpeed;
+        orbiting.x() += gamePad->GetAxisValue(GamePad::LeftThumbXAxis) * frameTime * gamePadOrbitSpeed;
+        orbiting.y() += gamePad->GetAxisValue(GamePad::LeftThumbYAxis) * frameTime * gamePadOrbitSpeed;
     }
 
     // process keyboard input
@@ -187,7 +195,10 @@ void
 ViewerApplication::OnUpdateFrame()
 {
     this->graphicsServer->OnFrame();
+    this->debugShapeRenderer->OnFrame();
+    this->debugTextRenderer->OnFrame();
 }
 
 } // namespace App
 
+    

@@ -9,7 +9,7 @@
 
 namespace InternalGraphics
 {
-ImplementClass(InternalGraphics::InternalCameraEntity, 'ICME', InternalGraphics::InternalGraphicsEntity);
+__ImplementClass(InternalGraphics::InternalCameraEntity, 'ICME', InternalGraphics::InternalGraphicsEntity);
 
 using namespace Math;
 using namespace CoreGraphics;

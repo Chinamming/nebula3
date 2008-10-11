@@ -49,7 +49,7 @@ class InternalCameraEntity;
 
 class InternalStage : public Core::RefCounted
 {
-    DeclareClass(InternalStage);
+    __DeclareClass(InternalStage);
 public:
     /// constructor
     InternalStage();

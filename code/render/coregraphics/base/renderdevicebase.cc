@@ -11,8 +11,8 @@
 
 namespace Base
 {
-ImplementClass(Base::RenderDeviceBase, 'RNDB', Core::RefCounted);
-ImplementSingleton(Base::RenderDeviceBase);
+__ImplementClass(Base::RenderDeviceBase, 'RNDB', Core::RefCounted);
+__ImplementSingleton(Base::RenderDeviceBase);
 
 using namespace Util;
 using namespace CoreGraphics;
@@ -27,7 +27,7 @@ RenderDeviceBase::RenderDeviceBase() :
     inBeginPass(false),
     inBeginBatch(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
     _setup_counter(RenderDeviceNumPrimitives);
 }
 
@@ -41,7 +41,7 @@ RenderDeviceBase::~RenderDeviceBase()
 
     _discard_counter(RenderDeviceNumPrimitives);
     
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

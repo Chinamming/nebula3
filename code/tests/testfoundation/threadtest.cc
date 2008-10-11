@@ -8,12 +8,12 @@
 
 namespace Test
 {
-ImplementClass(Test::ThreadTest, 'THRT', Test::TestCase);
+__ImplementClass(Test::ThreadTest, 'THRT', Test::TestCase);
 
-ImplementClass(Test::TestSingle, 'TSTS', Core::RefCounted);
-ImplementSingleton(Test::TestSingle);
+__ImplementClass(Test::TestSingle, 'TSTS', Core::RefCounted);
+__ImplementSingleton(Test::TestSingle);
 
-ImplementClass(Test::MyThread, 'MYTD', Threading::Thread);
+__ImplementClass(Test::MyThread, 'MYTD', Threading::Thread);
 
 bool ThreadTest::InstanceCheck = true;
 Threading::Event ThreadTest::threadEvent;
@@ -55,7 +55,7 @@ MyThread::DoWork()
 */
 TestSingle::TestSingle()
 {
-    ConstructSingleton;     
+    __ConstructSingleton;     
 }
 
 //------------------------------------------------------------------------------
@@ -72,6 +72,7 @@ void
 ThreadTest::Run()
 {
     this->mythread = MyThread::Create();
+    this->mythread->SetCoreId(System::Cpu::MainThreadCore);
     this->single = TestSingle::Create();
 
     this->single = TestSingle::Instance();

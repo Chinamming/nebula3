@@ -7,7 +7,7 @@
 
 namespace Graphics
 {
-ImplementClass(Graphics::AbstractLightEntity, 'GALE', Graphics::GraphicsEntity);
+__ImplementClass(Graphics::AbstractLightEntity, 'GALE', Graphics::GraphicsEntity);
 
 using namespace Lighting;
 

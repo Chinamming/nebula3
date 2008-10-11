@@ -7,7 +7,7 @@
 
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::RenderEventHandler, 'RDEH', Core::RefCounted);
+__ImplementClass(CoreGraphics::RenderEventHandler, 'RDEH', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

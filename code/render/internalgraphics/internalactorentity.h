@@ -20,7 +20,7 @@ namespace InternalGraphics
 {
 class InternalActorEntity : public InternalModelEntity
 {
-    DeclareClass(InternalActorEntity);
+    __DeclareClass(InternalActorEntity);
 public:
     enum AnimationType
     {

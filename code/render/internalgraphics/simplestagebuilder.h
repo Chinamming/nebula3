@@ -18,7 +18,7 @@ namespace InternalGraphics
 {
 class SimpleStageBuilder : public StageBuilder
 {
-    DeclareClass(SimpleStageBuilder);
+    __DeclareClass(SimpleStageBuilder);
 public:
     /// constructor
     SimpleStageBuilder();

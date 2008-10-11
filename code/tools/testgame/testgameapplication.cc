@@ -17,13 +17,13 @@ using namespace Util;
 using namespace Resources;
 using namespace Timing;
 
-ImplementSingleton(TestGameApplication);   
+__ImplementSingleton(TestGameApplication);   
 //------------------------------------------------------------------------------
 /**
 */
 TestGameApplication::TestGameApplication()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------

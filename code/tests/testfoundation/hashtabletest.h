@@ -15,7 +15,7 @@ namespace Test
 {
 class HashTableTest : public TestCase
 {
-    DeclareClass(HashTableTest);
+    __DeclareClass(HashTableTest);
 public:
     /// run the test
     virtual void Run();

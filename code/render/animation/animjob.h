@@ -12,36 +12,48 @@
     Subclasses of AnimJob are used to implement specific tasks like
     a lookat-controller, IK, and so forth...
 
+    FIXME: the current implementation of setting an absolute evaluation
+    time doesn't allow to manipulate the playback speed (for this,
+    advancing the time by a relative amount would be better).
+
     (C) 2008 Radon Labs GmbH
 */
 #include "core/refcounted.h"
+#include "core/weakptr.h"
 #include "coreanimation/animresource.h"
 #include "coreanimation/animsamplebuffer.h"
 
 //------------------------------------------------------------------------------
 namespace Animation
 {
+class AnimSequencer;
+
 class AnimJob : public Core::RefCounted
 {
-    DeclareClass(AnimJob);
+    __DeclareClass(AnimJob);
 public:
     /// constructor
     AnimJob();
     /// destructor
     virtual ~AnimJob();
 
-    /// setup the anim job from an anim resource
-    virtual void Setup(const Ptr<CoreAnimation::AnimResource>& animResource);
-    /// discard the anim job object
-    virtual void Discard();
-    /// return true if between Setup/Discard
-    bool IsValid() const;
     /// called when attached to anim sequencer
-    virtual void OnAttachedToSequencer();
+    virtual void OnAttachedToSequencer(const Ptr<AnimSequencer>& animSequencer);
     /// called when removed from sequencer
     virtual void OnRemoveFromSequencer();
     /// return true if the job is currently attached to a sequencer
     bool IsAttachedToSequencer() const;
+
+    /// evaluate the animation into the provided result buffer, returns current blend weight
+    virtual float Evaluate(Timing::Tick time, const Ptr<CoreAnimation::AnimSampleBuffer>& result);
+    /// return true if the job has currently playing (EvalTime within start/end time)
+    bool IsActive(Timing::Tick time) const;
+    /// return true if the job has been queued for playback but has not started yet
+    bool IsPending(Timing::Tick time) const;
+    /// return true if the job has finished playback
+    bool IsFinished(Timing::Tick time) const;
+    /// return true when the job has expired
+    bool IsExpired(Timing::Tick time) const;
 
     /// set the start time of the anim job
     void SetStartTime(Timing::Tick time);
@@ -61,39 +73,146 @@ public:
     void SetExpireTime(Timing::Tick expTime);
     /// get expire time
     Timing::Tick GetExpireTime() const;
-    /// set the track index (higher track numbers have a higher blend priority)
-    void SetTrackIndex(IndexT trackIndex);
+    /// set blend weight of the anim job (default is 1.0)
+    void SetBlendWeight(float w);
+    /// get blend weight of the anim job
+    float GetBlendWeight() const;
+    /// set the blend priority (default priority is 0)
+    void SetBlendPriority(int blendPriority);
     /// get the track index of the anim job
-    IndexT GetTrackIndex() const;
+    int GetBlendPriority() const;
     
-    /// set evaluation time
-    void SetEvalTime(Timing::Tick time);
-    /// get time of last evaluation
-    Timing::Tick GetTime() const;
-    /// evaluate the animation 
-    virtual bool Evaluate();
-    /// get result of the last evaluation
-    const Ptr<CoreAnimation::AnimSampleBuffer>& GetResult() const;
-    /// return true if the job has currently playing (EvalTime within start/end time)
-    bool IsActive() const;
-    /// return true if the job has been queued for playback but has not started yet
-    bool IsPending() const;
-    /// return true if the job has finished playback
-    bool IsFinished() const;
-    /// return true when the job has expired
-    bool IsExpired() const;
+protected:
+    /// compute current relative evaluation time, this is a helper method for subclasses
+    Timing::Tick ComputeRelEvalTime(Timing::Tick time) const;
+    /// compute current blend weight, this should take fade-in into account
+    float ComputeBlendWeight(Timing::Tick relEvalTime) const;
 
-private:
-    Ptr<CoreAnimation::AnimResource> animResource;
-    bool isAttachedToSequencer;
-    IndexT trackIndex;
+    WeakPtr<AnimSequencer> animSequencer;
+    int blendPriority;
+    float blendWeight;
     Timing::Tick startTime;
     Timing::Tick duration;
     Timing::Tick fadeInTime;
     Timing::Tick expireTime;
-    Timing::Tick curTime;
-    Ptr<CoreAnimation::AnimSampleBuffer> sampleBuffer;
 };
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+AnimJob::SetStartTime(Timing::Tick t)
+{
+    this->startTime = t;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline Timing::Tick
+AnimJob::GetStartTime() const
+{
+    return this->startTime;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+AnimJob::SetDuration(Timing::Tick t)
+{
+    this->duration = t;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline Timing::Tick
+AnimJob::GetDuration() const
+{
+    return this->duration;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline bool
+AnimJob::IsInfinite() const
+{
+    return (0 == this->duration);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+AnimJob::SetFadeInTime(Timing::Tick t)
+{
+    this->fadeInTime = t;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline Timing::Tick
+AnimJob::GetFadeInTime() const
+{
+    return this->fadeInTime;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+AnimJob::SetExpireTime(Timing::Tick t)
+{
+    this->expireTime = t;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline Timing::Tick
+AnimJob::GetExpireTime() const
+{
+    return this->expireTime;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+AnimJob::SetBlendWeight(float w)
+{
+    this->blendWeight = w;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline float
+AnimJob::GetBlendWeight() const
+{
+    return this->blendWeight;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+AnimJob::SetBlendPriority(int pri)
+{
+    this->blendPriority = pri;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline int
+AnimJob::GetBlendPriority() const
+{
+    return this->blendPriority;
+}
 
 } // namespace Animation
 //------------------------------------------------------------------------------

@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::AttributeTableTest, 'ATST', Test::TestCase);
+__ImplementClass(Test::AttributeTableTest, 'ATST', Test::TestCase);
 
 using namespace Attr;
 using namespace Math;

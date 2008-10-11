@@ -5,13 +5,8 @@
 /**
     @class CoreAnimation::AnimMixer
     
-    The AnimMixer mixes the content of exactly 2 source animation samplers
-    into a result animation sampler. AnimMixer objects are used by
-    AnimBlendTree to perform one blend operation in the blend tree.
-    The sample counts of the destination animation sampler indicate
-    how many active animation curves have contributed to the result
-    (this is the sum of active animation curves which have been
-    mixed into the resulting sample buffer).
+    A class which contains methods to mix 2 samples animation clips
+    into a result.
 
     (C) 2008 Radon Labs GmbH
 */
@@ -25,33 +20,9 @@ namespace CoreAnimation
 class AnimMixer
 {
 public:
-    /// constructor
-    AnimMixer();
-    /// destructor
-    ~AnimMixer();
-
-    /// setup the animation mixer
-    void Setup(const Ptr<AnimResource>& animResource);
-    /// discard the animation mixer
-    void Discard();
-    /// return true if the animation mixer has been setup
-    bool IsValid() const;
-
     /// mix 2 source anim samplers into a destination sampler: dst = lerp(src0, src1, lerpValue)
-    void Mix(const AnimSampler& src0, const AnimSampler& src1, float lerpValue, const AnimSampler& dst);
-
-private:
-    Ptr<AnimResource> animResource;
+    static void Mix(const Ptr<AnimResource>& animResource, const Ptr<AnimSampleBuffer>& src0, const Ptr<AnimSampleBuffer>& src1, float lerpValue, const Ptr<AnimSampleBuffer>& dst);
 };
-
-//------------------------------------------------------------------------------
-/**
-*/
-inline bool
-AnimMixer::IsValid() const
-{
-    return this->animResource.isvalid();
-}
 
 } // namespace AnimMixer
 //------------------------------------------------------------------------------

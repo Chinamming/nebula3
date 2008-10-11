@@ -21,7 +21,7 @@ namespace Tools
 {
 class ShaderNode : public Core::RefCounted
 {
-    DeclareClass(ShaderNode);
+    __DeclareClass(ShaderNode);
 public:
     /// constructor
     ShaderNode();

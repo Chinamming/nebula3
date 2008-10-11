@@ -9,7 +9,7 @@
 
 namespace Base
 {
-ImplementClass(Base::ShaderBase, 'SHDB', Resources::Resource);
+__ImplementClass(Base::ShaderBase, 'SHDB', Resources::Resource);
 
 using namespace CoreGraphics;
 

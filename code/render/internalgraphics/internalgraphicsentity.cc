@@ -9,7 +9,7 @@
 
 namespace InternalGraphics
 {
-ImplementClass(InternalGraphics::InternalGraphicsEntity, 'GREN', Core::RefCounted);
+__ImplementClass(InternalGraphics::InternalGraphicsEntity, 'GREN', Core::RefCounted);
 
 using namespace Util;
 using namespace Math;

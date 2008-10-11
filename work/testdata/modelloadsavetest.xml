@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Nebula3 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../schemas/nebula3.xsd">
+	<Model name="ModelLoadSaveTest">
+		<Attr name="ModelPos" value="1.0, 2.0, 3.0"/>
+		<Attr name="ModelInt" value="23"/>
+		<Attr name="ModelBool" value="true"/>
+		<Attr name="ModelString" value="Bla Bla"/>
+		<Node name="Node0" class="Scene::ModelNode">
+			<Attr name="ModelNodeInt" value="24"/>
+			<Attr name="ModelNodeString" value="Blub Blub"/>			
+		</Node>
+		<Node name="Node1" class="Scene::ModelNode" parent="Node0">
+			<Attr name="ModelNodeInt" value="25"/>
+			<Attr name="ModelNodeString" value="Blob"/>
+		</Node>
+		<Node name="Node2" class="Scene::ModelNode">
+			<Attr name="ModelNodeString" value="Blah"/>
+		</Node>
+	</Model>
+</Nebula3>

@@ -13,7 +13,7 @@
 
 namespace Remote
 {
-ImplementClass(Remote::AnimationRemoteRequestHandler, 'ARRH', Remote::RemoteRequestHandler);
+__ImplementClass(Remote::AnimationRemoteRequestHandler, 'ARRH', Remote::RemoteRequestHandler);
 
 using namespace Core;
 using namespace Util;

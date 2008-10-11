@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::MemoryPoolTest, 'MEPT', Test::TestCase);
+__ImplementClass(Test::MemoryPoolTest, 'MEPT', Test::TestCase);
 
 using namespace Memory;
 
@@ -22,7 +22,7 @@ MemoryPoolTest::Run()
     const SizeT numBlocks = 4;
     MemoryPool memPool("TestPool", blockSize, numBlocks);
 
-    this->Verify(memPool.GetName() == "TestPool");
+    this->Verify(Util::String("TestPool") == memPool.GetName());
     this->Verify(memPool.GetBlockSize() == blockSize);
     this->Verify(memPool.GetNumBlocksPerPage() == numBlocks);
     this->Verify(memPool.GetNumPages() == 1);

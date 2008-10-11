@@ -9,7 +9,7 @@
 
 namespace Direct3D9
 {
-ImplementClass(Direct3D9::D3D9Shader, 'D9SD', Base::ShaderBase);
+__ImplementClass(Direct3D9::D3D9Shader, 'D9SD', Base::ShaderBase);
 
 using namespace CoreGraphics;
 

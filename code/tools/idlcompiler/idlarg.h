@@ -17,7 +17,7 @@ namespace Tools
 {
 class IDLArg : public Core::RefCounted
 {
-    DeclareClass(IDLArg);
+    __DeclareClass(IDLArg);
 public:
     /// constructor
     IDLArg();

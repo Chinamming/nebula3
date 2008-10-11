@@ -19,7 +19,7 @@ namespace InternalGraphics
 {
 class InternalModelEntity : public InternalGraphicsEntity
 {
-    DeclareClass(InternalModelEntity);
+    __DeclareClass(InternalModelEntity);
 public:
     /// constructor
     InternalModelEntity();

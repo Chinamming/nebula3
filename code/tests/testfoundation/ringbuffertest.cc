@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::RingBufferTest, 'RBTT', Test::TestCase);
+__ImplementClass(Test::RingBufferTest, 'RBTT', Test::TestCase);
 
 using namespace Util;
 

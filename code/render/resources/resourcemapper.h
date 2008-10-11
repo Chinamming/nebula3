@@ -27,7 +27,7 @@ class ManagedResource;
 
 class ResourceMapper : public Core::RefCounted
 {
-    DeclareClass(ResourceMapper);
+    __DeclareClass(ResourceMapper);
 public:
     /// constructor
     ResourceMapper();
@@ -59,6 +59,8 @@ public:
     virtual void OnPrepare();
     /// called after gathering render stats to perform resource management
     virtual void OnUpdate();
+    /// return the number of currently pending resources
+    virtual SizeT GetNumPendingResources() const;
 
 protected:
     ResourceId placeholderResourceId;

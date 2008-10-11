@@ -11,7 +11,7 @@
 
 namespace Graphics
 {
-ImplementClass(Graphics::Stage, 'GSTG', Core::RefCounted);
+__ImplementClass(Graphics::Stage, 'GSTG', Core::RefCounted);
 
 using namespace Util;
 using namespace Messaging;

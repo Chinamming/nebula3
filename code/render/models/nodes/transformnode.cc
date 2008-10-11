@@ -9,7 +9,7 @@
 
 namespace Models
 {
-ImplementClass(Models::TransformNode, 'TRFN', Models::ModelNode);
+__ImplementClass(Models::TransformNode, 'TRFN', Models::ModelNode);
 
 using namespace Attr;
 using namespace Math;

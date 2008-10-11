@@ -11,7 +11,7 @@
 
 namespace Debug
 {
-ImplementClass(Debug::ShaderPageHandler, 'SPHL', Http::HttpRequestHandler);
+__ImplementClass(Debug::ShaderPageHandler, 'SPHL', Http::HttpRequestHandler);
 
 using namespace IO;
 using namespace CoreGraphics;

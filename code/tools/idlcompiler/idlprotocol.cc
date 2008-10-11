@@ -7,7 +7,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::IDLProtocol, 'ILPR', Core::RefCounted);
+__ImplementClass(Tools::IDLProtocol, 'ILPR', Core::RefCounted);
 
 using namespace Util;
 using namespace IO;

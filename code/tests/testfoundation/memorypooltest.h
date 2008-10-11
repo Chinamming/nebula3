@@ -16,7 +16,7 @@ namespace Test
 {
 class MemoryPoolTest : public TestCase
 {
-    DeclareClass(MemoryPoolTest);
+    __DeclareClass(MemoryPoolTest);
 public:
     /// run the test
     virtual void Run();

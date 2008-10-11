@@ -7,8 +7,8 @@
 
 namespace Base
 {
-ImplementClass(Base::TransformDeviceBase, 'TDVB', Core::RefCounted);
-ImplementSingleton(Base::TransformDeviceBase);
+__ImplementClass(Base::TransformDeviceBase, 'TDVB', Core::RefCounted);
+__ImplementSingleton(Base::TransformDeviceBase);
 
 using namespace Util;
 using namespace Math;

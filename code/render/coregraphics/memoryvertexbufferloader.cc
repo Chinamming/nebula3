@@ -5,20 +5,15 @@
 #include "stdneb.h"
 #include "coregraphics/memoryvertexbufferloader.h"
 
-#if __WIN32__
+#if (__WIN32__ || __XBOX360__)
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::MemoryVertexBufferLoader, 'MVBL', Direct3D9::D3D9MemoryVertexBufferLoader);
-}
-#elif __XBOX360__
-namespace CoreGraphics
-{
-ImplementClass(CoreGraphics::MemoryVertexBufferLoader, 'MVBL', Xbox360::Xbox360MemoryVertexBufferLoader);
+__ImplementClass(CoreGraphics::MemoryVertexBufferLoader, 'MVBL', Win360::D3D9MemoryVertexBufferLoader);
 }
 #elif __WII__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::MemoryVertexBufferLoader, 'MVBL', Wii::WiiMemoryVertexBufferLoader);
+__ImplementClass(CoreGraphics::MemoryVertexBufferLoader, 'MVBL', Wii::WiiMemoryVertexBufferLoader);
 }
 #else
 #error "MemoryVertexBufferLoader class not implemented on this platform!"

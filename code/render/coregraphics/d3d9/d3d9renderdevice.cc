@@ -8,16 +8,16 @@
 #include "coregraphics/displaydevice.h"
 #include "coregraphics/vertexbuffer.h"
 #include "coregraphics/indexbuffer.h"
-#include "coregraphics/d3d9/d3d9types.h"
-#include "coregraphics/debugtextrenderer.h"
+#include "coregraphics/win360/d3d9types.h"
 
 #include <dxerr9.h>
 
 namespace Direct3D9
 {
-ImplementClass(Direct3D9::D3D9RenderDevice, 'D9RD', Base::RenderDeviceBase);
-ImplementSingleton(Direct3D9::D3D9RenderDevice);
+__ImplementClass(Direct3D9::D3D9RenderDevice, 'D9RD', Base::RenderDeviceBase);
+__ImplementSingleton(Direct3D9::D3D9RenderDevice);
 
+using namespace Win360;
 using namespace CoreGraphics;
 
 IDirect3D9* D3D9RenderDevice::d3d9 = 0;
@@ -31,7 +31,7 @@ D3D9RenderDevice::D3D9RenderDevice() :
     displayFormat(D3DFMT_X8R8G8B8),
     deviceBehaviourFlags(0)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
     Memory::Clear(&this->presentParams, sizeof(this->presentParams));
     Memory::Clear(&this->d3d9DeviceCaps, sizeof(this->d3d9DeviceCaps));
     this->OpenDirect3D();
@@ -47,7 +47,7 @@ D3D9RenderDevice::~D3D9RenderDevice()
         this->Close();
     }
     this->CloseDirect3D();
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -483,12 +483,6 @@ D3D9RenderDevice::BeginFrame()
 void
 D3D9RenderDevice::EndFrame()
 {
-    // render any debug txt
-    if (!DebugTextRenderer::Instance()->IsTextBufferEmpty())
-    {
-        DebugTextRenderer::Instance()->RenderTextBuffer();
-    }
-
     RenderDeviceBase::EndFrame();
     HRESULT hr = this->d3d9Device->EndScene();
     n_assert(SUCCEEDED(hr));

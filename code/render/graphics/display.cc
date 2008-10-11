@@ -9,8 +9,8 @@
 
 namespace Graphics
 {
-ImplementClass(Graphics::Display, 'DISP', Core::RefCounted);
-ImplementSingleton(Graphics::Display);
+__ImplementClass(Graphics::Display, 'DISP', Core::RefCounted);
+__ImplementSingleton(Graphics::Display);
 
 using namespace Util;
 using namespace CoreGraphics;
@@ -31,7 +31,7 @@ Display::Display() :
     isOpen(false),
     iconName("Icon")
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ Display::Display() :
 Display::~Display()
 {
     n_assert(!this->isOpen);
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

@@ -8,7 +8,7 @@
 
 namespace Base
 {
-ImplementClass(Base::KeyboardBase, 'KBBS', Input::InputHandler);
+__ImplementClass(Base::KeyboardBase, 'KBBS', Input::InputHandler);
 
 using namespace Input;
 

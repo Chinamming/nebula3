@@ -5,18 +5,21 @@
 #include "stdneb.h"
 #include "graphics/graphicsinterface.h"
 #include "graphics/graphicshandler.h"
+#include "debugrender/debuggraphicshandler.h"
+#include "ui/uigraphicshandler.h"
 
 namespace Graphics
 {
-ImplementClass(Graphics::GraphicsInterface, 'GRIF', Messaging::AsyncPort);
-ImplementInterfaceSingleton(Graphics::GraphicsInterface);
+__ImplementClass(Graphics::GraphicsInterface, 'GRIF', Messaging::AsyncPort);
+__ImplementInterfaceSingleton(Graphics::GraphicsInterface);
 
 //------------------------------------------------------------------------------
 /**
 */
 GraphicsInterface::GraphicsInterface()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
+    this->SetThreadCpuCoreId(System::Cpu::RenderThreadCore);
 }
 
 //------------------------------------------------------------------------------
@@ -24,7 +27,7 @@ GraphicsInterface::GraphicsInterface()
 */
 GraphicsInterface::~GraphicsInterface()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -34,8 +37,8 @@ void
 GraphicsInterface::Open()
 {
     // we need to run continously, not wait for messages
-    this->SetWaitForMessages(false);
-    this->SetName("GraphicsInterface");
+    this->SetBehaviour(DoNotWait);
+    this->SetName("GraphicsInterface Thread");
     AsyncPort::Open();
 }
 
@@ -45,8 +48,14 @@ GraphicsInterface::Open()
 void
 GraphicsInterface::OnCreateHandlers()
 {
-    Ptr<GraphicsHandler> msgHandler = GraphicsHandler::Create();
-    this->AttachHandler(msgHandler.upcast<Messaging::Handler>());
+    Ptr<GraphicsHandler> graphicsHandler = GraphicsHandler::Create();
+    this->AttachHandler(graphicsHandler.upcast<Messaging::Handler>());
+    
+	Ptr<Debug::DebugGraphicsHandler> debugGraphicsHandler = Debug::DebugGraphicsHandler::Create();
+    this->AttachHandler(debugGraphicsHandler.upcast<Messaging::Handler>());
+
+	Ptr<CoreUI::UIGraphicsHandler> uiGraphicsHandler = CoreUI::UIGraphicsHandler::Create();
+	this->AttachHandler(uiGraphicsHandler.upcast<Messaging::Handler>());
 }
 
 //------------------------------------------------------------------------------

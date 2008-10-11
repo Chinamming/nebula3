@@ -18,6 +18,7 @@
 #include "math/line.h"
 #include "math/float2.h"
 #include "timing/time.h"
+#include "coregraphics/shadervariable.h"
 
 //------------------------------------------------------------------------------
 namespace InternalGraphics
@@ -28,8 +29,8 @@ class StageBuilder;
     
 class InternalGraphicsServer : public Core::RefCounted
 {
-    DeclareClass(InternalGraphicsServer);
-    DeclareSingleton(InternalGraphicsServer);
+    __DeclareClass(InternalGraphicsServer);
+    __DeclareSingleton(InternalGraphicsServer);
 public:
     /// constructor
     InternalGraphicsServer();
@@ -77,6 +78,10 @@ public:
     IndexT GetFrameCount() const;
     /// call per-frame, this renders the default view
     void OnFrame(Timing::Time curTime);
+    /// set render debug flag
+    void SetRenderDebug(bool b);
+    /// get render debug flag
+    bool GetRenderDebug() const;
 
 private:
     IndexT frameCount;
@@ -85,7 +90,9 @@ private:
     Util::Array<Ptr<InternalView> > views;
     Util::Dictionary<Util::StringAtom, IndexT> viewIndexMap;
     Ptr<InternalView> defaultView;
+    Ptr<CoreGraphics::ShaderVariable> timeShaderVar;
     bool isOpen;
+    bool renderDebug;
 };
 
 //------------------------------------------------------------------------------
@@ -104,6 +111,24 @@ inline IndexT
 InternalGraphicsServer::GetFrameCount() const
 {
     return this->frameCount;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void 
+InternalGraphicsServer::SetRenderDebug(bool b)
+{
+    this->renderDebug = b;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline bool 
+InternalGraphicsServer::GetRenderDebug() const
+{
+    return this->renderDebug;
 }
 
 } // namespace Graphics

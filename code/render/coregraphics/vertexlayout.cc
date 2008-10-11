@@ -4,20 +4,15 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "coregraphics/vertexlayout.h"
-#if __WIN32__
+#if (__WIN32__ || __XBOX360__)
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::VertexLayout, 'VTXL', Direct3D9::D3D9VertexLayout);
-}
-#elif __XBOX360__
-namespace CoreGraphics
-{
-ImplementClass(CoreGraphics::VertexLayout, 'VTXL', Xbox360::Xbox360VertexLayout);
+__ImplementClass(CoreGraphics::VertexLayout, 'VTXL', Win360::D3D9VertexLayout);
 }
 #elif __WII__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::VertexLayout, 'VTXL', Wii::WiiVertexLayout);
+__ImplementClass(CoreGraphics::VertexLayout, 'VTXL', Wii::WiiVertexLayout);
 }
 #else
 #error "VertexLayout class not implemented on this platform!"

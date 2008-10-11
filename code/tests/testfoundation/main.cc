@@ -42,6 +42,7 @@
 #include "memorypooltest.h"
 #include "runlengthcodectest.h"
 #include "ringbuffertest.h"
+#include "excelxmlreadertest.h"
 
 using namespace Core;
 using namespace Test;
@@ -59,6 +60,7 @@ __cdecl main()
 
     // setup and run test runner
     Ptr<TestRunner> testRunner = TestRunner::Create();
+    testRunner->AttachTestCase(ExcelXmlReaderTest::Create());
     testRunner->AttachTestCase(RingBufferTest::Create());
     testRunner->AttachTestCase(RunLengthCodecTest::Create());
     testRunner->AttachTestCase(MemoryPoolTest::Create());

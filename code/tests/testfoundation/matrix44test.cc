@@ -7,7 +7,7 @@
 
 namespace Test
 {
-ImplementClass(Test::Matrix44Test, 'M4TS', Test::TestCase);
+__ImplementClass(Test::Matrix44Test, 'M4TS', Test::TestCase);
 
 using namespace Math;
 

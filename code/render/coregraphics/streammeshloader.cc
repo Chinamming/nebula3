@@ -5,20 +5,15 @@
 #include "stdneb.h"
 #include "coregraphics/streammeshloader.h"
 
-#if __WIN32__
+#if (__WIN32__ || __XBOX360__)
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::StreamMeshLoader, 'SMLD', Direct3D9::D3D9StreamMeshLoader);
-}
-#elif __XBOX360__
-namespace CoreGraphics
-{
-ImplementClass(CoreGraphics::StreamMeshLoader, 'SMLD', Xbox360::Xbox360StreamMeshLoader);
+__ImplementClass(CoreGraphics::StreamMeshLoader, 'SMLD', Win360::D3D9StreamMeshLoader);
 }
 #elif __WII__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::StreamMeshLoader, 'SMLD', Wii::WiiStreamMeshLoader);
+__ImplementClass(CoreGraphics::StreamMeshLoader, 'SMLD', Wii::WiiStreamMeshLoader);
 }
 #else
 #error "StreamMeshLoader class not implemented on this platform!"

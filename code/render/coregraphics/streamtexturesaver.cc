@@ -5,20 +5,15 @@
 #include "stdneb.h"
 #include "coregraphics/streamtexturesaver.h"
 
-#if __WIN32__
+#if (__WIN32__ || __XBOX360__)
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::StreamTextureSaver, 'STXS', Direct3D9::D3D9StreamTextureSaver);
-}
-#elif __XBOX360__
-namespace CoreGraphics
-{
-ImplementClass(CoreGraphics::StreamTextureSaver, 'STXS', Xbox360::Xbox360StreamTextureSaver);
+__ImplementClass(CoreGraphics::StreamTextureSaver, 'STXS', Win360::D3D9StreamTextureSaver);
 }
 #elif __WII__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::StreamTextureSaver, 'STXS', Wii::WiiStreamTextureSaver);
+__ImplementClass(CoreGraphics::StreamTextureSaver, 'STXS', Wii::WiiStreamTextureSaver);
 }
 #else
 #error "StreamTextureSaver class not implemented on this platform!"

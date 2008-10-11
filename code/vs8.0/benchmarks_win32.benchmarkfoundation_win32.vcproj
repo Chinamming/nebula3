@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="benchmarkfoundation_win32"
-	ProjectGUID="{FC96E9BB-435E-4FE6-ACE6-4B51424D55F5}"
+	ProjectGUID="{C361BF9A-5909-410F-80BC-2AA23BFB19C2}"
 	>
 	<Platforms>
 		<Platform
@@ -78,7 +78,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dxerr9.lib  d_application_win32.lib d_foundation_win32.lib d_lua_win32.lib d_tinyxml_win32.lib d_zlib_win32.lib d_benchmarkbase_win32.lib "
+				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dxerr9.lib  "
 				OutputFile="..\..\bin\win32\benchmarkfoundation_win32.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
@@ -173,7 +173,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dxerr9.lib  application_win32.lib foundation_win32.lib lua_win32.lib tinyxml_win32.lib zlib_win32.lib benchmarkbase_win32.lib "
+				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dxerr9.lib  "
 				OutputFile="..\..\bin\win32\benchmarkfoundation_win32.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"

@@ -30,7 +30,7 @@ class ModelNodeInstance;
 
 class ModelNode : public Core::RefCounted
 {
-    DeclareClass(ModelNode);
+    __DeclareClass(ModelNode);
 public:
     /// constructor
     ModelNode();

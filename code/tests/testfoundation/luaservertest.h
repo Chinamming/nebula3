@@ -15,7 +15,7 @@ namespace Test
 {
 class LuaServerTest : public TestCase
 {
-    DeclareClass(LuaServerTest);
+    __DeclareClass(LuaServerTest);
 public:
     /// run the test
     virtual void Run();

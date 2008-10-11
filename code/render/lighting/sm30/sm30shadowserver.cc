@@ -11,7 +11,7 @@
 
 namespace Lighting
 {
-ImplementClass(Lighting::SM30ShadowServer, 'S3SS', Lighting::ShadowServerBase);
+__ImplementClass(Lighting::SM30ShadowServer, 'S3SS', Lighting::ShadowServerBase);
 
 using namespace Math;
 using namespace Util;

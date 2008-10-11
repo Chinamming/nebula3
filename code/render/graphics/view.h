@@ -21,7 +21,7 @@ class CameraEntity;
 
 class View : public Core::RefCounted
 {
-    DeclareClass(View);
+    __DeclareClass(View);
 public:
     /// constructor
     View();

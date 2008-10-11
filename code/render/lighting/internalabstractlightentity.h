@@ -20,7 +20,7 @@ namespace Lighting
 {
 class InternalAbstractLightEntity : public InternalGraphics::InternalGraphicsEntity
 {
-    DeclareClass(InternalAbstractLightEntity);
+    __DeclareClass(InternalAbstractLightEntity);
 public:
     /// constructor
     InternalAbstractLightEntity();

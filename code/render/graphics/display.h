@@ -26,8 +26,8 @@ namespace Graphics
 {
 class Display : public Core::RefCounted
 {
-    DeclareClass(Display);
-    DeclareSingleton(Display);
+    __DeclareClass(Display);
+    __DeclareSingleton(Display);
 public:
     /// constructor  
     Display();

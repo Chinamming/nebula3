@@ -7,7 +7,9 @@
 
 namespace Base
 {
-ImplementClass(Base::MemoryVertexBufferLoaderBase, 'MVLB', Resources::ResourceLoader);
+__ImplementClass(Base::MemoryVertexBufferLoaderBase, 'MVLB', Resources::ResourceLoader);
+
+using namespace CoreGraphics;
 
 //------------------------------------------------------------------------------
 /**
@@ -15,7 +17,9 @@ ImplementClass(Base::MemoryVertexBufferLoaderBase, 'MVLB', Resources::ResourceLo
 MemoryVertexBufferLoaderBase::MemoryVertexBufferLoaderBase() :
     numVertices(0),
     vertexDataPtr(0),
-    vertexDataSize(0)
+    vertexDataSize(0),
+    usage(CoreGraphics::VertexBuffer::UsageImmutable),
+    access(CoreGraphics::VertexBuffer::AccessNone)
 {
     // empty
 }
@@ -27,54 +31,26 @@ MemoryVertexBufferLoaderBase::MemoryVertexBufferLoaderBase() :
     will invaliate the data).
 */
 void
-MemoryVertexBufferLoaderBase::Setup(const Util::Array<CoreGraphics::VertexComponent>& components, SizeT num, void* ptr, SizeT numBytes)
+MemoryVertexBufferLoaderBase::Setup(const Util::Array<CoreGraphics::VertexComponent>& vertexComponents_, 
+                                    SizeT numVertices_, 
+                                    void* vertexDataPtr_, 
+                                    SizeT vertexDataSize_, 
+                                    VertexBuffer::Usage usage_, 
+                                    VertexBuffer::Access access_)
 {
-    n_assert(num > 0);
-    n_assert(0 != ptr);
+    n_assert(numVertices_ > 0);
+    if (VertexBuffer::UsageImmutable == usage_)
+    {
+        n_assert(0 != vertexDataPtr_);
+        n_assert(0 < vertexDataSize_);
+    }
 
-    this->vertexComponents = components;
-    this->numVertices = num;
-	this->vertexDataPtr = ptr;
-	this->vertexDataSize = numBytes;
-	this->vertexBufferUsage = CoreGraphics::VertexBuffer::UsageImmutable;
-	this->accessMode = CoreGraphics::VertexBuffer::AccessNone;
-}
-
-//------------------------------------------------------------------------------
-/**
-    Setup all information needed to initialize a empty VertexBuffer resource.
-*/
-void 
-MemoryVertexBufferLoaderBase::Setup(const Util::Array<CoreGraphics::VertexComponent>& vertexComponents, SizeT num,SizeT numBytes, CoreGraphics::VertexBuffer::Usage usage, CoreGraphics::VertexBuffer::Access access)
-{
-	n_assert(num > 0);
-
-    this->vertexComponents = vertexComponents;
-	this->numVertices = num;
-	this->vertexDataPtr = 0;
-    this->vertexDataSize = numBytes;
-	this->vertexBufferUsage = usage;
-	this->accessMode = access;
-}
-
-//------------------------------------------------------------------------------
-/**
-    Setup all information needed to initialize the VertexBuffer resource.
-    The data must remain valid until OnLoadRequested() is called (which
-    will invaliate the data).
-*/
-void
-MemoryVertexBufferLoaderBase::Setup(const Util::Array<CoreGraphics::VertexComponent>& components, SizeT num, void* ptr, SizeT numBytes, CoreGraphics::VertexBuffer::Usage usage, CoreGraphics::VertexBuffer::Access access)
-{
-    n_assert(num > 0);
-    n_assert(0 != ptr);
-
-    this->vertexComponents = components;
-    this->numVertices = num;
-	this->vertexDataPtr = ptr;
-	this->vertexDataSize = numBytes;		
-	this->vertexBufferUsage = usage;
-	this->accessMode = access;	
+    this->vertexComponents = vertexComponents_;
+    this->numVertices = numVertices_;
+    this->vertexDataPtr = vertexDataPtr_;
+    this->vertexDataSize = vertexDataSize_;
+    this->usage = usage_;
+    this->access = access_;
 }
 
 } // namespace Base

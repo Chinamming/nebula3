@@ -7,7 +7,7 @@
 
 namespace Lighting
 {
-ImplementClass(Lighting::InternalSpotLightEntity, 'SPLE', Lighting::InternalAbstractLightEntity);
+__ImplementClass(Lighting::InternalSpotLightEntity, 'SPLE', Lighting::InternalAbstractLightEntity);
 
 using namespace Math;
 

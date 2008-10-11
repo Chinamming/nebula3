@@ -8,20 +8,20 @@
 namespace Lighting
 {
 #if (__WIN32__ || __XBOX360__)
-ImplementClass(Lighting::ShadowServer, 'SDSV', Lighting::SM30ShadowServer);
+__ImplementClass(Lighting::ShadowServer, 'SDSV', Lighting::SM30ShadowServer);
 #elif __WII__
-ImplementClass(Lighting::ShadowServer, 'SDSV', Lighting::WiiShadowServer);
+__ImplementClass(Lighting::ShadowServer, 'SDSV', Lighting::WiiShadowServer);
 #else
 #error "ShadowServer class not implemented on this platform!"
 #endif
-ImplementSingleton(Lighting::ShadowServer);
+__ImplementSingleton(Lighting::ShadowServer);
 
 //------------------------------------------------------------------------------
 /**
 */
 ShadowServer::ShadowServer()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ ShadowServer::ShadowServer()
 */
 ShadowServer::~ShadowServer()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 } // namespace Lighting
