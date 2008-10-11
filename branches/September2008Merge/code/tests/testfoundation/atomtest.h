@@ -16,7 +16,7 @@ namespace Test
 {
 class AtomTest : public TestCase
 {
-    DeclareClass(AtomTest);
+    __DeclareClass(AtomTest);
 public:
     /// run the test
     virtual void Run();

@@ -22,7 +22,7 @@ namespace Frame
 {
 class FramePass : public Core::RefCounted
 {
-    DeclareClass(FramePass);
+    __DeclareClass(FramePass);
 public:
     /// constructor
     FramePass();

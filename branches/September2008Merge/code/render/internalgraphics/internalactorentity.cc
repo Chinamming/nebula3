@@ -10,7 +10,7 @@
 
 namespace InternalGraphics
 {
-ImplementClass(InternalGraphics::InternalActorEntity, 'IAET', InternalGraphics::InternalModelEntity);
+__ImplementClass(InternalGraphics::InternalActorEntity, 'IAET', InternalGraphics::InternalModelEntity);
 
 using namespace Math;
 using namespace Timing;

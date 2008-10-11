@@ -7,8 +7,8 @@
 
 namespace Lighting
 {
-ImplementClass(Lighting::LightServerBase, 'LISB', Core::RefCounted);
-ImplementSingleton(Lighting::LightServerBase);
+__ImplementClass(Lighting::LightServerBase, 'LISB', Core::RefCounted);
+__ImplementSingleton(Lighting::LightServerBase);
 
 using namespace InternalGraphics;
 
@@ -20,7 +20,7 @@ LightServerBase::LightServerBase() :
     inBeginFrame(false),
     inBeginAttach(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ LightServerBase::~LightServerBase()
     n_assert(!this->inBeginAttach);
     n_assert(!this->cameraEntity.isvalid());
     n_assert(this->visibleLightEntities.IsEmpty());
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

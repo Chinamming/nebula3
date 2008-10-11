@@ -15,7 +15,7 @@
 
 namespace Models
 {
-ImplementClass(Models::N2ModelReader, 'N2MR', Models::ModelReader);
+__ImplementClass(Models::N2ModelReader, 'N2MR', Models::ModelReader);
 
 using namespace IO;
 using namespace Util;
@@ -532,6 +532,11 @@ N2ModelReader::ReadModelNodeAttributes(const Ptr<ModelNode>& modelNode)
                         modelNode->SetType(Models::ModelNodeType::Alpha);
                     }
 					shaderResId = "shd:static";
+				}
+				else if(shaderResId == "shd:environment_alpha")
+				{
+					modelNode->SetType(Models::ModelNodeType::Refractive);
+					shaderResId = "shd:refractive";
 				}
 
                 modelNode->SetString(Attr::Shader, shaderResId);                          

@@ -16,7 +16,7 @@ namespace Graphics
 {
 class GlobalLightEntity : public AbstractLightEntity
 {
-    DeclareClass(GlobalLightEntity);
+    __DeclareClass(GlobalLightEntity);
 public:
     /// constructor
     GlobalLightEntity();

@@ -16,12 +16,14 @@ namespace Animation
 {
 class PlayClipJob : public AnimJob
 {
-    DeclareClass(PlayClipJob);
+    __DeclareClass(PlayClipJob);
 public:
     /// constructor
     PlayClipJob();
     /// destructor
     virtual ~PlayClipJob();
+    /// evaluate the animation into the provided result buffer
+    virtual float Evaluate(Timing::Tick time, const Ptr<CoreAnimation::AnimSampleBuffer>& result);
 
     /// set the clip index to play
     void SetClipIndex(IndexT clipIndex);
@@ -32,6 +34,25 @@ private:
     IndexT clipIndex;
 };
 
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+PlayClipJob::SetClipIndex(IndexT i)
+{
+    this->clipIndex = i;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline IndexT
+PlayClipJob::GetClipIndex() const
+{
+    return this->clipIndex;
+}
+
+} // namespace Animation
 //------------------------------------------------------------------------------
 #endif
 

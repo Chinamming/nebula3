@@ -7,12 +7,14 @@
 
 namespace CoreGraphics
 {
-#if __WII__
-ImplementClass(CoreGraphics::TransformDevice, 'TRDV', Wii::WiiTransformDevice);
-ImplementSingleton(CoreGraphics::TransformDevice);
+#if (__WIN32__ || __XBOX360__)
+__ImplementClass(CoreGraphics::TransformDevice, 'TRDV', Win360::D3D9TransformDevice);
+__ImplementSingleton(CoreGraphics::TransformDevice);
+#elif __WII__
+__ImplementClass(CoreGraphics::TransformDevice, 'TRDV', Wii::WiiTransformDevice);
+__ImplementSingleton(CoreGraphics::TransformDevice);
 #else
-ImplementClass(CoreGraphics::TransformDevice, 'TRDV', Base::TransformDeviceBase);
-ImplementSingleton(CoreGraphics::TransformDevice);
+#error "TransformDevice class not implemented on this platform!"
 #endif
 
 //------------------------------------------------------------------------------
@@ -20,7 +22,7 @@ ImplementSingleton(CoreGraphics::TransformDevice);
 */
 TransformDevice::TransformDevice()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -28,7 +30,7 @@ TransformDevice::TransformDevice()
 */
 TransformDevice::~TransformDevice()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 } // namespace CoreGraphics

@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::FixedArrayTest, 'FART' /* huhu, he said 'fart' */, Test::TestCase);
+__ImplementClass(Test::FixedArrayTest, 'FART' /* huhu, he said 'fart' */, Test::TestCase);
 
 using namespace Util;
 

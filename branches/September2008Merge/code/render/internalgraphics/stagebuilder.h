@@ -20,7 +20,7 @@ class InternalStage;
 
 class StageBuilder : public Core::RefCounted
 {
-    DeclareClass(StageBuilder);
+    __DeclareClass(StageBuilder);
 public:
     /// constructor
     StageBuilder();

@@ -7,7 +7,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::ShaderBinding, 'SDBG', Core::RefCounted);
+__ImplementClass(Tools::ShaderBinding, 'SDBG', Core::RefCounted);
 
 using namespace IO;
 using namespace Util;

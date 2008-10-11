@@ -19,7 +19,7 @@ namespace Models
 {
 class StateNode : public TransformNode
 {
-    DeclareClass(StateNode);
+    __DeclareClass(StateNode);
 public:
     /// constructor
     StateNode();

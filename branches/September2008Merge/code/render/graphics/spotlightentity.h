@@ -16,7 +16,7 @@ namespace Graphics
 {
 class SpotLightEntity : public AbstractLightEntity
 {
-    DeclareClass(SpotLightEntity);
+    __DeclareClass(SpotLightEntity);
 public:
     /// constructor
     SpotLightEntity();

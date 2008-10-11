@@ -6,14 +6,16 @@
 #include "resources/resourcemanager.h"
 #include "resources/resourcemapper.h"
 #include "resources/managedresource.h"
+#include "timing/timer.h"
 
 namespace Resources
 {
-ImplementClass(Resources::ResourceManager, 'RMGR', Core::RefCounted);
-ImplementSingleton(Resources::ResourceManager);
+__ImplementClass(Resources::ResourceManager, 'RMGR', Core::RefCounted);
+__ImplementSingleton(Resources::ResourceManager);
 
 using namespace Core;
 using namespace Util;
+using namespace Timing;
 
 //------------------------------------------------------------------------------
 /**
@@ -21,7 +23,7 @@ using namespace Util;
 ResourceManager::ResourceManager() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -33,7 +35,7 @@ ResourceManager::~ResourceManager()
     {
         this->Close();
     }
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -221,6 +223,42 @@ ResourceManager::LookupManagedResource(const ResourceId& resId) const
 {
     n_assert(this->IsOpen());
     return this->managedResources[resId];
+}
+
+//------------------------------------------------------------------------------
+/**
+    This method blocks until all pending resources are loaded, or until
+    a time-out occurs. If a time-out occurs the method will return false,
+    otherwise true.
+*/
+bool
+ResourceManager::WaitForPendingResources(Time timeOut)
+{
+    // this basically runs a local resource update loop until 
+    // everything is loaded or the timeout is reached
+    Timer timer;
+    timer.Start();
+    bool timedOut = false;
+    bool allLoaded = false;
+    do
+    {
+        this->Prepare();
+        this->Update();
+        SizeT numPending = 0;
+        IndexT i;
+        for (i = 0; i < this->mappers.Size(); i++)
+        {
+            numPending += this->mappers.ValueAtIndex(i)->GetNumPendingResources();
+        }
+        if (0 == numPending)
+        {
+            allLoaded = true;
+        }
+        timedOut = timer.GetTime() > timeOut;
+        Timing::Sleep(0.01);
+    }
+    while (!(allLoaded || timedOut));
+    return allLoaded;
 }
 
 } // namespace Resources

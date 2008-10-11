@@ -23,7 +23,7 @@ namespace Debug
 {
 class ShaderPageHandler : public Http::HttpRequestHandler
 {
-    DeclareClass(ShaderPageHandler);
+    __DeclareClass(ShaderPageHandler);
 public:
     /// constructor
     ShaderPageHandler();

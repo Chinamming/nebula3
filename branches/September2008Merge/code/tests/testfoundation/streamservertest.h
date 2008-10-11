@@ -15,7 +15,7 @@ namespace Test
 {
 class StreamServerTest : public TestCase
 {
-    DeclareClass(StreamServerTest);
+    __DeclareClass(StreamServerTest);
 public:
     /// run the test
     virtual void Run();

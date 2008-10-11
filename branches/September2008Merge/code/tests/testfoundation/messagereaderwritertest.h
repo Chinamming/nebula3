@@ -17,7 +17,7 @@ namespace Test
 {
 class MessageReaderWriterTest : public TestCase
 {
-    DeclareClass(MessageReaderWriterTest);
+    __DeclareClass(MessageReaderWriterTest);
 public:
     /// run the test
     virtual void Run();
@@ -26,7 +26,7 @@ public:
 /// a test message for encoding/decoding
 class TestMessage : public Messaging::Message
 {
-    DeclareClass(TestMessage);
+    __DeclareClass(TestMessage);
     DeclareMsgId;
 public:
     /// encode message into a stream

@@ -21,7 +21,7 @@ namespace Resources
 {
 class StreamResourceLoader : public ResourceLoader
 {
-    DeclareClass(StreamResourceLoader);
+    __DeclareClass(StreamResourceLoader);
 public:
     /// constructor
     StreamResourceLoader();

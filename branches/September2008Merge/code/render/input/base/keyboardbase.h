@@ -17,7 +17,7 @@ namespace Base
 {
 class KeyboardBase : public Input::InputHandler
 {
-    DeclareClass(KeyboardBase);
+    __DeclareClass(KeyboardBase);
 public:
     /// constructor
     KeyboardBase();

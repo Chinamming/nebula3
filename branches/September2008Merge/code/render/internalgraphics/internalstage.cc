@@ -11,7 +11,7 @@
 
 namespace InternalGraphics
 {
-ImplementClass(InternalGraphics::InternalStage, 'IGSG', Core::RefCounted);
+__ImplementClass(InternalGraphics::InternalStage, 'IGSG', Core::RefCounted);
 
 using namespace Util;
 

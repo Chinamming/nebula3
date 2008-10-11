@@ -15,7 +15,7 @@
 
 namespace Models
 {
-ImplementClass(Models::StreamModelLoader, 'SMDL', Resources::ResourceLoader);
+__ImplementClass(Models::StreamModelLoader, 'SMDL', Resources::ResourceLoader);
 
 using namespace Core;
 using namespace Messaging;

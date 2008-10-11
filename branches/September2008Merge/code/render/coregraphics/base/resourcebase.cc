@@ -7,7 +7,7 @@
 
 namespace Base
 {
-ImplementClass(Base::ResourceBase, 'RSBS', Resources::Resource);
+__ImplementClass(Base::ResourceBase, 'RSBS', Resources::Resource);
 
 //------------------------------------------------------------------------------
 /**

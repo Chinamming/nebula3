@@ -10,7 +10,7 @@
 
 namespace Test
 {
-ImplementClass(Test::LoadMeshTest, 'lmsh', Test::CoreGraphicsTest);
+__ImplementClass(Test::LoadMeshTest, 'lmsh', Test::CoreGraphicsTest);
 
 using namespace Util;
 using namespace CoreGraphics;

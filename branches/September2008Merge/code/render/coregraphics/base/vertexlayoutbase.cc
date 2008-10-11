@@ -7,7 +7,7 @@
 
 namespace Base
 {
-ImplementClass(Base::VertexLayoutBase, 'VXLB', Core::RefCounted);
+__ImplementClass(Base::VertexLayoutBase, 'VXLB', Core::RefCounted);
 
 using namespace CoreGraphics;
 using namespace Util;

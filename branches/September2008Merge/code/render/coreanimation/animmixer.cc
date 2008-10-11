@@ -12,102 +12,57 @@ using namespace Math;
 
 //------------------------------------------------------------------------------
 /**
-*/
-AnimMixer::AnimMixer()
-{
-    // empty
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-AnimMixer::~AnimMixer()
-{
-    if (this->IsValid())
-    {
-        this->Discard();
-    }
-}
-
-//------------------------------------------------------------------------------
-/**
+    Mixes 2 source sample buffers into a destination sample buffer using a
+    single lerp-value between 0.0 and 1.0. Mixing takes sample counts
+    into consideration. A source sample count of 0 indicates, the this
+    sample is not valid and the result is made of 100% of the other sample.
+    If both source samples are valid, the result is blended from both
+    source samples. This gives the expected results when an animation clip
+    only manipulates parts of a character skeleton.
 */
 void
-AnimMixer::Setup(const Ptr<AnimResource>& animRes)
+AnimMixer::Mix(const Ptr<AnimResource>& animResource, 
+               const Ptr<AnimSampleBuffer>& src0, 
+               const Ptr<AnimSampleBuffer>& src1, 
+               float lerpValue,
+               const Ptr<AnimSampleBuffer>& dst)
 {
-    n_assert(!this->IsValid());
-    n_assert(animRes.isvalid());
-    n_assert(animRes->GetNumClips() > 0);
-    this->animResource = animRes;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-AnimMixer::Discard()
-{
-    n_assert(this->IsValid());
-    this->animResource = 0;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-AnimMixer::Mix(const AnimSampler& src0, const AnimSampler& src1, float lerpValue, const AnimSampler& dst)
-{
-    n_assert(this->IsValid());
+    n_assert(animResource.isvalid());
 
     // get a template clip from the anim resource, this defines the anim curve
     // types which we need for correct lerping
-    const AnimClip& templClip = this->animResource->GetClipByIndex(0);
-    n_assert(templClip.GetNumCurves() == src0.GetNumKeys());
-    n_assert(templClip.GetNumCurves() == src1.GetNumKeys());
-    n_assert(templClip.GetNumCurves() == dst.GetNumKeys());
-    scalar* src0SamplePtr = (scalar*) src0.GetSamples();
-    scalar* src1SamplePtr = (scalar*) src1.GetSamples();
-    scalar* dstSamplePtr  = (scalar*) dst.GetSamples();
-    uchar* src0SampleCounts = src0.GetSampleCounts();
-    uchar* src1SampleCounts = src1.GetSampleCounts();
-    uchar* dstSampleCounts = dst.GetSampleCounts();
+    const AnimClip& templClip = animResource->GetClipByIndex(0);
+    n_assert(templClip.GetNumCurves() == src0->GetNumSamples());
+    n_assert(templClip.GetNumCurves() == src1->GetNumSamples());
+    n_assert(templClip.GetNumCurves() == dst->GetNumSamples());
+    float4* src0SamplePtr = src0->MapSamples();
+    float4* src1SamplePtr = src1->MapSamples();
+    float4* dstSamplePtr  = dst->MapSamples();
+    uchar* src0SampleCounts = src0->MapSampleCounts();
+    uchar* src1SampleCounts = src1->MapSampleCounts();
+    uchar* dstSampleCounts  = dst->MapSampleCounts();
 
     // perform the mixing...
     IndexT i;
-    SizeT num = src0.GetNumKeys();
+    SizeT num = src0->GetNumSamples();
     quaternion q0, q1, qDst;
     float4 f0, f1, fDst;
     for (i = 0; i < num; i++)
     {
         const AnimCurve& curve = templClip.CurveByIndex(i);
-
-        // read source sample counts and update destination sample counts
         uchar src0Count = *src0SampleCounts++;
         uchar src1Count = *src1SampleCounts++;
-        
-        // if lerp value is 0 or 1, set the left or right source sample counts 
-        // to zero accordingly since they don't contribute to the result
-        if (0.0f == lerpValue)
-        {
-            // only src0 contributes to the result
-            src1Count = 0;
-        }
-        else if (1.0f == lerpValue)
-        {
-            // only src1 contributes to the result
-            src0Count = 0;
-        }
-        *dstSampleCounts++ = src0Count + src1Count; 
+        *dstSampleCounts++ = src0Count + src1Count;
 
         if ((src0Count > 0) && (src1Count > 0))
         {
-            // both source keys are valid, need to mix into result
+            // both source samples are valid, need to mix into result
             if (curve.GetCurveType() == CurveType::Rotation)
             {
                 // spherical interpolation
                 q0.load((scalar*)src0SamplePtr);
                 q1.load((scalar*)src1SamplePtr);
-                qDst.slerp(q0, q1, lerpValue);
+                qDst = quaternion::slerp(q0, q1, lerpValue);
                 qDst.store((scalar*)dstSamplePtr);
             }
             else
@@ -115,7 +70,7 @@ AnimMixer::Mix(const AnimSampler& src0, const AnimSampler& src1, float lerpValue
                 // linear interpolation
                 f0.load((scalar*)src0SamplePtr);
                 f1.load((scalar*)src1SamplePtr);
-                fDst.lerp(f0, f1, lerpValue);
+                fDst = float4::lerp(f0, f1, lerpValue);
                 fDst.store((scalar*)dstSamplePtr);
             }
         }
@@ -143,6 +98,12 @@ AnimMixer::Mix(const AnimSampler& src0, const AnimSampler& src1, float lerpValue
         src1SamplePtr++;
         dstSamplePtr++;
     }
+    dst->UnmapSampleCounts();
+    src1->UnmapSampleCounts();
+    src0->UnmapSampleCounts();
+    dst->UnmapSamples();
+    src1->UnmapSamples();
+    src0->UnmapSamples();
 }
 
 } // namespace CoreAnimation

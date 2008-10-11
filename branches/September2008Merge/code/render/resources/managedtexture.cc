@@ -7,5 +7,5 @@
 
 namespace Resources
 {
-ImplementClass(Resources::ManagedTexture, 'MGTX', Resources::ManagedResource);
+__ImplementClass(Resources::ManagedTexture, 'MGTX', Resources::ManagedResource);
 } // namespace Resources

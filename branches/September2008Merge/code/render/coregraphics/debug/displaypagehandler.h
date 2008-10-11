@@ -24,7 +24,7 @@ namespace Debug
 {
 class DisplayPageHandler : public Http::HttpRequestHandler
 {
-    DeclareClass(DisplayPageHandler);
+    __DeclareClass(DisplayPageHandler);
 public:
     /// constructor
     DisplayPageHandler();

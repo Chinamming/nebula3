@@ -16,7 +16,7 @@ namespace CoreAnimation
 {
 class AnimKeyBuffer : public Core::RefCounted
 {
-    DeclareClass(AnimKeyBuffer);
+    __DeclareClass(AnimKeyBuffer);
 public:
     /// constructor
     AnimKeyBuffer();

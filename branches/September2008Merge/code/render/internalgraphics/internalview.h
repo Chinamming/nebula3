@@ -26,7 +26,7 @@ namespace InternalGraphics
 {
 class InternalView : public Core::RefCounted
 {
-    DeclareClass(InternalView);
+    __DeclareClass(InternalView);
 public:
     /// constructor
     InternalView();

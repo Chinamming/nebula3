@@ -7,5 +7,5 @@
 
 namespace Win32
 {
-ImplementClass(Win32::Win32Mouse, 'W3MS', Base::MouseBase);
+__ImplementClass(Win32::Win32Mouse, 'W3MS', Base::MouseBase);
 }

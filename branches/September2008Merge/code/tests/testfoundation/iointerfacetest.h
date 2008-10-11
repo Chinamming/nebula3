@@ -15,7 +15,7 @@ namespace Test
 {
 class IOInterfaceTest : public TestCase
 {
-    DeclareClass(IOInterfaceTest);
+    __DeclareClass(IOInterfaceTest);
 public:
     /// run the test
     virtual void Run();

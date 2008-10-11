@@ -38,6 +38,11 @@ public:
     static Code FromString(const Util::String& str);
     /// convert to string
     static Util::String ToString(Code code);
+    /// compute number of vertices/indices given a primitive topology and number of primitives
+    static SizeT NumberOfVertices(Code topology, SizeT numPrimitives);
+    /// compute number of primitives given a primitive type and number of vertices/indices
+    static SizeT NumberOfPrimitives(Code topology, SizeT numVertices);
+
 };
 
 }; // namespace CoreGraphics

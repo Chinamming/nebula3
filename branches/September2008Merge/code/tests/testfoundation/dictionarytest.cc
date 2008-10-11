@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::DictionaryTest, 'DCTT', Test::TestCase);
+__ImplementClass(Test::DictionaryTest, 'DCTT', Test::TestCase);
 
 using namespace Util;
 

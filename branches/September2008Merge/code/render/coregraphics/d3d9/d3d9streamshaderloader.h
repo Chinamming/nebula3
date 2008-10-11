@@ -15,7 +15,7 @@ namespace Direct3D9
 {
 class D3D9StreamShaderLoader : public Resources::StreamResourceLoader
 {
-    DeclareClass(D3D9StreamShaderLoader);
+    __DeclareClass(D3D9StreamShaderLoader);
 public:
     /// return true if asynchronous loading is supported
     virtual bool CanLoadAsync() const;

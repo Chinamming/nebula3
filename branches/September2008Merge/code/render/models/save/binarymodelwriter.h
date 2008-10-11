@@ -17,7 +17,7 @@ namespace Models
 {
 class BinaryModelWriter : public ModelWriter
 {
-    DeclareClass(BinaryModelWriter);
+    __DeclareClass(BinaryModelWriter);
 public:
     /// constructor
     BinaryModelWriter();

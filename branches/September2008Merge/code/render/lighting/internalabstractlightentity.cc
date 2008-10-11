@@ -7,7 +7,7 @@
 
 namespace Lighting
 {
-ImplementClass(Lighting::InternalAbstractLightEntity, 'ALIE', InternalGraphics::InternalGraphicsEntity);
+__ImplementClass(Lighting::InternalAbstractLightEntity, 'ALIE', InternalGraphics::InternalGraphicsEntity);
 
 using namespace Math;
 

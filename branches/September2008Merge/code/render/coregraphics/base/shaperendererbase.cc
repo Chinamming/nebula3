@@ -6,24 +6,26 @@
 #include "coregraphics/base/shaperendererbase.h"
 #include "coregraphics/shaderserver.h"
 #include "resources/resourceid.h"
+#include "threading/threadid.h"
 
 namespace Base
 {
-ImplementClass(Base::ShapeRendererBase, 'SRBS', Core::RefCounted);
-ImplementSingleton(Base::ShapeRendererBase);
+__ImplementClass(Base::ShapeRendererBase, 'SRBS', Core::RefCounted);
+__ImplementSingleton(Base::ShapeRendererBase);
 
+using namespace Threading;
 using namespace CoreGraphics;
 using namespace Resources;
 using namespace Math;
+using namespace Util;
 
 //------------------------------------------------------------------------------
 /**
 */
 ShapeRendererBase::ShapeRendererBase() :
-    isOpen(false),
-    inBegin(false)
+    isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -32,8 +34,7 @@ ShapeRendererBase::ShapeRendererBase() :
 ShapeRendererBase::~ShapeRendererBase()
 {
     n_assert(!this->isOpen);
-    n_assert(!this->inBegin);
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -43,8 +44,8 @@ void
 ShapeRendererBase::Open()
 {
     n_assert(!this->isOpen);
-    n_assert(!this->inBegin);
     n_assert(!this->shapeShader.isvalid());
+    n_assert(this->shapes.IsEmpty());
     this->isOpen = true;
 
     // create shape shader instance
@@ -58,65 +59,60 @@ void
 ShapeRendererBase::Close()
 {
     n_assert(this->isOpen);
-    n_assert(!this->inBegin);
     n_assert(this->shapeShader.isvalid());
     this->isOpen = false;
     this->shapeShader->Discard();
     this->shapeShader = 0;
+    this->shapes.Clear();
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-ShapeRendererBase::Begin()
+ShapeRendererBase::DeleteShapesByThreadId(Threading::ThreadId threadId)
 {
-    n_assert(this->isOpen);
-    n_assert(!this->inBegin);
-    this->inBegin = true;
-
-    // begin rendering through shape shader
-    this->shapeShader->Begin();
-    this->shapeShader->BeginPass(0);
+    n_assert(this->IsOpen());
+    IndexT i;
+    for (i = this->shapes.Size() - 1; i != InvalidIndex; i--)
+    {
+        ThreadId shapeThreadId = this->shapes[i].GetThreadId();
+        n_assert(shapeThreadId != InvalidThreadId);
+        if (shapeThreadId == threadId)
+        {
+            this->shapes.EraseIndex(i);
+        }
+    }
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-ShapeRendererBase::DrawShape(const matrix44& modelTransform, ShapeType shapeType, const Math::float4& color)
+ShapeRendererBase::AddShape(const Shape& shape)
 {
-    n_assert(this->inBegin);
+    n_assert(this->IsOpen());
+    this->shapes.Append(shape);
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-ShapeRendererBase::DrawPrimitives(const matrix44& modelTransform, PrimitiveTopology::Code topology, SizeT numPrimitives, float* vertices, SizeT vertexWidth, const Math::float4& color)
+ShapeRendererBase::AddShapes(const Array<Shape>& shapeArray)
 {
-    n_assert(this->inBegin);
+    n_assert(this->IsOpen());
+    this->shapes.AppendArray(shapeArray);
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-ShapeRendererBase::DrawIndexedPrimitives(const matrix44& modelTransform, PrimitiveTopology::Code topology, SizeT numPrimitives, float* vertices, SizeT numVertices, SizeT vertexWidth, void* indices, IndexType::Code indexType, const Math::float4& color)
+ShapeRendererBase::DrawShapes()
 {
-    n_assert(this->inBegin);
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-ShapeRendererBase::End()
-{
-    n_assert(this->inBegin);
-    this->inBegin = false;
-    this->shapeShader->EndPass();
-    this->shapeShader->End();
+    // override in subclass!
+    n_error("ShapeRendererBase::DrawShapes() called!");
 }
 
 } // namespace Base

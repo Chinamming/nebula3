@@ -27,7 +27,7 @@ namespace Base
 {
 class MeshBase : public Resources::Resource
 {
-    DeclareClass(MeshBase);
+    __DeclareClass(MeshBase);
 public:
     /// constructor
     MeshBase();
@@ -39,10 +39,14 @@ public:
     
     /// return true if the mesh has a vertex buffer
     bool HasVertexBuffer() const;
+    /// set the vertex buffer object
+    void SetVertexBuffer(const Ptr<CoreGraphics::VertexBuffer>& vb);
     /// get the vertex buffer object
     const Ptr<CoreGraphics::VertexBuffer>& GetVertexBuffer() const;
     /// return true if the mesh has an index buffer
     bool HasIndexBuffer() const;
+    /// set the index buffer object
+    void SetIndexBuffer(const Ptr<CoreGraphics::IndexBuffer>& ib);
     /// get the index buffer object
     const Ptr<CoreGraphics::IndexBuffer>& GetIndexBuffer() const;
     /// get the number of primitive groups in the mesh
@@ -54,14 +58,7 @@ public:
     /// set primitive groups
     void SetPrimitiveGroups(const Util::Array<CoreGraphics::PrimitiveGroup>& groups);
  
-protected:
-    friend class CoreGraphics::StreamMeshLoader;
-	friend class CoreGraphics::DynamicMeshResourceLoader;
-    /// set the vertex buffer object
-    void SetVertexBuffer(const Ptr<CoreGraphics::VertexBuffer>& vb);
-    /// set the index buffer object
-    void SetIndexBuffer(const Ptr<CoreGraphics::IndexBuffer>& ib);
-   
+protected:   
     Ptr<CoreGraphics::VertexBuffer> vertexBuffer;
     Ptr<CoreGraphics::IndexBuffer> indexBuffer;
     Util::Array<CoreGraphics::PrimitiveGroup> primitiveGroups;

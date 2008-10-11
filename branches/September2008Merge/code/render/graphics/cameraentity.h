@@ -21,7 +21,7 @@ namespace Graphics
 {
 class CameraEntity : public GraphicsEntity
 {
-    DeclareClass(CameraEntity);
+    __DeclareClass(CameraEntity);
 public:
     /// constructor
     CameraEntity();

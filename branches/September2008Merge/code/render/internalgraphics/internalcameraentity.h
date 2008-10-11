@@ -17,7 +17,7 @@ namespace InternalGraphics
 {
 class InternalCameraEntity : public InternalGraphicsEntity
 {
-    DeclareClass(InternalCameraEntity);
+    __DeclareClass(InternalCameraEntity);
 public:
     /// constructor
     InternalCameraEntity();

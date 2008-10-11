@@ -15,7 +15,7 @@ namespace Test
 {
 class URITest : public TestCase
 {
-    DeclareClass(URITest);
+    __DeclareClass(URITest);
 public:
     /// run the test
     virtual void Run();

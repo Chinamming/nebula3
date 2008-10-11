@@ -14,7 +14,7 @@
 
 namespace InternalGraphics
 {
-ImplementClass(InternalGraphics::InternalView, 'IGVW', Core::RefCounted);
+__ImplementClass(InternalGraphics::InternalView, 'IGVW', Core::RefCounted);
 
 using namespace Util;
 using namespace Models;
@@ -198,7 +198,6 @@ InternalView::RenderDebug()
     transformDevice->SetViewTransform(this->camera->GetViewTransform());
 
     // just call OnRenderDebug on all graphics entities visible through our camera
-    ShapeRenderer::Instance()->Begin();
     const Array<Ptr<InternalGraphicsEntity> >& visLinks = this->camera->GetLinks(InternalGraphicsEntity::CameraLink);
     IndexT i;
     SizeT num = visLinks.Size();
@@ -207,7 +206,6 @@ InternalView::RenderDebug()
         const Ptr<InternalGraphicsEntity>& curEntity = visLinks[i];
         curEntity->OnRenderDebug();
     }
-    ShapeRenderer::Instance()->End();
 }
 
 //------------------------------------------------------------------------------

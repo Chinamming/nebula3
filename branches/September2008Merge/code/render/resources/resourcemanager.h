@@ -34,6 +34,7 @@
 #include "core/refcounted.h"
 #include "core/singleton.h"
 #include "resources/resourceid.h"
+#include "timing/time.h"
 
 //------------------------------------------------------------------------------
 namespace Resources
@@ -43,8 +44,8 @@ class ManagedResource;
 
 class ResourceManager : public Core::RefCounted
 {
-    DeclareClass(ResourceManager);
-    DeclareSingleton(ResourceManager);
+    __DeclareClass(ResourceManager);
+    __DeclareSingleton(ResourceManager);
 public:
     /// constructor
     ResourceManager();
@@ -82,6 +83,8 @@ public:
     void Prepare();
     /// perform actual resource management, call per frame
     void Update();
+    /// wait until pending resources are loaded, or time-out is reached (returns false if time-out)
+    bool WaitForPendingResources(Timing::Time timeOut);
 
 private:
     bool isOpen;

@@ -18,14 +18,12 @@
 #include "graphics/display.h"
 #include "input/inputserver.h"
 #include "timing/timer.h"
+#include "debug/debuginterface.h"
 #include "debug/debugtimer.h"
-
-#if !__WII__
 #include "http/httpinterface.h"
 #include "http/httpserverproxy.h"
 #include "remote/remoteinterface.h"
 #include "remote/remotecontrolproxy.h"
-#endif
 
 //------------------------------------------------------------------------------
 namespace App
@@ -71,12 +69,10 @@ protected:
     Ptr<Graphics::GraphicsInterface> graphicsInterface;
     Ptr<Graphics::Display> display;    
     Ptr<Input::InputServer> inputServer;
-#if !__WII__    
     Ptr<Http::HttpInterface> httpInterface;
     Ptr<Http::HttpServerProxy> httpServerProxy;
     Ptr<Remote::RemoteInterface> remoteInterface;
     Ptr<Remote::RemoteControlProxy> remoteControlProxy;
-#endif    
     Timing::Timer timer;
     Timing::Time time;
     Timing::Time frameTime;

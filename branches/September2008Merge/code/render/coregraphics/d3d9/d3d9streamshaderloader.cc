@@ -11,7 +11,7 @@
 
 namespace Direct3D9
 {
-ImplementClass(Direct3D9::D3D9StreamShaderLoader, 'D9SL', Resources::StreamResourceLoader);
+__ImplementClass(Direct3D9::D3D9StreamShaderLoader, 'D9SL', Resources::StreamResourceLoader);
 
 using namespace Resources;
 using namespace CoreGraphics;

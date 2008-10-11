@@ -24,7 +24,7 @@ namespace Frame
 {
 class FrameShader : public Core::RefCounted
 {
-    DeclareClass(FrameShader);
+    __DeclareClass(FrameShader);
 public:
     /// constructor
     FrameShader();

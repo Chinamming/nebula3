@@ -11,7 +11,7 @@
 #if NEBULA3_LEGACY_SUPPORT
 namespace Legacy
 {
-ImplementClass(Legacy::Nvx2StreamReader, 'N2SR', IO::StreamReader);
+__ImplementClass(Legacy::Nvx2StreamReader, 'N2SR', IO::StreamReader);
 
 using namespace CoreGraphics;
 using namespace Util;
@@ -141,6 +141,7 @@ Nvx2StreamReader::ReadHeaderData()
     struct Nvx2Header* header = (struct Nvx2Header*) this->mapPtr;
     byteOrder.Convert<uint>(header->magic);
     byteOrder.Convert<uint>(header->numGroups);
+    byteOrder.Convert<uint>(header->numVertices);
     byteOrder.Convert<uint>(header->vertexWidth);
     byteOrder.Convert<uint>(header->numIndices);
     header->numIndices *= 3; // header holds number of tris, not indices

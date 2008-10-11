@@ -9,7 +9,7 @@
 
 namespace InternalGraphics
 {
-ImplementClass(InternalGraphics::Cell, 'IGCL', Core::RefCounted);
+__ImplementClass(InternalGraphics::Cell, 'IGCL', Core::RefCounted);
 
 using namespace Math;
 using namespace Util;

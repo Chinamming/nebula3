@@ -19,7 +19,7 @@ namespace Lighting
 {
 class InternalSpotLightEntity : public InternalAbstractLightEntity
 {
-    DeclareClass(InternalSpotLightEntity);
+    __DeclareClass(InternalSpotLightEntity);
 public:
     /// constructor
     InternalSpotLightEntity();

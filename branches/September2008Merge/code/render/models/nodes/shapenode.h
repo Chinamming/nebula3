@@ -20,7 +20,7 @@ namespace Models
 {
 class ShapeNode : public StateNode
 {
-    DeclareClass(ShapeNode);
+    __DeclareClass(ShapeNode);
 public:
     /// constructor
     ShapeNode();

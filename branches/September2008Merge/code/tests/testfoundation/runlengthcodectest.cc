@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::RunLengthCodecTest, 'RLET', Test::TestCase);
+__ImplementClass(Test::RunLengthCodecTest, 'RLET', Test::TestCase);
 
 using namespace Util;
 
@@ -87,7 +87,7 @@ RunLengthCodecTest::Run()
     // test some semi-random data
     for (i = 0; i < bufSize; i++)
     {
-        srcBuffer[i] = rand() % 16;
+        srcBuffer[i] = (uchar) (rand() % 16);
     }
     rleSize = RunLengthCodec::Encode(srcBuffer, bufSize, rleBuffer, rleBufferSize);
     this->Verify(RunLengthCodec::ComputeDecodedSize(rleBuffer, rleSize) == 2001);

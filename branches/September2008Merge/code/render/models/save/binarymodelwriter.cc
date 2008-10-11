@@ -7,7 +7,7 @@
 
 namespace Models
 {
-ImplementClass(Models::BinaryModelWriter, 'BNMW', Models::ModelWriter);
+__ImplementClass(Models::BinaryModelWriter, 'BNMW', Models::ModelWriter);
 
 using namespace Util;
 using namespace IO;

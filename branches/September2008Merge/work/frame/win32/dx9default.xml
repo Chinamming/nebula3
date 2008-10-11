@@ -20,7 +20,11 @@
         
     <!-- apply a post effect with color correction, renders directly to the presentation buffer -->
     <PostEffect name="Compose" shader="pe_compose">
-        <ApplyShaderVariable sem="ColorBuffer" value="ColorBuffer"/>        
+        <ApplyShaderVariable sem="ColorBuffer" value="ColorBuffer"/>
+        
+        <!-- render debug stuff on top of complete frame -->
+        <Batch shader="b_shape" type="Shapes"/>
+        <Batch shader="b_empty" type="Text"/>
     </PostEffect>
     
 </FrameShader>

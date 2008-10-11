@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::FixedTableTest, 'FTBT', Test::TestCase);
+__ImplementClass(Test::FixedTableTest, 'FTBT', Test::TestCase);
 
 using namespace Util;
 

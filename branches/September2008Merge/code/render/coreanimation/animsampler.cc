@@ -14,71 +14,23 @@ using namespace Timing;
 //------------------------------------------------------------------------------
 /**
 */
-AnimSampler::AnimSampler() :
-    numKeys(0),
-    sampleBuffer(0),
-    sampleCounts(0)
-{
-    // empty
-}    
-
-//------------------------------------------------------------------------------
-/**
-*/
-AnimSampler::~AnimSampler()
-{
-    if (this->IsValid())
-    {
-        this->Discard();
-    }
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
 void
-AnimSampler::Setup(const Ptr<AnimResource>& res)
+AnimSampler::Sample(const Ptr<AnimResource>& animResource, 
+                    IndexT clipIndex, 
+                    SampleType::Code sampleType, 
+                    Tick time, 
+                    const Ptr<AnimSampleBuffer>& result)
 {
-    n_assert(!this->IsValid());    
-    n_assert(0 == this->sampleBuffer);
-    n_assert(0 == this->sampleCounts);
-    n_assert(res.isvalid());
-    this->animResource = res;
-    this->numKeys = this->animResource->GetClipByIndex(0).GetNumCurves();
-    this->sampleBuffer = (float4*) Memory::Alloc(Memory::ResourceHeap, sizeof(float4) * this->numKeys);
-    this->sampleCounts = (uchar*) Memory::Alloc(Memory::ResourceHeap, sizeof(uchar) * this->numKeys);
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-AnimSampler::Discard()
-{
-    n_assert(this->IsValid());
-    n_assert(0 != this->sampleBuffer);
-    n_assert(0 != this->sampleCounts);
-    this->animResource = 0;
-    Memory::Free(Memory::ResourceHeap, this->sampleBuffer);
-    Memory::Free(Memory::ResourceHeap, this->sampleCounts);
-    this->sampleBuffer = 0;
-    this->sampleCounts = 0;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-AnimSampler::Sample(IndexT clipIndex, SampleType::Code sampleType, Tick time)
-{
-    n_assert(this->IsValid());
+    n_assert(animResource.isvalid());
+    n_assert(result.isvalid());
     n_assert((sampleType == SampleType::Step) || (sampleType == SampleType::Linear));
     
-    const AnimClip& clip = this->animResource->GetClipByIndex(clipIndex);
+    const AnimClip& clip = animResource->GetClipByIndex(clipIndex);
     SizeT keyStride    = clip.GetKeyStride();
     Tick keyDuration   = clip.GetKeyDuration();
     Tick clipDuration  = clip.GetClipDuration();
     SizeT clipNumKeys  = clip.GetNumKeys();
+    n_assert(clip.GetNumCurves() == result->GetNumSamples());
 
     // clamp sample time to valid range as defined by pre-infinity and post-infinity type
     Tick sampleTime = time;
@@ -118,7 +70,9 @@ AnimSampler::Sample(IndexT clipIndex, SampleType::Code sampleType, Tick time)
     float4 f4Key0, f4Key1, f4SampleKey;
     quaternion qKey0, qKey1, qSampleKey;
 
-    scalar* srcKeyStart = (scalar*) this->animResource->GetKeyBuffer()->Map();
+    Math::float4* srcKeyStart = (Math::float4*) animResource->GetKeyBuffer()->Map();
+    Math::float4* dstKeyBuffer = result->MapSamples();
+    uchar* dstSampleCounts = result->MapSampleCounts();
     IndexT curveIndex;
     SizeT numCurves = clip.GetNumCurves();
     for (curveIndex = 0; curveIndex < numCurves; curveIndex++)
@@ -126,14 +80,14 @@ AnimSampler::Sample(IndexT clipIndex, SampleType::Code sampleType, Tick time)
         const AnimCurve& curve = clip.CurveByIndex(curveIndex);
         if (!curve.IsActive())
         {
-            // curve is not active, reset sample count to 0
-            this->sampleCounts[curveIndex] = 0;
+            // curve is not active, set sample count to 0
+            dstSampleCounts[curveIndex] = 0;
         }
         else
         {
             // curve is active, set sample count to 1
-            this->sampleCounts[curveIndex] = 1;
-            scalar* resultPtr = (scalar*) &(this->sampleBuffer[curveIndex]);
+            dstSampleCounts[curveIndex] = 1;
+            scalar* resultPtr = (scalar*) &(dstKeyBuffer[curveIndex]);
             if (curve.IsStatic())
             {
                 // the curve is constant, just copy the constant value into the result buffer
@@ -145,7 +99,7 @@ AnimSampler::Sample(IndexT clipIndex, SampleType::Code sampleType, Tick time)
                 IndexT startKeyIndex = curve.GetFirstKeyIndex();
 
                 // compute position of first key in source key buffer
-                float* keyPtr0 = srcKeyStart + ((startKeyIndex + keyIndex0) * keyStride);
+                scalar* keyPtr0 = (scalar*) (srcKeyStart + startKeyIndex + (keyIndex0 * keyStride));
                 if (SampleType::Step == sampleType)
                 {
                     // if no interpolation needed, just copy the key to the sample buffer
@@ -155,13 +109,13 @@ AnimSampler::Sample(IndexT clipIndex, SampleType::Code sampleType, Tick time)
                 else
                 {
                     // need to interpolate between 2 keys
-                    float* keyPtr1 = srcKeyStart + ((startKeyIndex + keyIndex1) * keyStride);
+                    scalar* keyPtr1 = (scalar*) (srcKeyStart + startKeyIndex + (keyIndex1 * keyStride));
                     if (curve.GetCurveType() == CurveType::Rotation)
                     {
                         // perform spherical interpolation
                         qKey0.load(keyPtr0);
                         qKey1.load(keyPtr1);
-                        qSampleKey.slerp(qKey0, qKey1, lerpValue);
+                        qSampleKey = quaternion::slerp(qKey0, qKey1, lerpValue);
                         qSampleKey.store(resultPtr);
                     }
                     else
@@ -169,7 +123,7 @@ AnimSampler::Sample(IndexT clipIndex, SampleType::Code sampleType, Tick time)
                         // perform linear interpolation
                         f4Key0.load(keyPtr0);
                         f4Key1.load(keyPtr1);
-                        f4SampleKey.lerp(f4Key0, f4Key1, lerpValue);
+                        f4SampleKey = float4::lerp(f4Key0, f4Key1, lerpValue);
                         f4SampleKey.store(resultPtr);
                     }
                 }
@@ -177,7 +131,9 @@ AnimSampler::Sample(IndexT clipIndex, SampleType::Code sampleType, Tick time)
         }
     }
     // done
-    this->animResource->GetKeyBuffer()->Unmap();
+    result->UnmapSampleCounts();
+    result->UnmapSamples();
+    animResource->GetKeyBuffer()->Unmap();
 }
 
 } // namespace CoreAnimation

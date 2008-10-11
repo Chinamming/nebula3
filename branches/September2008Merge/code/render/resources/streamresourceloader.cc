@@ -9,7 +9,7 @@
 
 namespace Resources
 {
-ImplementClass(Resources::StreamResourceLoader, 'SRLD', Resources::ResourceLoader);
+__ImplementClass(Resources::StreamResourceLoader, 'SRLD', Resources::ResourceLoader);
 
 using namespace Interface;
 using namespace IO;

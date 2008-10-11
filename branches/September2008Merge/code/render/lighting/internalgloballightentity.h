@@ -22,7 +22,7 @@ namespace Lighting
 {
 class InternalGlobalLightEntity : public InternalAbstractLightEntity
 {
-    DeclareClass(InternalGlobalLightEntity);
+    __DeclareClass(InternalGlobalLightEntity);
 public:
     /// constructor
     InternalGlobalLightEntity();

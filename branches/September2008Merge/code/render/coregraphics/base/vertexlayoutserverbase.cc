@@ -8,8 +8,8 @@
 
 namespace Base
 {
-ImplementClass(Base::VertexLayoutServerBase, 'VSVB', Core::RefCounted);
-ImplementSingleton(Base::VertexLayoutServerBase);
+__ImplementClass(Base::VertexLayoutServerBase, 'VSVB', Core::RefCounted);
+__ImplementSingleton(Base::VertexLayoutServerBase);
 
 using namespace Util;
 using namespace CoreGraphics;
@@ -20,7 +20,7 @@ using namespace CoreGraphics;
 VertexLayoutServerBase::VertexLayoutServerBase() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ VertexLayoutServerBase::VertexLayoutServerBase() :
 */
 VertexLayoutServerBase::~VertexLayoutServerBase()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

@@ -16,7 +16,7 @@ namespace Attr
 
 namespace InternalGraphics
 {
-ImplementClass(InternalGraphics::QuadtreeStageBuilder, 'QSBL', InternalGraphics::StageBuilder);
+__ImplementClass(InternalGraphics::QuadtreeStageBuilder, 'QSBL', InternalGraphics::StageBuilder);
 
 using namespace Math;
 using namespace Util;
@@ -43,7 +43,7 @@ QuadtreeStageBuilder::~QuadtreeStageBuilder()
 void
 QuadtreeStageBuilder::BuildStage(const Ptr<InternalStage>& stage)
 {
-    this->quadTree.SetDepth(this->attrs.GetInt(Attr::QuadTreeStageBuilderDepth));
+    this->quadTree.SetDepth((uchar)this->attrs.GetInt(Attr::QuadTreeStageBuilderDepth));
     Math::bbox box(this->attrs.GetFloat4(Attr::QuadTreeStageBuilderCenter),
                    this->attrs.GetFloat4(Attr::QuadTreeStageBuilderExtents));
     this->quadTree.SetBoundingBox(box);

@@ -18,7 +18,7 @@ namespace Base
 {
 class VertexBufferBase : public ResourceBase
 {
-    DeclareClass(VertexBufferBase);
+    __DeclareClass(VertexBufferBase);
 public:
     /// constructor
     VertexBufferBase();
@@ -31,17 +31,17 @@ public:
     void* Map(MapType mapType);
     /// unmap the resource
     void Unmap();
+    
+    /// set vertex layout (set by resource loader)
+    void SetVertexLayout(const Ptr<CoreGraphics::VertexLayout>& vertexLayout);
     /// get the vertex layout
     const Ptr<CoreGraphics::VertexLayout>& GetVertexLayout() const;
+    /// set number of vertices (set by resource loader)
+    void SetNumVertices(SizeT numVertices);
     /// get number of vertices in the buffer
     SizeT GetNumVertices() const;
 
 protected:
-    /// set vertex layout (set by resource loader)
-    void SetVertexLayout(const Ptr<CoreGraphics::VertexLayout>& vertexLayout);
-    /// set number of vertices (set by resource loader)
-    void SetNumVertices(SizeT numVertices);
-
     Ptr<CoreGraphics::VertexLayout> vertexLayout;
     SizeT numVertices;
 };

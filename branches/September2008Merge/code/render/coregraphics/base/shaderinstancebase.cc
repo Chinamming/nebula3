@@ -10,7 +10,7 @@
 
 namespace Base
 {
-ImplementClass(Base::ShaderInstanceBase, 'SIBS', Core::RefCounted);
+__ImplementClass(Base::ShaderInstanceBase, 'SIBS', Core::RefCounted);
 
 using namespace CoreGraphics;
 
@@ -36,7 +36,6 @@ ShaderInstanceBase::~ShaderInstanceBase()
     n_assert(this->variablesBySemantic.IsEmpty());
     n_assert(this->variations.IsEmpty());    
     n_assert(!this->activeVariation.isvalid());
-    n_assert(this->preShaders.IsEmpty());
 }
 
 //------------------------------------------------------------------------------
@@ -88,34 +87,6 @@ ShaderInstanceBase::Cleanup()
     this->variablesBySemantic.Clear();
     this->variations.Clear();
     this->activeVariation = 0;
-    IndexT i;
-    for (i = 0; i < this->preShaders.Size(); i++)
-    {
-        this->preShaders[i]->OnDetach();
-    }
-    this->preShaders.Clear();
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-ShaderInstanceBase::AddPreShader(const Ptr<PreShader>& preShader)
-{
-    preShader->OnAttach((ShaderInstance*)this);
-    this->preShaders.Append(preShader);
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-ShaderInstanceBase::RemovePreShader(const Ptr<PreShader>& preShader)
-{
-    IndexT index = this->preShaders.FindIndex(preShader);
-    n_assert(InvalidIndex != index);
-    preShader->OnDetach();
-    this->preShaders.EraseIndex(index);
 }
 
 //------------------------------------------------------------------------------
@@ -127,13 +98,6 @@ ShaderInstanceBase::Begin()
     n_assert(!this->inBegin);
     n_assert(!this->inBeginPass);
     this->inBegin = true;
-    
-    // invoke pre-shaders
-    IndexT i;
-    for (i = 0; i < this->preShaders.Size(); i++)
-    {
-        this->preShaders[i]->OnApply();
-    }
     return 0;
 }
 

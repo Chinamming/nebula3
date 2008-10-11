@@ -9,7 +9,7 @@
 
 namespace CoreAnimation
 {
-ImplementClass(CoreAnimation::StreamAnimationLoader, 'SANL', Resources::StreamResourceLoader);
+__ImplementClass(CoreAnimation::StreamAnimationLoader, 'SANL', Resources::StreamResourceLoader);
 
 using namespace IO;
 using namespace Util;
@@ -82,7 +82,6 @@ StreamAnimationLoader::SetupResourceFromStream(const Ptr<Stream>& stream)
         n_error("CoreAnimation::StreamAnimationLoader: unrecognized file extension in '%s'\n", this->resource->GetResourceId().Value().AsCharPtr());
         return false;
     }
-    return true;
 }
 
 //------------------------------------------------------------------------------
@@ -111,135 +110,167 @@ StreamAnimationLoader::SetupFromNax2(const Ptr<Stream>& stream)
 {
     const Ptr<AnimResource>& anim = this->resource.downcast<AnimResource>();
     n_assert(!anim->IsLoaded());
-    uchar* ptr = (uchar*) stream->Map();
-
-    // read header
-    ByteOrder byteOrder(ByteOrder::LittleEndian, ByteOrder::Host);
-    Nax2Header* naxHeader = (Nax2Header*) ptr;
-    byteOrder.Convert<uint>(naxHeader->magic);
-    byteOrder.Convert<SizeT>(naxHeader->numGroups);
-    byteOrder.Convert<SizeT>(naxHeader->numKeys);
-    ptr += sizeof(Nax2Header);
-
-    // check magic value
-    if (FourCC(naxHeader->magic) != 'NAX3')
+    stream->SetAccessMode(Stream::ReadAccess);
+    if (stream->Open())
     {
-        n_error("nMemoryAnimation::SetupFromNax2(): '%s' has obsolete file format!", stream->GetURI().AsString().AsCharPtr());        
-        return false;
-    }
-    n_assert(0 != naxHeader->numGroups);
+        uchar* ptr = (uchar*) stream->Map();
 
-    // setup animation clips
-    n_assert(this->nax2ClipNames.Size() == naxHeader->numGroups);
-    anim->BeginSetupClips(naxHeader->numGroups);
-    IndexT clipIndex;
-    for (clipIndex = 0; clipIndex < naxHeader->numGroups; clipIndex++)
-    {
-        Nax2Group* naxGroup = (Nax2Group*) ptr;
-        
-        // endian conversion
-        byteOrder.Convert<SizeT>(naxGroup->numCurves);
-        byteOrder.Convert<IndexT>(naxGroup->startKey);
-        byteOrder.Convert<SizeT>(naxGroup->numKeys);
-        byteOrder.Convert<SizeT>(naxGroup->keyStride);
-        byteOrder.Convert<float>(naxGroup->keyTime);
-        byteOrder.Convert<float>(naxGroup->fadeInFrames);
-        byteOrder.Convert<int>(naxGroup->loopType);
-        
-        // setup anim clip object
-        AnimClip& clip = anim->Clip(clipIndex);
-        clip.SetNumCurves(naxGroup->numCurves);
-        clip.SetNumKeys(naxGroup->numKeys);
-        clip.SetKeyStride(naxGroup->keyStride);
-        clip.SetKeyDuration(Timing::SecondsToTicks(naxGroup->keyTime));
-        if (0 == naxGroup->loopType)
+        // read header
+        ByteOrder byteOrder(ByteOrder::LittleEndian, ByteOrder::Host);
+        Nax2Header* naxHeader = (Nax2Header*) ptr;
+        byteOrder.Convert<uint>(naxHeader->magic);
+        byteOrder.Convert<SizeT>(naxHeader->numGroups);
+        byteOrder.Convert<SizeT>(naxHeader->numKeys);
+        ptr += sizeof(Nax2Header);
+
+        // check magic value
+        if (FourCC(naxHeader->magic) != 'NAX3')
         {
-            // Clamp
-            clip.SetPreInfinityType(InfinityType::Constant);
-            clip.SetPostInfinityType(InfinityType::Constant);
+            n_error("nMemoryAnimation::SetupFromNax2(): '%s' has obsolete file format!", stream->GetURI().AsString().AsCharPtr());        
+            return false;
+        }
+        n_assert(0 != naxHeader->numGroups);
+
+        if (this->nax2ClipNames.IsEmpty())
+        {
+            // if no clip names have been defined, automatically generate clip names
+            IndexT i;
+            String clipName;
+            for (i = 0; i < naxHeader->numGroups; i++)
+            {
+                clipName.Format("clip%d", i);
+                this->nax2ClipNames.Append(clipName);
+            }
         }
         else
         {
-            clip.SetPreInfinityType(InfinityType::Cycle);
-            clip.SetPostInfinityType(InfinityType::Cycle);
+            // if clip names are defined, the number must be identical
+            // with the number of groups in the nax2 anim file
+            n_assert(this->nax2ClipNames.Size() == naxHeader->numGroups);
         }
-        ptr += sizeof(Nax2Group);
-    }
 
-    // setup clip curves
-    for (clipIndex = 0; clipIndex < naxHeader->numGroups; clipIndex++)
-    {
-        AnimClip& clip = anim->Clip(clipIndex);
-        IndexT curveIndex;
-        for (curveIndex = 0; curveIndex < clip.GetNumCurves(); curveIndex++)
+        // setup animation clips
+        anim->BeginSetupClips(naxHeader->numGroups);
+        IndexT clipIndex;
+        for (clipIndex = 0; clipIndex < naxHeader->numGroups; clipIndex++)
         {
-            Nax2Curve* naxCurve = (Nax2Curve*) ptr;
+            Nax2Group* naxGroup = (Nax2Group*) ptr;
             
             // endian conversion
-            byteOrder.Convert<int>(naxCurve->ipolType);
-            byteOrder.Convert<int>(naxCurve->firstKeyIndex);
-            byteOrder.Convert<int>(naxCurve->isAnim);
-            byteOrder.Convert<float>(naxCurve->keyX);
-            byteOrder.Convert<float>(naxCurve->keyY);
-            byteOrder.Convert<float>(naxCurve->keyZ);
-            byteOrder.Convert<float>(naxCurve->keyW);
-
-            AnimCurve& animCurve = clip.CurveByIndex(curveIndex);
-            animCurve.SetFirstKeyIndex(naxCurve->firstKeyIndex);
-            animCurve.SetStatic(-1 == naxCurve->firstKeyIndex);
-            animCurve.SetStaticKey(float4(naxCurve->keyX, naxCurve->keyY,naxCurve->keyZ, naxCurve->keyW));
-            animCurve.SetActive(0 != naxCurve->isAnim);
+            byteOrder.Convert<SizeT>(naxGroup->numCurves);
+            byteOrder.Convert<IndexT>(naxGroup->startKey);
+            byteOrder.Convert<SizeT>(naxGroup->numKeys);
+            byteOrder.Convert<SizeT>(naxGroup->keyStride);
+            byteOrder.Convert<float>(naxGroup->keyTime);
+            byteOrder.Convert<float>(naxGroup->fadeInFrames);
+            byteOrder.Convert<int>(naxGroup->loopType);
             
-            // this is a hack, Nebula2 files usually always have translation,
-            // rotation and scale (in that order)
-            int type = curveIndex % 3;
-            switch (type)
+            // setup anim clip object
+            AnimClip& clip = anim->Clip(clipIndex);
+            clip.SetName(this->nax2ClipNames[clipIndex]);
+            clip.SetNumCurves(naxGroup->numCurves);
+            clip.SetNumKeys(naxGroup->numKeys);
+            clip.SetKeyStride(naxGroup->keyStride);
+            clip.SetKeyDuration(Timing::SecondsToTicks(naxGroup->keyTime));
+            if (0 == naxGroup->loopType)
             {
-                case 0:
-                    animCurve.SetCurveType(CurveType::Translation);
-                    break;
-                case 1:
-                    n_assert(2 == naxCurve->ipolType);   // nAnimation::IpolType::Quat
-                    animCurve.SetCurveType(CurveType::Rotation);
-                    break;
-                case 2:
-                    animCurve.SetCurveType(CurveType::Scale);
-                    break;
+                // Clamp
+                clip.SetPreInfinityType(InfinityType::Constant);
+                clip.SetPostInfinityType(InfinityType::Constant);
+            }
+            else
+            {
+                clip.SetPreInfinityType(InfinityType::Cycle);
+                clip.SetPostInfinityType(InfinityType::Cycle);
             }
 
-            // advance to next NAX2 curve
-            ptr += sizeof(Nax2Curve);
+            ptr += sizeof(Nax2Group);
         }
-    }
-    anim->EndSetupClips();
 
-    // finally load keys (endian convert if necessary)
-    const Ptr<AnimKeyBuffer> animKeyBuffer = anim->SetupKeyBuffer(naxHeader->numKeys);
-    void* keyPtr = animKeyBuffer->Map();
-    Memory::Copy(ptr, keyPtr, animKeyBuffer->GetByteSize());
-
-    #pragma warning(push)   
-    #pragma warning(disable : 4127) // expression is constant
-    if (ByteOrder::Host != ByteOrder::LittleEndian)
-    {
-        ByteOrder byteOrder(ByteOrder::LittleEndian, ByteOrder::Host);
-        float* floatKeyPtr = (float*) keyPtr;
-        IndexT keyIndex;
-        SizeT numKeys = animKeyBuffer->GetNumKeys();
-        for (keyIndex = 0; keyIndex < numKeys; keyIndex++)
+        // setup clip curves
+        for (clipIndex = 0; clipIndex < naxHeader->numGroups; clipIndex++)
         {
-            byteOrder.Convert<float>(floatKeyPtr[0]);
-            byteOrder.Convert<float>(floatKeyPtr[1]);
-            byteOrder.Convert<float>(floatKeyPtr[2]);
-            byteOrder.Convert<float>(floatKeyPtr[3]);
-            floatKeyPtr += 4;
-        }
-    }
-    #pragma warning(pop)
-    animKeyBuffer->Unmap();
+            AnimClip& clip = anim->Clip(clipIndex);
+            IndexT curveIndex;
+            for (curveIndex = 0; curveIndex < clip.GetNumCurves(); curveIndex++)
+            {
+                Nax2Curve* naxCurve = (Nax2Curve*) ptr;
+                
+                // endian conversion
+                byteOrder.Convert<int>(naxCurve->ipolType);
+                byteOrder.Convert<int>(naxCurve->firstKeyIndex);
+                byteOrder.Convert<int>(naxCurve->isAnim);
+                byteOrder.Convert<float>(naxCurve->keyX);
+                byteOrder.Convert<float>(naxCurve->keyY);
+                byteOrder.Convert<float>(naxCurve->keyZ);
+                byteOrder.Convert<float>(naxCurve->keyW);
 
-    // done!
-    return true;
+                AnimCurve& animCurve = clip.CurveByIndex(curveIndex);
+                bool isStaticCurve = (-1 == naxCurve->firstKeyIndex);
+                if (isStaticCurve)
+                {
+                    animCurve.SetFirstKeyIndex(0);
+                }
+                else
+                {
+                    animCurve.SetFirstKeyIndex(naxCurve->firstKeyIndex);
+                }
+                animCurve.SetStatic(isStaticCurve);
+                animCurve.SetStaticKey(float4(naxCurve->keyX, naxCurve->keyY, naxCurve->keyZ, naxCurve->keyW));
+                animCurve.SetActive(0 != naxCurve->isAnim);
+                
+                // this is a hack, Nebula2 files usually always have translation,
+                // rotation and scale (in that order)
+                int type = curveIndex % 3;
+                switch (type)
+                {
+                    case 0:
+                        animCurve.SetCurveType(CurveType::Translation);
+                        break;
+                    case 1:
+                        n_assert(2 == naxCurve->ipolType);   // nAnimation::IpolType::Quat
+                        animCurve.SetCurveType(CurveType::Rotation);
+                        break;
+                    case 2:
+                        animCurve.SetCurveType(CurveType::Scale);
+                        break;
+                }
+
+                // advance to next NAX2 curve
+                ptr += sizeof(Nax2Curve);
+            }
+        }
+        anim->EndSetupClips();
+
+        // finally load keys (endian convert if necessary)
+        const Ptr<AnimKeyBuffer> animKeyBuffer = anim->SetupKeyBuffer(naxHeader->numKeys);
+        void* keyPtr = animKeyBuffer->Map();
+        Memory::Copy(ptr, keyPtr, animKeyBuffer->GetByteSize());
+
+        #pragma warning(push)   
+        #pragma warning(disable : 4127) // expression is constant
+        if (ByteOrder::Host != ByteOrder::LittleEndian)
+        {
+            ByteOrder byteOrder(ByteOrder::LittleEndian, ByteOrder::Host);
+            float* floatKeyPtr = (float*) keyPtr;
+            IndexT keyIndex;
+            SizeT numKeys = animKeyBuffer->GetNumKeys();
+            for (keyIndex = 0; keyIndex < numKeys; keyIndex++)
+            {
+                byteOrder.Convert<float>(floatKeyPtr[0]);
+                byteOrder.Convert<float>(floatKeyPtr[1]);
+                byteOrder.Convert<float>(floatKeyPtr[2]);
+                byteOrder.Convert<float>(floatKeyPtr[3]);
+                floatKeyPtr += 4;
+            }
+        }
+        #pragma warning(pop)
+        animKeyBuffer->Unmap();
+        stream->Unmap();
+        stream->Close();
+        return true;
+    }
+    return false;
 }
 #endif
 

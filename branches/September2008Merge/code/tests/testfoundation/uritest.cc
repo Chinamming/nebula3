@@ -10,7 +10,7 @@
 
 namespace Test
 {
-ImplementClass(Test::URITest, 'URIT', Test::TestCase);
+__ImplementClass(Test::URITest, 'URIT', Test::TestCase);
 
 using namespace Util;
 using namespace IO;

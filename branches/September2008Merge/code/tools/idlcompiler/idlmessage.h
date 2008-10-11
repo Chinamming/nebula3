@@ -18,7 +18,7 @@ namespace Tools
 {
 class IDLMessage : public Core::RefCounted
 {
-    DeclareClass(IDLMessage);
+    __DeclareClass(IDLMessage);
 public:
     /// constructor
     IDLMessage();

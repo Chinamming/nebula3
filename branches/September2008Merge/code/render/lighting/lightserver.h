@@ -16,8 +16,8 @@ namespace Lighting
 {
 class LightServer : public SM30LightServer
 {
-    DeclareClass(LightServer);
-    DeclareSingleton(LightServer);
+    __DeclareClass(LightServer);
+    __DeclareSingleton(LightServer);
 public:
     /// constructor
     LightServer();
@@ -31,8 +31,8 @@ namespace Lighting
 {
 class LightServer : public WiiLightServer
 {
-    DeclareClass(LightServer);
-    DeclareSingleton(LightServer);
+    __DeclareClass(LightServer);
+    __DeclareSingleton(LightServer);
 public:
     /// constructor
     LightServer();

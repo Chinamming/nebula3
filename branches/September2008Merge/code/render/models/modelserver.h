@@ -22,8 +22,8 @@ namespace Models
 {
 class ModelServer : public Core::RefCounted
 {
-    DeclareClass(ModelServer);
-    DeclareSingleton(ModelServer);
+    __DeclareClass(ModelServer);
+    __DeclareSingleton(ModelServer);
 public:
     /// constructor
     ModelServer();

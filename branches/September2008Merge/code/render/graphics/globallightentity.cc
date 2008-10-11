@@ -8,7 +8,7 @@
 
 namespace Graphics
 {
-ImplementClass(Graphics::GlobalLightEntity, 'GLEP', Graphics::AbstractLightEntity);
+__ImplementClass(Graphics::GlobalLightEntity, 'GLEP', Graphics::AbstractLightEntity);
 
 //------------------------------------------------------------------------------
 /**

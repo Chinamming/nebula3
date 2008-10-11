@@ -7,7 +7,7 @@
 
 namespace InternalGraphics
 {
-ImplementClass(InternalGraphics::StageBuilder, 'STGB', Core::RefCounted);
+__ImplementClass(InternalGraphics::StageBuilder, 'STGB', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

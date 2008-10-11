@@ -7,8 +7,8 @@
 
 namespace Lighting
 {
-ImplementClass(Lighting::ShadowServerBase, 'SDSB', Core::RefCounted);
-ImplementSingleton(Lighting::ShadowServerBase);
+__ImplementClass(Lighting::ShadowServerBase, 'SDSB', Core::RefCounted);
+__ImplementSingleton(Lighting::ShadowServerBase);
 
 using namespace InternalGraphics;
 
@@ -20,7 +20,7 @@ ShadowServerBase::ShadowServerBase() :
     inBeginFrame(false),
     inBeginAttach(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ ShadowServerBase::~ShadowServerBase()
     n_assert(!this->isOpen);
     n_assert(!this->inBeginFrame);
     n_assert(!this->inBeginAttach);
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

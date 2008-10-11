@@ -13,6 +13,7 @@
 #include "messaging/handler.h"
 #include "messaging/message.h"
 #include "graphics/graphicsprotocol.h"
+#include "debugrender/debugrenderprotocol.h"
 #include "io/console.h"
 #include "io/ioserver.h"
 #include "coregraphics/renderdevice.h"
@@ -32,17 +33,15 @@
 #include "timing/timer.h"
 
 #include "debug/debugtimer.h"
-#include "coregraphics/debugtextrenderer.h"
-
-#if __NEBULA3_HTTP__
+#include "coregraphics/textrenderer.h"
 #include "http/httpserverproxy.h"
-#endif
+
 //------------------------------------------------------------------------------
 namespace Graphics
 {
 class GraphicsHandler : public Messaging::Handler
 {
-    DeclareClass(GraphicsHandler);
+    __DeclareClass(GraphicsHandler);
 public:
     /// constructor
     GraphicsHandler();
@@ -107,8 +106,10 @@ private:
     void OnRemoveCameraFromView(const Ptr<Graphics::RemoveCameraFromView>& msg);
     /// handle SetVisibility message
     void OnSetVisibility(const Ptr<Graphics::SetVisibility>& msg);
-    /// on render debug text
-    void OnRenderDebugText(const Ptr<Graphics::RenderDebugText>& msg);
+    /// on update instance variable
+    bool OnUpdateInstanceShaderVariable(const Ptr<Graphics::UpdateInstanceShaderVariable>& msg);
+    /// handle pending messages
+    void HandlePendingMessages();
 
     bool isGraphicsRuntimeValid;
     Timing::Timer timer;
@@ -120,7 +121,7 @@ private:
     Ptr<CoreGraphics::ShaderServer> shaderServer;
     Ptr<CoreGraphics::ShapeRenderer> shapeRenderer;
     Ptr<CoreGraphics::VertexLayoutServer> vertexLayoutServer;
-    Ptr<CoreGraphics::DebugTextRenderer> debugTextRenderer;
+    Ptr<CoreGraphics::TextRenderer> textRenderer;
     Ptr<Resources::SharedResourceServer> sharedResourceServer;
     Ptr<Resources::ResourceManager> resourceManager;
     Ptr<Models::ModelServer> modelServer;
@@ -129,12 +130,12 @@ private:
     Ptr<Lighting::ShadowServer> shadowServer;
     Ptr<Frame::FrameServer> frameServer;
     Ptr<Anim::AnimationServer> animationServer;
+
+    Util::Array<Ptr<Messaging::Message> > pendingGfxMessages;
     
     _declare_timer(GraphicsFrameTime);
 
-#if __NEBULA3_HTTP__
     Ptr<Http::HttpServerProxy> httpServerProxy;
-#endif
 };
 
 } // namespace GraphicsHandler

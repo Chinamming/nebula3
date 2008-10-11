@@ -7,7 +7,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::IDLMessage, 'ILMS', Core::RefCounted);
+__ImplementClass(Tools::IDLMessage, 'ILMS', Core::RefCounted);
 
 using namespace IO;
 

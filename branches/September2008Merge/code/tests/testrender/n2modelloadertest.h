@@ -16,7 +16,7 @@ namespace Test
 {
 class N2ModelLoaderTest : public CoreGraphicsTest
 {
-    DeclareClass(N2ModelLoaderTest);
+    __DeclareClass(N2ModelLoaderTest);
 public:
     /// run the test
     virtual void Run();    

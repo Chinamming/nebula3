@@ -10,7 +10,7 @@
 
 namespace Debug
 {
-ImplementClass(Debug::DisplayPageHandler, 'DDPH', Http::HttpRequestHandler);
+__ImplementClass(Debug::DisplayPageHandler, 'DDPH', Http::HttpRequestHandler);
 
 using namespace CoreGraphics;
 using namespace Http;

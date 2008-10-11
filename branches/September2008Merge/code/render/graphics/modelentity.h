@@ -16,7 +16,7 @@ namespace Graphics
 {
 class ModelEntity : public GraphicsEntity
 {
-    DeclareClass(ModelEntity);
+    __DeclareClass(ModelEntity);
 public:
     /// constructor
     ModelEntity();
@@ -27,6 +27,8 @@ public:
     void SetResourceId(const Resources::ResourceId& resId);
     /// get the model's resource id
     const Resources::ResourceId& GetResourceId() const;
+    /// set instance shader variable
+    void SetShaderVariable(const Util::String& nodeName, const Util::String& variableSemantic, const Util::Variant& value);
 
 private:
     /// called by stage when entity should setup itself

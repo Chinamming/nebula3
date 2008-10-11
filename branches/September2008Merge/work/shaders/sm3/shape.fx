@@ -32,17 +32,6 @@ technique Default
 {
     pass p0
     {
-        ColorWriteEnable  = RED|GREEN|BLUE|ALPHA;
-        ZEnable           = False;
-        ZWriteEnable      = False;
-        StencilEnable     = False;
-        FogEnable         = False;
-        AlphaBlendEnable  = True;
-        SrcBlend          = SrcAlpha;
-        DestBlend         = InvSrcAlpha;
-        AlphaTestEnable   = False;
-        ScissorTestEnable = False;
-        CullMode          = CW;        
         VertexShader = compile vs_3_0 VertexShaderFunc();
         PixelShader = compile ps_3_0 PixelShaderFunc();
     }

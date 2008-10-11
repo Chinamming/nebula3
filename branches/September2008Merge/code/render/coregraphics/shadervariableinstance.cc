@@ -8,17 +8,17 @@
 #if __WIN32__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::ShaderVariableInstance, 'SDVI', Base::ShaderVariableInstanceBase);
+__ImplementClass(CoreGraphics::ShaderVariableInstance, 'SDVI', Base::ShaderVariableInstanceBase);
 }
 #elif __XBOX360__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::ShaderVariableInstance, 'SDVI', Base::ShaderVariableInstanceBase);
+__ImplementClass(CoreGraphics::ShaderVariableInstance, 'SDVI', Base::ShaderVariableInstanceBase);
 }
 #elif __WII__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::ShaderVariableInstance, 'SDVI', Base::ShaderVariableInstanceBase);
+__ImplementClass(CoreGraphics::ShaderVariableInstance, 'SDVI', Base::ShaderVariableInstanceBase);
 }
 #else
 #error "ShaderVariableInstance class not implemented on this platform!"

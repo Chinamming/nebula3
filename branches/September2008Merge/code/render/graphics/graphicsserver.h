@@ -19,8 +19,8 @@ namespace Graphics
 {
 class GraphicsServer : public Core::RefCounted
 {
-    DeclareClass(GraphicsServer);
-    DeclareSingleton(GraphicsServer);
+    __DeclareClass(GraphicsServer);
+    __DeclareSingleton(GraphicsServer);
 public:
     /// constructor
     GraphicsServer();

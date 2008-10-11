@@ -16,7 +16,7 @@ namespace Test
 {
 class Matrix44Test : public TestCase
 {
-    DeclareClass(Matrix44Test);
+    __DeclareClass(Matrix44Test);
 public:
     /// run the test
     virtual void Run();

@@ -9,7 +9,7 @@
 
 namespace Test
 {
-ImplementClass(Test::SimpleTreeTest, 'STTT', Test::TestCase);
+__ImplementClass(Test::SimpleTreeTest, 'STTT', Test::TestCase);
 
 using namespace Util;
 

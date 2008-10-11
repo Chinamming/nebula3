@@ -15,7 +15,7 @@ namespace Test
 {
 class TextReaderWriterTest : public TestCase
 {
-    DeclareClass(TextReaderWriterTest);
+    __DeclareClass(TextReaderWriterTest);
 public:
     /// run the test
     virtual void Run();

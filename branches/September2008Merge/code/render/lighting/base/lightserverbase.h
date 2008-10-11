@@ -22,8 +22,8 @@ namespace Lighting
 {
 class LightServerBase : public Core::RefCounted
 {
-    DeclareClass(LightServerBase);
-    DeclareSingleton(LightServerBase);
+    __DeclareClass(LightServerBase);
+    __DeclareSingleton(LightServerBase);
 public:
     /// constructor
     LightServerBase();

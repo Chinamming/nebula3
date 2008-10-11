@@ -19,8 +19,8 @@ namespace Graphics
 {
 class GraphicsInterface : public Messaging::AsyncPort
 {
-    DeclareClass(GraphicsInterface);
-    DeclareInterfaceSingleton(GraphicsInterface);
+    __DeclareClass(GraphicsInterface);
+    __DeclareInterfaceSingleton(GraphicsInterface);
 public:
     /// constructor
     GraphicsInterface();

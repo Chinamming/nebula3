@@ -10,7 +10,7 @@
 
 namespace Test
 {
-ImplementClass(Test::LoadTextureTest, 'ltex', Test::CoreGraphicsTest);
+__ImplementClass(Test::LoadTextureTest, 'ltex', Test::CoreGraphicsTest);
 
 using namespace Util;
 using namespace CoreGraphics;

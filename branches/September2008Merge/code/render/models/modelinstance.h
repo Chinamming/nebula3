@@ -27,7 +27,7 @@ namespace Models
 {
 class ModelInstance : public Core::RefCounted
 {
-    DeclareClass(ModelInstance);
+    __DeclareClass(ModelInstance);
 public:
     /// constructor
     ModelInstance();

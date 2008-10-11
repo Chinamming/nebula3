@@ -7,7 +7,7 @@
 
 namespace Models
 {
-ImplementAbstractClass(Models::ModelReader, 'MDLR', IO::StreamReader);
+__ImplementAbstractClass(Models::ModelReader, 'MDLR', IO::StreamReader);
 
 using namespace Core;
 using namespace Util;

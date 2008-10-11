@@ -36,7 +36,7 @@ class InternalStage;
 
 class Cell : public Core::RefCounted
 {
-    DeclareClass(Cell);
+    __DeclareClass(Cell);
 public:
     /// constructor
     Cell();

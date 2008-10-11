@@ -8,7 +8,7 @@
 
 namespace Base
 {
-ImplementClass(Base::MouseBase, 'MSBS', Input::InputHandler);
+__ImplementClass(Base::MouseBase, 'MSBS', Input::InputHandler);
 
 using namespace Input;
 

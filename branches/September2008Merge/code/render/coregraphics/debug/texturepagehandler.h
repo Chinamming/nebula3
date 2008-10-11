@@ -23,7 +23,7 @@ namespace Debug
 {
 class TexturePageHandler : public Http::HttpRequestHandler
 {
-    DeclareClass(TexturePageHandler);
+    __DeclareClass(TexturePageHandler);
 public:
     /// constructor
     TexturePageHandler();

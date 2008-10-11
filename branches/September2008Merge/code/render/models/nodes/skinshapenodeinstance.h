@@ -25,7 +25,7 @@ namespace Models
 {
 class SkinShapeNodeInstance : public ShapeNodeInstance
 {
-    DeclareClass(SkinShapeNodeInstance);
+    __DeclareClass(SkinShapeNodeInstance);
 public:
     /// constructor
     SkinShapeNodeInstance();

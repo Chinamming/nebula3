@@ -8,7 +8,7 @@
 
 namespace CoreAnimation
 {
-ImplementClass(CoreAnimation::AnimKeyBuffer, 'ANKB', Core::RefCounted);
+__ImplementClass(CoreAnimation::AnimKeyBuffer, 'ANKB', Core::RefCounted);
 
 using namespace Math;
 
@@ -58,7 +58,6 @@ AnimKeyBuffer::Discard()
     Memory::Free(Memory::ResourceHeap, this->keyBuffer);
     this->keyBuffer = 0;
     this->numKeys = 0;
-
 }
 
 //------------------------------------------------------------------------------

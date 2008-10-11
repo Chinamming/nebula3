@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::QueueTest, 'QUET', Test::TestCase);
+__ImplementClass(Test::QueueTest, 'QUET', Test::TestCase);
 
 using namespace Util;
 

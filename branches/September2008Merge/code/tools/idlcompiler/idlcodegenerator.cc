@@ -8,7 +8,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::IDLCodeGenerator, 'IDCG', Core::RefCounted);
+__ImplementClass(Tools::IDLCodeGenerator, 'IDCG', Core::RefCounted);
 
 using namespace Util;
 using namespace IO;
@@ -333,7 +333,7 @@ IDLCodeGenerator::WriteIncludeHeader(TextWriter* writer) const
     n_assert(0 != writer);
     writer->WriteLine("#pragma once");
     writer->WriteLine("//------------------------------------------------------------------------------");
-    writer->WriteLine("/**");
+    writer->WriteLine("/*");
     writer->WriteLine("    This file was generated with Nebula3's idlc compiler tool.");
     writer->WriteLine("    DO NOT EDIT");
     writer->WriteLine("*/");
@@ -462,7 +462,7 @@ IDLCodeGenerator::WriteCommandDeclaration(IDLCommand* cmd, TextWriter* writer) c
     writer->WriteLine("//------------------------------------------------------------------------------");
     writer->WriteFormatted("class %s : public Scripting::Command\n", cmd->GetName().AsCharPtr());
     writer->WriteLine("{");
-    writer->WriteFormatted("    DeclareClass(%s);\n", cmd->GetName().AsCharPtr());
+    writer->WriteFormatted("    __DeclareClass(%s);\n", cmd->GetName().AsCharPtr());
     writer->WriteLine("public:");
     writer->WriteLine("    virtual void OnRegister();");
     writer->WriteLine("    virtual bool OnExecute();");
@@ -491,7 +491,7 @@ IDLCodeGenerator::WriteMessageDeclaration(IDLMessage* msg, TextWriter* writer) c
     writer->WriteLine("//------------------------------------------------------------------------------");
     writer->WriteFormatted("class %s : public %s\n", msg->GetName().AsCharPtr(), parentClass.AsCharPtr());
     writer->WriteLine("{");
-    writer->WriteFormatted("    DeclareClass(%s);\n", msg->GetName().AsCharPtr());
+    writer->WriteFormatted("    __DeclareClass(%s);\n", msg->GetName().AsCharPtr());
     writer->WriteLine("    DeclareMsgId;");
     writer->WriteLine("public:");
     
@@ -649,7 +649,7 @@ IDLCodeGenerator::WriteSourceHeader(TextWriter* writer) const
     writer->WriteFormatted("#include \"%s\"\n", headerFile.AsCharPtr());
     writer->WriteLine("");
 
-    // write ImplementClass macros
+    // write __ImplementClass macros
     if (!this->document->GetLibraries().IsEmpty())
     {
         const Array<Ptr<IDLLibrary>>& libs = this->document->GetLibraries();
@@ -661,7 +661,7 @@ IDLCodeGenerator::WriteSourceHeader(TextWriter* writer) const
             for (cmdIndex = 0; cmdIndex < curLib->GetCommands().Size(); cmdIndex++)
             {
                 const Ptr<IDLCommand>& cmd = curLib->GetCommands()[cmdIndex];
-                writer->WriteFormatted("ImplementClass(Commands::%s, '%s', Scripting::Command);\n",
+                writer->WriteFormatted("__ImplementClass(Commands::%s, '%s', Scripting::Command);\n",
                     cmd->GetName().AsCharPtr(), cmd->GetFourCC().AsCharPtr());
             }
         }
@@ -679,7 +679,7 @@ IDLCodeGenerator::WriteSourceHeader(TextWriter* writer) const
             for (msgIndex = 0; msgIndex < curProt->GetMessages().Size(); msgIndex++)
             {
                 const Ptr<IDLMessage>& msg = curProt->GetMessages()[msgIndex];
-                writer->WriteFormatted("    ImplementClass(%s::%s, '%s', Messaging::Message);\n",
+                writer->WriteFormatted("    __ImplementClass(%s::%s, '%s', Messaging::Message);\n",
                     curProt->GetNameSpace().AsCharPtr(),
                     msg->GetName().AsCharPtr(),
                     msg->GetFourCC().AsCharPtr());

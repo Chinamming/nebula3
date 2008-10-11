@@ -9,7 +9,7 @@
 
 namespace Models
 {
-ImplementClass(Models::ModelInstance, 'MODI', Core::RefCounted);
+__ImplementClass(Models::ModelInstance, 'MODI', Core::RefCounted);
 
 using namespace Util;
 

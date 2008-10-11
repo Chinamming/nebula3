@@ -15,6 +15,9 @@
 #include "simplemeshmappertest.h"
 #include "simpletexturemappertest.h"
 #include "n2modelloadertest.h"
+#include "loadanimationtest.h"
+#include "animsamplemixtest.h"
+#include "animsequencertest.h"
 
 using namespace Core;
 using namespace Test;
@@ -32,6 +35,10 @@ __cdecl main()
 
     // setup and run test runner
     Ptr<TestRunner> testRunner = TestRunner::Create();
+    testRunner->AttachTestCase(AnimSequencerTest::Create());
+    testRunner->AttachTestCase(AnimSampleMixTest::Create());
+    testRunner->AttachTestCase(LoadAnimationTest::Create());
+    /*
     testRunner->AttachTestCase(N2ModelLoaderTest::Create());
     testRunner->AttachTestCase(LoadMeshTest::Create());
     testRunner->AttachTestCase(LoadTextureTest::Create());
@@ -39,6 +46,7 @@ __cdecl main()
     testRunner->AttachTestCase(ShaderTest::Create());
     testRunner->AttachTestCase(SimpleMeshMapperTest::Create());
     testRunner->AttachTestCase(SimpleTextureMapperTest::Create());
+    */
     testRunner->Run(); 
 
     coreServer->Close();

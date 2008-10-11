@@ -7,7 +7,7 @@
 
 namespace Resources
 {
-ImplementClass(Resources::ManagedResource, 'MGRS', Core::RefCounted);
+__ImplementClass(Resources::ManagedResource, 'MGRS', Core::RefCounted);
 
 using namespace Util;
 using namespace Math;

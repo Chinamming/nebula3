@@ -38,7 +38,7 @@ void
 ViewerStressTestApplication::GetRandomTransform(matrix44& m)
 {
     point pos(n_rand() * 100.0f, n_rand() * 100.0f, n_rand() * 100.0f);
-    m.setpos_component(pos);
+    m.set_position(pos);
 }
 
 //------------------------------------------------------------------------------

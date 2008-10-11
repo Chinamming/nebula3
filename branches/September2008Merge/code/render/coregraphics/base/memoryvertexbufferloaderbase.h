@@ -19,24 +19,20 @@ namespace Base
 {
 class MemoryVertexBufferLoaderBase : public Resources::ResourceLoader
 {
-    DeclareClass(MemoryVertexBufferLoaderBase);
+    __DeclareClass(MemoryVertexBufferLoaderBase);
 public:
     /// constructor
     MemoryVertexBufferLoaderBase();
     /// setup vertex buffer data, must remain valid until OnLoadRequested() is called!
-    void Setup(const Util::Array<CoreGraphics::VertexComponent>& vertexComponents, SizeT numVertices, void* ptr, SizeT numBytes);
-	/// setup a empty vertex buffer
-	void Setup(const Util::Array<CoreGraphics::VertexComponent>& vertexComponents, SizeT numVertices, SizeT numBytes, CoreGraphics::VertexBuffer::Usage usage, CoreGraphics::VertexBuffer::Access access);
-	/// setup a vertex buffer, vertex buffer data, must remain valid until OnLoadRequested() is called!
-	void Setup(const Util::Array<CoreGraphics::VertexComponent>& vertexComponents, SizeT numVertices, void* ptr,SizeT numBytes, CoreGraphics::VertexBuffer::Usage usage, CoreGraphics::VertexBuffer::Access access);
+    void Setup(const Util::Array<CoreGraphics::VertexComponent>& vertexComponents, SizeT numVertices, void* vertexDataPtr, SizeT vertexDataSize, CoreGraphics::VertexBuffer::Usage usage = CoreGraphics::VertexBuffer::UsageImmutable, CoreGraphics::VertexBuffer::Access access = CoreGraphics::VertexBuffer::AccessNone);
 
 protected:
     Util::Array<CoreGraphics::VertexComponent> vertexComponents;
     SizeT numVertices;
     void* vertexDataPtr;
     SizeT vertexDataSize;
-	CoreGraphics::VertexBuffer::Usage vertexBufferUsage;
-	CoreGraphics::VertexBuffer::Access accessMode;
+	CoreGraphics::VertexBuffer::Usage usage;
+	CoreGraphics::VertexBuffer::Access access;
 };
 
 } // namespace Base

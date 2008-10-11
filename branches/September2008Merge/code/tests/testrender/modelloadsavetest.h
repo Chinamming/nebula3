@@ -28,7 +28,7 @@ namespace Test
 {
 class ModelLoadSaveTest : public TestCase
 {
-    DeclareClass(ModelLoadSaveTest);
+    __DeclareClass(ModelLoadSaveTest);
 public:
     /// run the test
     virtual void Run();

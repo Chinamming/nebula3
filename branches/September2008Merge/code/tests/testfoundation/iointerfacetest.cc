@@ -9,7 +9,7 @@
 
 namespace Test
 {
-ImplementClass(Test::IOInterfaceTest, 'IOIT', Test::TestCase);
+__ImplementClass(Test::IOInterfaceTest, 'IOIT', Test::TestCase);
 
 using namespace Interface;
 using namespace IO;

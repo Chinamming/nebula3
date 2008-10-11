@@ -7,7 +7,7 @@
 
 namespace Lighting
 {
-ImplementClass(Lighting::InternalGlobalLightEntity, 'GLBE', Lighting::InternalAbstractLightEntity);
+__ImplementClass(Lighting::InternalGlobalLightEntity, 'GLBE', Lighting::InternalAbstractLightEntity);
 
 using namespace Math;
 
@@ -47,9 +47,9 @@ InternalGlobalLightEntity::OnTransformChanged()
     // extend transformation to a very big size, since we need to be visible
     // from everywhere in the stage
     const float size = 100000.0f;
-    this->transform.setx_component(float4::normalize(this->transform.getx_component()) * size);
-    this->transform.sety_component(float4::normalize(this->transform.gety_component()) * size);
-    this->transform.setz_component(float4::normalize(this->transform.getz_component()) * size);
+    this->transform.set_xaxis(float4::normalize(this->transform.get_xaxis()) * size);
+    this->transform.set_yaxis(float4::normalize(this->transform.get_yaxis()) * size);
+    this->transform.set_zaxis(float4::normalize(this->transform.get_zaxis()) * size);
 }
 
 } // namespace Lighting

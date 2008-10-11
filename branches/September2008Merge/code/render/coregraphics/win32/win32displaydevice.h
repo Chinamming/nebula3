@@ -17,8 +17,8 @@ namespace Win32
 {
 class Win32DisplayDevice : public Base::DisplayDeviceBase
 {
-    DeclareClass(Win32DisplayDevice);
-    DeclareSingleton(Win32DisplayDevice);
+    __DeclareClass(Win32DisplayDevice);
+    __DeclareSingleton(Win32DisplayDevice);
 public:
     /// constructor
     Win32DisplayDevice();

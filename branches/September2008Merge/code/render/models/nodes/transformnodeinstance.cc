@@ -10,7 +10,7 @@
 
 namespace Models
 {
-ImplementClass(Models::TransformNodeInstance, 'TFNI', Models::ModelNodeInstance);
+__ImplementClass(Models::TransformNodeInstance, 'TFNI', Models::ModelNodeInstance);
 
 using namespace Math;
 using namespace CoreGraphics;

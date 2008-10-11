@@ -17,7 +17,7 @@ namespace Test
 {
 class RunLengthCodecTest : public TestCase
 {
-    DeclareClass(RunLengthCodecTest);
+    __DeclareClass(RunLengthCodecTest);
 public:
     /// run the test
     virtual void Run();

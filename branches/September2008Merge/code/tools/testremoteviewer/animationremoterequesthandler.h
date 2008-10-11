@@ -18,7 +18,7 @@ namespace Remote
 {
 class AnimationRemoteRequestHandler : public RemoteRequestHandler
 {
-    DeclareClass(AnimationRemoteRequestHandler);
+    __DeclareClass(AnimationRemoteRequestHandler);
 public:
     /// Constructor
     AnimationRemoteRequestHandler();

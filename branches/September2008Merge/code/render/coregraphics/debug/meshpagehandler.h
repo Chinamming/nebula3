@@ -21,7 +21,7 @@ namespace Debug
 {
 class MeshPageHandler : public Http::HttpRequestHandler
 {
-    DeclareClass(MeshPageHandler);
+    __DeclareClass(MeshPageHandler);
 public:
     /// constructor
     MeshPageHandler();

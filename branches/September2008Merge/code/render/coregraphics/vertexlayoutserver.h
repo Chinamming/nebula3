@@ -3,7 +3,7 @@
 #define COREGRAPHICS_VERTEXLAYOUTSERVER_H
 //------------------------------------------------------------------------------
 /**
-    @class CoreGraphics::VertexLayoutServer
+    @class CoreGraphics::VertexLayoutServer    
     
     The VertexLayoutServer creates VertexLayout objects shared by their
     vertex component signature. On some platforms it is more efficient
@@ -14,14 +14,14 @@
     is called.
     
     (C) 2007 Radon Labs GmbH
-*/
+*/    
 #if __WIN32__
 #include "coregraphics/base/vertexlayoutserverbase.h"
 namespace CoreGraphics
 {
 class VertexLayoutServer : public Base::VertexLayoutServerBase
 {
-    DeclareClass(VertexLayoutServer);
+    __DeclareClass(VertexLayoutServer);
 };
 }
 #elif __XBOX360__
@@ -30,7 +30,7 @@ namespace CoreGraphics
 {
 class VertexLayoutServer : public Base::VertexLayoutServerBase
 {
-    DeclareClass(VertexLayoutServer);
+    __DeclareClass(VertexLayoutServer);
 };
 }
 #elif __WII__
@@ -39,7 +39,7 @@ namespace CoreGraphics
 {
 class VertexLayoutServer : public Wii::WiiVertexLayoutServer
 {
-    DeclareClass(VertexLayoutServer);
+    __DeclareClass(VertexLayoutServer);
 };
 }
 #else
@@ -49,3 +49,5 @@ class VertexLayoutServer : public Wii::WiiVertexLayoutServer
 //------------------------------------------------------------------------------
 #endif
 
+
+    

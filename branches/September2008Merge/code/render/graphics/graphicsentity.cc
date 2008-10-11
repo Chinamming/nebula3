@@ -9,7 +9,7 @@
 
 namespace Graphics
 {
-ImplementClass(Graphics::GraphicsEntity, 'GREP', Core::RefCounted);
+__ImplementClass(Graphics::GraphicsEntity, 'GREP', Core::RefCounted);
 
 using namespace Math;
 using namespace Messaging;
@@ -97,6 +97,9 @@ GraphicsEntity::Discard()
     Ptr<DiscardGraphicsEntity> msg = DiscardGraphicsEntity::Create();
     msg->SetEntityHandle(this->graphicsEntityHandle);
     GraphicsInterface::Instance()->Send(msg.cast<Message>());
+
+	// clear the entity handle, since it is invalid now
+	this->graphicsEntityHandle = 0;
 }
 
 //------------------------------------------------------------------------------

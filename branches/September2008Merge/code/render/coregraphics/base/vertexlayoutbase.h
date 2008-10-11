@@ -25,7 +25,7 @@ namespace Base
 {
 class VertexLayoutBase : public Core::RefCounted
 {
-    DeclareClass(VertexLayoutBase);
+    __DeclareClass(VertexLayoutBase);
 public:
     /// constructor
     VertexLayoutBase();

@@ -20,6 +20,7 @@ ModelNodeType::FromString(const String& str)
     else if (str == "Alpha") return Alpha;
     else if (str == "Occluder") return Occluder;
     else if (str == "ShadowCaster") return ShadowCaster;
+	else if (str == "Refractive") return Refractive;
     else
     {
         n_error("ModelNodeType::FromString(): invalid type string '%s'!", str.AsCharPtr());
@@ -39,6 +40,7 @@ ModelNodeType::ToString(Code c)
         case Alpha:         return "Alpha";
         case Occluder:      return "Occluder";
         case ShadowCaster:  return "ShadowCaster";
+		case Refractive:	return "Refractive";
         default:
             n_error("ModelNodeType::ToString(): invalid type!");
             return "";

@@ -7,7 +7,7 @@
 
 namespace Models
 {
-ImplementAbstractClass(Models::ModelWriter, 'MDLW', IO::StreamWriter);
+__ImplementAbstractClass(Models::ModelWriter, 'MDLW', IO::StreamWriter);
 
 //------------------------------------------------------------------------------
 /**

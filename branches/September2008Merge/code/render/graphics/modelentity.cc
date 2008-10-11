@@ -8,7 +8,7 @@
 
 namespace Graphics
 {
-ImplementClass(Graphics::ModelEntity, 'MDLE', Graphics::GraphicsEntity);
+__ImplementClass(Graphics::ModelEntity, 'MDLE', Graphics::GraphicsEntity);
 
 //------------------------------------------------------------------------------
 /**
@@ -45,6 +45,19 @@ ModelEntity::Setup(const Ptr<Stage>& stage_)
     msg->SetVisible(this->isVisible);
     msg->SetResourceId(this->resId);
     this->SendCreateMsg(msg.cast<CreateGraphicsEntity>());
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+ModelEntity::SetShaderVariable(const Util::String& nodeName, const Util::String& variableSemantic, const Util::Variant& value)
+{
+    Ptr<UpdateInstanceShaderVariable> msg = UpdateInstanceShaderVariable::Create();
+    msg->SetNodeInstanceName(nodeName);
+    msg->SetSemantic(variableSemantic);
+    msg->SetValue(value);
+    this->SendMsg(msg.cast<GraphicsEntityMsg>());
 }
 
 } // namespace Graphics

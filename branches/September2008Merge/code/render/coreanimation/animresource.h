@@ -21,7 +21,7 @@ namespace CoreAnimation
 {
 class AnimResource : public Resources::Resource
 {
-    DeclareClass(AnimResource);
+    __DeclareClass(AnimResource);
 public:
     /// constructor
     AnimResource();
@@ -53,7 +53,7 @@ private:
     void BeginSetupClips(SizeT numClips);
     /// access to anim clip for setup
     AnimClip& Clip(IndexT clipIndex);
-    /// finisg setting up clips, called by the resource loader
+    /// finish setting up clips, called by the resource loader
     void EndSetupClips();
 
     Util::FixedArray<AnimClip> animClips;
@@ -103,7 +103,15 @@ AnimResource::HasClip(const Util::StringAtom& clipName) const
 inline IndexT
 AnimResource::GetClipIndexByName(const Util::StringAtom& clipName) const
 {
-    return this->clipIndexMap.FindIndex(clipName);
+    IndexT index = this->clipIndexMap.FindIndex(clipName);
+    if (InvalidIndex != index)
+    {
+        return this->clipIndexMap.ValueAtIndex(index);
+    }
+    else
+    {
+        return InvalidIndex;
+    }
 }
 
 //------------------------------------------------------------------------------

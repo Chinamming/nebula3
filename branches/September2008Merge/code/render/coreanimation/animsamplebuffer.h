@@ -5,10 +5,10 @@
 /**
     @class CoreAnimation::AnimSampleBuffer
   
-    Stores the result of an animation sampling operation and keeps count
-    on the number of source samples which contributed to a resulting
-    sample. AnimSampleBuffer are used inside of AnimTrees to store
-    and transfer the result of sampling and blending operations.
+    Stores the result of an animation sampling operation, stores 
+    samples key values and sample-counts which keep track of the number 
+    of samples which contributed to a mixing result (this is necessary
+    for correct mixing of partial animations).
      
     (C) 2008 Radon Labs GmbH
 */    
@@ -20,7 +20,7 @@ namespace CoreAnimation
 {
 class AnimSampleBuffer : public Core::RefCounted
 {
-    DeclareClass(AnimSampleBuffer);
+    __DeclareClass(AnimSampleBuffer);
 public:
     /// constructor
     AnimSampleBuffer();
@@ -36,16 +36,22 @@ public:
     
     /// get the number of samples in the buffer
     SizeT GetNumSamples() const;
-    /// get access to the sample buffer
-    Math::float4* GetSampleValues() const;
-    /// get access to the sample counts
-    uchar* GetSampleCounts() const;
+    /// gain read/write access to sample buffer
+    Math::float4* MapSamples();
+    /// give up access to sample buffer
+    void UnmapSamples();
+    /// gain read/write access to sample counts
+    uchar* MapSampleCounts();
+    /// give up access to sample counts
+    void UnmapSampleCounts();
 
 private:
     Ptr<AnimResource> animResource;
     SizeT numSamples;
-    Math::float4* sampleValues;
+    Math::float4* samples;
     uchar* sampleCounts;
+    bool samplesMapped;
+    bool sampleCountsMapped;
 };
 
 //------------------------------------------------------------------------------
@@ -64,24 +70,6 @@ inline SizeT
 AnimSampleBuffer::GetNumSamples() const
 {
     return this->numSamples;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-inline Math::float4*
-AnimSampleBuffer::GetSampleValues() const
-{
-    return this->sampleValues;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-inline uchar*
-AnimSampleBuffer::GetSampleCounts() const
-{
-    return this->sampleCounts;
 }
 
 } // namespace CoreAnimation

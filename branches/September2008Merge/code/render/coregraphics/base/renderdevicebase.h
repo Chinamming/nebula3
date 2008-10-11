@@ -35,8 +35,8 @@ namespace Base
 {
 class RenderDeviceBase : public Core::RefCounted
 {
-    DeclareClass(RenderDeviceBase);
-    DeclareSingleton(RenderDeviceBase);
+    __DeclareClass(RenderDeviceBase);
+    __DeclareSingleton(RenderDeviceBase);
 public:
     /// constructor
     RenderDeviceBase();

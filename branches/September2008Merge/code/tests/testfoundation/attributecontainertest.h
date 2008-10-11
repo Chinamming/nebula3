@@ -16,7 +16,7 @@ namespace Test
 {
 class AttributeContainerTest : public TestCase
 {
-    DeclareClass(AttributeContainerTest);
+    __DeclareClass(AttributeContainerTest);
 public:
     /// run the test
     virtual void Run();

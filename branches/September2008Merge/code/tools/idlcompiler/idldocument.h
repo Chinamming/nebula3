@@ -20,7 +20,7 @@ namespace Tools
 {
 class IDLDocument : public Core::RefCounted
 {
-    DeclareClass(IDLDocument);
+    __DeclareClass(IDLDocument);
 public:
     /// constructor
     IDLDocument();
