@@ -51,9 +51,26 @@ PosixThread::Start()
     pthread_attr_t threadAttributes;
     pthread_attr_init(&threadAttributes);
     pthread_attr_setstacksize(&threadAttributes, PTHREAD_STACK_MIN + this->stackSize);
-    // XXX: Consider dealing with the thread priority here.
+    pthread_attr_setinheritsched(&threadAttributes, PTHREAD_INHERIT_SCHED);
     int r = pthread_create(&(this->threadHandle), &threadAttributes, ThreadProc, (void *) this);
     n_assert(0 == r);
+    sched_param sched = {0};
+    //int priomin, priomax;
+
+    // apply thread priority
+    switch (this->priority)
+    {
+        case Low:
+            sched.sched_priority = sched_get_priority_min(SCHED_OTHER);
+            break;
+        case Normal:
+            sched.sched_priority = (sched_get_priority_max(SCHED_OTHER) - sched_get_priority_min(SCHED_OTHER)) >> 1;
+            break;
+        case High:
+            sched.sched_priority = sched_get_priority_max(SCHED_OTHER);
+            break;
+    }
+    pthread_setschedparam(this->threadHandle, SCHED_OTHER, &sched);
 }
 
 //------------------------------------------------------------------------------

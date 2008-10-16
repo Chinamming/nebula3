@@ -38,6 +38,13 @@ namespace Threading
 class Interlocked : public Darwin::DarwinInterlocked
 { };
 }
+#elif __unix__
+#include "threading/posix/posixinterlocked.h"
+namespace Threading
+{
+class Interlocked : public Posix::PosixInterlocked
+{ };
+}
 #else
 #error "Threading::Interlocked not implemented on this platform!"
 #endif

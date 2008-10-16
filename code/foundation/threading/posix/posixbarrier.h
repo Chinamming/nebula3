@@ -14,12 +14,11 @@
     the barrier (all memory access will be finished before the barrier
     is crossed).
     
-    (C) 2007 Radon Labs GmbH
+    (C) 2007 Oleg Khryptul (Haron)
 */
-#include "core/types.h"
 
 //------------------------------------------------------------------------------
-#define ReadWriteBarrier _ReadWriterBarrier
-// NOTE: MemoryBarrier is defined by windows.h
+inline void ReadWriteBarrier() {asm volatile("": : :"memory");}
+inline void MemoryBarrier() {asm volatile("mfence":::"memory");}
 //------------------------------------------------------------------------------
 #endif

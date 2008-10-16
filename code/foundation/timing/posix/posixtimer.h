@@ -4,7 +4,7 @@
 //------------------------------------------------------------------------------
 /**
     @class Posix::PosixTimer
-    
+
     Posix implementation of the Time::Timer class. Under Posix, time
     measurement uses the QueryPerformanceCounter() methods.
 
@@ -12,7 +12,7 @@
     (different processors may return different PerformanceFrequency
     values, thus, threads should be prevented from switching between
     processors with thread affinities).
-    
+
     (C) 2006 Radon Labs GmbH
 */
 #include "core/types.h"
@@ -41,14 +41,14 @@ public:
 
 private:
     /// return internal time as 64 bit integer
-    int64_t InternalTime() const;
+    clock_t InternalTime() const;
 
     bool running;
-    int64_t diffTime;  // accumulated time when the timer was not running
-    int64_t stopTime;  // when was the timer last stopped?
+    clock_t diffTime;  // accumulated time when the timer was not running
+    clock_t stopTime;  // when was the timer last stopped?
 };
 
 } // namespace Posix
 //------------------------------------------------------------------------------
 #endif
-   
+
