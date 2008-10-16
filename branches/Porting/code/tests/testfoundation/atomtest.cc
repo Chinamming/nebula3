@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::AtomTest, 'atmt', Test::TestCase);
+__ImplementClass(Test::AtomTest, 'atmt', Test::TestCase);
 
 using namespace Util;
 

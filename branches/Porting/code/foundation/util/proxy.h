@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_PROXY_H
-#define UTIL_PROXY_H
 //------------------------------------------------------------------------------
 /**
     @class Util::Proxy
@@ -120,7 +118,7 @@ Proxy<TYPE>::Object::Create(const TYPE& rhs)
 template<class TYPE> void
 Proxy<TYPE>::Object::AddRef()
 {
-    this->refCount++;
+    Threading::Interlocked::Increment(this->refCount);
 }
 
 //------------------------------------------------------------------------------
@@ -129,11 +127,9 @@ Proxy<TYPE>::Object::AddRef()
 template<class TYPE> void
 Proxy<TYPE>::Object::Release()
 {
-    n_assert(this->refCount > 0);
-    this->refCount--;
-    if (this->refCount == 0)
+    if (0 == Threading::Interlocked::Decrement(this->refCount))
     {
-        delete this;
+        n_delete(this);
     }
 }
 
@@ -181,7 +177,7 @@ Proxy<TYPE>::operator=(const TYPE& rhs)
 //------------------------------------------------------------------------------
 /**
     Assigning a proxy to this proxy will share the right-hand-side's target
-    object and incremnet its refcount.
+    object and increment its refcount.
 */
 template<class TYPE> void
 Proxy<TYPE>::operator=(const Proxy<TYPE>& rhs)
@@ -351,4 +347,3 @@ Proxy<TYPE>::Clear()
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif

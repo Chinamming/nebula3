@@ -17,7 +17,7 @@ namespace Http
 {
 class HttpResponseWriter : public IO::StreamWriter
 {
-    DeclareClass(HttpResponseWriter);
+    __DeclareClass(HttpResponseWriter);
 public:
     /// set status code
     void SetStatusCode(HttpStatus::Code statusCode);

@@ -178,7 +178,7 @@ Attribute::Attribute()
 */
 inline
 Attribute::Attribute(const Attribute& rhs) :
-    Util::KeyValuePair<AttrId,Util::Variant>(rhs.key, rhs.value)
+    Util::KeyValuePair<AttrId,Util::Variant>(rhs.keyData, rhs.valueData)
 {
     // empty
 }
@@ -279,7 +279,7 @@ Attribute::Attribute(const BlobAttrId& id, const Util::Blob& val) :
 inline void
 Attribute::SetAttrId(const AttrId& id)
 {
-    this->key = id;
+    this->keyData = id;
 }
 
 //------------------------------------------------------------------------------
@@ -288,7 +288,7 @@ Attribute::SetAttrId(const AttrId& id)
 inline const AttrId&
 Attribute::GetAttrId() const
 {
-    return this->key;
+    return this->keyData;
 }
 
 //------------------------------------------------------------------------------
@@ -297,7 +297,7 @@ Attribute::GetAttrId() const
 inline const Util::String&
 Attribute::GetName() const
 {
-    return this->key.GetName();
+    return this->keyData.GetName();
 }
 
 //------------------------------------------------------------------------------
@@ -306,7 +306,7 @@ Attribute::GetName() const
 inline const Util::FourCC&
 Attribute::GetFourCC() const
 {
-    return this->key.GetFourCC();
+    return this->keyData.GetFourCC();
 }
 
 //------------------------------------------------------------------------------
@@ -315,7 +315,7 @@ Attribute::GetFourCC() const
 inline ValueType
 Attribute::GetValueType() const
 {
-    return this->key.GetValueType();
+    return this->keyData.GetValueType();
 }
 
 //------------------------------------------------------------------------------
@@ -324,7 +324,7 @@ Attribute::GetValueType() const
 inline AccessMode
 Attribute::GetAccessMode() const
 {
-    return this->key.GetAccessMode();
+    return this->keyData.GetAccessMode();
 }
 
 //------------------------------------------------------------------------------
@@ -333,7 +333,7 @@ Attribute::GetAccessMode() const
 inline void
 Attribute::Clear()
 {
-    this->value.Clear();
+    this->valueData.Clear();
 }
 
 //------------------------------------------------------------------------------
@@ -342,8 +342,8 @@ Attribute::Clear()
 inline void
 Attribute::operator=(const Attribute& rhs)
 {
-    this->key = rhs.key;
-    this->value = rhs.value;
+    this->keyData = rhs.keyData;
+    this->valueData = rhs.valueData;
 }
 
 //------------------------------------------------------------------------------
@@ -354,7 +354,7 @@ Attribute::operator=(bool rhs)
 {
     n_assert(this->GetValueType() == BoolType);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = rhs;
+    this->valueData = rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -365,7 +365,7 @@ Attribute::operator=(float rhs)
 {
     n_assert(this->GetValueType() == FloatType);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = rhs;
+    this->valueData = rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -376,7 +376,7 @@ Attribute::operator=(int rhs)
 {
     n_assert(this->GetValueType() == IntType);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = rhs;
+    this->valueData = rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -387,7 +387,7 @@ Attribute::operator=(const Math::matrix44& rhs)
 {
     n_assert(this->GetValueType() == Matrix44Type);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = rhs;
+    this->valueData = rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -398,7 +398,7 @@ Attribute::operator=(const Util::String& rhs)
 {
     n_assert(this->GetValueType() == StringType);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = rhs;
+    this->valueData = rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -409,7 +409,7 @@ Attribute::operator=(const Math::float4& rhs)
 {
     n_assert(this->GetValueType() == Float4Type);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = rhs;
+    this->valueData = rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -420,7 +420,7 @@ Attribute::operator=(const Util::Guid& rhs)
 {
     n_assert(this->GetValueType() == GuidType);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = rhs;
+    this->valueData = rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -431,7 +431,7 @@ Attribute::operator=(const Util::Blob& rhs)
 {
     n_assert(this->GetValueType() == BlobType);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = rhs;
+    this->valueData = rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -440,7 +440,7 @@ Attribute::operator=(const Util::Blob& rhs)
 inline bool
 Attribute::operator==(const Attribute& rhs) const
 {
-    return ((this->key == rhs.key) && (this->value == rhs.value));
+    return ((this->keyData == rhs.keyData) && (this->valueData == rhs.valueData));
 }
 
 //------------------------------------------------------------------------------
@@ -450,7 +450,7 @@ inline bool
 Attribute::operator==(const Util::String& rhs) const
 {
     n_assert(this->GetValueType() == StringType);
-    return this->value == rhs;
+    return this->valueData == rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -460,7 +460,7 @@ inline bool
 Attribute::operator==(int rhs) const
 {
     n_assert(this->GetValueType() == IntType);
-    return this->value == rhs;
+    return this->valueData == rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -470,7 +470,7 @@ inline bool
 Attribute::operator==(float rhs) const
 {
     n_assert(this->GetValueType() == FloatType);
-    return this->value == rhs;
+    return this->valueData == rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -480,7 +480,7 @@ inline bool
 Attribute::operator==(bool rhs) const
 {
     n_assert(this->GetValueType() == BoolType);
-    return this->value == rhs;
+    return this->valueData == rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -490,7 +490,7 @@ inline bool
 Attribute::operator==(const Math::float4& rhs) const
 {
     n_assert(this->GetValueType() == Float4Type);
-    return this->value == rhs;
+    return this->valueData == rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -500,7 +500,7 @@ inline bool
 Attribute::operator==(const Util::Guid& rhs) const
 {
     n_assert(this->GetValueType() == GuidType);
-    return this->value == rhs;
+    return this->valueData == rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -509,7 +509,7 @@ Attribute::operator==(const Util::Guid& rhs) const
 inline bool
 Attribute::operator!=(const Attribute& rhs) const
 {
-    return (this->key != rhs.key) || (this->value != rhs.value);
+    return (this->keyData != rhs.keyData) || (this->valueData != rhs.valueData);
 }
 
 //------------------------------------------------------------------------------
@@ -519,7 +519,7 @@ inline bool
 Attribute::operator!=(const Util::String& rhs) const
 {
     n_assert(this->GetValueType() == StringType);
-    return this->value != rhs;
+    return this->valueData != rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -529,7 +529,7 @@ inline bool
 Attribute::operator!=(int rhs) const
 {
     n_assert(this->GetValueType() == IntType);
-    return this->value != rhs;
+    return this->valueData != rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -539,7 +539,7 @@ inline bool
 Attribute::operator!=(float rhs) const
 {
     n_assert(this->GetValueType() == FloatType);
-    return this->value != rhs;
+    return this->valueData != rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -549,7 +549,7 @@ inline bool
 Attribute::operator!=(const Math::float4& rhs) const
 {
     n_assert(this->GetValueType() == Float4Type);
-    return this->value != rhs;
+    return this->valueData != rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -559,7 +559,7 @@ inline bool
 Attribute::operator!=(const Util::Guid& rhs) const
 {
     n_assert(this->GetValueType() == GuidType);
-    return this->value != rhs;
+    return this->valueData != rhs;
 }
 
 //------------------------------------------------------------------------------
@@ -570,7 +570,7 @@ Attribute::SetBool(bool val)
 {
     n_assert(this->GetValueType() == BoolType);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = val;
+    this->valueData = val;
 }
 
 //------------------------------------------------------------------------------
@@ -580,7 +580,7 @@ inline bool
 Attribute::GetBool() const
 {
     n_assert(this->GetValueType() == BoolType);
-    return this->value.GetBool();
+    return this->valueData.GetBool();
 }
 
 //------------------------------------------------------------------------------
@@ -591,7 +591,7 @@ Attribute::SetInt(int val)
 {
     n_assert(this->GetValueType() == IntType);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = val;
+    this->valueData = val;
 }
 
 //------------------------------------------------------------------------------
@@ -601,7 +601,7 @@ inline int
 Attribute::GetInt() const
 {
     n_assert(this->GetValueType() == IntType);
-    return this->value.GetInt();
+    return this->valueData.GetInt();
 }
 
 //------------------------------------------------------------------------------
@@ -612,7 +612,7 @@ Attribute::SetFloat(float val)
 {
     n_assert(this->GetValueType() == FloatType);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = val;
+    this->valueData = val;
 }
 
 //------------------------------------------------------------------------------
@@ -622,7 +622,7 @@ inline float
 Attribute::GetFloat() const
 {
     n_assert(this->GetValueType() == FloatType);
-    return this->value.GetFloat();
+    return this->valueData.GetFloat();
 }
 
 //------------------------------------------------------------------------------
@@ -633,7 +633,7 @@ Attribute::SetString(const Util::String& val)
 {
     n_assert(this->GetValueType() == StringType);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = val;
+    this->valueData = val;
 }
 
 //------------------------------------------------------------------------------
@@ -643,7 +643,7 @@ inline const Util::String&
 Attribute::GetString() const
 {
     n_assert(this->GetValueType() == StringType);
-    return this->value.GetString();
+    return this->valueData.GetString();
 }
 
 //------------------------------------------------------------------------------
@@ -654,7 +654,7 @@ Attribute::SetMatrix44(const Math::matrix44& val)
 {
     n_assert(this->GetValueType() == Matrix44Type);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = val;
+    this->valueData = val;
 }
 
 //------------------------------------------------------------------------------
@@ -664,7 +664,7 @@ inline const Math::matrix44&
 Attribute::GetMatrix44() const
 {
     n_assert(this->GetValueType() == Matrix44Type);
-    return this->value.GetMatrix44();
+    return this->valueData.GetMatrix44();
 }
 
 //------------------------------------------------------------------------------
@@ -675,7 +675,7 @@ Attribute::SetFloat4(const Math::float4& val)
 {
     n_assert(this->GetValueType() == Float4Type);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = val;
+    this->valueData = val;
 }
 
 //------------------------------------------------------------------------------
@@ -685,7 +685,7 @@ inline Math::float4
 Attribute::GetFloat4() const
 {
     n_assert(this->GetValueType() == Float4Type);
-    return this->value.GetFloat4();
+    return this->valueData.GetFloat4();
 }
 
 //------------------------------------------------------------------------------
@@ -696,7 +696,7 @@ Attribute::SetGuid(const Util::Guid& val)
 {
     n_assert(this->GetValueType() == GuidType);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = val;
+    this->valueData = val;
 }
 
 //------------------------------------------------------------------------------
@@ -706,7 +706,7 @@ inline const Util::Guid&
 Attribute::GetGuid() const
 {
     n_assert(this->GetValueType() == GuidType);
-    return this->value.GetGuid();
+    return this->valueData.GetGuid();
 }
 
 //------------------------------------------------------------------------------
@@ -717,7 +717,7 @@ Attribute::SetBlob(const Util::Blob& val)
 {
     n_assert(this->GetValueType() == BlobType);
     n_assert(this->GetAccessMode() == ReadWrite);
-    this->value = val;
+    this->valueData = val;
 }
 
 //------------------------------------------------------------------------------
@@ -727,7 +727,7 @@ inline const Util::Blob&
 Attribute::GetBlob() const
 {
     n_assert(this->GetValueType() == BlobType);
-    return this->value.GetBlob();
+    return this->valueData.GetBlob();
 }
 
 //------------------------------------------------------------------------------
@@ -740,31 +740,31 @@ Attribute::SetValueFromString(const Util::String& str)
     switch (this->GetValueType())
     {
         case IntType:
-            this->value = str.AsInt();
+            this->valueData = str.AsInt();
             break;
 
         case FloatType:
-            this->value = str.AsFloat();
+            this->valueData = str.AsFloat();
             break;
 
         case BoolType:
-            this->value = str.AsBool();
+            this->valueData = str.AsBool();
             break;
 
         case Float4Type:
-            this->value = str.AsFloat4();
+            this->valueData = str.AsFloat4();
             break;
 
         case StringType:
-            this->value = str;
+            this->valueData = str;
             break;
 
         case Matrix44Type:
-            this->value = str.AsMatrix44();
+            this->valueData = str.AsMatrix44();
             break;
 
         case GuidType:
-            this->value = Util::Guid::FromString(str);
+            this->valueData = Util::Guid::FromString(str);
             break;
 
         default:
@@ -842,7 +842,7 @@ Attribute::ValueTypeToString(ValueType t)
 inline void
 Attribute::SetValue(const Util::Variant& val)
 {
-    this->value = val;
+    this->valueData = val;
 }
 
 //------------------------------------------------------------------------------
@@ -851,7 +851,7 @@ Attribute::SetValue(const Util::Variant& val)
 inline const Util::Variant&
 Attribute::GetValue() const
 {
-    return this->value;
+    return this->valueData;
 }
 
 } // namespace Attr

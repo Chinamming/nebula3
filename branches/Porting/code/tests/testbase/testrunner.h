@@ -18,7 +18,7 @@ namespace Test
 {
 class TestRunner : public Core::RefCounted
 {
-    DeclareClass(TestRunner);
+    __DeclareClass(TestRunner);
 public:
     /// attach a test
     void AttachTestCase(TestCase* testCase);

@@ -13,7 +13,7 @@
 
 namespace Game
 {
-ImplementClass(Game::Entity, 'GAEN', Core::RefCounted);
+__ImplementClass(Game::Entity, 'GAEN', Core::RefCounted);
 
 using namespace BaseGameFeature;
 

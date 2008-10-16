@@ -5,12 +5,12 @@
 #include "stdneb.h"
 #include "coregraphics/debug/displaypagehandler.h"
 #include "coregraphics/displaydevice.h"
-#include "http/htmlpagewriter.h"
+#include "http/html/htmlpagewriter.h"
 #include "coregraphics/renderdevice.h"
 
 namespace Debug
 {
-ImplementClass(Debug::DisplayPageHandler, 'DDPH', Http::HttpRequestHandler);
+__ImplementClass(Debug::DisplayPageHandler, 'DDPH', Http::HttpRequestHandler);
 
 using namespace CoreGraphics;
 using namespace Http;
@@ -24,16 +24,7 @@ DisplayPageHandler::DisplayPageHandler()
 {
     this->SetName("Display");
     this->SetDesc("show Display debug information");
-    this->SetRootLocation("/display");
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-DisplayPageHandler::AcceptsRequest(const Ptr<Http::HttpRequest>& request)
-{
-    return (HttpMethod::Get == request->GetMethod()) && (String::MatchPattern(request->GetURI().LocalPath(), "display*"));
+    this->SetRootLocation("display");
 }
 
 //------------------------------------------------------------------------------

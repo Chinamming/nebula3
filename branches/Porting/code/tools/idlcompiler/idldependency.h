@@ -17,7 +17,7 @@ namespace Tools
 {
 class IDLDependency : public Core::RefCounted
 {
-    DeclareClass(IDLDependency);
+    __DeclareClass(IDLDependency);
 public:
     /// constructor
     IDLDependency();

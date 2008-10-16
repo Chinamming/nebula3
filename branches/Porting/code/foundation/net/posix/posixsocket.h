@@ -30,7 +30,7 @@ typedef int SOCKET;
 
 class PosixSocket : public Core::RefCounted
 {
-    DeclareClass(PosixSocket);
+    __DeclareClass(PosixSocket);
 public:
     /// protocol types
     enum Protocol

@@ -18,7 +18,7 @@ public:
 //------------------------------------------------------------------------------
 class ListCmds : public Scripting::Command
 {
-    DeclareClass(ListCmds);
+    __DeclareClass(ListCmds);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();
@@ -29,7 +29,7 @@ private:
 //------------------------------------------------------------------------------
 class Help : public Scripting::Command
 {
-    DeclareClass(Help);
+    __DeclareClass(Help);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();

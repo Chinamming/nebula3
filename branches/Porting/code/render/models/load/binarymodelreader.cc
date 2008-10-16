@@ -7,7 +7,7 @@
 
 namespace Models
 {
-ImplementClass(Models::BinaryModelReader, 'BNMR', Models::ModelReader);
+__ImplementClass(Models::BinaryModelReader, 'BNMR', Models::ModelReader);
 
 using namespace Core;
 using namespace Util;

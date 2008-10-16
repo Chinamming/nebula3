@@ -26,8 +26,8 @@ namespace Http
 {
 class HttpServer : public Core::RefCounted
 {
-    DeclareClass(HttpServer);
-    DeclareSingleton(HttpServer);
+    __DeclareClass(HttpServer);
+    __DeclareSingleton(HttpServer);
 public:
     /// constructor
     HttpServer();
@@ -48,19 +48,28 @@ public:
     void AttachRequestHandler(const Ptr<HttpRequestHandler>& h);
     /// remove a request handler from the server
     void RemoveRequestHandler(const Ptr<HttpRequestHandler>& h);
-    /// get array of currently attached request handlers
-    const Util::Array<Ptr<HttpRequestHandler> >& GetRequestHandlers() const;
+    /// get registered request handlers
+    Util::Array<Ptr<HttpRequestHandler> > GetRequestHandlers() const;
     /// call this method frequently to serve http connections
     void OnFrame();
 
 private:
-    /// handle a http request
-    bool HandleHttpRequest(const Ptr<IO::Stream>& recvStream, const Ptr<IO::Stream>& sendStream);
+    /// handle an HttpRequest
+    bool HandleHttpRequest(const Ptr<Net::TcpClientConnection>& clientConnection);
+    /// build an HttpResponse for a handled http request
+    bool BuildHttpResponse(const Ptr<Net::TcpClientConnection>& clientConnection, const Ptr<HttpRequest>& httpRequest);
 
-    Ptr<DefaultHttpRequestHandler> defaultRequestHandler;
-    Util::Array<Ptr<HttpRequestHandler> > requestHandlers;
+    struct PendingRequest
+    {
+        Ptr<Net::TcpClientConnection> clientConnection;
+        Ptr<HttpRequest> httpRequest;
+    };
+
+    Util::Dictionary<Util::String, Ptr<HttpRequestHandler> > requestHandlers;
+    Ptr<DefaultHttpRequestHandler> defaultRequestHandler;    
     Net::IpAddress ipAddress;
     Ptr<Net::TcpServer> tcpServer;
+    Util::Array<PendingRequest> pendingRequests;
     bool isOpen;
 };
 
@@ -94,10 +103,10 @@ HttpServer::GetPort() const
 //------------------------------------------------------------------------------
 /**
 */
-inline const Util::Array<Ptr<HttpRequestHandler> >&
+inline Util::Array<Ptr<HttpRequestHandler> >
 HttpServer::GetRequestHandlers() const
 {
-    return this->requestHandlers;
+    return this->requestHandlers.ValuesAsArray();
 }
 
 } // namespace Http

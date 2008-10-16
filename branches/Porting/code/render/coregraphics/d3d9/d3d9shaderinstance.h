@@ -24,7 +24,7 @@ namespace Direct3D9
 {
 class D3D9ShaderInstance : public Base::ShaderInstanceBase
 {
-    DeclareClass(D3D9ShaderInstance);
+    __DeclareClass(D3D9ShaderInstance);
 public:
     /// constructor
     D3D9ShaderInstance();

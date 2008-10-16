@@ -26,8 +26,8 @@ namespace IO
 {
 class Console : public Core::RefCounted
 {
-    DeclareClass(Console);
-    DeclareSingleton(Console);
+    __DeclareClass(Console);
+    __DeclareSingleton(Console);
 public:
     /// constructor
     Console();

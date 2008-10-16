@@ -15,7 +15,7 @@ namespace Input
 {
 class Mouse : public Win32::Win32Mouse
 {
-    DeclareClass(Mouse);
+    __DeclareClass(Mouse);
 };
 }
 #elif __XBOX360__
@@ -24,7 +24,7 @@ namespace Input
 {
 class Mouse : public Xbox360::Xbox360Mouse
 {
-    DeclareClass(Mouse);
+    __DeclareClass(Mouse);
 };
 }
 #elif __WII__
@@ -33,7 +33,7 @@ namespace Input
 {
 class Mouse : public Wii::WiiMouse
 {
-    DeclareClass(Mouse);
+    __DeclareClass(Mouse);
 };
 }
 #else

@@ -7,7 +7,7 @@
 
 namespace IO
 {
-ImplementClass(IO::TextReader, 'TXTR', IO::StreamReader);
+__ImplementClass(IO::TextReader, 'TXTR', IO::StreamReader);
 
 using namespace Util;
 
@@ -36,7 +36,7 @@ TextReader::ReadLine()
     
     // read file contents in chunks of 128 bytes
     const int bufSize = 64;
-    char* buf = (char*) Memory::Alloc(bufSize);
+    char* buf = (char*) Memory::Alloc(Memory::ScratchHeap, bufSize);
 
     // read chunk until newline found
     bool newLineFound = false;
@@ -60,7 +60,7 @@ TextReader::ReadLine()
         }
         result.Append(buf);
     }
-    Memory::Free(buf);
+    Memory::Free(Memory::ScratchHeap, buf);
     return result;
 }
 
@@ -72,11 +72,11 @@ TextReader::ReadAll()
 {
     this->stream->Seek(0, Stream::Begin);
     Stream::Size size = this->stream->GetSize();
-    char* buf = (char*) Memory::Alloc(size + 1);
+    char* buf = (char*) Memory::Alloc(Memory::ScratchHeap, size + 1);
     Stream::Size bytesRead = this->stream->Read(buf, size);
     buf[bytesRead] = 0;
     String result = buf;
-    Memory::Free(buf);
+    Memory::Free(Memory::ScratchHeap, buf);
     return result;
 }
 

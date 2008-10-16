@@ -7,7 +7,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::IDLLibrary, 'ILLB', Core::RefCounted);
+__ImplementClass(Tools::IDLLibrary, 'ILLB', Core::RefCounted);
 
 using namespace Util;
 using namespace IO;

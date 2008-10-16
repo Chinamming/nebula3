@@ -1,6 +1,4 @@
 #pragma once
-#ifndef CORE_CONFIG_H
-#define CORE_CONFIG_H
 //------------------------------------------------------------------------------
 /**
     @file core/config.h
@@ -25,6 +23,25 @@
 #define NEBULA3_MEMORY_STATS (0)
 #endif
 
+// enable/disable allocating RefCounted objects from MemoryPool
+// NOTE: the object creation benchmark actually runs FASTER without
+// memory pools doh... (even after removing asserts and taking the critical
+// section) -> needs more investigation!
+#define NEBULA3_REFCOUNTED_MEMORYPOOLS (0)
+
+// average page size for RefCounted memory pools
+#define NEBULA3_REFCOUNTED_MEMPOOLPAGESIZE (4096)
+
+// enable/disable bounds checking in the container util classes
+#if NEBULA3_DEBUG
+#define NEBULA3_BOUNDSCHECKS (1)
+#else
+#define NEBULA3_BOUNDSCHECKS (0)
+#endif
+
+// enable/disable profiling (see Debug::DebugTimer, Debug::DebugCounter)
+#define NEBULA3_ENABLE_PROFILING (1)
+
 // enable/disable support for Nebula2 file formats
 #define NEBULA3_LEGACY_SUPPORT (1)
 
@@ -33,7 +50,6 @@
 
 // Nebula3's main window class
 #define NEBULA3_WINDOW_CLASS "Nebula3::MainWindow"
-
 
 //------------------------------------------------------------------------------
 /**
@@ -55,6 +71,26 @@
 #endif
 #ifdef WIN32
 #define __WIN32__ (1)
+#endif
+
+//------------------------------------------------------------------------------
+/**
+    http define
+*/
+#if __WII__
+#define __NEBULA3_HTTP__ (0)
+#else
+#define __NEBULA3_HTTP__ (1)
+#endif
+
+//------------------------------------------------------------------------------
+/**
+    script define
+*/
+#if __WII__
+#define __NEBULA3_SCRIPTING__ (0)
+#else
+#define __NEBULA3_SCRIPTING__ (1)
 #endif
 
 //------------------------------------------------------------------------------
@@ -108,5 +144,4 @@
 #endif
 
 //------------------------------------------------------------------------------
-#endif
 

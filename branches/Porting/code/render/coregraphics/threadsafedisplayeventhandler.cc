@@ -7,7 +7,7 @@
 
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::ThreadSafeDisplayEventHandler, 'TDEH', CoreGraphics::DisplayEventHandler);
+__ImplementClass(CoreGraphics::ThreadSafeDisplayEventHandler, 'TDEH', CoreGraphics::DisplayEventHandler);
 
 using namespace Util;
 

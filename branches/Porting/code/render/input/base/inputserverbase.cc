@@ -11,7 +11,7 @@
 
 namespace Base
 {
-ImplementClass(Base::InputServerBase, 'IPSB', Core::RefCounted);
+__ImplementClass(Base::InputServerBase, 'IPSB', Core::RefCounted);
 
 using namespace Input;
 using namespace Util;
@@ -23,6 +23,7 @@ InputServerBase::InputServerBase() :
     isOpen(false),
     isQuitRequested(false),
     inputHandlersLockCount(0),
+    maxNumLocalPlayers(1),
     inBeginFrame(false),
     defaultGamePad(GamePad::GetMaxNumPlayers())
 {
@@ -38,6 +39,20 @@ InputServerBase::~InputServerBase()
     {
         this->Close();
     }
+}
+
+//------------------------------------------------------------------------------
+/**
+    Setup the maximum number of local players for this application. The
+    default number is 1. This defines the number of game pad objects
+    created and queried.
+*/
+void
+InputServerBase::SetMaxNumLocalPlayers(SizeT num)
+{
+    n_assert(!this->isOpen);
+    n_assert(num <= GamePad::GetMaxNumPlayers());
+    this->maxNumLocalPlayers = num;
 }
 
 //------------------------------------------------------------------------------
@@ -72,7 +87,7 @@ InputServerBase::Close()
     // release default input handlers
     this->defaultKeyboard = 0;
     this->defaultMouse = 0;
-    this->defaultGamePad.Clear(0);
+    this->defaultGamePad.Fill(0);
 
     this->isOpen = false;
 }

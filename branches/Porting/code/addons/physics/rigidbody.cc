@@ -10,7 +10,9 @@
 
 namespace Physics
 {
-ImplementClass(Physics::RigidBody, 'PRIB', Core::RefCounted);
+__ImplementClass(Physics::RigidBody, 'PRIB', Core::RefCounted);
+
+using namespace Math;
 
 uint RigidBody::uniqueIdCounter = 1;
 
@@ -208,7 +210,7 @@ RigidBody::ApplyImpulseAtPos(const Math::vector& impulse, const Math::vector& po
     dWorldImpulseToForce(odeWorldId, dReal(stepSize), newImpulse.x(), newImpulse.y(), newImpulse.z(), odeForce);
 
     // apply force to body
-    dBodyAddForceAtRelPos(this->odeBodyId, odeForce[0], odeForce[1], odeForce[2], pos.x(), pos.y(), pos.z());
+    dBodyAddForceAtPos(this->odeBodyId, odeForce[0], odeForce[1], odeForce[2], pos.x(), pos.y(), pos.z());
 }
 
 //------------------------------------------------------------------------------
@@ -317,8 +319,8 @@ RigidBody::OnStepAfter()
     Math::vector p;
     PhysicsServer::OdeToMatrix44(*(dMatrix3*)rot, this->transform);
     PhysicsServer::OdeToVector3(*(dVector3*)pos, p);
-    float w = this->transform.getpos_component().w();
-    this->transform.setpos_component(float4(p.x(),p.y(),p.z(),w));
+    float w = this->transform.get_position().w();
+    this->transform.set_position(float4(p.x(),p.y(),p.z(),w));
 }
 
 //------------------------------------------------------------------------------
@@ -338,7 +340,7 @@ RigidBody::SetTransform(const Math::matrix44& m)
         dVector3 odePos;
         dMatrix3 odeRot;
         PhysicsServer::Matrix44ToOde(m, odeRot);
-        PhysicsServer::Vector3ToOde(m.getpos_component(), odePos);
+        PhysicsServer::Vector3ToOde(m.get_position(), odePos);
         dBodySetPosition(this->odeBodyId, odePos[0], odePos[1], odePos[2]);
         dBodySetRotation(this->odeBodyId, odeRot);
     }

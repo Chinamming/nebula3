@@ -15,29 +15,14 @@
 
     (C) 2007 Radon Labs GmbH
 */
-#if __WIN32__
-#include "coregraphics/d3d9/d3d9transformdevice.h"
+#if (__WIN32__ || __XBOX360__)
+#include "coregraphics/win360/d3d9transformdevice.h"
 namespace CoreGraphics
 {
-class TransformDevice : public Direct3D9::D3D9TransformDevice
+class TransformDevice : public Win360::D3D9TransformDevice
 {
-    DeclareClass(TransformDevice);
-    DeclareSingleton(TransformDevice);
-public:
-    /// constructor
-    TransformDevice();
-    /// destructor
-    virtual ~TransformDevice();
-};
-}
-#elif __XBOX360__
-#include "coregraphics/xbox360/xbox360transformdevice.h"
-namespace CoreGraphics
-{
-class TransformDevice : public Xbox360::Xbox360TransformDevice
-{
-    DeclareClass(TransformDevice);
-    DeclareSingleton(TransformDevice);
+    __DeclareClass(TransformDevice);
+    __DeclareSingleton(TransformDevice);
 public:
     /// constructor
     TransformDevice();
@@ -51,8 +36,8 @@ namespace CoreGraphics
 {
 class TransformDevice : public Wii::WiiTransformDevice
 {
-    DeclareClass(TransformDevice);
-    DeclareSingleton(TransformDevice);
+    __DeclareClass(TransformDevice);
+    __DeclareSingleton(TransformDevice);
 public:
     /// constructor
     TransformDevice();

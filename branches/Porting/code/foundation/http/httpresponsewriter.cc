@@ -8,7 +8,7 @@
 
 namespace Http
 {
-ImplementClass(Http::HttpResponseWriter, 'HTRW', IO::StreamWriter);
+__ImplementClass(Http::HttpResponseWriter, 'HTRW', IO::StreamWriter);
 
 using namespace IO;
 

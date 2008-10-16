@@ -23,7 +23,7 @@ namespace Frame
 {
 class FrameBatch : public Core::RefCounted
 {
-    DeclareClass(FrameBatch);
+    __DeclareClass(FrameBatch);
 public:
     /// constructor
     FrameBatch();

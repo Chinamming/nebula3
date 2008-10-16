@@ -30,8 +30,8 @@ namespace BaseGameFeature
 {
 class FocusManager : public Game::Manager
 {
-	DeclareClass(FocusManager);
-    DeclareSingleton(FocusManager);
+	__DeclareClass(FocusManager);
+    __DeclareSingleton(FocusManager);
 
 public:
     /// constructor

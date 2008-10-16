@@ -16,7 +16,7 @@ namespace Benchmarking
 {
 class CreateObjects : public Benchmark
 {
-    DeclareClass(CreateObjects);
+    __DeclareClass(CreateObjects);
 public:
     /// run the benchmark
     virtual void Run(Timing::Timer& timer);

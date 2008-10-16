@@ -1,14 +1,12 @@
 #pragma once
-#ifndef CORE_FACTORY_H
-#define CORE_FACTORY_H
 //------------------------------------------------------------------------------
 /**
     @class Core::Factory
 
     Provides the central object factory mechanism for Nebula3. Classes
     which are derived from RefCounted register themselves automatically
-    to the central Factory object through the DeclareClass and
-    ImplementClass macros.
+    to the central Factory object through the __DeclareClass and
+    __ImplementClass macros.
 
 
     (C) 2005 Radon Labs GmbH
@@ -63,4 +61,3 @@ private:
 
 } // namespace Foundation
 //------------------------------------------------------------------------------
-#endif

@@ -22,7 +22,7 @@ namespace Attr
 
 namespace Test
 {
-ImplementClass(Test::ModelLoadSaveTest, 'MLST', Test::TestCase);
+__ImplementClass(Test::ModelLoadSaveTest, 'MLST', Test::TestCase);
 
 using namespace Models;
 using namespace IO;

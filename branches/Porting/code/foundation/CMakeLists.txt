@@ -6,9 +6,6 @@ SET(Nebula3Foundation_SRCS
     app/application.h
     app/consoleapplication.cc
     app/consoleapplication.h
-    asynchttp/asynchttphandler.h
-    asynchttp/asynchttpinterface.h
-    asynchttp/httpserverproxy.h
     attr/accessmode.h
     attr/attribute.h
     attr/attributecontainer.cc
@@ -58,10 +55,6 @@ SET(Nebula3Foundation_SRCS
     http/base64writer.h
     http/defaulthttprequesthandler.cc
     http/defaulthttprequesthandler.h
-    http/htmlelement.cc
-    http/htmlelement.h
-    http/htmlpagewriter.cc
-    http/htmlpagewriter.h
     http/httpmethod.h
     http/httprequest.cc
     http/httprequest.h
@@ -81,22 +74,6 @@ SET(Nebula3Foundation_SRCS
     interface/iointerface.h
     interface/iointerfacehandler.cc
     interface/iointerfacehandler.h
-    interface/iomsg/copyfile.cc
-    interface/iomsg/copyfile.h
-    interface/iomsg/createdirectory.cc
-    interface/iomsg/createdirectory.h
-    interface/iomsg/deletedirectory.cc
-    interface/iomsg/deletedirectory.h
-    interface/iomsg/deletefile.cc
-    interface/iomsg/deletefile.h
-    interface/iomsg/iomessage.cc
-    interface/iomsg/iomessage.h
-    interface/iomsg/mountziparchive.cc
-    interface/iomsg/mountziparchive.h
-    interface/iomsg/readstream.cc
-    interface/iomsg/readstream.h
-    interface/iomsg/writestream.cc
-    interface/iomsg/writestream.h
     io/assign.h
     io/binaryreader.cc
     io/binaryreader.h
@@ -210,7 +187,8 @@ SET(Nebula3Foundation_SRCS
     system/appentry.h
     system/byteorder.h
     system/cpu.h
-    system/platform.h
+    system/base/systeminfobase.cc
+    system/base/systeminfobase.h
     threading/barrier.h
     threading/criticalsection.h
     threading/event.h
@@ -219,7 +197,6 @@ SET(Nebula3Foundation_SRCS
     threading/safequeue.h
     threading/thread.cc
     threading/thread.h
-    threading/threadlocalptr.h
     timing/base/calendartimebase.cc
     timing/base/calendartimebase.h
     timing/calendartime.h
@@ -323,11 +300,15 @@ IF(APPLE)
         memory/posix/posixheap.h
         memory/posix/posixmemory.cc
         memory/posix/posixmemory.h
+        memory/posix/posixmemoryconfig.cc
+        memory/posix/posixmemoryconfig.h
         net/posix/posixipaddress.cc
         net/posix/posixipaddress.h
         net/posix/posixsocket.cc
         net/posix/posixsocket.h
         system/darwin/darwinbyteorder.h
+        system/darwin/darwinsysteminfo.cc
+        system/darwin/darwinsysteminfo.h
         threading/darwin/darwininterlocked.h
         threading/posix/posixbarrier.h
         threading/posix/posixcriticalsection.h

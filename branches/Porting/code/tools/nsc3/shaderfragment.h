@@ -21,7 +21,7 @@ namespace Tools
 {
 class ShaderFragment : public Core::RefCounted
 {
-    DeclareClass(ShaderFragment);
+    __DeclareClass(ShaderFragment);
 public:
     /// constructor
     ShaderFragment();

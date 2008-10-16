@@ -19,8 +19,8 @@ namespace Tools
 {
 class ShaderSamplerManager : public Core::RefCounted
 {
-    DeclareClass(ShaderSamplerManager);
-    DeclareSingleton(ShaderSamplerManager);
+    __DeclareClass(ShaderSamplerManager);
+    __DeclareSingleton(ShaderSamplerManager);
 public:
     /// constructor
     ShaderSamplerManager();

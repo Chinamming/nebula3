@@ -14,14 +14,14 @@
 */
 #include "resources/resourceloader.h"
 #include "io/stream.h"
-#include "interface/iomsg/readstream.h"
+#include "interface/interfaceprotocol.h"
 
 //------------------------------------------------------------------------------
 namespace Models
 {
 class StreamModelLoader : public Resources::ResourceLoader
 {
-    DeclareClass(StreamModelLoader);
+    __DeclareClass(StreamModelLoader);
 public:
     /// constructor
     StreamModelLoader();

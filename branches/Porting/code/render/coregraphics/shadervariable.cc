@@ -8,17 +8,17 @@
 #if __WIN32__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::ShaderVariable, 'SHDV', Direct3D9::D3D9ShaderVariable);
+__ImplementClass(CoreGraphics::ShaderVariable, 'SHDV', Direct3D9::D3D9ShaderVariable);
 }
 #elif __XBOX360__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::ShaderVariable, 'SHDV', Xbox360::Xbox360ShaderVariable);
+__ImplementClass(CoreGraphics::ShaderVariable, 'SHDV', Xbox360::Xbox360ShaderVariable);
 }
 #elif __WII__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::ShaderVariable, 'SHDV', Wii::WiiShaderVariable);
+__ImplementClass(CoreGraphics::ShaderVariable, 'SHDV', Wii::WiiShaderVariable);
 }
 #else
 #error "ShaderVariable class not implemented on this platform!"

@@ -8,8 +8,8 @@
 
 namespace Messaging
 {
-ImplementClass(Messaging::AsyncPort, 'ASPT', Core::RefCounted);
-ImplementClass(Messaging::AsyncPort::HandlerThread, 'ASHT', Threading::Thread);
+__ImplementClass(Messaging::AsyncPort, 'ASPT', Core::RefCounted);
+__ImplementClass(Messaging::AsyncPort::HandlerThread, 'ASHT', Threading::Thread);
 
 using namespace Util;
 using namespace Threading;
@@ -19,7 +19,8 @@ using namespace Threading;
 */
 AsyncPort::AsyncPort() :
     isOpen(false),
-    waitForMessages(true)
+    behaviour(WaitForMessage),
+    waitTimeOut(0)
 {
     // create a thread object (but don't start it!)
     this->thread = HandlerThread::Create();
@@ -52,9 +53,11 @@ AsyncPort::Open()
     // let subclass create and attach message handlers
     this->OnCreateHandlers();
     
-    // start the handler thread
-    this->thread->waitForMessages = this->waitForMessages;
+    // start the handler thread, and wait until handlers are open
+    this->thread->SetBehaviour(this->behaviour);
+    this->thread->SetWaitTimeout(this->waitTimeOut);
     this->thread->Start();
+    this->thread->WaitForHandlersOpened();
 
     this->isOpen = true;
 }
@@ -192,9 +195,47 @@ AsyncPort::Flush()
     HandlerThread constructor.
 */
 AsyncPort::HandlerThread::HandlerThread() :
-    waitForMessages(true)
+    behaviour(AsyncPort::WaitForMessage),
+    waitTimeout(0)
 {
     // empty
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+AsyncPort::HandlerThread::SetBehaviour(Behaviour b)
+{
+    this->behaviour = b;
+    if (DoNotWait == this->behaviour)
+    {
+        this->msgQueue.SetSignalOnEnqueueEnabled(false);
+    }
+    else
+    {
+        this->msgQueue.SetSignalOnEnqueueEnabled(true);
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+AsyncPort::HandlerThread::SetWaitTimeout(int ms)
+{
+    this->waitTimeout = ms;
+}
+
+//------------------------------------------------------------------------------
+/**
+    Waits until the thread proc signals that handlers have been opened.
+*/
+void
+AsyncPort::HandlerThread::WaitForHandlersOpened()
+{
+    n_assert(this->IsRunning());
+    this->handlersOpenedEvent.Wait();
 }
 
 //------------------------------------------------------------------------------
@@ -220,12 +261,13 @@ AsyncPort::HandlerThread::EmitWakeupSignal()
 void
 AsyncPort::HandlerThread::DoWork()
 {
-    // open attached handlers
+    // open attached handlers and signal event when all handlers are open
     Array<Ptr<Handler> >::Iterator iter;
     for (iter = this->handlers.Begin(); iter < this->handlers.End(); iter++)
     {
         (*iter)->Open();
     }
+    this->handlersOpenedEvent.Signal();
 
     // handle messages
     while (!this->ThreadStopRequested())
@@ -233,9 +275,13 @@ AsyncPort::HandlerThread::DoWork()
         // wait for the next message to arrive, note that 
         // this may also be signalled by the Stop() method to 
         // wake us up
-        if (this->waitForMessages)
+        if (AsyncPort::WaitForMessage == this->behaviour)
         {
             this->msgQueue.Wait();
+        }
+        else if (AsyncPort::WaitForMessageOrTimeOut == this->behaviour)
+        {
+            this->msgQueue.WaitTimeout(this->waitTimeout);
         }
 
         // handle pending messages
@@ -247,10 +293,10 @@ AsyncPort::HandlerThread::DoWork()
                 if ((*iter)->HandleMessage(msg))
                 {
                     // message had been handled by this handler
-                    /// @todo should we stop here, once the message had been handled...?
                     msg->SetHandled(true);
                     MemoryBarrier();
                     this->msgHandledEvent.Signal();
+                    break;
                 }
             }
         }

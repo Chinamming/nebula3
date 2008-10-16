@@ -31,8 +31,8 @@ namespace BaseGameFeature
 {
 class EnvEntityManager : public Game::Manager
 {
-    DeclareClass(EnvEntityManager);
-    DeclareSingleton(EnvEntityManager);
+    __DeclareClass(EnvEntityManager);
+    __DeclareSingleton(EnvEntityManager);
 
 public:
     /// constructor

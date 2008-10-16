@@ -16,7 +16,7 @@ namespace Benchmarking
 {
 class Benchmark : public Core::RefCounted
 {
-    DeclareClass(Benchmark);
+    __DeclareClass(Benchmark);
 public:
     /// run the benchmark
     virtual void Run(Timing::Timer& timer);

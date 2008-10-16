@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::GuidTest, 'GUDT', Test::TestCase);
+__ImplementClass(Test::GuidTest, 'GUDT', Test::TestCase);
 
 using namespace Util;
 

@@ -5,11 +5,13 @@
 #include "stdneb.h"
 #include "io/xmlreader.h"
 
+// this will accept old 3-component vectors and convert them to
+// float4 (w component will be set to 0)
 #define __NEBULA2_EXPORT__ (1)
 
 namespace IO
 {
-ImplementClass(IO::XmlReader, 'XMLR', IO::StreamReader);
+__ImplementClass(IO::XmlReader, 'XMLR', IO::StreamReader);
 
 // This static object setsup TinyXml at application startup
 // (set condense white space to false). There seems to be no easy,
@@ -395,6 +397,26 @@ float
 XmlReader::GetFloat(const String& name) const
 {
     return this->GetString(name).AsFloat();
+}
+
+
+//------------------------------------------------------------------------------
+/**
+    Return the provided attribute as float2. If the attribute does not exist
+    the method will fail hard (use HasAttr() to check for its existance).
+*/
+float2
+XmlReader::GetFloat2(const String& name) const
+{
+#if __NEBULA2_EXPORT__
+    const String& float2String = this->GetString(name);
+    Array<String> tokens = float2String.Tokenize(", \t");
+    if (tokens.Size() == 2)
+    {
+        return float2(tokens[0].AsFloat(), tokens[1].AsFloat());
+    }    
+#endif
+    return this->GetString(name).AsFloat2();
 }
 
 //------------------------------------------------------------------------------

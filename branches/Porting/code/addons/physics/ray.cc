@@ -13,7 +13,9 @@
 
 namespace Physics
 {
-ImplementClass(Physics::Ray, 'PRAY',  Core::RefCounted);
+__ImplementClass(Physics::Ray, 'PRAY',  Core::RefCounted);
+
+using namespace Math;
 
 Util::Array<ContactPoint>* Ray::contactsArray = 0;
 

@@ -4,28 +4,25 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "graphics/view.h"
-#include "graphics/stagebuilder.h"
-#include "graphics/modelentity.h"
-#include "models/visresolver.h"
-#include "coregraphics/transformdevice.h"
-#include "coregraphics/shaperenderer.h"
-#include "lighting/lightserver.h"
-#include "lighting/shadowserver.h"
+#include "graphics/graphicsprotocol.h"
+#include "graphics/graphicsinterface.h"
+#include "graphics/cameraentity.h"
+#include "internalgraphics/internalview.h"
 
 namespace Graphics
 {
-ImplementClass(Graphics::View, 'GRVW', Core::RefCounted);
+__ImplementClass(Graphics::View, 'GVIW', Core::RefCounted);
 
+using namespace Messaging;
 using namespace Util;
-using namespace Models;
-using namespace CoreGraphics;
-using namespace Lighting;
 
 //------------------------------------------------------------------------------
 /**
 */
 View::View() :
-    isAttachedToServer(false)
+    viewClass(&InternalGraphics::InternalView::RTTI),
+    isDefaultView(false),
+    viewHandle(0)
 {
     // empty
 }
@@ -35,218 +32,82 @@ View::View() :
 */
 View::~View()
 {
-    // check that we've been properly cleaned up
-    n_assert(!this->isAttachedToServer);
-    n_assert(!this->stage.isvalid());
-    n_assert(!this->camera.isvalid());
-    n_assert(!this->renderTarget.isvalid());
-    n_assert(!this->frameShader.isvalid());
-    n_assert(this->dependencies.IsEmpty());
+    n_assert(!this->IsValid());
+    n_assert(!this->cameraEntity.isvalid());
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-View::OnAttachToServer()
+View::Setup()
 {
-    n_assert(!this->IsAttachedToServer());
-    this->isAttachedToServer = true;
+    n_assert(0 != this->viewClass);
+    n_assert(!this->IsValid());
+    n_assert(this->name.Value().IsValid());
+    n_assert(this->stageName.Value().IsValid());
+    n_assert(this->frameShaderName.Value().IsValid());
+
+    // send a CreateGraphicsView message and wait for completion
+    Ptr<Graphics::CreateGraphicsView> msg = Graphics::CreateGraphicsView::Create();
+    msg->SetViewClass(this->viewClass);
+    msg->SetName(this->name);
+    msg->SetStageName(this->stageName);
+    msg->SetFrameShaderName(this->frameShaderName);
+    msg->SetDefaultView(this->isDefaultView);
+    GraphicsInterface::Instance()->SendWait(msg.cast<Message>());
+    n_assert(msg->Handled());
+    this->viewHandle = msg->GetResult();
+    n_assert(0 != this->viewHandle);
 }
 
 //------------------------------------------------------------------------------
 /**
 */
 void
-View::OnRemoveFromServer()
+View::Discard()
 {
-    n_assert(this->IsAttachedToServer());
-    if (this->camera.isvalid())
+    n_assert(this->IsValid());
+
+    // properly detach camera entity if set
+    if (this->cameraEntity.isvalid())
     {
-        this->camera->OnRemoveFromView(this);
-        this->camera = 0;
+        this->cameraEntity->OnRemoveFromView(this);
+        this->cameraEntity = 0;
     }
-    this->stage = 0;
-    this->renderTarget = 0;
-    this->frameShader = 0;
-    this->dependencies.Clear();
-    this->isAttachedToServer = false;
+
+    // send a DiscardGraphicsView message and wait for completion
+    Ptr<Graphics::DiscardGraphicsView> msg = Graphics::DiscardGraphicsView::Create();
+    msg->SetViewHandle(this->viewHandle);
+    GraphicsInterface::Instance()->SendWait(msg.cast<Message>());
+    this->viewHandle = 0;
 }
 
 //------------------------------------------------------------------------------
 /**
-    This method updates the visibility links for the view's camera.
-    This method should usually be called before Render().
 */
 void
-View::UpdateVisibilityLinks()
+View::SetCameraEntity(const Ptr<CameraEntity>& entity)
 {
-    n_assert(this->camera.isvalid());
-    this->stage->UpdateCameraLinks(this->camera);
-}
-
-//------------------------------------------------------------------------------
-/**
-    This attaches visible lights to the light and shadow server.
-    @todo: currently this methods needs to go over all visible
-    graphics entities to find the lights... 
-*/
-void
-View::ResolveVisibleLights()
-{
-    n_assert(this->camera.isvalid());
-    LightServer* lightServer = LightServer::Instance();
-    ShadowServer* shadowServer = ShadowServer::Instance();
-
-    lightServer->BeginAttachVisibleLights();
-    shadowServer->BeginAttachVisibleLights();
-    const Array<Ptr<GraphicsEntity> >& visLinks = this->camera->GetLinks(GraphicsEntity::CameraLink);
-    IndexT i;
-    SizeT num = visLinks.Size();
-    for (i = 0; i < num; i++)
+    if (this->cameraEntity.isvalid())
     {
-        const Ptr<GraphicsEntity>& curEntity = visLinks[i];
-        if (GraphicsEntity::LightType == curEntity->GetType())
-        {
-            const Ptr<AbstractLightEntity>& lightEntity = curEntity.downcast<AbstractLightEntity>();
-            lightServer->AttachVisibleLight(lightEntity);
-            if (lightEntity->GetCastShadows())
-            {
-                shadowServer->AttachVisibleLight(lightEntity);
-            }
-        }
+        this->cameraEntity->OnRemoveFromView(this);
+        this->cameraEntity = 0;
     }
-    shadowServer->EndAttachVisibleLights();
-    lightServer->EndAttachVisibleLights();
-}
-
-//------------------------------------------------------------------------------
-/**
-    Resolve all visible ModelNodeInstances by following the visibility
-    links of our camera. This is necessary as preparation for rendering.
-*/
-void
-View::ResolveVisibleModelNodeInstances()
-{
-    n_assert(this->camera.isvalid());
-    VisResolver* visResolver = VisResolver::Instance();
-    visResolver->BeginResolve();
-    const Array<Ptr<GraphicsEntity> >& visLinks = this->camera->GetLinks(GraphicsEntity::CameraLink);
-    IndexT i;
-    SizeT num = visLinks.Size();
-    for (i = 0; i < num; i++)
+    if (entity.isvalid())
     {
-        const Ptr<GraphicsEntity>& curEntity = visLinks[i];
-        if (GraphicsEntity::ModelType == curEntity->GetType())
-        {
-            const Ptr<ModelEntity>& modelEntity = curEntity.downcast<ModelEntity>();
-            visResolver->AttachVisibleModelInstance(modelEntity->GetModelInstance());
-        }
-    }
-    visResolver->EndResolve();
-}
-
-//------------------------------------------------------------------------------
-/**
-    This method renders the current view into the render target. This method
-    must be called sometimes after UpdateVisibilityLinks()
-*/
-void
-View::Render()
-{
-    n_assert(this->frameShader.isvalid());      
-    n_assert(this->camera.isvalid());
-
-    LightServer* lightServer = LightServer::Instance();
-    ShadowServer* shadowServer = ShadowServer::Instance();
-    lightServer->BeginFrame(this->camera);
-    shadowServer->BeginFrame(this->camera);
-
-    // resolve visible light source
-    this->ResolveVisibleLights();
-
-    // draw the shadow pass
-    ShadowServer::Instance()->UpdateShadowBuffers();
-
-    // resolve visible ModelNodeInstances
-    this->ResolveVisibleModelNodeInstances();
-
-    // render the world...
-    TransformDevice* transformDevice = TransformDevice::Instance();
-    transformDevice->SetProjTransform(this->camera->GetProjTransform());
-    transformDevice->SetViewTransform(this->camera->GetViewTransform());
-    transformDevice->ApplyViewSettings();
-    this->frameShader->Render();
-
-    // tell light and shadow servers that rendering is finished
-    shadowServer->EndFrame();
-    lightServer->EndFrame();
-}
-
-//------------------------------------------------------------------------------
-/**
-    Renders a debug visualization. Can be called alone or after Render().
-*/
-void
-View::RenderDebug()
-{
-    n_assert(this->frameShader.isvalid());
-
-    // setup global transforms...
-    TransformDevice* transformDevice = TransformDevice::Instance();
-    transformDevice->SetProjTransform(this->camera->GetProjTransform());
-    transformDevice->SetViewTransform(this->camera->GetViewTransform());
-
-    // just call OnRenderDebug on all graphics entities visible through our camera
-    ShapeRenderer::Instance()->Begin();
-    const Array<Ptr<GraphicsEntity> >& visLinks = this->camera->GetLinks(GraphicsEntity::CameraLink);
-    IndexT i;
-    SizeT num = visLinks.Size();
-    for (i = 0; i < num; i++)
-    {
-        const Ptr<GraphicsEntity>& curEntity = visLinks[i];
-        curEntity->OnRenderDebug();
-    }
-    ShapeRenderer::Instance()->End();
-}
-
-//------------------------------------------------------------------------------
-/**
-    Renders a debug visualization. Must be called inside Begin and End of shaperenderer.
-*/
-void
-View::RenderDebugSimple()
-{
-    n_assert(this->frameShader.isvalid());
-    
-    const Array<Ptr<GraphicsEntity> >& visLinks = this->camera->GetLinks(GraphicsEntity::CameraLink);
-    IndexT i;
-    SizeT num = visLinks.Size();
-    for (i = 0; i < num; i++)
-    {
-        const Ptr<GraphicsEntity>& curEntity = visLinks[i];
-        curEntity->OnRenderDebug();
+        this->cameraEntity = entity;
+        this->cameraEntity->OnAttachToView(this);
     }
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-void
-View::SetCameraEntity(const Ptr<CameraEntity>& newCameraEntity)
+const Ptr<CameraEntity>&
+View::GetCameraEntity() const
 {
-    // assert if cam is not attached to a stage
-    n_assert2(!newCameraEntity.isvalid() || newCameraEntity->IsAttachedToStage(), "Camera has to be attached to a stage first!");
-    if (this->camera.isvalid())
-    {
-        this->camera->OnRemoveFromView(this);
-        this->camera = 0;
-    }
-    if (newCameraEntity.isvalid())
-    {
-        this->camera = newCameraEntity;
-        this->camera->OnAttachToView(this);
-    }
+    return this->cameraEntity;
 }
 
 } // namespace Graphics

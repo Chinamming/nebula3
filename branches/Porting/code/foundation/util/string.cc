@@ -7,7 +7,6 @@
 
 namespace Util
 {
-Memory::Heap* String::DataHeap = 0;
 Memory::Heap* String::ObjectHeap = 0;
 
 //------------------------------------------------------------------------------
@@ -82,7 +81,7 @@ String::Set(const char* str, SizeT length)
     else
     {
         // need to allocate bigger heap buffer
-        this->Allocate(length + 1);
+        this->Alloc(length + 1);
         Memory::Copy(str, this->heapBuffer, length);
         this->heapBuffer[length] = 0;
         this->localBuffer[0] = 0;
@@ -120,7 +119,7 @@ String::AppendRange(const char* append, SizeT length)
         else
         {
             // need to re-allocate
-            this->Reallocate(newLength + newLength / 2);
+            this->Realloc(newLength + newLength / 2);
             Memory::Copy(append, this->heapBuffer + this->strLen, length);
             this->heapBuffer[newLength] = 0;
         }
@@ -343,9 +342,9 @@ String::TrimRight(const String& charSet)
     if (this->IsValid())
     {
         SizeT charSetLen = charSet.strLen;
-        IndexT thisIndex = this->strLen - 1;
+        int thisIndex = this->strLen - 1;   // NOTE: may not be unsigned (thus not IndexT!)
         bool stopped = false;
-        while (!stopped && (thisIndex < this->strLen))
+        while (!stopped && (thisIndex >= 0))
         {
             IndexT charSetIndex;
             bool match = false;
@@ -489,7 +488,7 @@ String::ANSItoUTF8()
 {
     n_assert(!this->IsEmpty());
     SizeT bufSize = this->strLen * 2 + 1;
-    char* buffer = (char*) DataHeap->Alloc(bufSize);
+    char* buffer = (char*) Memory::Alloc(Memory::ScratchHeap, bufSize);
     char* dstPtr = buffer;
     const char* srcPtr = this->AsCharPtr();
     unsigned char c;
@@ -509,7 +508,7 @@ String::ANSItoUTF8()
     }
     *dstPtr = 0;
     this->SetCharPtr(buffer);
-    DataHeap->Free(buffer);
+    Memory::Free(Memory::ScratchHeap, buffer);
 }
 
 //------------------------------------------------------------------------------

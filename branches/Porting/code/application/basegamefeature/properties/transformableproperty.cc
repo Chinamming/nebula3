@@ -6,11 +6,11 @@
 #include "properties/transformableproperty.h"
 #include "game/entity.h"
 #include "basegameattr/basegameattributes.h"
-#include "msg/settransform.h"
+#include "basegameprotocol.h"
 
 namespace BaseGameFeature
 {
-ImplementClass(BaseGameFeature::TransformableProperty, 'TRPR', Game::Property);
+__ImplementClass(BaseGameFeature::TransformableProperty, 'TRPR', Game::Property);
 
 using namespace Game;
 

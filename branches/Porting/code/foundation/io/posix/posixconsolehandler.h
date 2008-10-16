@@ -18,7 +18,7 @@ namespace Posix
 {
 class PosixConsoleHandler : public IO::ConsoleHandler
 {
-    DeclareClass(PosixConsoleHandler);
+    __DeclareClass(PosixConsoleHandler);
 public:
     /// constructor
     PosixConsoleHandler();

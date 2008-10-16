@@ -17,7 +17,7 @@ namespace Base
 {
 class TextureBase : public Base::ResourceBase
 {
-    DeclareClass(TextureBase);
+    __DeclareClass(TextureBase);
 public:
     /// texture types
     enum Type

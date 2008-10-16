@@ -4,18 +4,20 @@
 //------------------------------------------------------------------------------
 /**
     @class App::ViewerApplication
-
-    Nebula3's default viewer application.
-
+    
+    Derived from RenderApplication, adds support for Stages, Views
+    and GraphicsEntities to the asynchronous render app.
+    
     (C) 2007 Radon Labs GmbH
 */
 #include "apprender/renderapplication.h"
+#include "graphics/graphicsserver.h"
 #include "graphics/stage.h"
 #include "graphics/view.h"
 #include "graphics/cameraentity.h"
-#include "lighting/spotlightentity.h"
-#include "graphics/modelentity.h"
 #include "renderutil/mayacamerautil.h"
+#include "debugrender/debugshaperenderer.h"
+#include "debugrender/debugtextrenderer.h"
 
 //------------------------------------------------------------------------------
 namespace App
@@ -32,22 +34,23 @@ public:
     /// close the application
     virtual void Close();
 
-protected:
+protected:    
     /// process input (called before rendering)
     virtual void OnProcessInput();
-    /// render current frame
-    virtual void OnRenderFrame();
+    /// update world 
+    virtual void OnUpdateFrame();
 
-    Resources::ResourceId resId;
-    Ptr<Frame::FrameShader> frameShader;
+    Ptr<Graphics::GraphicsServer> graphicsServer;
+    Ptr<Debug::DebugShapeRenderer> debugShapeRenderer;
+    Ptr<Debug::DebugTextRenderer> debugTextRenderer;
     Ptr<Graphics::Stage> stage;
     Ptr<Graphics::View> view;
-    Ptr<Graphics::CameraEntity> cameraEntity;
-    Ptr<Graphics::ModelEntity> modelEntity;
-    Ptr<Lighting::SpotLightEntity> lightEntity;
+    Ptr<Graphics::CameraEntity> camera;
     RenderUtil::MayaCameraUtil mayaCameraUtil;
 };
 
-} // namespace App
+} // namespace Graphics
 //------------------------------------------------------------------------------
 #endif
+
+    

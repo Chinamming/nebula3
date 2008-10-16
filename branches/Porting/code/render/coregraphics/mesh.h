@@ -11,31 +11,25 @@
     
     (C) 2007 Radon Labs GmbH
 */    
-#if __WIN32__
+#if (__WIN32__ || __XBOX360__)
 #include "coregraphics/base/meshbase.h"
 namespace CoreGraphics
 {
 class Mesh : public Base::MeshBase
 {
-    DeclareClass(Mesh);
-};
-}
-#elif __XBOX360__
-#include "coregraphics/base/meshbase.h"
-namespace CoreGraphics
-{
-class Mesh : public Base::MeshBase
-{
-    DeclareClass(Mesh);
+    __DeclareClass(Mesh);
 };
 }
 #elif __WII__
 #include "coregraphics/wii/wiimesh.h"
+#include "coregraphics/wii/wiistreammeshloader.h"
 namespace CoreGraphics
 {
 class Mesh : public Wii::WiiMesh
 {
-    DeclareClass(Mesh);
+    __DeclareClass(Mesh);
+private:
+    friend class Wii::WiiStreamMeshLoader;
 };
 }
 #else

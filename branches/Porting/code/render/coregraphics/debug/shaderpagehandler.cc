@@ -6,12 +6,12 @@
 #include "coregraphics/debug/shaderpagehandler.h"
 #include "coregraphics/shaderserver.h"
 #include "coregraphics/shader.h"
-#include "http/htmlpagewriter.h"
+#include "http/html/htmlpagewriter.h"
 #include "io/ioserver.h"
 
 namespace Debug
 {
-ImplementClass(Debug::ShaderPageHandler, 'SPHL', Http::HttpRequestHandler);
+__ImplementClass(Debug::ShaderPageHandler, 'SPHL', Http::HttpRequestHandler);
 
 using namespace IO;
 using namespace CoreGraphics;
@@ -26,16 +26,7 @@ ShaderPageHandler::ShaderPageHandler()
 {
     this->SetName("Shaders");
     this->SetDesc("show shader debug information");
-    this->SetRootLocation("/shader");
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-ShaderPageHandler::AcceptsRequest(const Ptr<HttpRequest>& request)
-{
-    return (HttpMethod::Get == request->GetMethod()) && (String::MatchPattern(request->GetURI().LocalPath(), "shader*"));
+    this->SetRootLocation("shader");
 }
 
 //------------------------------------------------------------------------------
@@ -70,7 +61,7 @@ ShaderPageHandler::HandleRequest(const Ptr<HttpRequest>& request)
 
         // create a table of all existing shaders
         htmlWriter->Element(HtmlElement::Heading3, "Shaders");
-        const Dictionary<ResourceId, Ptr<Shader>>& shaders = shdServer->GetAllShaders();
+        const Dictionary<ResourceId, Ptr<Shader> >& shaders = shdServer->GetAllShaders();
         htmlWriter->AddAttr("border", "1");
         htmlWriter->AddAttr("rules", "cols");
         htmlWriter->Begin(HtmlElement::Table);
@@ -96,7 +87,7 @@ ShaderPageHandler::HandleRequest(const Ptr<HttpRequest>& request)
 
         // create a table of globally shared variables
         htmlWriter->Element(HtmlElement::Heading3, "Shared Shader Variables");
-        Array<Ptr<ShaderVariable>> sharedVars;
+        Array<Ptr<ShaderVariable> > sharedVars;
         for (i = 0; i < shdServer->GetNumSharedVariables(); i++)
         {
             sharedVars.Append(shdServer->GetSharedVariableByIndex(i));
@@ -166,7 +157,7 @@ ShaderPageHandler::HandleShaderInfoRequest(const ResourceId& resId, const Ptr<St
         if (shdInst->GetNumVariables() > 0)
         {
             IndexT i;
-            Array<Ptr<ShaderVariable>> variables;
+            Array<Ptr<ShaderVariable> > variables;
             for (i = 0; i < shdInst->GetNumVariables(); i++)
             {
                 variables.Append(shdInst->GetVariableByIndex(i));
@@ -220,7 +211,7 @@ ShaderPageHandler::HandleShaderInfoRequest(const ResourceId& resId, const Ptr<St
 /**
 */
 void
-ShaderPageHandler::WriteShaderVariableTable(const Ptr<HtmlPageWriter>& htmlWriter, const Array<Ptr<ShaderVariable>>& vars)
+ShaderPageHandler::WriteShaderVariableTable(const Ptr<HtmlPageWriter>& htmlWriter, const Array<Ptr<ShaderVariable> >& vars)
 {
     htmlWriter->AddAttr("border", "1");
     htmlWriter->AddAttr("rules", "cols");

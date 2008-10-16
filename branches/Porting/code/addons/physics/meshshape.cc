@@ -7,11 +7,14 @@
 #include "coregraphics/legacy/nvx2streamreader.h"
 #include "physics/meshcache.h"
 #include "physics/physicsserver.h"
-#include "coregraphics/shaperenderer.h"
+#include "debugrender/debugshaperenderer.h"
 
 namespace Physics
 {
-ImplementClass(Physics::MeshShape, 'PMSS', Physics::Shape);
+__ImplementClass(Physics::MeshShape, 'PMSS', Physics::Shape);
+
+using namespace Math;
+using namespace Debug;
 
 Opcode::SphereCollider MeshShape::opcSphereCollider;
 dGeomID MeshShape::odeRayGeomId = 0;
@@ -79,9 +82,6 @@ MeshShape::Attach(dSpaceID spaceId)
                                     this->GetIndexBuffer(),
                                     this->GetNumIndices(),
                                     3 * sizeof(int));
-
-        this->sharedMesh->UnmapVertexBuffer();
-        this->sharedMesh->UnmapIndexBuffer();
         this->odeTriMeshID = dCreateTriMesh(0, odeTriMeshDataId, 0, 0, 0);
         this->AttachGeom(this->odeTriMeshID, spaceId);
 
@@ -186,16 +186,14 @@ MeshShape::RenderDebug(const Math::matrix44& t)
     if (this->IsAttached())
     {        
         Math::matrix44 m = matrix44::multiply(this->GetTransform(), t);
-        CoreGraphics::ShapeRenderer::Instance()->DrawIndexedPrimitives(m, CoreGraphics::PrimitiveTopology::TriangleList, 
-                                                            this->GetNumIndices() / 3,
-                                                            (float*)this->GetVertexBuffer(),
-                                                            this->GetNumVertices(),
-                                                            this->GetVertexByteSize()/4,
-                                                            (void*) this->GetIndexBuffer(),
-                                                            CoreGraphics::IndexType::Index32,                                                            
-                                                            this->GetDebugVisualizationColor());
-        this->sharedMesh->UnmapVertexBuffer();
-        this->sharedMesh->UnmapIndexBuffer();
+        DebugShapeRenderer::Instance()->DrawIndexedPrimitives(m, CoreGraphics::PrimitiveTopology::TriangleList, 
+                                                              this->GetNumIndices() / 3,
+                                                              this->GetVertexBuffer(),
+                                                              this->GetNumVertices(),
+                                                              this->GetVertexByteSize()/4,
+                                                              this->GetIndexBuffer(),
+                                                              CoreGraphics::IndexType::Index32,                                                            
+                                                              this->GetDebugVisualizationColor());
     }
 }
 

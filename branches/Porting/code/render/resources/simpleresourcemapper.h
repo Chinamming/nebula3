@@ -19,7 +19,7 @@ namespace Resources
 {
 class SimpleResourceMapper : public ResourceMapper
 {
-    DeclareClass(SimpleResourceMapper);
+    __DeclareClass(SimpleResourceMapper);
 public:
     /// constructor
     SimpleResourceMapper();
@@ -47,6 +47,8 @@ public:
     virtual void OnPrepare();
     /// called after gathering render stats to perform resource management
     virtual void OnUpdate();
+    /// return the number of currently pending resources
+    virtual SizeT GetNumPendingResources() const;
 
 protected:
     const Core::Rtti* resourceClass;

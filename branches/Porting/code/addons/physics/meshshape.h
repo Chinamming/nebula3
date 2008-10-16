@@ -16,13 +16,12 @@
 #define BAN_OPCODE_AUTOLINK
 #include "opcode/opcode.h"
 
-using namespace Math;
 //------------------------------------------------------------------------------
 namespace Physics
 {
 class MeshShape : public Shape
 {
-    DeclareClass(MeshShape);
+    __DeclareClass(MeshShape);
 public:
     /// constructor
     MeshShape();
@@ -57,7 +56,7 @@ public:
     /// get number of indices
     int GetNumIndices() const;
     /// do a sphere collide check, returns number of and indices of contained faces
-    int DoSphereCollide(const sphere& s, uint*& outFaceIndices);
+    int DoSphereCollide(const Math::sphere& s, uint*& outFaceIndices);
     /// do a first-hit raycheck
     bool DoRayCheck(const Math::line& l, Math::vector& contact);
 

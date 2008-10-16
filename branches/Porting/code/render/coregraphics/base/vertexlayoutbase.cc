@@ -7,7 +7,7 @@
 
 namespace Base
 {
-ImplementClass(Base::VertexLayoutBase, 'VXLB', Core::RefCounted);
+__ImplementClass(Base::VertexLayoutBase, 'VXLB', Core::RefCounted);
 
 using namespace CoreGraphics;
 using namespace Util;
@@ -97,6 +97,7 @@ VertexLayoutBase::FindComponent(VertexComponent::SemanticName semName, IndexT se
     Returns the component offset in bytes from the beginning
     of a vertex to the start of the given vertex components. Returns InvalidIndex
     if the vertex component doesn't exist!
+    @todo: precompute on creation
 */
 IndexT
 VertexLayoutBase::GetComponentByteOffset(VertexComponent::SemanticName semName, IndexT semIndex) const

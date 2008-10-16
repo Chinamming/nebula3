@@ -23,7 +23,7 @@ class ParticleSystemNode;
 
 class N2ModelReader : public ModelReader
 {
-    DeclareClass(N2ModelReader);
+    __DeclareClass(N2ModelReader);
 public:
     /// constructor
     N2ModelReader();

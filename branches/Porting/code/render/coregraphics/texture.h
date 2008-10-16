@@ -9,22 +9,13 @@
     
     (C) 2007 Radon Labs GmbH
 */
-#if __WIN32__
-#include "coregraphics/d3d9/d3d9texture.h"
+#if (__WIN32__ || __XBOX360__)
+#include "coregraphics/win360/d3d9texture.h"
 namespace CoreGraphics
 {
-class Texture : public Direct3D9::D3D9Texture
+class Texture : public Win360::D3D9Texture
 {
-    DeclareClass(Texture);
-};
-}
-#elif __XBOX360__
-#include "coregraphics/xbox360/xbox360texture.h"
-namespace CoreGraphics
-{
-class Texture : public Xbox360::Xbox360Texture
-{
-    DeclareClass(Texture);
+    __DeclareClass(Texture);
 };
 }
 #elif __WII__
@@ -33,7 +24,7 @@ namespace CoreGraphics
 {
 class Texture : public Wii::WiiTexture
 {
-    DeclareClass(Texture);
+    __DeclareClass(Texture);
 };
 }
 #else

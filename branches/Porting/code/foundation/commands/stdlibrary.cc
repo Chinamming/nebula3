@@ -6,8 +6,8 @@
 #include "scripting/arg.h"
 #include "stdlibrary.h"
 
-ImplementClass(Commands::ListCmds, 'LSCD', Scripting::Command);
-ImplementClass(Commands::Help, 'HELP', Scripting::Command);
+__ImplementClass(Commands::ListCmds, 'LSCD', Scripting::Command);
+__ImplementClass(Commands::Help, 'HELP', Scripting::Command);
 
 namespace Commands
 {

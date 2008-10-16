@@ -9,7 +9,7 @@
 
 namespace Test
 {
-ImplementClass(Test::ProxyTest, 'prxt', Test::TestCase);
+__ImplementClass(Test::ProxyTest, 'prxt', Test::TestCase);
 
 using namespace Util;
 

@@ -23,7 +23,7 @@ namespace Base
 {
 class RenderTargetBase : public Core::RefCounted
 {
-    DeclareClass(RenderTargetBase);
+    __DeclareClass(RenderTargetBase);
 public:
     /// max number of color buffers
     static const IndexT MaxNumColorBuffers = 4;

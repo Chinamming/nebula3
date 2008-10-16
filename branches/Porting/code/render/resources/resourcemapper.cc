@@ -8,7 +8,7 @@
 
 namespace Resources
 {
-ImplementClass(Resources::ResourceMapper, 'RSMP', Core::RefCounted);
+__ImplementClass(Resources::ResourceMapper, 'RSMP', Core::RefCounted);
 
 using namespace Core;
 using namespace Util;
@@ -18,11 +18,7 @@ using namespace Util;
 */
 ResourceMapper::ResourceMapper() :
     isAttached(false),
-    #if __WII__
-    asyncEnabled(false)
-    #else
     asyncEnabled(true)
-    #endif
 {
     // empty
 }
@@ -100,6 +96,19 @@ void
 ResourceMapper::OnUpdate()
 {
     n_error("ResourceMapper::OnUpdate() called!");
+}
+
+//------------------------------------------------------------------------------
+/**
+    This method must return the number of currently pending resources
+    (resource which have been requested but are not loaded yet).
+*/
+SizeT
+ResourceMapper::GetNumPendingResources() const
+{
+    // override in subclass!
+    n_error("ResourceMapper::GetNumPendingResources() called!");
+    return 0;
 }
 
 } // namespace Resources

@@ -18,7 +18,7 @@ namespace Posix
 {
 class PosixThread : public Core::RefCounted
 {
-    DeclareClass(PosixThread);
+    __DeclareClass(PosixThread);
 public:
     /// thread priorities
     enum Priority

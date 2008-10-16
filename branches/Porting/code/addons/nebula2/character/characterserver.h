@@ -16,8 +16,8 @@ namespace Nebula2
 {
 class CharacterServer : public Core::RefCounted
 {
-    DeclareClass(CharacterServer);
-    DeclareSingleton(CharacterServer);
+    __DeclareClass(CharacterServer);
+    __DeclareSingleton(CharacterServer);
 public:
     /// constructor
     CharacterServer();

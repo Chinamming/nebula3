@@ -8,13 +8,14 @@
 
 namespace Game
 {
-ImplementClass(FeatureUnit, 'GAFE' , Core::RefCounted);
+__ImplementClass(FeatureUnit, 'GAFE' , Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**
 */
 FeatureUnit::FeatureUnit() : 
-    active(false)
+    active(false),
+	renderDebug(false)
 {
     // empty
 }
@@ -205,7 +206,32 @@ FeatureUnit::OnEndFrame()
 void
 FeatureUnit::OnRenderDebug()
 {
-    // empty
+    int i;
+    int num = this->managers.Size();
+
+    // call OnEndFrame() on managers
+    for (i = 0; i < num; i++)
+    {
+        this->managers[i]->OnRenderDebug();
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+FeatureUnit::StartRenderDebug()
+{
+    // overwrite in subclass if needed
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+FeatureUnit::StopRenderDebug()
+{
+    // overwrite in subclass if needed
 }
 
 //------------------------------------------------------------------------------

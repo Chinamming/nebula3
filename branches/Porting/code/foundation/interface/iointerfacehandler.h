@@ -16,8 +16,8 @@ namespace Interface
 {
 class IOInterfaceHandler : public Base::IOInterfaceHandlerBase
 {
-    DeclareClass(IOInterfaceHandler);
-    DeclareSingleton(IOInterfaceHandler);
+    __DeclareClass(IOInterfaceHandler);
+    __DeclareSingleton(IOInterfaceHandler);
 public:
     /// constructor
     IOInterfaceHandler();
@@ -31,8 +31,8 @@ namespace Interface
 {
 class IOInterfaceHandler : public Base::IOInterfaceHandlerBase
 {
-    DeclareClass(IOInterfaceHandler);
-    DeclareSingleton(IOInterfaceHandler);
+    __DeclareClass(IOInterfaceHandler);
+    __DeclareSingleton(IOInterfaceHandler);
 public:
     /// constructor
     IOInterfaceHandler();
@@ -46,8 +46,8 @@ namespace Interface
 {
 class IOInterfaceHandler : public Wii::WiiIOInterfaceHandler
 {
-    DeclareClass(IOInterfaceHandler);
-    DeclareSingleton(IOInterfaceHandler);
+    __DeclareClass(IOInterfaceHandler);
+    __DeclareSingleton(IOInterfaceHandler);
 public:
     /// constructor
     IOInterfaceHandler();

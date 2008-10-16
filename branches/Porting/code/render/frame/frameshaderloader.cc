@@ -254,10 +254,11 @@ FrameShaderLoader::ParseFramePass(const Ptr<XmlReader>& xmlReader, const Ptr<Fra
     }
     while (xmlReader->SetToNextChild("ApplyShaderVariable"));
 
-    // add instance batches
+    // add render batches
     if (xmlReader->SetToFirstChild("Batch")) do
     {
-        ParseFrameBatch(xmlReader, framePass);
+        Ptr<FrameBatch> frameBatch = ParseFrameBatch(xmlReader);
+        framePass->AddBatch(frameBatch);
     }
     while (xmlReader->SetToNextChild("Batch"));
 
@@ -268,8 +269,8 @@ FrameShaderLoader::ParseFramePass(const Ptr<XmlReader>& xmlReader, const Ptr<Fra
 //------------------------------------------------------------------------------
 /**
 */
-void
-FrameShaderLoader::ParseFrameBatch(const Ptr<XmlReader>& xmlReader, const Ptr<FramePass>& framePass)
+Ptr<FrameBatch>
+FrameShaderLoader::ParseFrameBatch(const Ptr<XmlReader>& xmlReader)
 {
     Ptr<FrameBatch> frameBatch = FrameBatch::Create();
     
@@ -280,21 +281,31 @@ FrameShaderLoader::ParseFrameBatch(const Ptr<XmlReader>& xmlReader, const Ptr<Fr
 
     // setup batch type, model node filter, lighting and sorting mode
     frameBatch->SetType(BatchType::FromString(xmlReader->GetString("type")));
-    frameBatch->SetNodeFilter(ModelNodeType::FromString(xmlReader->GetString("nodeFilter")));
-    frameBatch->SetLightingMode(LightingMode::FromString(xmlReader->GetString("lighting")));
-    frameBatch->SetSortingMode(SortingMode::FromString(xmlReader->GetString("sorting")));
-    frameBatch->SetShaderFeatures(ShaderServer::Instance()->FeatureStringToMask(xmlReader->GetString("shdFeatures")));
+    if (xmlReader->HasAttr("nodeFilter"))
+    {
+        frameBatch->SetNodeFilter(ModelNodeType::FromString(xmlReader->GetString("nodeFilter")));
+    }
+    if (xmlReader->HasAttr("lighting"))
+    {
+        frameBatch->SetLightingMode(LightingMode::FromString(xmlReader->GetString("lighting")));
+    }
+    if (xmlReader->HasAttr("sorting"))
+    {
+        frameBatch->SetSortingMode(SortingMode::FromString(xmlReader->GetString("sorting")));
+    }
+    if (xmlReader->HasAttr("shdFeatures"))
+    {
+        frameBatch->SetShaderFeatures(ShaderServer::Instance()->FeatureStringToMask(xmlReader->GetString("shdFeatures")));
+    }
 
     // add shader variable instances
     if (xmlReader->SetToFirstChild("ApplyShaderVariable")) do
     {
         Ptr<ShaderVariableInstance> var = ParseShaderVariableInstance(xmlReader, shader);
-        framePass->AddVariable(var);
+        frameBatch->AddVariable(var);
     }
     while (xmlReader->SetToNextChild("ApplyShaderVariable"));
-
-    // add new batch to frame pass
-    framePass->AddBatch(frameBatch);
+    return frameBatch;
 }
 
 //------------------------------------------------------------------------------
@@ -311,14 +322,6 @@ FrameShaderLoader::ParsePostEffect(const Ptr<XmlReader>& xmlReader, const Ptr<Fr
     ResourceId shdResId = ResourceId("shd:" + xmlReader->GetString("shader"));
     Ptr<ShaderInstance> shader = ShaderServer::Instance()->CreateShaderInstance(shdResId);
     framePostEffect->SetShader(shader);
-
-    // test if a pre-shader has been defined
-    if (xmlReader->HasAttr("preShader"))
-    {
-        // create a pre-shader object and attach it to the posteffect shader
-        Ptr<PreShader> preShader = (PreShader*) Core::Factory::Instance()->Create(xmlReader->GetString("preShader"));
-        shader->AddPreShader(preShader);
-    }
 
     // setup the render target (if not render to default render target)
     if (xmlReader->HasAttr("renderTarget"))
@@ -348,6 +351,14 @@ FrameShaderLoader::ParsePostEffect(const Ptr<XmlReader>& xmlReader, const Ptr<Fr
         framePostEffect->AddVariable(var);
     }
     while (xmlReader->SetToNextChild("ApplyShaderVariable"));
+
+    // add render batches
+    if (xmlReader->SetToFirstChild("Batch")) do
+    {
+        Ptr<FrameBatch> frameBatch = ParseFrameBatch(xmlReader);
+        framePostEffect->AddBatch(frameBatch);
+    }
+    while (xmlReader->SetToNextChild("Batch"));
 
     // add post effect to frame shader
     frameShader->AddPostEffect(framePostEffect);

@@ -17,7 +17,7 @@ namespace Resources
 {
 class ManagedTexture : public ManagedResource
 {
-    DeclareClass(ManagedTexture);
+    __DeclareClass(ManagedTexture);
 public:
     /// get contained texture resource
     const Ptr<CoreGraphics::Texture>& GetTexture() const;

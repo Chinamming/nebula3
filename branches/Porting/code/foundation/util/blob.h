@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_BLOB_H
-#define UTIL_BLOB_H
 //------------------------------------------------------------------------------
 /**
     @class Util::Blob
@@ -19,7 +17,7 @@ namespace Util
 class Blob
 {
 public:
-    /// static Setup method, called by Util::Setup()
+    /// static Setup method, called by SysFunc::Setup()
     static void Setup();
     /// overloaded operator new
     void* operator new(size_t size);
@@ -56,6 +54,8 @@ public:
     bool IsValid() const;
     /// reserve N bytes
     void Reserve(SizeT size);
+    /// trim the size member (without re-allocating!)
+    void Trim(SizeT size);
     /// set blob contents
     void Set(const void* ptr, SizeT size);
     /// get blob ptr
@@ -338,6 +338,16 @@ Blob::Reserve(SizeT s)
 /**
 */
 inline void
+Blob::Trim(SizeT trimSize)
+{
+    n_assert(trimSize <= this->size);
+    this->size = trimSize;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
 Blob::Set(const void* fromPtr, SizeT fromSize)
 {
     this->Copy(fromPtr, fromSize);
@@ -387,5 +397,4 @@ Blob::HashCode() const
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif
     

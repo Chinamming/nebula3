@@ -17,7 +17,7 @@ namespace Tools
 {
 class ShaderSlot : public Core::RefCounted
 {
-    DeclareClass(ShaderSlot);
+    __DeclareClass(ShaderSlot);
 public:
     /// slot types
     enum SlotType

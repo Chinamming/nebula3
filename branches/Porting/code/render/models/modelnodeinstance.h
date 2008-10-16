@@ -21,7 +21,7 @@ class ModelNode;
 
 class ModelNodeInstance : public Core::RefCounted
 {
-    DeclareClass(ModelNodeInstance);
+    __DeclareClass(ModelNodeInstance);
 public:
     /// constructor
     ModelNodeInstance();

@@ -18,7 +18,7 @@ class Command;
 
 class Sqlite3Dataset : public Dataset
 {
-    DeclareClass(Sqlite3Dataset);
+    __DeclareClass(Sqlite3Dataset);
 public:
     /// constructor
     Sqlite3Dataset();

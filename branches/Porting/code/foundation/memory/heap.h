@@ -10,17 +10,11 @@
     (C) 2006 Radon Labs GmbH
 */
 #include "core/config.h"
-#if __WIN32__
-#include "memory/win32/win32heap.h"
+#if (__XBOX360__ || __WIN32__)
+#include "memory/win360/win360heap.h"
 namespace Memory
 {
-typedef Win32::Win32Heap Heap;
-}
-#elif __XBOX360__
-#include "memory/xbox360/xbox360heap.h"
-namespace Memory
-{
-typedef Xbox360::Xbox360Heap Heap;
+typedef Win360::Win360Heap Heap;
 }
 #elif __WII__
 #include "memory/wii/wiiheap.h"

@@ -10,7 +10,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::ShaderCompiler, 'SCMP', Core::RefCounted);
+__ImplementClass(Tools::ShaderCompiler, 'SCMP', Core::RefCounted);
 
 using namespace IO;
 using namespace Util;

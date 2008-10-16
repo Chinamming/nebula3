@@ -7,14 +7,14 @@
 
 namespace BaseGameFeature
 {
-ImplementClass(SystemTimeSource, 'TSTS', TimeSource);
-ImplementSingleton(SystemTimeSource);
+__ImplementClass(SystemTimeSource, 'TSTS', TimeSource);
+__ImplementSingleton(SystemTimeSource);
 //--------------------------------------------------------------------
 /**
 */
 SystemTimeSource::SystemTimeSource()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //--------------------------------------------------------------------
@@ -22,7 +22,7 @@ SystemTimeSource::SystemTimeSource()
 */
 SystemTimeSource::~SystemTimeSource()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 }; // namespace Timing

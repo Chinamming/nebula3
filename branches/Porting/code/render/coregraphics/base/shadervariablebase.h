@@ -26,7 +26,7 @@ namespace Base
 {
 class ShaderVariableBase : public Core::RefCounted
 {
-    DeclareClass(ShaderVariableBase);
+    __DeclareClass(ShaderVariableBase);
 public:
     /// shader variable types
     enum Type

@@ -7,5 +7,5 @@
 
 namespace Resources
 {
-ImplementClass(Resources::ManagedMesh, 'MGMS', Resources::ManagedResource);
+__ImplementClass(Resources::ManagedMesh, 'MGMS', Resources::ManagedResource);
 } // namespace Resources

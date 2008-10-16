@@ -10,7 +10,7 @@
 
 namespace Posix
 {
-ImplementClass(Posix::PosixConsoleHandler, 'POSC', IO::ConsoleHandler);
+__ImplementClass(Posix::PosixConsoleHandler, 'POSC', IO::ConsoleHandler);
 
 using namespace Util;
 

@@ -47,14 +47,14 @@ public:
         Short4N,    //> four-component normalized signed short (value / 32767.0f)
     };
     
-    /// access type
+    /// access type hint, this is only relevant on the Wii
     enum AccessType
     {
         None,
-        Direct,     //> component has direct value
-        Index8,     //> component is indexed with 8bit reference           
-        Index16,    //> component is indexed with 16bit reference
-        Index32
+        Direct,     //> component has direct value (non-indexed)
+        Index8,     //> component is indexed with 8-bit indices           
+        Index16,    //> component is indexed with 16-bit indices
+        Index32,    //> component is indexed with 32-bit indices
     };
 
     /// default constructor
@@ -78,7 +78,7 @@ public:
     /// convert format to string
     static Util::String FormatToString(Format f);
 
-public:
+private:
     SemanticName semName;
     IndexT semIndex;
     Format format;
@@ -237,7 +237,8 @@ VertexComponent::GetSignature() const
             n_error("can't happen!");
             break;
     }
-    str.AppendInt(this->semIndex);
+    str.AppendInt(this->semIndex);    
+    str.Append(FormatToString(this->format));
     return str;
 }
 

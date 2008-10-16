@@ -16,8 +16,8 @@
 
 namespace IO
 {
-ImplementClass(IO::Console, 'CNSL', Core::RefCounted);
-ImplementSingleton(IO::Console);
+__ImplementClass(IO::Console, 'CNSL', Core::RefCounted);
+__ImplementSingleton(IO::Console);
 
 using namespace Core;
 using namespace Util;
@@ -28,7 +28,7 @@ using namespace Util;
 Console::Console() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ Console::~Console()
     {
         this->Close();
     }
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

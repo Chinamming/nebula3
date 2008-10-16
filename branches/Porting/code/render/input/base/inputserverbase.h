@@ -28,13 +28,17 @@ namespace Base
 {
 class InputServerBase : public Core::RefCounted
 {
-    DeclareClass(InputServerBase);
+    __DeclareClass(InputServerBase);
 public:
     /// constructor
     InputServerBase();
     /// destructor
     virtual ~InputServerBase();
 
+    /// set the max number of local players for this application (default is 1)
+    void SetMaxNumLocalPlayers(SizeT maxNumLocalPlayers);
+    /// get the max number of local players
+    SizeT GetMaxNumLocalPlayers() const;
     /// open the input server
     virtual void Open();
     /// close the input server
@@ -51,7 +55,7 @@ public:
     const Ptr<Input::Keyboard>& GetDefaultKeyboard() const;
     /// get the default mouse input handler
     const Ptr<Input::Mouse>& GetDefaultMouse() const;
-    /// get default gamepad handler (up to 4)
+    /// get default gamepad handler (playerIndex is valid up to MaxNumLocalPlayers)
     const Ptr<Input::GamePad>& GetDefaultGamePad(IndexT playerIndex) const;
 
     /// attach an input handler
@@ -93,6 +97,7 @@ protected:
     bool inBeginFrame;
     bool isQuitRequested;
     int inputHandlersLockCount;
+    SizeT maxNumLocalPlayers;
     Util::Array<Util::KeyValuePair<Input::InputPriority::Code,Ptr<Input::InputHandler> > > inputHandlers;
     Ptr<Input::InputHandler> mouseCaptureHandler;
     Ptr<Input::InputHandler> keyboardCaptureHandler;
@@ -108,6 +113,15 @@ inline bool
 InputServerBase::IsOpen() const
 {
     return this->isOpen;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline SizeT
+InputServerBase::GetMaxNumLocalPlayers() const
+{
+    return this->maxNumLocalPlayers;
 }
 
 //------------------------------------------------------------------------------
@@ -152,6 +166,7 @@ InputServerBase::GetDefaultMouse() const
 inline const Ptr<Input::GamePad>&
 InputServerBase::GetDefaultGamePad(IndexT playerIndex) const
 {
+    n_assert(playerIndex < this->maxNumLocalPlayers);
     return this->defaultGamePad[playerIndex];
 }
 

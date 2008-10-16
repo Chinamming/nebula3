@@ -17,7 +17,7 @@ namespace Base
 {
 class MouseBase : public Input::InputHandler
 {
-    DeclareClass(MouseBase);
+    __DeclareClass(MouseBase);
 public:
     /// constructor
     MouseBase();

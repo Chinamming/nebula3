@@ -15,7 +15,7 @@ namespace Input
 {
 class GamePad : public XInput::XInputGamePad
 {
-    DeclareClass(GamePad);
+    __DeclareClass(GamePad);
 };
 }
 #elif (__WII__)
@@ -24,7 +24,7 @@ namespace Input
 {
 class GamePad : public Wii::WiiGamePad
 {
-    DeclareClass(GamePad);
+    __DeclareClass(GamePad);
 };
 }
 #else

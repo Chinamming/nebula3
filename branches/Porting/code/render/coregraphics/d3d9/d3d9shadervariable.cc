@@ -7,7 +7,7 @@
 
 namespace Direct3D9
 {
-ImplementClass(Direct3D9::D3D9ShaderVariable, 'D9VR', Base::ShaderVariableBase);
+__ImplementClass(Direct3D9::D3D9ShaderVariable, 'D9VR', Base::ShaderVariableBase);
 
 using namespace CoreGraphics;
 

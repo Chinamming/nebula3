@@ -16,7 +16,7 @@ namespace Test
 {
 class Float4Test : public TestCase
 {
-    DeclareClass(Float4Test);
+    __DeclareClass(Float4Test);
 public:
     /// run the test
     virtual void Run();

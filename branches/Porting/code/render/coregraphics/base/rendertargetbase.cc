@@ -8,7 +8,7 @@
 
 namespace Base
 {
-ImplementClass(Base::RenderTargetBase, 'RTGB', Core::RefCounted);
+__ImplementClass(Base::RenderTargetBase, 'RTGB', Core::RefCounted);
 
 using namespace CoreGraphics;
 using namespace Resources;

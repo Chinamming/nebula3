@@ -6,11 +6,10 @@
 #include "physics/shape.h"
 #include "physics/rigidbody.h"
 #include "physics/filterset.h"
-#include "physics/contactpoint.h"
 
 namespace Physics
 {
-ImplementClass(Physics::Shape, 'SHAP', Core::RefCounted);
+__ImplementClass(Physics::Shape, 'SHAP', Core::RefCounted);
 
 Util::Array<ContactPoint>* Shape::CollideContacts = 0;
 const FilterSet* Shape::CollideFilterSet = 0;
@@ -28,7 +27,7 @@ Shape::Shape() :
     odeSpaceId(0),
     transform(Math::matrix44::identity())
 {
-    materialType = MaterialTable::StringToMaterialType("Metal");
+    materialType = MaterialTable::StringToMaterialType("Soil");
     dMassSetZero(&(this->odeMass));
 }
 
@@ -145,7 +144,7 @@ Shape::AttachGeom(dGeomID geomId, dSpaceID spaceId)
     // extract position and rotation
     dVector3 odePos;
     dMatrix3 odeRot;
-    PhysicsServer::Vector3ToOde(this->transform.getpos_component(), odePos);
+    PhysicsServer::Vector3ToOde(this->transform.get_position(), odePos);
     PhysicsServer::Matrix44ToOde(this->transform, odeRot);
 
     // set the geom's local transform
@@ -188,7 +187,7 @@ Shape::TransformMass()
 {
     dVector3 odePos;
     dMatrix3 odeRot;
-    PhysicsServer::Vector3ToOde(this->transform.getpos_component(), odePos);
+    PhysicsServer::Vector3ToOde(this->transform.get_position(), odePos);
     PhysicsServer::Matrix44ToOde(this->transform, odeRot);
     dMassRotate(&(this->odeMass), odeRot);
     dMassTranslate(&(this->odeMass), odePos[0], odePos[1], odePos[2]);
@@ -220,7 +219,7 @@ Shape::SetTransform(const Math::matrix44& m)
     {
         dVector3 odePos;
         dMatrix3 odeRot;
-        PhysicsServer::Vector3ToOde(this->transform.getpos_component(), odePos);
+        PhysicsServer::Vector3ToOde(this->transform.get_position(), odePos);
         PhysicsServer::Matrix44ToOde(this->transform, odeRot);
         dGeomSetPosition(this->odeGeomId, odePos[0], odePos[1], odePos[2]);
         dGeomSetRotation(this->odeGeomId, odeRot);

@@ -2,6 +2,8 @@
 #define PROPERTIES_ACTORPHYSICSPROPERTY_H
 //------------------------------------------------------------------------------
 /**
+    @class PhysicsFeature::ActorPhysicsProperty  
+
     ActorPhysicsProperty adds "actor physics" to an entity. This is 
     mainly a capsule which is always kept upright and responds "immediately"
     to move messages. Attach the ActorPhysicsProperty instead of a 
@@ -16,16 +18,10 @@
     MoveTurn
     MoveRotate
     
-    (C) 2005 Radon Labs GmbH
+    (C) 2008 Radon Labs GmbH
 */
 #include "properties/physicsproperty.h"
-#include "msg/movegoto.h"
-#include "msg/movedirection.h"
-#include "msg/movefollow.h"
-#include "msg/movestop.h"
-#include "msg/settransform.h"
-#include "msg/moveturn.h"
-#include "msg/moverotate.h"
+#include "basegameprotocol.h"
 #include "game/entity.h"
 #include "physics/charentity.h"
 #include "math/pfeedbackloop.h"
@@ -45,7 +41,7 @@ namespace PhysicsFeature
 {
 class ActorPhysicsProperty : public PhysicsProperty
 {
-	DeclareClass(ActorPhysicsProperty);
+	__DeclareClass(ActorPhysicsProperty);
 public:
     /// constructor
     ActorPhysicsProperty();
@@ -71,7 +67,7 @@ public:
     virtual void OnLoseActivity();
     
     /// get a pointer to the physics entity
-    virtual Physics::PhysicsEntity* GetPhysicsEntity() const;
+    virtual Ptr<Physics::PhysicsEntity> GetPhysicsEntity() const;
     
     /// override to register accepted messages
     virtual void SetupAcceptedMessages();
@@ -116,7 +112,7 @@ protected:
     /// perform auto evade
     void AutoEvade(Math::vector& targetVec);
     /// create physics entity
-    virtual Physics::PhysicsEntity* CreatePhysicsEntity() const;
+    virtual Ptr<Physics::PhysicsEntity> CreatePhysicsEntity() const;
 
     Ptr<Physics::CharEntity> charPhysicsEntity;
 
@@ -142,7 +138,7 @@ protected:
     Math::point gotoDest;
     Util::String physicsMaterial;
 };
-RegisterClass(ActorPhysicsProperty);
+__RegisterClass(ActorPhysicsProperty);
 
 //------------------------------------------------------------------------------
 /**

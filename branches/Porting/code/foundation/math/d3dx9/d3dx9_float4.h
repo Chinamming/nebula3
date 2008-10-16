@@ -89,7 +89,7 @@ public:
     float4 abs() const;
     
     /// return 1.0 / vec
-    static float4 inverse(const float4& v);
+    static float4 reciprocal(const float4& v);
     /// component-wise multiplication
     static float4 multiply(const float4& v0, const float4& v1);
     /// return 3-dimensional cross product
@@ -112,8 +112,12 @@ public:
     static float4 normalize(const float4& v);
     /// transform 4d vector by matrix44
     static float4 transform(const float4& v, const matrix44& m);
+    /// reflect a vector v 
+    static float4 reflect(const float4& normal, const float4& incident);
     /// clamp to min/max vector
     static float4 clamp(const float4& vClamp, const float4& vMin, const float4& vMax);
+    /// angle between two vectors
+    static scalar angle(const float4& v0, const float4& v1);
 
     /// perform less-then comparison
     static cmpresult less(const float4& v0, const float4& v1);
@@ -134,6 +138,7 @@ public:
 
 protected:
     friend class matrix44;
+    friend class quaternion;
 
     scalar X;
     scalar Y;
@@ -438,7 +443,7 @@ float4::lengthsq() const
 /**
 */
 __forceinline float4
-float4::inverse(const float4& v)
+float4::reciprocal(const float4& v)
 {
     return float4(1.0f / v.X, 1.0f / v.Y, 1.0f / v.Z, 1.0f / v.W);
 }
@@ -659,6 +664,17 @@ __forceinline bool
 float4::all(cmpresult res)
 {
     return res == ((1<<0) | (1<<1) | (1<<2) | (1<<3));
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline float4 
+float4::reflect(const float4& normal, const float4& incident)
+{
+    scalar s = 2.0f * dot3(incident, normal);
+    float4 result = incident - (normal * s);
+    return result;
 }
 
 } // namespace Math

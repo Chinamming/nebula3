@@ -87,10 +87,10 @@ PSSMUtil::CalculateFrustumPoints(IndexT splitIndex)
     float farWidth        = cameraNormWidth * zFar;
     float farHeight       = cameraNormHeight * zFar;
 
-    point viewPos = view.getpos_component();
-    vector viewX  = view.getx_component();
-    vector viewY  = view.gety_component();
-    vector viewZ  = -view.getz_component();
+    point viewPos = view.get_position();
+    vector viewX  = view.get_xaxis();
+    vector viewY  = view.get_yaxis();
+    vector viewZ  = -view.get_zaxis();
 
     point nearPlaneCenter = viewPos + viewZ * zNear;
     point farPlaneCenter  = viewPos + viewZ * zFar;    

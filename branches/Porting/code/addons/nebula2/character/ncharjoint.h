@@ -397,17 +397,17 @@ nCharJoint::Evaluate()
                 }
 
                 // joint translation is affected by parent scale while the actual axis are not
-                Math::point trans = this->worldUnscaledMatrix.getpos_component();
+                Math::point trans = this->worldUnscaledMatrix.get_position();
                 trans.x() *= this->parentJoint->scale.x() * this->parentJoint->variationScale.x();
                 trans.y() *= this->parentJoint->scale.y() * this->parentJoint->variationScale.y();
                 trans.z() *= this->parentJoint->scale.z() * this->parentJoint->variationScale.z();
-                this->worldUnscaledMatrix.setpos_component(trans);
+                this->worldUnscaledMatrix.set_position(trans);
 
-                trans = this->worldScaledMatrix.getpos_component();
+                trans = this->worldScaledMatrix.get_position();
                 trans.x() *= this->parentJoint->scale.x() * this->parentJoint->variationScale.x();
                 trans.y() *= this->parentJoint->scale.y() * this->parentJoint->variationScale.y();
                 trans.z() *= this->parentJoint->scale.z() * this->parentJoint->variationScale.z();
-                this->worldScaledMatrix.setpos_component(trans);
+                this->worldScaledMatrix.set_position(trans);
 
                 // we calculate 2 world matrices
                 // the unscaled one has uniform axis, which our children need to calculate their matrices

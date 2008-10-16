@@ -13,8 +13,8 @@
 
 namespace BaseGameFeature
 {
-ImplementClass(EnvQueryManager, 'EVQM', Game::Manager);
-ImplementSingleton(EnvQueryManager);
+__ImplementClass(EnvQueryManager, 'EVQM', Game::Manager);
+__ImplementSingleton(EnvQueryManager);
 
 using namespace Game;
 using namespace Input;
@@ -28,7 +28,7 @@ EnvQueryManager::EnvQueryManager() :
     mouseIntersection(false),
     materialUnderMouse(Physics::InvalidMaterial)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ EnvQueryManager::EnvQueryManager() :
 */
 EnvQueryManager::~EnvQueryManager()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -223,6 +223,8 @@ EnvQueryManager::OnFrame()
   //          this->pickingEntities[i]->SendSync(beginPickingMsg);
   //      }
 
+    if (InputServer::HasInstance())
+    {
         float2 mousePos = InputServer::Instance()->GetDefaultMouse()->GetScreenPosition();
         float length = 1000;
         line worldRay = EnvQueryManager::Instance()->ComputeMouseWorldRay(mousePos, length, GraphicsFeature::GraphicsFeatureUnit::Instance()->GetDefaultView());
@@ -259,6 +261,7 @@ EnvQueryManager::OnFrame()
         //{
         //    this->pickingEntities[i]->SendSync(endPickingMsg);
         //}  
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -267,6 +270,7 @@ EnvQueryManager::OnFrame()
 Math::line 
 EnvQueryManager::ComputeMouseWorldRay(const float2& mousePos, float length, const Ptr<Graphics::View>& view) const
 {    
+    // FIXME: ComputeWorldMouseRay() must not be a feature of GraphicsServer!!!
     const Ptr<Graphics::CameraEntity>& cam = view->GetCameraEntity();
     n_assert(cam.isvalid());
     const matrix44& invView = matrix44::inverse(cam->GetViewTransform());
@@ -274,4 +278,4 @@ EnvQueryManager::ComputeMouseWorldRay(const float2& mousePos, float length, cons
     return Graphics::GraphicsServer::Instance()->ComputeWorldMouseRay(mousePos, length, invView, invProj, cam->GetZNear());    
 }
 
-}; // namespace Game
+} // namespace Game

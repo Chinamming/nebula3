@@ -13,7 +13,6 @@
 #include "basegameattr/basegameattributes.h"
 #include "loader/loaderserver.h"
 #include "appgame/appconfig.h"
-#include "coregraphics/shaperenderer.h"
 #include "game/gameserver.h"
 #include "game/gameserver.h"
 #include "addons/db/dbserver.h"
@@ -26,6 +25,9 @@
 #include "basegametiming/gametimesource.h"
 #include "input/inputserver.h"
 #include "input/keyboard.h"
+#include "debugrender/debugrender.h"
+#include "http/httpserverproxy.h"
+#include "debug/objectinspectorhandler.h"
 
 // include all properties for known by managers::factorymanager
 #include "properties/timeproperty.h"
@@ -33,8 +35,8 @@
 
 namespace BaseGameFeature
 {
-ImplementClass(BaseGameFeatureUnit, 'GAGF' , Game::FeatureUnit);
-ImplementSingleton(BaseGameFeatureUnit);
+__ImplementClass(BaseGameFeatureUnit, 'GAGF' , Game::FeatureUnit);
+__ImplementSingleton(BaseGameFeatureUnit);
 
 using namespace Timing;
 using namespace App;
@@ -46,7 +48,7 @@ using namespace GraphicsFeature;
 */
 BaseGameFeatureUnit::BaseGameFeatureUnit()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -54,7 +56,7 @@ BaseGameFeatureUnit::BaseGameFeatureUnit()
 */
 BaseGameFeatureUnit::~BaseGameFeatureUnit()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -66,8 +68,8 @@ BaseGameFeatureUnit::OnActivate()
 	FeatureUnit::OnActivate();
 
     // this feature needs the graphics feature
-    n_assert2(GraphicsFeatureUnit::HasInstance(), "BaseGameFeatureUnit needs the GraphicsFeature!");
-    n_assert(GraphicsFeatureUnit::Instance()->IsActive());
+    //n_assert2(GraphicsFeatureUnit::HasInstance(), "BaseGameFeatureUnit needs the GraphicsFeature!");
+    //n_assert(GraphicsFeatureUnit::Instance()->IsActive());
     
     // setup database subsystem
     this->dbServer = Db::DbServer::Create();
@@ -121,11 +123,9 @@ BaseGameFeatureUnit::OnActivate()
     timeManager->AttachTimeSource(gameTimeSource.upcast<TimeSource>());
     timeManager->AttachTimeSource(inputTimeSource.upcast<TimeSource>());
 
-    if (GraphicsFeatureUnit::HasInstance())
-    {
-        /// add this feature for render debug callback
-        GraphicsFeature::GraphicsFeatureUnit::Instance()->AddRenderDebugCallback(this, "BaseGame");
-    }
+    // create handler for http debug requests
+    this->debugRequestHandler = Debug::ObjectInspectorHandler::Create();
+    Http::HttpServerProxy::Instance()->AttachRequestHandler(this->debugRequestHandler);
 }
 
 //------------------------------------------------------------------------------
@@ -134,6 +134,10 @@ BaseGameFeatureUnit::OnActivate()
 void
 BaseGameFeatureUnit::OnDeactivate()
 {
+    // create handler for http debug requests
+    Http::HttpServerProxy::Instance()->RemoveRequestHandler(this->debugRequestHandler);
+    this->debugRequestHandler = 0;
+
     this->RemoveManager(this->factoryManager.upcast<Game::Manager>());
     this->RemoveManager(this->focusManager.upcast<Game::Manager>());
     this->RemoveManager(this->entityManager.upcast<Game::Manager>());
@@ -172,7 +176,10 @@ BaseGameFeatureUnit::OnRenderDebug()
 
     // print fps
     Timing::Time frameTime = SystemTimeSource::Instance()->GetFrameTime();        
-    IO::Console::Instance()->Print("FPS: %.0f \n", 1/frameTime);
+	Util::String txt;
+	txt.Format("FPS: %.0f \n", 1/frameTime);
+	_debug_text(txt, Math::float2(0.7f, 0.0f), Math::float4(1, 1, 1, 1));
+	//IO::Console::Instance()->Print("FPS: %.0f \n", 1/frameTime);
 }
 
 //------------------------------------------------------------------------------
@@ -183,11 +190,12 @@ BaseGameFeatureUnit::OnRenderDebug()
 */
 Util::String
 BaseGameFeatureUnit::GetStartupLevel()
-{
-    if (this->overrideStartLevel.IsValid())
+{    
+    // check command line args for overwrite level
+    if (this->args.HasArg("-level"))
     {
-        // override level set, use this
-        return this->overrideStartLevel;
+        // overwrite level set, use this
+        return this->args.GetString("-level");
     }
     else
     {
@@ -227,11 +235,12 @@ BaseGameFeatureUnit::NewGame()
     n_assert(curAppStateHandler);
 
     // open database in NewGame mode
-#if __WII__    
-    bool dbOpened = Db::DbServer::Instance()->OpenNewGame(userProfile->GetProfileDirectory(), "export:db/game.db4");
-#else
-    bool dbOpened = Db::DbServer::Instance()->OpenNewGame(userProfile->GetProfileDirectory(), userProfile->GetDatabasePath());
-#endif    
+    bool dbOpened = false;
+#if !__WII__    
+    dbOpened = Db::DbServer::Instance()->OpenNewGame(userProfile->GetProfileDirectory(), userProfile->GetDatabasePath());    
+#else 
+    dbOpened = Db::DbServer::Instance()->OpenNewGame(userProfile->GetProfileDirectory(), "export:db/game.db4");
+#endif
     n_assert(dbOpened);
 
     // load attributes and reload categories
@@ -362,7 +371,6 @@ BaseGameFeatureUnit::LoadLevel(const Util::String& levelName)
     GlobalAttrsManager::Instance()->LoadAttributes();
 
     // setup the world
-    Util::String startupLevel = this->GetStartupLevel();
     this->SetCurrentLevel(levelName);
     curAppStateHandler->OnLoadBefore();
     this->SetupWorldFromCurrentLevel();
@@ -421,8 +429,10 @@ BaseGameFeatureUnit::SetupEmptyWorld()
 #endif
 
     // build new graphics world with stage and view
-    n_assert(GraphicsFeatureUnit::HasInstance());
-    GraphicsFeatureUnit::Instance()->CreateDefaultGraphicsWorld();    
+    if (GraphicsFeatureUnit::HasInstance())
+    {
+        GraphicsFeatureUnit::Instance()->SetupDefaultGraphicsWorld();  
+    }
 
     // TODO:
     //open navigation subsystem
@@ -472,8 +482,10 @@ BaseGameFeatureUnit::CleanupWorld()
     this->entityManager->Cleanup();
 
     // clean up graphics world
-    n_assert(GraphicsFeatureUnit::HasInstance());
-    GraphicsFeatureUnit::Instance()->CleanupDefaultGraphicsWorld();   
+    if (GraphicsFeatureUnit::HasInstance())
+    {
+        GraphicsFeatureUnit::Instance()->DiscardDefaultGraphicsWorld(); 
+    }
 
 #if __USE_PHYSICS__
     // cleanup physics world
@@ -494,7 +506,10 @@ void
 BaseGameFeatureUnit::OnEndFrame()
 {
     FeatureUnit::OnEndFrame();
-    this->HandleInput();
+    if (Input::InputServer::HasInstance())
+    {
+        this->HandleInput();
+    }    
 }
 
 //------------------------------------------------------------------------------

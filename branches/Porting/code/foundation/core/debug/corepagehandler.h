@@ -1,6 +1,4 @@
 #pragma once
-#ifndef DEBUG_COREPAGEHANDLER_H
-#define DEBUG_COREPAGEHANDLER_H
 //------------------------------------------------------------------------------
 /**
     @class Debug::CorePageHandler
@@ -16,16 +14,13 @@ namespace Debug
 {
 class CorePageHandler : public Http::HttpRequestHandler
 {
-    DeclareClass(CorePageHandler);
+    __DeclareClass(CorePageHandler);
 public:
     /// constructor
     CorePageHandler();
-    /// return true if the http request is accepted by the request handler
-    virtual bool AcceptsRequest(const Ptr<Http::HttpRequest>& request);
     /// handle a http request, the handler is expected to fill the content stream with response data
     virtual void HandleRequest(const Ptr<Http::HttpRequest>& request);        
 };
 
 } // namespace Debug
 //------------------------------------------------------------------------------
-#endif

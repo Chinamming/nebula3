@@ -16,7 +16,7 @@ class Command;
 
 class Sqlite3Table : public Table
 {
-    DeclareClass(Sqlite3Table);
+    __DeclareClass(Sqlite3Table);
 public:
     /// constructor
     Sqlite3Table();

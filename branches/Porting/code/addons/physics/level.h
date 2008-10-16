@@ -29,12 +29,11 @@ namespace Physics
 {
 class PhysicsEntity;
 class Shape;
-class Server;
 class Ray;
 
 class Level : public Core::RefCounted 
 {
-    DeclareClass(Level);
+    __DeclareClass(Level);
 public:
     /// constructor
     Level();

@@ -8,7 +8,7 @@
 
 namespace Base
 {
-ImplementClass(Base::MeshBase, 'MSHB', Resources::Resource);
+__ImplementClass(Base::MeshBase, 'MSHB', Resources::Resource);
 
 using namespace CoreGraphics;
 

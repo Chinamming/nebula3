@@ -37,7 +37,7 @@ namespace IO
 {
 class ZipFileStream : public Stream
 {
-    DeclareClass(ZipFileStream);
+    __DeclareClass(ZipFileStream);
 public:
     /// constructor
     ZipFileStream();

@@ -9,14 +9,14 @@
 
 namespace Nebula2
 {
-ImplementClass(CharacterServer, 'CHSR', Core::RefCounted);
-ImplementSingleton(CharacterServer);
+__ImplementClass(CharacterServer, 'CHSR', Core::RefCounted);
+__ImplementSingleton(CharacterServer);
 //------------------------------------------------------------------------------
 /**
 */
 CharacterServer::CharacterServer()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ CharacterServer::CharacterServer()
 */
 CharacterServer::~CharacterServer()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

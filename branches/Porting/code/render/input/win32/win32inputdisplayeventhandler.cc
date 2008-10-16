@@ -9,7 +9,7 @@
 
 namespace Win32
 {
-ImplementClass(Win32::Win32InputDisplayEventHandler, 'WIEH', CoreGraphics::ThreadSafeDisplayEventHandler);
+__ImplementClass(Win32::Win32InputDisplayEventHandler, 'WIEH', CoreGraphics::ThreadSafeDisplayEventHandler);
 
 using namespace Input;
 using namespace CoreGraphics;

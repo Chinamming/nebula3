@@ -16,7 +16,7 @@ namespace Physics
 {
 class SliderJoint : public Joint
 {
-	DeclareClass(SliderJoint);
+	__DeclareClass(SliderJoint);
 public:
     /// constructor
     SliderJoint();

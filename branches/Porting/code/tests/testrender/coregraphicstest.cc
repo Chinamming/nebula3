@@ -8,18 +8,23 @@
 #include "resources/simpleresourcemapper.h"
 #include "coregraphics/streamtextureloader.h"
 #include "coregraphics/streammeshloader.h"
+#include "coreanimation/streamanimationloader.h"
 #include "resources/managedtexture.h"
 #include "resources/managedmesh.h"
+#include "coreanimation/managedanimresource.h"
 
 namespace Test
 {
-ImplementClass(Test::CoreGraphicsTest, 'cgtt', Test::TestCase);
+__ImplementClass(Test::CoreGraphicsTest, 'cgtt', Test::TestCase);
 
 using namespace Util;
 using namespace CoreGraphics;
+using namespace CoreAnimation;
 using namespace IO;
 using namespace Interface;
 using namespace Resources;
+using namespace Debug;
+using namespace Http;
 
 //------------------------------------------------------------------------------
 /**
@@ -29,18 +34,35 @@ CoreGraphicsTest::SetupRuntime()
 {
     // setup foundation layer runtime
     this->ioServer = IoServer::Create();
-    this->ioServer->SetAssign(Assign("tex", "home:work/testdata"));
-    this->ioServer->SetAssign(Assign("msh", "home:work/testdata"));
-    this->ioServer->SetAssign(Assign("shd", "home:work/testdata/shaders"));
-    this->ioServer->SetAssign(Assign("mdl", "home:work/testdata"));
-    this->ioServer->RegisterUriScheme("file", FileStream::RTTI);
+    this->ioServer->RegisterStandardUriSchemes();
+    this->ioServer->SetupStandardAssigns();
+
+    // setup asynchronous IO
     this->ioInterface = IOInterface::Create();
     this->ioInterface->Open();
+    if (IoServer::Instance()->FileExists("home:export.zip"))
+    {
+        // main thread
+        this->ioServer->MountZipArchive("home:export.zip");
 
+        // io thread
+        Ptr<Interface::MountZipArchive> mountZipArchiveMsg = Interface::MountZipArchive::Create();
+        mountZipArchiveMsg->SetURI("home:export.zip");
+        this->ioInterface->Send(mountZipArchiveMsg.upcast<Messaging::Message>());
+    }
+
+    // setup HTTP subsystem
+    this->httpInterface = Http::HttpInterface::Create();
+    this->httpInterface->Open();
+
+    // setup Debug subsystem
+    this->debugInterface = DebugInterface::Create();
+    this->debugInterface->Open();
+    
     // setup the display device
     this->displayDevice = DisplayDevice::Create();
     this->displayDevice->SetFullscreen(false);
-    this->displayDevice->SetDisplayMode(DisplayMode(0, 0, 64, 64));
+    this->displayDevice->SetDisplayMode(DisplayMode(0, 0, 64, 64, PixelFormat::X8R8G8B8));
     this->displayDevice->SetWindowTitle("Nebula3 Test Window");
     if (this->displayDevice->Open())
     {
@@ -53,6 +75,10 @@ CoreGraphicsTest::SetupRuntime()
             return false;
         }
     }
+
+    // create vertex layout server
+    this->vertexLayoutServer = VertexLayoutServer::Create();
+    this->vertexLayoutServer->Open();
 
     // setup the shader server
     this->shaderServer = ShaderServer::Create();
@@ -73,18 +99,25 @@ CoreGraphicsTest::SetupRuntime()
     this->resManager->Open();
 
     Ptr<SimpleResourceMapper> texMapper = SimpleResourceMapper::Create();
-    texMapper->SetPlaceholderResourceId(ResourceId("tex:placeholder.dds"));
+    texMapper->SetPlaceholderResourceId(ResourceId("tex:system/placeholder.dds"));
     texMapper->SetResourceClass(Texture::RTTI);
     texMapper->SetResourceLoaderClass(StreamTextureLoader::RTTI);
     texMapper->SetManagedResourceClass(ManagedTexture::RTTI);
     this->resManager->AttachMapper(texMapper.upcast<ResourceMapper>());
 
     Ptr<SimpleResourceMapper> meshMapper = SimpleResourceMapper::Create();
-    meshMapper->SetPlaceholderResourceId(ResourceId("msh:placeholder.nvx2"));
+    meshMapper->SetPlaceholderResourceId(ResourceId("msh:system/placeholder_s_0.nvx2"));
     meshMapper->SetResourceClass(Mesh::RTTI);
     meshMapper->SetResourceLoaderClass(StreamMeshLoader::RTTI);
     meshMapper->SetManagedResourceClass(ManagedMesh::RTTI);
     this->resManager->AttachMapper(meshMapper.upcast<ResourceMapper>());
+
+    Ptr<SimpleResourceMapper> animMapper = SimpleResourceMapper::Create();
+    animMapper->SetPlaceholderResourceId(ResourceId("anim:characters/mensch_m_variations.nax2"));
+    animMapper->SetResourceClass(AnimResource::RTTI);
+    animMapper->SetResourceLoaderClass(StreamAnimationLoader::RTTI);
+    animMapper->SetManagedResourceClass(ManagedAnimResource::RTTI);
+    this->resManager->AttachMapper(animMapper.upcast<ResourceMapper>());
 
     return true;
 }
@@ -95,12 +128,33 @@ CoreGraphicsTest::SetupRuntime()
 void
 CoreGraphicsTest::ShutdownRuntime()
 {
-    this->shaderServer = 0;
+    this->resManager->Close();
     this->resManager = 0;
+
+    this->resServer->Close();
     this->resServer = 0;
+
+    this->shaderServer->Close();
+    this->shaderServer = 0;
+
+    this->vertexLayoutServer->Close();
+    this->vertexLayoutServer = 0;
+
+    this->renderDevice->Close();
     this->renderDevice = 0;
+
+    this->displayDevice->Close();
     this->displayDevice = 0;
+
+    this->debugInterface->Close();
+    this->debugInterface = 0;
+
+    this->httpInterface->Close();
+    this->httpInterface = 0;
+
+    this->ioInterface->Close();
     this->ioInterface = 0;
+
     this->ioServer = 0;
 }
 

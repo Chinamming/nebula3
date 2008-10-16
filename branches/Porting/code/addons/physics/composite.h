@@ -30,7 +30,7 @@ class PhysicsEntity;
 
 class Composite : public Core::RefCounted
 {
-	DeclareClass(Composite);
+	__DeclareClass(Composite);
 public:
     /// constructor
     Composite();

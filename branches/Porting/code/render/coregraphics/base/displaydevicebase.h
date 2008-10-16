@@ -25,8 +25,8 @@ namespace Base
 {
 class DisplayDeviceBase : public Core::RefCounted
 {
-    DeclareClass(DisplayDeviceBase);
-    DeclareSingleton(DisplayDeviceBase);
+    __DeclareClass(DisplayDeviceBase);
+    __DeclareSingleton(DisplayDeviceBase);
 public:
     /// constructor
     DisplayDeviceBase();

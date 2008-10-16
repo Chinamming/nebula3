@@ -8,20 +8,20 @@
 namespace Lighting
 {
 #if (__WIN32__ || __XBOX360__)
-ImplementClass(Lighting::LightServer, 'LISV', Lighting::SM30LightServer);
+__ImplementClass(Lighting::LightServer, 'LISV', Lighting::SM30LightServer);
 #elif __WII__
-ImplementClass(Lighting::LightServer, 'LISV', Lighting::WiiLightServer);
+__ImplementClass(Lighting::LightServer, 'LISV', Lighting::WiiLightServer);
 #else
 #error "LightServer class not implemented on this platform!"
 #endif
-ImplementSingleton(Lighting::LightServer);
+__ImplementSingleton(Lighting::LightServer);
 
 //------------------------------------------------------------------------------
 /**
 */
 LightServer::LightServer()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ LightServer::LightServer()
 */
 LightServer::~LightServer()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 } // namespace Lighting

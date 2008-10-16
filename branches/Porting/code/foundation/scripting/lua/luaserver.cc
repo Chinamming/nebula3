@@ -11,8 +11,8 @@
 
 namespace Scripting
 {
-ImplementClass(Scripting::LuaServer, 'LUAS', Scripting::ScriptServer);
-ImplementSingleton(Scripting::LuaServer);
+__ImplementClass(Scripting::LuaServer, 'LUAS', Scripting::ScriptServer);
+__ImplementSingleton(Scripting::LuaServer);
 
 using namespace Util;
 using namespace IO;
@@ -23,7 +23,7 @@ using namespace IO;
 LuaServer::LuaServer() :
     luaState(0)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ LuaServer::~LuaServer()
     {
         this->Close();
     }
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ LuaServer::LuaAllocator(void* /*ud*/, void* ptr, size_t osize, size_t nsize)
         // free a block of memory
         if (0 != ptr)
         {
-            Memory::Free(ptr);
+            Memory::Free(Memory::DefaultHeap, ptr);
         }
         return 0;
     }
@@ -59,12 +59,12 @@ LuaServer::LuaAllocator(void* /*ud*/, void* ptr, size_t osize, size_t nsize)
         if (0 == osize)
         {
             // allocate a block of memory
-            return Memory::Alloc(nsize);
+            return Memory::Alloc(Memory::DefaultHeap, nsize);
         }
         else
         {
             // reallocate a block of memory
-            return Memory::Realloc(ptr, nsize);
+            return Memory::Realloc(Memory::DefaultHeap, ptr, nsize);
         }
     }
 }

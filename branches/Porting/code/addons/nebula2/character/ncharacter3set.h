@@ -26,7 +26,7 @@ namespace Nebula2
 //------------------------------------------------------------------------------
 class nCharacter3Set : public Core::RefCounted
 {
-DeclareClass(nCharacter3Set);
+__DeclareClass(nCharacter3Set);
 
 public:
     /// skin texture info (returned by GetSkinTextures)

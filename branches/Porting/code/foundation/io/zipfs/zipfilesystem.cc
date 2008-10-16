@@ -9,8 +9,8 @@
 
 namespace IO
 {
-ImplementClass(IO::ZipFileSystem, 'ZPFS', Core::RefCounted);
-ImplementSingleton(IO::ZipFileSystem);
+__ImplementClass(IO::ZipFileSystem, 'ZPFS', Core::RefCounted);
+__ImplementSingleton(IO::ZipFileSystem);
 
 using namespace Util;
 
@@ -19,7 +19,7 @@ using namespace Util;
 */
 ZipFileSystem::ZipFileSystem()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ ZipFileSystem::~ZipFileSystem()
     {
         this->Unmount(this->archives.ValueAtIndex(0));
     }
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

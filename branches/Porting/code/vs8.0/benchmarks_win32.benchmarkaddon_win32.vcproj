@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="benchmarkaddon_win32"
-	ProjectGUID="{23081EFC-8A97-4585-9318-79809E84D60B}"
+	ProjectGUID="{34DD833E-591F-4524-84A6-47F8D8A12277}"
 	>
 	<Platforms>
 		<Platform
@@ -78,7 +78,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dxerr9.lib  d_application_win32.lib d_foundation_win32.lib d_lua_win32.lib d_tinyxml_win32.lib d_zlib_win32.lib d_sqlite_win32.lib d_db_win32.lib d_benchmarkbase_win32.lib "
+				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dxerr9.lib  "
 				OutputFile="..\..\bin\win32\benchmarkaddon_win32.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
@@ -173,7 +173,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dxerr9.lib  application_win32.lib foundation_win32.lib lua_win32.lib tinyxml_win32.lib zlib_win32.lib sqlite_win32.lib db_win32.lib benchmarkbase_win32.lib "
+				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dxerr9.lib  "
 				OutputFile="..\..\bin\win32\benchmarkaddon_win32.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"

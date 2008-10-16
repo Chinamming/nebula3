@@ -7,7 +7,7 @@
 
 namespace Posix
 {
-ImplementClass(Posix::PosixThread, 'THRD', Core::RefCounted);
+__ImplementClass(Posix::PosixThread, 'THRD', Core::RefCounted);
 
 #ifdef HAVE_THREAD_LOCAL_STORAGE
 __thread const char* PosixThread::ThreadName = 0; 
@@ -21,7 +21,7 @@ PosixThread::PosixThread() :
     running(false),
     priority(Normal),
     stackSize(4096),
-    coreId(System::Cpu::UndefinedCoreId)
+    coreId(System::Cpu::InvalidCoreId)
 {
     // empty
 }

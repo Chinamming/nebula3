@@ -18,7 +18,7 @@ namespace Benchmarking
 {
 class BenchmarkRunner : public Core::RefCounted
 {
-    DeclareClass(BenchmarkRunner);
+    __DeclareClass(BenchmarkRunner);
 public:
     /// attach a benchmark
     void AttachBenchmark(Benchmark* b);

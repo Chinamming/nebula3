@@ -7,7 +7,7 @@
 
 namespace Base
 {
-ImplementClass(Base::TextureBase, 'TXRB', Base::ResourceBase);
+__ImplementClass(Base::TextureBase, 'TXRB', Base::ResourceBase);
 
 using namespace CoreGraphics;
 

@@ -7,7 +7,7 @@
 
 namespace Benchmarking
 {
-ImplementClass(Benchmarking::Benchmark, 'BNCH', Core::RefCounted);
+__ImplementClass(Benchmarking::Benchmark, 'BNCH', Core::RefCounted);
 
 using namespace Timing;
 
