@@ -57,7 +57,7 @@ private:
     bool ParseTables(const Ptr<IO::XmlReader>& xmlReader);
 
     Util::Array<Util::String> tableNames;
-    Util::Array<Util::FixedTable<Util::String>> tables;
+    Util::Array<Util::FixedTable<Util::String> > tables;
 };
 
 } // namespace IO
