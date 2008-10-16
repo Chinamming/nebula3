@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Nebula3 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\nebula3\schemas\projectinfo.xsd">
+	
+	<Project name="Nebula3" defaultPlatform="win32">
+		
+		<!-- Win32 Platform Info -->
+		<Platform name="win32">
+            <!-- general settings -->
+            <Attr name="DstDir" value="proj:export_win32"/>
+            <Attr name="SrcDir" value="proj:work"/>
+            <Attr name="Archive" value="proj:export_win32.zip"/>
+
+            <!-- shader compilation -->
+            <Attr name="ShaderTool" value="c:/Programme/Microsoft DirectX SDK (August 2008)/Utilities/bin/x86/fxc.exe"/>
+            <Attr name="ShaderToolParams" value="/I ../lib /I lib"/>
+			<Attr name="ShaderSrcDir" value="src:shaders/sm3"/>
+			<Attr name="ShaderDstDir" value="dst:shaders"/>
+            <Attr name="FrameShaderSrcDir" value="src:frame/win32"/>
+            <Attr name="FrameShaderDstDir" value="dst:frame"/>
+            
+            <!-- texture conversion -->
+            <Attr name="TextureTool" value="toolkit:bin/win32/nvdxt.exe"/>
+            <Attr name="TextureAttrTable" value="src:textures/batchattributes.xml"/>
+            <Attr name="TextureSrcDir" value="src:textures"/>
+            <Attr name="TextureDstDir" value="dst:textures"/>
+            
+            <!-- audio export -->
+            <Attr name="AudioTool" value="c:/Programme/Microsoft DirectX SDK (August 2008)/Utilities/bin/x86/xactbld3.exe"/>
+            <Attr name="AudioProjectFile" value="src:audio/audio.xap"/>
+            <Attr name="AudioDstDir" value="dst:audio"/>
+        </Platform>
+
+		<!-- Xbox360 Platform Info -->
+		<Platform name="xbox360">
+            <!-- general settings -->
+            <Attr name="DstDir" value="proj:export_xbox360"/>
+            <Attr name="SrcDir" value="proj:work"/>
+            <Attr name="Archive" value="proj:export_xbox360.zip"/>
+            <Attr name="ExtraDataSrcDir" value="src:xbox360data"/>
+            <Attr name="ExtraDataDstDir" value="dst:xbox360data"/>
+
+            <!-- shader compilation -->
+            <Attr name="ShaderTool" value="c:/Programme/Microsoft Xbox 360 SDK/bin/win32/fxc.exe"/>
+            <Attr name="ShaderToolParams" value="/I ../lib /I lib"/>
+            <Attr name="ShaderSrcDir" value="src:shaders/xbox360"/>
+            <Attr name="ShaderDstDir" value="dst:shaders"/>
+            <Attr name="FrameShaderSrcDir" value="src:frame/xbox360"/>
+            <Attr name="FrameShaderDstDir" value="dst:frame"/>
+
+            <!-- texture conversion -->
+            <Attr name="TextureTool" value="c:/Programme/Microsoft Xbox 360 SDK/bin/win32/bundler.exe"/>
+            <Attr name="TextureAttrTable" value="src:textures/batchattributes.xml"/>
+            <Attr name="TextureSrcDir" value="src:textures"/>
+            <Attr name="TextureDstDir" value="dst:textures"/>
+
+            <!-- audio export -->
+            <Attr name="AudioTool" value="c:/Programme/Microsoft DirectX SDK (August 2008)/Utilities/bin/x86/xactbld3.exe"/>
+            <Attr name="AudioProjectFile" value="src:audio/audio.xap"/>
+            <Attr name="AudioDstDir" value="dst:audio"/>
+        </Platform>
+
+        <!-- Wii Platform Info -->
+        <Platform name="wii">
+            <!-- general settings -->
+            <Attr name="DstDir" value="proj:export_wii"/>
+            <Attr name="SrcDir" value="proj:work"/>
+            <Attr name="Archive" value="proj:export_wii.zip"/>
+
+            <!-- shader compilation -->
+            <Attr name="ShaderSrcDir" value="src:shaders/wii"/>
+            <Attr name="ShaderDstDir" value="dst:shaders"/>
+            <Attr name="FrameShaderSrcDir" value="src:frame/wii"/>
+            <Attr name="FrameShaderDstDir" value="dst:frame"/>
+
+            <!-- texture conversion -->
+            <Attr name="TextureTool" value="texconv.exe"/>
+            <Attr name="TextureAttrTable" value="src:textures/batchattributes.xml"/>
+            <Attr name="TextureSrcDir" value="src:textures"/>
+            <Attr name="TextureDstDir" value="dst:textures"/>
+        </Platform>
+
+    </Project>
+</Nebula3>

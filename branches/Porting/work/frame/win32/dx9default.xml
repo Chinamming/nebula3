@@ -12,15 +12,19 @@
     <DeclareRenderTarget name="ColorBuffer" format="A8R8G8B8" depth="true" relWidth="1.0" relHeight="1.0" msaa="true"/>
     
     <!-- render the world to the BackBuffer render target -->
-    <Pass name="Color" renderTarget="ColorBuffer" shader="p_color" clearColor="0.0,1.0,0.0,1.0" clearDepth="1.0" clearStencil="0">
+    <Pass name="Color" renderTarget="ColorBuffer" shader="p_color" clearColor="0.2,0.2,0.2,1.0" clearDepth="1.0" clearStencil="0">
         <Batch shader="b_depth" type="Depth" shdFeatures="Depth" nodeFilter="Solid" sorting="FrontToBack" lighting="None"/>
         <Batch shader="b_solid" type="Solid" shdFeatures="Solid" nodeFilter="Solid" sorting="None" lighting="SinglePass"/>
-        <Batch shader="b_alpha" type="Alpha" shdFeatures="Alpha" nodeFilter="Alpha" sorting="None" lighting="SinglePass"/>
+        <Batch shader="b_alpha" type="Alpha" shdFeatures="Alpha" nodeFilter="Alpha" sorting="None" lighting="None"/>
     </Pass>
         
     <!-- apply a post effect with color correction, renders directly to the presentation buffer -->
     <PostEffect name="Compose" shader="pe_compose">
-        <ApplyShaderVariable sem="ColorBuffer" value="ColorBuffer"/>        
+        <ApplyShaderVariable sem="ColorBuffer" value="ColorBuffer"/>
+        
+        <!-- render debug stuff on top of complete frame -->
+        <Batch shader="b_shape" type="Shapes"/>
+        <Batch shader="b_empty" type="Text"/>
     </PostEffect>
     
 </FrameShader>

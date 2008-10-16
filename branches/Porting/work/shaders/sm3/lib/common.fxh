@@ -29,7 +29,9 @@ technique name < string Mask = features; > \
 }
 
 float4x4 mvp   : ModelViewProjection;
+float4x4 imv   : InvModelView;
 float4x4 model : Model;
+shared float4x4 view : View;
 
 texture diffMap : DiffMap0;
 sampler diffMapSampler = sampler_state
