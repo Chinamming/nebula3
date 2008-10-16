@@ -2,7 +2,7 @@
 #define POSIX_POSIXCALENDARTIME_H
 //------------------------------------------------------------------------------
 /**
-    @class Posix::Win32CalendarTime
+    @class Posix::PosixCalendarTime
   
     Posix implementation of CalendarTime.
     

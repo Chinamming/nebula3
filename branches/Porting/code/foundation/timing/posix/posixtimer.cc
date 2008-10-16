@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 //  posixtimer.cc
-//  (C) 2006 Radon Labs GmbH
+//  (C) 2007 Oleg Khryptul (Haron)
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "timing/posix/posixtimer.h"
@@ -29,11 +29,11 @@ void
 PosixTimer::Start()
 {
     n_assert(!this->running);
-    
+
     // query the current real time and update the diffTime member
     // to take the "lost" time into account since the timer was stopped
-    int64_t curRealTime;
-    QueryPerformanceCounter((LARGE_INTEGER*) &curRealTime);
+    clock_t curRealTime;
+    curRealTime = clock();
     this->diffTime += curRealTime - this->stopTime;
     this->stopTime = 0;
     this->running = true;
@@ -50,7 +50,7 @@ void
 PosixTimer::Stop()
 {
     n_assert(this->running);
-    QueryPerformanceCounter((LARGE_INTEGER*) &this->stopTime);
+    this->stopTime = clock();
     this->running = false;
 }
 
@@ -88,26 +88,26 @@ PosixTimer::Running() const
 /**
     This returns the internal local time as large integer.
 */
-int64_t
+clock_t
 PosixTimer::InternalTime() const
 {
     // get the current real time
-    int64_t time;
+    clock_t inttime;
     if (this->running)
     {
         // we are running, query current time
-        QueryPerformanceCounter((LARGE_INTEGER*) &time);
+        inttime = clock();
     }
     else
     {
         // we are stopped, use time at last stop
-        time = this->stopTime;
+        inttime = this->stopTime;
     }
- 
-    // convert to local time
-    time -= this->diffTime;
 
-    return time;
+    // convert to local time
+    inttime -= this->diffTime;
+
+    return inttime;
 }
 
 //------------------------------------------------------------------------------
@@ -117,15 +117,7 @@ PosixTimer::InternalTime() const
 Timing::Time
 PosixTimer::GetTime() const
 {
-    // get the current real time
-    int64_t time = this->InternalTime();
-
-    // query the performance frequency
-    int64_t freq;
-    QueryPerformanceFrequency((LARGE_INTEGER*) &freq);
- 
-    // convert to seconds
-    Timing::Time seconds = ((Timing::Time)time) / ((Timing::Time)freq);
+    Timing::Time seconds = ((Timing::Time)this->InternalTime()) / ((Timing::Time)CLOCKS_PER_SEC);
     return seconds;
 }
 
@@ -136,15 +128,11 @@ PosixTimer::GetTime() const
 uint
 PosixTimer::GetTicks() const
 {
-    // get the current real time
-    int64_t time = this->InternalTime();
+    //// get the current real time
+    clock_t time = this->InternalTime();
 
-    // query the performance frequency
-    int64_t freq;
-    QueryPerformanceFrequency((LARGE_INTEGER*) &freq);
-
-    int64_t ticks64 = time / (freq / 100000);
-    return (uint) ticks64;
+    return time / (CLOCKS_PER_SEC / 100000);
 }
 
 } // namespace Posix
+
