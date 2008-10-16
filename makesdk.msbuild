@@ -33,7 +33,7 @@
 	</Target>
 
     <Target Name="BuildAssets" Condition="$(Assets)=='true'" DependsOnTargets="CVSUpdate">
-        <MSBuild Projects="buildassets_win32.msbuild" Targets="All" Properties="Rebuild=true"/>        
+        <MSBuild Projects="buildassets.msbuild" Targets="All" Properties="Rebuild=true;Platform=win32"/>        
     </Target>
 	
 	<Target Name="BuildInstaller" Condition="$(Installer)=='true'" DependsOnTargets="BuildDocs;BuildTools;BuildAssets">

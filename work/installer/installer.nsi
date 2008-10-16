@@ -14,10 +14,11 @@
 ;   Defines
     
     !define COMPANY "Radon Labs GmbH"
-    !define PRODUCT "Nebula3 SDK (Feb 2008)"
-    !define SETUP   "N3SDK_Feb2008"
+    !define PRODUCT "Nebula3 SDK (Sep 2008)"
+    !define SETUP   "N3SDK_Sep2008"
     !define SRCDIR "..\.."
     !define STARTMENU "$SMPROGRAMS\${PRODUCT}"
+    !define EXCLUDE '/x ".svn" /x "*xbox360*" /x "*wii*" /x ".#*"' 
 
 ;-------------------------------------------------------------------------------
 ;   General
@@ -71,7 +72,8 @@ Section "-Everything" Section_EverythingFiles
 
     ; root
     SetOutPath "$INSTDIR"
-    File /x "*xbox360*" /x "*wii*" "${SRCDIR}\*.msbuild"
+    File ${EXCLUDE} "${SRCDIR}\*.msbuild"
+    File ${EXCLUDE} "${SRCDIR}\*.xml"
     
     ; bin
     SetOutPath "$INSTDIR\bin"
@@ -84,23 +86,28 @@ Section "-Everything" Section_EverythingFiles
     File "${SRCDIR}\code\*_win32.epk"
     File "${SRCDIR}\code\*.tcl"
     File "${SRCDIR}\code\*.rules"    
-    File /r /x ".svn" /x "*xbox360*" /x "*wii*" "${SRCDIR}\code\*.cc" 
-    File /r /x ".svn" /x "*xbox360*" /x "*wii*" "${SRCDIR}\code\*.c" 
-    File /r /x ".svn" /x "*xbox360*" /x "*wii*" "${SRCDIR}\code\*.h" 
-    File /r /x ".svn" /x "*xbox360*" /x "*wii*" "${SRCDIR}\code\*.dox" 
-    File /r /x ".svn" /x "*xbox360*" /x "*wii*" "${SRCDIR}\code\*.nidl"
+    File /r ${EXCLUDE} "${SRCDIR}\code\*.cc" 
+    File /r ${EXCLUDE} "${SRCDIR}\code\*.c" 
+    File /r ${EXCLUDE} "${SRCDIR}\code\*.h" 
+    File /r ${EXCLUDE} "${SRCDIR}\code\*.dox" 
+    File /r ${EXCLUDE} "${SRCDIR}\code\*.nidl"
     SetOutPath "$INSTDIR\code\vs8.0"
-    File /x ".svn" /x "*xbox360*" /x "*wii*" "${SRCDIR}\code\vs8.0\*.sln"
-    File /x ".svn" /x "*xbox360*" /x "*wii*" "${SRCDIR}\code\vs8.0\*.vcproj"
-    
+    File ${EXCLUDE} "${SRCDIR}\code\vs8.0\*.sln"
+    File ${EXCLUDE} "${SRCDIR}\code\vs8.0\*.vcproj"
+
+    ; special RakNet stuff
+    SetOutPath "$INSTDIR\code\extlibs\raknet"
+    File /r ${EXCLUDE} "${SRCDIR}\code\extlibs\raknet\*.lib"
+    File /r ${EXCLUDE} "${SRCDIR}\code\extlibs\raknet\*.pdb"
+
     ; doc
     SetOutPath "$INSTDIR\doc"
     File "${SRCDIR}\doc\*.chm"
     File "${SRCDIR}\doc\*.txt"
     SetOutPath "$INSTDIR\doc\doxygen"
-    File /x ".svn" /x ".#*" "${SRCDIR}\doc\doxygen\*.*"
+    File ${EXCLUDE} "${SRCDIR}\doc\doxygen\*.*"
     SetOutPath "$INSTDIR\doc\nebula3"
-    File /x ".svn" /x ".#*" "${SRCDIR}\doc\nebula3\*.*"
+    File ${EXCLUDE} "${SRCDIR}\doc\nebula3\*.*"
 
     ; schemas
     SetOutPath "$INSTDIR\schemas"
@@ -108,13 +115,16 @@ Section "-Everything" Section_EverythingFiles
     
     ; work
     SetOutPath "$INSTDIR\work"
-    File /r /x ".svn" /x "*xbox360*" /x "*wii*" /x ".#*" /x "textures" /x "gfxlib" /x "levels" /x "testdata" "${SRCDIR}\work\*.*"
+    File /r ${EXCLUDE} "${SRCDIR}\work\*.*"
 
     ; export
     SetOutPath "$INSTDIR"
     File "${SRCDIR}\export.zip"
+    File "${SRCDIR}\export_win32.zip"
     SetOutPath "$INSTDIR\export\db"
     File "${SRCDIR}\export\db\*.db4"
+    SetOutPath "$INSTDIR\export_win32\audio"
+    File "${SRCDIR}\export_win32\audio\*.xwb"
 
 ;   write registry keys
     WriteRegStr HKLM "SOFTWARE\${COMPANY}\${PRODUCT}" "installdir" "$INSTDIR"
@@ -135,16 +145,16 @@ Section "-StartMenuEntries" Section_StartMenuEntries
     ; this sets the "current working directory" for the shortcuts
     SetOutPath "$INSTDIR\bin\win32"
     CreateDirectory "${STARTMENU}"
-    CreateDirectory "${STARTMENU}\Lighting Test"
-    CreateDirectory "${STARTMENU}\App Layer Test"
+    ; CreateDirectory "${STARTMENU}\Lighting Test"
+    ; CreateDirectory "${STARTMENU}\App Layer Test"
 
-    CreateShortCut "${STARTMENU}\Lighting Test\No MSAA.lnk" "$INSTDIR\bin\win32\testviewer.exe" "-w 640 -h 480"
-    CreateShortCut "${STARTMENU}\Lighting Test\2x MSAA.lnk" "$INSTDIR\bin\win32\testviewer.exe" "-w 640 -h 480 -aa Low"
-    CreateShortCut "${STARTMENU}\Lighting Test\4x MSAA.lnk" "$INSTDIR\bin\win32\testviewer.exe" "-w 640 -h 480 -aa Medium"
-    CreateShortCut "${STARTMENU}\App Layer Test\No MSAA.lnk" "$INSTDIR\bin\win32\testgame.exe" "-w 640 -h 480"
-    CreateShortCut "${STARTMENU}\App Layer Test\2x MSAA.lnk" "$INSTDIR\bin\win32\testgame.exe" "-w 640 -h 480 -aa Low"
-    CreateShortCut "${STARTMENU}\App Layer Test\4x MSAA.lnk" "$INSTDIR\bin\win32\testgame.exe" "-w 640 -h 480 -aa Medium"
-    CreateShortCut "${STARTMENU}\Connect Web Browser.lnk" "http://127.0.0.1:2100"
+    ; CreateShortCut "${STARTMENU}\Lighting Test\No MSAA.lnk" "$INSTDIR\bin\win32\testviewer.exe" "-w 640 -h 480"
+    ; CreateShortCut "${STARTMENU}\Lighting Test\2x MSAA.lnk" "$INSTDIR\bin\win32\testviewer.exe" "-w 640 -h 480 -aa Low"
+    ; CreateShortCut "${STARTMENU}\Lighting Test\4x MSAA.lnk" "$INSTDIR\bin\win32\testviewer.exe" "-w 640 -h 480 -aa Medium"
+    ; CreateShortCut "${STARTMENU}\App Layer Test\No MSAA.lnk" "$INSTDIR\bin\win32\testgame.exe" "-w 640 -h 480"
+    ; CreateShortCut "${STARTMENU}\App Layer Test\2x MSAA.lnk" "$INSTDIR\bin\win32\testgame.exe" "-w 640 -h 480 -aa Low"
+    ; CreateShortCut "${STARTMENU}\App Layer Test\4x MSAA.lnk" "$INSTDIR\bin\win32\testgame.exe" "-w 640 -h 480 -aa Medium"
+    ; CreateShortCut "${STARTMENU}\Connect Web Browser.lnk" "http://127.0.0.1:2100"
     CreateShortCut "${STARTMENU}\Browse Files.lnk" "$WINDIR\explorer.exe" "$INSTDIR"
     CreateShortCut "${STARTMENU}\Documentation.lnk" "$INSTDIR\doc\nebula3.chm"
     CreateShortCut "${STARTMENU}\License.lnk" "$INSTDIR\doc\license.txt"
