@@ -15,7 +15,7 @@
 */
 #include "http/httprequesthandler.h"
 #include "resources/resourceid.h"
-#include "http/htmlpagewriter.h"
+#include "http/html/htmlpagewriter.h"
 #include "coregraphics/shader.h"
 
 //------------------------------------------------------------------------------
@@ -23,12 +23,10 @@ namespace Debug
 {
 class ShaderPageHandler : public Http::HttpRequestHandler
 {
-    DeclareClass(ShaderPageHandler);
+    __DeclareClass(ShaderPageHandler);
 public:
     /// constructor
     ShaderPageHandler();
-    /// return true if the http request is accepted by the request handler
-    virtual bool AcceptsRequest(const Ptr<Http::HttpRequest>& request);
     /// handle a http request, the handler is expected to fill the content stream with response data
     virtual void HandleRequest(const Ptr<Http::HttpRequest>& request);
 

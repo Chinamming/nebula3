@@ -19,8 +19,8 @@ namespace BaseGameFeature
 {
 class GlobalAttrsManager : public Game::Manager
 {
-    DeclareClass(GlobalAttrsManager);
-    DeclareSingleton(GlobalAttrsManager);
+    __DeclareClass(GlobalAttrsManager);
+    __DeclareSingleton(GlobalAttrsManager);
 public:
     /// constructor
     GlobalAttrsManager();

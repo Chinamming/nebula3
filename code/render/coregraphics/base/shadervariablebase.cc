@@ -8,7 +8,7 @@
 
 namespace Base
 {
-ImplementClass(Base::ShaderVariableBase, 'SVRB', Core::RefCounted);
+__ImplementClass(Base::ShaderVariableBase, 'SVRB', Core::RefCounted);
 
 using namespace CoreGraphics;
 using namespace Math;

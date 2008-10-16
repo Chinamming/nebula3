@@ -9,22 +9,13 @@
     
     (C) 2006 Radon Labs GmbH
 */
-#if __WIN32__
-#include "coregraphics/d3d9/d3d9vertexlayout.h"
+#if (__WIN32__ || __XBOX360__)
+#include "coregraphics/win360/d3d9vertexlayout.h"
 namespace CoreGraphics
 {
-class VertexLayout : public Direct3D9::D3D9VertexLayout
+class VertexLayout : public Win360::D3D9VertexLayout
 {
-    DeclareClass(VertexLayout);
-};
-}
-#elif __XBOX360__
-#include "coregraphics/xbox360/xbox360vertexlayout.h"
-namespace CoreGraphics
-{
-class VertexLayout : public Xbox360::Xbox360VertexLayout
-{
-    DeclareClass(VertexLayout);
+    __DeclareClass(VertexLayout);
 };
 }
 #elif __WII__
@@ -33,7 +24,7 @@ namespace CoreGraphics
 {
 class VertexLayout : public Wii::WiiVertexLayout
 {
-    DeclareClass(VertexLayout);
+    __DeclareClass(VertexLayout);
 };
 }
 #else

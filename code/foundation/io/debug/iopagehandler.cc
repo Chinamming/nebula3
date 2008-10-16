@@ -4,7 +4,7 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "io/debug/iopagehandler.h"
-#include "http/htmlpagewriter.h"
+#include "http/html/htmlpagewriter.h"
 #include "io/ioserver.h"
 #include "io/zipfs/zipfilesystem.h"
 #include "io/zipfs/ziparchive.h"
@@ -12,7 +12,7 @@
 
 namespace Debug
 {
-ImplementClass(Debug::IoPageHandler, 'DIOP', Http::HttpRequestHandler);
+__ImplementClass(Debug::IoPageHandler, 'DIOP', Http::HttpRequestHandler);
 
 using namespace Http;
 using namespace IO;
@@ -25,16 +25,7 @@ IoPageHandler::IoPageHandler()
 {
     this->SetName("IO");
     this->SetDesc("show debug information about IO subsystem");
-    this->SetRootLocation("/inout");
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-IoPageHandler::AcceptsRequest(const Ptr<HttpRequest>& request)
-{
-    return (HttpMethod::Get == request->GetMethod()) && String::MatchPattern(request->GetURI().LocalPath(), "inout*");
+    this->SetRootLocation("inout");
 }
 
 //------------------------------------------------------------------------------

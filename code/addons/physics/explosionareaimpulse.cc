@@ -11,7 +11,7 @@
 
 namespace Physics
 {
-ImplementClass(Physics::ExplosionAreaImpulse, 'PEAI', Physics::AreaImpulse);
+__ImplementClass(Physics::ExplosionAreaImpulse, 'PEAI', Physics::AreaImpulse);
 
 Util::Array<ContactPoint> ExplosionAreaImpulse::CollideContacts(256, 512);
 

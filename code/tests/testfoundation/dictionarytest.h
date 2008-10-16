@@ -15,7 +15,7 @@ namespace Test
 {
 class DictionaryTest : public TestCase
 {
-    DeclareClass(DictionaryTest);
+    __DeclareClass(DictionaryTest);
 public:
     /// run the test
     virtual void Run();

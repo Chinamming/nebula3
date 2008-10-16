@@ -4,16 +4,18 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "core/debug/corepagehandler.h"
-#include "http/htmlpagewriter.h"
+#include "http/html/htmlpagewriter.h"
+#include "system/systeminfo.h"
 
 namespace Debug
 {
-ImplementClass(Debug::CorePageHandler, 'CPGH', Http::HttpRequestHandler);
+__ImplementClass(Debug::CorePageHandler, 'CPGH', Http::HttpRequestHandler);
 
 using namespace IO;
 using namespace Http;
 using namespace Util;
 using namespace Core;
+using namespace System;
 
 //------------------------------------------------------------------------------
 /**
@@ -22,16 +24,7 @@ CorePageHandler::CorePageHandler()
 {
     this->SetName("Core");
     this->SetDesc("show debug information about Core subsystem");
-    this->SetRootLocation("/core");
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-CorePageHandler::AcceptsRequest(const Ptr<HttpRequest>& request)
-{
-    return (HttpMethod::Get == request->GetMethod()) && String::MatchPattern(request->GetURI().LocalPath(), "core");
+    this->SetRootLocation("core");
 }
 
 //------------------------------------------------------------------------------
@@ -52,11 +45,33 @@ CorePageHandler::HandleRequest(const Ptr<HttpRequest>& request)
         htmlWriter->AddAttr("href", "/index.html");
         htmlWriter->Element(HtmlElement::Anchor, "Home");
 
+        // write basic system info
+        htmlWriter->Element(HtmlElement::Heading3, "System Info");
+        SystemInfo systemInfo;
+        htmlWriter->Begin(HtmlElement::Table);        
+            htmlWriter->Begin(HtmlElement::TableRow);
+                htmlWriter->Element(HtmlElement::TableData, "Host Platform:");
+                htmlWriter->Element(HtmlElement::TableData, SystemInfo::PlatformAsString(systemInfo.GetPlatform()));
+            htmlWriter->End(HtmlElement::TableRow);
+            htmlWriter->Begin(HtmlElement::TableRow);
+                htmlWriter->Element(HtmlElement::TableData, "CPU Type:");
+                htmlWriter->Element(HtmlElement::TableData, SystemInfo::CpuTypeAsString(systemInfo.GetCpuType()));
+            htmlWriter->End(HtmlElement::TableRow);
+            htmlWriter->Begin(HtmlElement::TableRow);
+                htmlWriter->Element(HtmlElement::TableData, "CPU Cores:");
+                htmlWriter->Element(HtmlElement::TableData, String::FromInt(systemInfo.GetNumCpuCores()));
+            htmlWriter->End(HtmlElement::TableRow);
+            htmlWriter->Begin(HtmlElement::TableRow);
+                htmlWriter->Element(HtmlElement::TableData, "Page Size:");
+                htmlWriter->Element(HtmlElement::TableData, String::FromInt(systemInfo.GetPageSize()));
+            htmlWriter->End(HtmlElement::TableRow);
+        htmlWriter->End(HtmlElement::Table);
+            
         // if not compiled with NEBULA_DEBUG, display a message
         #if (NEBULA3_MEMORY_STATS == 0)
         htmlWriter->LineBreak();
         htmlWriter->LineBreak();
-        htmlWriter->Text("Core stats not available because application was not compiled with debug information!");
+        htmlWriter->Text("RefCounted stats not available because application was not compiled with debug information!");
         #else
         htmlWriter->Element(HtmlElement::Heading3, "RefCounted Instances");
         Dictionary<String, RefCounted::Stats> refCountedStats = RefCounted::GetOverallStats();
@@ -78,6 +93,7 @@ CorePageHandler::HandleRequest(const Ptr<HttpRequest>& request)
             htmlWriter->Begin(HtmlElement::TableRow);
                 htmlWriter->Element(HtmlElement::TableHeader, "Class Name");
                 htmlWriter->Element(HtmlElement::TableHeader, "Class FourCC");
+                htmlWriter->Element(HtmlElement::TableHeader, "Instance Size");
                 htmlWriter->Element(HtmlElement::TableHeader, "NumInstances");
                 htmlWriter->Element(HtmlElement::TableHeader, "References");
             htmlWriter->End(HtmlElement::TableRow);
@@ -88,6 +104,7 @@ CorePageHandler::HandleRequest(const Ptr<HttpRequest>& request)
                 htmlWriter->Begin(HtmlElement::TableRow);
                     htmlWriter->Element(HtmlElement::TableData, curStats.className);
                     htmlWriter->Element(HtmlElement::TableData, curStats.classFourCC.AsString());
+                    htmlWriter->Element(HtmlElement::TableData, String::FromInt(curStats.instanceSize));
                     htmlWriter->Element(HtmlElement::TableData, String::FromInt(curStats.numObjects));
                     htmlWriter->Element(HtmlElement::TableData, String::FromInt(curStats.overallRefCount));
                 htmlWriter->End(HtmlElement::TableRow);

@@ -21,7 +21,7 @@ class Shader;
 
 class ShaderCompiler : public Core::RefCounted
 {
-    DeclareClass(ShaderCompiler);
+    __DeclareClass(ShaderCompiler);
 public:
     /// constructor
     ShaderCompiler();

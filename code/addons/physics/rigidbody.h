@@ -27,7 +27,7 @@ class Composite;
 
 class RigidBody : public Core::RefCounted
 {
-	DeclareClass(RigidBody);
+	__DeclareClass(RigidBody);
 public:
     /// link types (for linking to graphical representation)
     enum LinkType

@@ -10,7 +10,7 @@
 
 namespace Db
 {
-ImplementClass(Db::Writer, 'DBWR', Core::RefCounted);
+__ImplementClass(Db::Writer, 'DBWR', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

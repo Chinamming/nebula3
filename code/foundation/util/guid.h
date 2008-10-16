@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_GUID_H
-#define UTIL_GUID_H
 //------------------------------------------------------------------------------
 /**
     @class Util::Guid
@@ -38,5 +36,4 @@ typedef Posix::PosixGuid Guid;
 #error "IMPLEMENT ME!"
 #endif
 //------------------------------------------------------------------------------
-#endif
     

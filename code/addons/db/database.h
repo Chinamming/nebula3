@@ -28,7 +28,7 @@ namespace Db
 {
 class Database : public Core::RefCounted
 {
-    DeclareClass(Database);
+    __DeclareClass(Database);
 public:
     /// access modes
     enum AccessMode

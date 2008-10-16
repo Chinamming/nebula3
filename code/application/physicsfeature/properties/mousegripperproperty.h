@@ -4,8 +4,10 @@
 /**
     @class PhysicsFeature::MouseGripperProperty
 
+    The MouseGripperProperty allows for picking up of a dynamic physics object
+    and throwing it around.  
   
-    (C) 2005 Radon Labs GmbH
+    (C) 2008 Radon Labs GmbH
 */
 #include "properties/inputproperty.h"
 #include "physics/mousegripper.h"
@@ -15,7 +17,7 @@ namespace PhysicsFeature
 {
 class MouseGripperProperty : public GraphicsFeature::InputProperty
 {
-	DeclareClass(MouseGripperProperty);
+	__DeclareClass(MouseGripperProperty);
 public:
     /// constructor
     MouseGripperProperty();
@@ -49,7 +51,7 @@ protected:
 private:
     Ptr<Physics::MouseGripper> physicsGripper;
 };
-RegisterClass(MouseGripperProperty);
+__RegisterClass(MouseGripperProperty);
 
 }; // namespace Properties
 //------------------------------------------------------------------------------

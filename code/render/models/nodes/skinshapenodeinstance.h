@@ -16,12 +16,16 @@
 #include "models/nodes/shapenodeinstance.h"
 #include "addons/nebula2/nebula2wrapper.h"
 
+namespace Char
+{    
+    class CharacterRenderer;
+}
 //------------------------------------------------------------------------------
 namespace Models
 {
 class SkinShapeNodeInstance : public ShapeNodeInstance
 {
-    DeclareClass(SkinShapeNodeInstance);
+    __DeclareClass(SkinShapeNodeInstance);
 public:
     /// constructor
     SkinShapeNodeInstance();
@@ -34,14 +38,13 @@ public:
     virtual void Render();
     /// set visible, used by charactersystem
     virtual void SetVisible(bool b);
+    
+    /// get character ptr
+    const Ptr<Char::Character>& GetCharacter() const;
 
 protected:
     /// notify that we are visible
     virtual void OnNotifyVisible(IndexT frameIndex);
-    /// render skinned mesh
-    void RenderSkinning();
-    /// render mesh fragment
-    void RenderFragment(int primGroupIndex, Char::CharJointPalette& jointPalette);
     /// called when attached to ModelInstance
     virtual void OnAttachToModelInstance(const Ptr<ModelInstance>& inst, const Ptr<ModelNode>& node, const Ptr<ModelNodeInstance>& parentNodeInst);
     /// called when removed from ModelInstance
@@ -50,9 +53,21 @@ protected:
     void ValidateCharacter();
     
 private:    
+    static int curBuffer;
     Ptr<Char::Character> character;
+    Ptr<CoreGraphics::ShaderVariable> paletteShdVar;
+    Ptr<Char::CharacterRenderer> charRenderer;
 };
 
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline const Ptr<Char::Character>& 
+SkinShapeNodeInstance::GetCharacter() const
+{
+    return this->character;    
+}
 } // namespace Models
 //------------------------------------------------------------------------------
 #endif

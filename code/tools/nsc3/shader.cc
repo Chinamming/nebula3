@@ -9,7 +9,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::Shader, 'SHDR', Core::RefCounted);
+__ImplementClass(Tools::Shader, 'SHDR', Core::RefCounted);
 
 using namespace Util;
 using namespace IO;

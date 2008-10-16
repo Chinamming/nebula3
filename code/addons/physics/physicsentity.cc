@@ -12,7 +12,7 @@
 
 namespace Physics
 {
-ImplementClass(Physics::PhysicsEntity, 'PENT', Core::RefCounted);
+__ImplementClass(Physics::PhysicsEntity, 'PENT', Core::RefCounted);
 
 uint PhysicsEntity::uniqueIdCounter = 1;
 

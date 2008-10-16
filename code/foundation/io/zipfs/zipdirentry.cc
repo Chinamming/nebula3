@@ -7,7 +7,7 @@
 
 namespace IO
 {
-ImplementClass(IO::ZipDirEntry, 'ZPDE', Core::RefCounted);
+__ImplementClass(IO::ZipDirEntry, 'ZPDE', Core::RefCounted);
 
 using namespace Util;
 

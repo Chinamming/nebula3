@@ -10,7 +10,7 @@
 
 namespace Models
 {
-ImplementClass(Models::ModelNode, 'MDND', Core::RefCounted);
+__ImplementClass(Models::ModelNode, 'MDND', Core::RefCounted);
 
 using namespace Resources;
 

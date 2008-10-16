@@ -10,8 +10,8 @@
 
 namespace Test
 {
-ImplementClass(Test::MessageReaderWriterTest, 'MRWT', Test::TestCase);
-ImplementClass(Test::TestMessage, 'TMSG', Messaging::Message);
+__ImplementClass(Test::MessageReaderWriterTest, 'MRWT', Test::TestCase);
+__ImplementClass(Test::TestMessage, 'TMSG', Messaging::Message);
 ImplementMsgId(Test::TestMessage);
 
 using namespace Util;

@@ -3,7 +3,7 @@
 #define TIMING_INPUTTIMESOURCE_H
 //------------------------------------------------------------------------------
 /**
-    @class Timing::InputTimeSource
+    @class BaseGameFeature::InputTimeSource
   
     Provides a time source for input handling. This allows the Timing world
     to be paused independently from input handling.
@@ -18,8 +18,8 @@ namespace BaseGameFeature
 {
 class InputTimeSource : public TimeSource
 {
-    DeclareClass(InputTimeSource);
-    DeclareSingleton(InputTimeSource);
+    __DeclareClass(InputTimeSource);
+    __DeclareSingleton(InputTimeSource);
 
 public:
     /// constructor

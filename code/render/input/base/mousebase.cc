@@ -8,7 +8,7 @@
 
 namespace Base
 {
-ImplementClass(Base::MouseBase, 'MSBS', Input::InputHandler);
+__ImplementClass(Base::MouseBase, 'MSBS', Input::InputHandler);
 
 using namespace Input;
 
@@ -61,7 +61,7 @@ MouseBase::OnAttach()
     InputHandler::OnAttach();
 
     ButtonState initialButtonState;
-    this->buttonStates.Clear(initialButtonState);
+    this->buttonStates.Fill(initialButtonState);
     this->beginFramePixelPosition.set(0.0f, 0.0f);
     this->beginFrameScreenPosition.set(0.0f, 0.0f);
     this->pixelPosition.set(0.0f, 0.0f);

@@ -10,22 +10,13 @@
     (C) 2006 Radon Labs GmbH
 */
 #include "core/config.h"
-#if __WIN32__
-#include "threading/win32/win32thread.h"
+#if (__WIN32__ || __XBOX360__)
+#include "threading/win360/win360thread.h"
 namespace Threading
 {
-class Thread : public Win32::Win32Thread
+class Thread : public Win360::Win360Thread
 { 
-    DeclareClass(Thread);
-};
-}
-#elif __XBOX360__
-#include "threading/xbox360/xbox360thread.h"
-namespace Threading
-{
-class Thread : public Xbox360::Xbox360Thread
-{
-    DeclareClass(Thread);
+    __DeclareClass(Thread);
 };
 }
 #elif __WII__
@@ -34,7 +25,7 @@ namespace Threading
 {
 class Thread : public Wii::WiiThread
 {
-    DeclareClass(Thread);
+    __DeclareClass(Thread);
 };
 }
 #elif __APPLE__
@@ -43,7 +34,7 @@ namespace Threading
 {
 class Thread : public Posix::PosixThread
 {
-    DeclareClass(Thread);
+    __DeclareClass(Thread);
 };
 }
 #else

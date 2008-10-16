@@ -7,7 +7,9 @@
 
 namespace IO
 {
-ImplementClass(IO::MemoryStream, 'MSTR', IO::Stream);
+__ImplementClass(IO::MemoryStream, 'MSTR', IO::Stream);
+
+using namespace Math;
 
 //------------------------------------------------------------------------------
 /**
@@ -35,7 +37,7 @@ MemoryStream::~MemoryStream()
     // release memory buffer if allocated
     if (0 != this->buffer)
     {
-        Memory::Free(this->buffer);
+        Memory::Free(Memory::StreamDataHeap, this->buffer);
         this->buffer = 0;
     }
 }
@@ -85,7 +87,7 @@ MemoryStream::SetSize(Size s)
     n_assert(!this->IsOpen());
     if (s > this->capacity)
     {
-        this->Reallocate(s);
+        this->Realloc(s);
     }
     this->size = s;
 }
@@ -248,15 +250,15 @@ MemoryStream::HasRoom(Size numBytes) const
     is smaller then the existing size, the buffer contents will be clipped.
 */
 void
-MemoryStream::Reallocate(Size newCapacity)
+MemoryStream::Realloc(Size newCapacity)
 {
-    unsigned char* newBuffer = (unsigned char*) Memory::Alloc(newCapacity);
+    unsigned char* newBuffer = (unsigned char*) Memory::Alloc(Memory::StreamDataHeap, newCapacity);
     n_assert(0 != newBuffer);
     int newSize = n_min(newCapacity, this->size);
     if (0 != this->buffer)
     {
         Memory::Copy(this->buffer, newBuffer, newSize);
-        Memory::Free(this->buffer);
+        Memory::Free(Memory::StreamDataHeap, this->buffer);
     }
     this->buffer = newBuffer;
     this->size = newSize;
@@ -284,7 +286,7 @@ MemoryStream::MakeRoom(Size numBytes)
     n_assert(newCapacity > this->capacity);
 
     // (re-)allocate memory buffer
-    this->Reallocate(newCapacity);
+    this->Realloc(newCapacity);
 }
 
 //------------------------------------------------------------------------------
@@ -312,6 +314,20 @@ MemoryStream::Unmap()
 {
     n_assert(this->IsOpen());
     Stream::Unmap();
+}
+
+//------------------------------------------------------------------------------
+/**
+    Get a direct pointer to the raw data. This is a convenience method
+    and only works for memory streams.
+    NOTE: writing new data to the stream may/will result in an invalid
+    pointer, don't keep the returned pointer around between writes!
+*/
+void*
+MemoryStream::GetRawPointer() const
+{
+    n_assert(0 != this->buffer);
+    return this->buffer;
 }
 
 } // namespace IO

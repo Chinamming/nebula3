@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::LuaServerTest, 'luat', Test::TestCase);
+__ImplementClass(Test::LuaServerTest, 'luat', Test::TestCase);
 
 using namespace Scripting;
 using namespace Util;

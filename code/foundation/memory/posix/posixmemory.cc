@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
-//  posixmemory.cc
-//  (C) 2006 RadonLabs GmbH
+//  win360memory.cc
+//  (C) 2008 Radon Labs GmbH
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "core/types.h"
@@ -8,9 +8,12 @@
 
 namespace Memory
 {
+void* volatile PosixProcessHeap = 0;
 #if NEBULA3_MEMORY_STATS
-int volatile AllocCount = 0;
-int volatile AllocSize = 0;
+int volatile TotalAllocCount = 0;
+int volatile TotalAllocSize = 0;
+int volatile HeapTypeAllocCount[NumHeapTypes] = { 0 };
+int volatile HeapTypeAllocSize[NumHeapTypes] = { 0 };
 
 //------------------------------------------------------------------------------
 /**
@@ -20,16 +23,18 @@ int volatile AllocSize = 0;
 bool
 Validate()
 {
-    if (0 == PosixProcessHeap)
+    bool res = true;
+    IndexT i;
+    for (i = 0; i < NumHeapTypes; i++)
     {
-        PosixProcessHeap = GetProcessHeap();
+        if (0 != Heaps[i])
+        {
+            res &= (0 != HeapValidate(Heaps[i], 0, NULL));
+        }
     }
-    bool res = (0 != HeapValidate(PosixProcessHeap, 0, NULL));
     res &= Heap::ValidateAllHeaps();
     return res;
 }
 
 #endif
 } // namespace Memory
-
-

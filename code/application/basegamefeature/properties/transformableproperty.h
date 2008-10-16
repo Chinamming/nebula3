@@ -2,6 +2,8 @@
 #define PROPERTIES_TRANSFORMABLEPROPERTY_H
 //------------------------------------------------------------------------------
 /**
+    @class BaseGameFeature::TransformableProperty
+
     Entites with this property can be transformed.
   
     (C) 2007 Radon Labs GmbH
@@ -14,7 +16,7 @@ namespace BaseGameFeature
 {
 class TransformableProperty : public Game::Property
 {
-	DeclareClass(TransformableProperty);
+	__DeclareClass(TransformableProperty);
 public:
     /// constructor
     TransformableProperty();
@@ -29,7 +31,7 @@ public:
     /// handle a single message
     virtual void HandleMessage(const Ptr<Messaging::Message>& msg);
 };
-RegisterClass(TransformableProperty);
+__RegisterClass(TransformableProperty);
 }; // namespace Properties
 //------------------------------------------------------------------------------
 #endif

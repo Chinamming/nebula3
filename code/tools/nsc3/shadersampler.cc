@@ -7,7 +7,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::ShaderSampler, 'SSMP', Core::RefCounted);
+__ImplementClass(Tools::ShaderSampler, 'SSMP', Core::RefCounted);
 
 using namespace Util;
 using namespace IO;

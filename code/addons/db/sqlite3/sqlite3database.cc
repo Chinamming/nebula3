@@ -27,7 +27,7 @@ namespace Attr
 
 namespace Db
 {
-ImplementClass(Db::Sqlite3Database, 'S3DB', Db::Database);
+__ImplementClass(Db::Sqlite3Database, 'S3DB', Db::Database);
 
 using namespace IO;
 using namespace Util;

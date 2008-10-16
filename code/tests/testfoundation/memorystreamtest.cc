@@ -10,7 +10,7 @@
 
 namespace Test
 {
-ImplementClass(Test::MemoryStreamTest, 'MSST', Test::TestCase);
+__ImplementClass(Test::MemoryStreamTest, 'MSST', Test::TestCase);
 
 using namespace Util;
 using namespace Math;

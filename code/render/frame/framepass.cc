@@ -8,7 +8,7 @@
 
 namespace Frame
 {
-ImplementClass(Frame::FramePass, 'FPSS', Core::RefCounted);
+__ImplementClass(Frame::FramePass, 'FPSS', Core::RefCounted);
 
 using namespace CoreGraphics;
 

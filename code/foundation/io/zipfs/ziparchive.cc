@@ -10,7 +10,7 @@
 
 namespace IO
 {
-ImplementClass(IO::ZipArchive, 'ZPAR', Core::RefCounted);
+__ImplementClass(IO::ZipArchive, 'ZPAR', Core::RefCounted);
 
 using namespace Util;
 

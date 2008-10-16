@@ -21,7 +21,7 @@ namespace Physics
 {
 class Ray : public Core::RefCounted
 {
-	DeclareClass(Ray);
+	__DeclareClass(Ray);
 public:
     /// constructor
     Ray();

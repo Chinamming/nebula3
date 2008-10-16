@@ -1,11 +1,15 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "foundation_win32", "foundation_win32.foundation_win32.vcproj", "{644EFE92-A26C-40AB-B173-5E7B80E29EEF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{03496D18-8912-4906-AEA9-59E93D30D83F} = {03496D18-8912-4906-AEA9-59E93D30D83F}
-	EndProjectSection
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NIDLs", "NIDLs", "{798777e9-b38c-4974-bee3-b1cd45f6a1e6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nidls_win32", "foundation_win32.nidls_win32.vcproj", "{03496D18-8912-4906-AEA9-59E93D30D83F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{832A854F-2030-4EA4-86FE-EDEEC017E78E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "foundation_nidls_win32", "foundation_win32.foundation_nidls_win32.vcproj", "{B6419E8F-CD70-425E-84E5-914AECF8F1BF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "foundation_win32", "foundation_win32.foundation_win32.vcproj", "{B8328592-1328-44CF-A371-99097496B6E8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B6419E8F-CD70-425E-84E5-914AECF8F1BF} = {B6419E8F-CD70-425E-84E5-914AECF8F1BF}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,16 +17,20 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{644EFE92-A26C-40AB-B173-5E7B80E29EEF}.Debug|Win32.ActiveCfg = Debug|Win32
-		{644EFE92-A26C-40AB-B173-5E7B80E29EEF}.Debug|Win32.Build.0 = Debug|Win32
-		{644EFE92-A26C-40AB-B173-5E7B80E29EEF}.Release|Win32.ActiveCfg = Release|Win32
-		{644EFE92-A26C-40AB-B173-5E7B80E29EEF}.Release|Win32.Build.0 = Release|Win32
-		{03496D18-8912-4906-AEA9-59E93D30D83F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{03496D18-8912-4906-AEA9-59E93D30D83F}.Debug|Win32.Build.0 = Debug|Win32
-		{03496D18-8912-4906-AEA9-59E93D30D83F}.Release|Win32.ActiveCfg = Release|Win32
-		{03496D18-8912-4906-AEA9-59E93D30D83F}.Release|Win32.Build.0 = Release|Win32
+		{B6419E8F-CD70-425E-84E5-914AECF8F1BF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B6419E8F-CD70-425E-84E5-914AECF8F1BF}.Debug|Win32.Build.0 = Debug|Win32
+		{B6419E8F-CD70-425E-84E5-914AECF8F1BF}.Release|Win32.ActiveCfg = Release|Win32
+		{B6419E8F-CD70-425E-84E5-914AECF8F1BF}.Release|Win32.Build.0 = Release|Win32
+		{B8328592-1328-44CF-A371-99097496B6E8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B8328592-1328-44CF-A371-99097496B6E8}.Debug|Win32.Build.0 = Debug|Win32
+		{B8328592-1328-44CF-A371-99097496B6E8}.Release|Win32.ActiveCfg = Release|Win32
+		{B8328592-1328-44CF-A371-99097496B6E8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B6419E8F-CD70-425E-84E5-914AECF8F1BF} = {798777e9-b38c-4974-bee3-b1cd45f6a1e6}
+		{B8328592-1328-44CF-A371-99097496B6E8} = {832A854F-2030-4EA4-86FE-EDEEC017E78E}
 	EndGlobalSection
 EndGlobal

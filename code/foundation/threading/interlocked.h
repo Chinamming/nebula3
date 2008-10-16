@@ -10,18 +10,11 @@
     (C) 2006 Radon Labs GmbH
 */
 #include "core/config.h"
-#if __WIN32__
-#include "threading/win32/win32interlocked.h"
+#if (__WIN32__ || __XBOX360__)
+#include "threading/win360/win360interlocked.h"
 namespace Threading
 {
-class Interlocked : public Win32::Win32Interlocked
-{ };
-}
-#elif __XBOX360__
-#include "threading/xbox360/xbox360interlocked.h"
-namespace Threading
-{
-class Interlocked : public Xbox360::Xbox360Interlocked
+class Interlocked : public Win360::Win360Interlocked
 { };
 }
 #elif __WII__

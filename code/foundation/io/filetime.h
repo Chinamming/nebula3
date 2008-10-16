@@ -10,18 +10,11 @@
     (C) 2006 Radon Labs GmbH
 */
 #include "core/config.h"
-#if __WIN32__
-#include "io/win32/win32filetime.h"
+#if (__WIN32__ || __XBOX360__)
+#include "io/win360/win360filetime.h"
 namespace IO
 {
-class FileTime : public Win32::Win32FileTime
-{ };
-}
-#elif __XBOX360__
-#include "io/xbox360/xbox360filetime.h"
-namespace IO
-{
-class FileTime : public Xbox360::Xbox360FileTime
+class FileTime : public Win360::Win360FileTime
 { };
 }
 #elif __WII__

@@ -20,7 +20,7 @@ namespace Tools
 {
 class ShaderFragmentGroup : public Core::RefCounted
 {
-    DeclareClass(ShaderFragmentGroup);
+    __DeclareClass(ShaderFragmentGroup);
 public:
     /// constructor
     ShaderFragmentGroup();

@@ -33,7 +33,7 @@ namespace Messaging
 {
 class Dispatcher : public Port
 {
-	DeclareClass(Dispatcher);
+	__DeclareClass(Dispatcher);
 public:
     /// constructor
     Dispatcher();

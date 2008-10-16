@@ -19,9 +19,9 @@ class DarwinInterlocked
 {
 public:
     /// interlocked increment
-    static void Increment(int volatile& var);
+    static int Increment(int volatile& var);
     /// interlocked decrement
-    static void Decrement(int volatile& var);
+    static int Decrement(int volatile& var);
     /// interlocked add
     static void Add(int volatile& var, int add);
 };
@@ -29,19 +29,19 @@ public:
 //------------------------------------------------------------------------------
 /**
 */
-inline void
+inline int
 DarwinInterlocked::Increment(int volatile& var)
 {
-    OSAtomicIncrement32((volatile int32_t*)&var);
+    return OSAtomicIncrement32((volatile int32_t*)&var);
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-inline void
+inline int
 DarwinInterlocked::Decrement(int volatile& var)
 {
-    OSAtomicDecrement32((volatile int32_t*)&var);
+    return OSAtomicDecrement32((volatile int32_t*)&var);
 }
 
 //------------------------------------------------------------------------------

@@ -21,7 +21,7 @@ public:
 //------------------------------------------------------------------------------
 class SetAssign : public Scripting::Command
 {
-    DeclareClass(SetAssign);
+    __DeclareClass(SetAssign);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();
@@ -32,7 +32,7 @@ private:
 //------------------------------------------------------------------------------
 class GetAssign : public Scripting::Command
 {
-    DeclareClass(GetAssign);
+    __DeclareClass(GetAssign);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();
@@ -43,7 +43,7 @@ private:
 //------------------------------------------------------------------------------
 class HasAssign : public Scripting::Command
 {
-    DeclareClass(HasAssign);
+    __DeclareClass(HasAssign);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();
@@ -54,7 +54,7 @@ private:
 //------------------------------------------------------------------------------
 class ClearAssign : public Scripting::Command
 {
-    DeclareClass(ClearAssign);
+    __DeclareClass(ClearAssign);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();
@@ -65,7 +65,7 @@ private:
 //------------------------------------------------------------------------------
 class ResolveAssigns : public Scripting::Command
 {
-    DeclareClass(ResolveAssigns);
+    __DeclareClass(ResolveAssigns);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();
@@ -76,7 +76,7 @@ private:
 //------------------------------------------------------------------------------
 class CreateDirectory : public Scripting::Command
 {
-    DeclareClass(CreateDirectory);
+    __DeclareClass(CreateDirectory);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();
@@ -87,7 +87,7 @@ private:
 //------------------------------------------------------------------------------
 class CopyFile : public Scripting::Command
 {
-    DeclareClass(CopyFile);
+    __DeclareClass(CopyFile);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();
@@ -98,7 +98,7 @@ private:
 //------------------------------------------------------------------------------
 class DeleteFile : public Scripting::Command
 {
-    DeclareClass(DeleteFile);
+    __DeclareClass(DeleteFile);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();
@@ -109,7 +109,7 @@ private:
 //------------------------------------------------------------------------------
 class DeleteDirectory : public Scripting::Command
 {
-    DeclareClass(DeleteDirectory);
+    __DeclareClass(DeleteDirectory);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();
@@ -120,7 +120,7 @@ private:
 //------------------------------------------------------------------------------
 class FileExists : public Scripting::Command
 {
-    DeclareClass(FileExists);
+    __DeclareClass(FileExists);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();
@@ -131,7 +131,7 @@ private:
 //------------------------------------------------------------------------------
 class ListFiles : public Scripting::Command
 {
-    DeclareClass(ListFiles);
+    __DeclareClass(ListFiles);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();
@@ -142,7 +142,7 @@ private:
 //------------------------------------------------------------------------------
 class ListDirectories : public Scripting::Command
 {
-    DeclareClass(ListDirectories);
+    __DeclareClass(ListDirectories);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();
@@ -153,7 +153,7 @@ private:
 //------------------------------------------------------------------------------
 class Print : public Scripting::Command
 {
-    DeclareClass(Print);
+    __DeclareClass(Print);
 public:
     virtual void OnRegister();
     virtual bool OnExecute();

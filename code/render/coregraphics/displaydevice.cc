@@ -8,14 +8,14 @@
 namespace CoreGraphics
 {
 #if __WIN32__
-ImplementClass(CoreGraphics::DisplayDevice, 'DDVC', Direct3D9::D3D9DisplayDevice);
-ImplementSingleton(CoreGraphics::DisplayDevice);
+__ImplementClass(CoreGraphics::DisplayDevice, 'DDVC', Direct3D9::D3D9DisplayDevice);
+__ImplementSingleton(CoreGraphics::DisplayDevice);
 #elif __XBOX360__
-ImplementClass(CoreGraphics::DisplayDevice, 'DDVC', Xbox360::Xbox360DisplayDevice);
-ImplementSingleton(CoreGraphics::DisplayDevice);
+__ImplementClass(CoreGraphics::DisplayDevice, 'DDVC', Xbox360::Xbox360DisplayDevice);
+__ImplementSingleton(CoreGraphics::DisplayDevice);
 #elif __WII__
-ImplementClass(CoreGraphics::DisplayDevice, 'DDVC', Wii::WiiDisplayDevice);
-ImplementSingleton(CoreGraphics::DisplayDevice);
+__ImplementClass(CoreGraphics::DisplayDevice, 'DDVC', Wii::WiiDisplayDevice);
+__ImplementSingleton(CoreGraphics::DisplayDevice);
 #else
 #error "DisplayDevice class not implemented on this platform!"
 #endif
@@ -25,7 +25,7 @@ ImplementSingleton(CoreGraphics::DisplayDevice);
 */
 DisplayDevice::DisplayDevice()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ DisplayDevice::DisplayDevice()
 */
 DisplayDevice::~DisplayDevice()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 } // namespace CoreGraphics

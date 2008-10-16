@@ -19,27 +19,20 @@ namespace Base
 {
 class MemoryIndexBufferLoaderBase : public Resources::ResourceLoader
 {
-    DeclareClass(MemoryIndexBufferLoaderBase);
+    __DeclareClass(MemoryIndexBufferLoaderBase);
 public:
     /// constructor
     MemoryIndexBufferLoaderBase();
-    /// setup index buffer data, must remain valid until OnLoadRequested() is called!
-    void Setup(CoreGraphics::IndexType::Code indexType, SizeT numIndices, void* ptr, SizeT numBytes);
-	/// setup a empty index buffer
-	void Setup(CoreGraphics::IndexType::Code indexType, SizeT numIndices,SizeT numBytes, 
-		CoreGraphics::IndexBuffer::Usage usage, CoreGraphics::IndexBuffer::Access access);
-	/// setup index buffer data, must remain valid until OnLoadRequested() is called!
-	void Setup(CoreGraphics::IndexType::Code type, SizeT num, void* ptr, SizeT numBytes, 
-				CoreGraphics::IndexBuffer::Usage usage, CoreGraphics::IndexBuffer::Access access); 
-	
+    /// setup index buffer from existing data, or provide 0 pointer if empty index buffer should be created
+    void Setup(CoreGraphics::IndexType::Code indexType, SizeT numIndices, void* indexDataPtr, SizeT indexDataSize, CoreGraphics::IndexBuffer::Usage usage = CoreGraphics::IndexBuffer::UsageImmutable, CoreGraphics::IndexBuffer::Access access = CoreGraphics::IndexBuffer::AccessNone);
 
 protected:
     CoreGraphics::IndexType::Code indexType;
     SizeT numIndices;
     void* indexDataPtr;
     SizeT indexDataSize;
-	CoreGraphics::IndexBuffer::Usage indexBufferUsage;
-	CoreGraphics::IndexBuffer::Access accessMode;
+	CoreGraphics::IndexBuffer::Usage usage;
+	CoreGraphics::IndexBuffer::Access access;
 };
         
 } // namespace CoreGraphics

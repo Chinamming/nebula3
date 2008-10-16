@@ -20,7 +20,7 @@ namespace Tools
 {
 class TestGameApplication : public App::GameApplication
 {
-    DeclareSingleton(TestGameApplication);   
+    __DeclareSingleton(TestGameApplication);   
 public:
     /// constructor
     TestGameApplication();

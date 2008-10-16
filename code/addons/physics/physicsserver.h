@@ -24,9 +24,6 @@
 //------------------------------------------------------------------------------
 namespace Physics
 {
-using namespace Timing;
-using namespace Math;
-
 class Level;
 class Composite;
 class Ragdoll;
@@ -49,7 +46,7 @@ class MeshCache;
 
 class PhysicsServer : public Core::RefCounted
 {
-	DeclareClass(PhysicsServer);
+	__DeclareClass(PhysicsServer);
 public:
     /// constructor
     PhysicsServer();
@@ -74,7 +71,7 @@ public:
     /// set the current simulation time
     void SetTime(Timing::Time t);
     /// get the current simulation time
-    Time GetTime() const;
+    Timing::Time GetTime() const;
     /// set current point of interest
     void SetPointOfInterest(const Math::vector& p);
     /// get current point of interest
@@ -175,7 +172,7 @@ protected:
     Util::Array<ContactPoint> contactPoints;
     Ptr<Level> curLevel;
     Ptr<MeshCache> meshCache;
-    Time time;
+    Timing::Time time;
     bool isOpen;
     Ray ray;
 
@@ -273,9 +270,9 @@ inline
 void
 PhysicsServer::OdeToMatrix44(const dMatrix3& from, Math::matrix44& to)
 {
-    to.setrow0(float4(from[0],from[4],from[8],0.0f));
-    to.setrow1(float4(from[1],from[5],from[9],0.0f));
-    to.setrow2(float4(from[2],from[6],from[10],0.0f));
+    to.setrow0(Math::float4(from[0],from[4],from[8],0.0f));
+    to.setrow1(Math::float4(from[1],from[5],from[9],0.0f));
+    to.setrow2(Math::float4(from[2],from[6],from[10],0.0f));
 }
 
 //------------------------------------------------------------------------------
@@ -337,7 +334,7 @@ PhysicsEntity*
 PhysicsServer::FindEntityByUniqueId(PhysicsEntity::Id uniqueId) const
 {
     PhysicsEntity* entity = 0;
-    if (0 != uniqueId)
+    if (0 != uniqueId && this->entityRegistry.Contains(uniqueId))
     {
         entity = this->entityRegistry[uniqueId];
     }

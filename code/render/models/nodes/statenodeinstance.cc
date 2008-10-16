@@ -12,7 +12,7 @@
 
 namespace Models
 {
-ImplementClass(Models::StateNodeInstance, 'STNI', Models::TransformNodeInstance);
+__ImplementClass(Models::StateNodeInstance, 'STNI', Models::TransformNodeInstance);
 
 using namespace Util;
 using namespace CoreGraphics;

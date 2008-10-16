@@ -18,9 +18,9 @@ class PosixInterlocked
 {
 public:
     /// interlocked increment
-    static void Increment(int volatile& var);
+    static int Increment(int volatile& var);
     /// interlocked decrement
-    static void Decrement(int volatile& var);
+    static int Decrement(int volatile& var);
     /// interlocked add
     static void Add(int volatile& var, int add);
 };
@@ -28,20 +28,19 @@ public:
 //------------------------------------------------------------------------------
 /**
 */
-inline void
+inline int
 PosixInterlocked::Increment(int volatile& var)
 {
-    __sync_fetch_and_add(&var, 1);
+    return __sync_fetch_and_add(&var, 1);
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-inline
-void
+inline int
 PosixInterlocked::Decrement(int volatile& var)
 {
-    __sync_fetch_and_sub(&var, 1);
+    return __sync_fetch_and_sub(&var, 1);
 }
 
 //------------------------------------------------------------------------------

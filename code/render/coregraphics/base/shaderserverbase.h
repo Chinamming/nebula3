@@ -28,8 +28,8 @@ namespace Base
 {
 class ShaderServerBase : public Core::RefCounted
 {
-    DeclareClass(ShaderServerBase);
-    DeclareSingleton(ShaderServerBase);
+    __DeclareClass(ShaderServerBase);
+    __DeclareSingleton(ShaderServerBase);
 public:
     /// shader parameter bind modes
     enum ShaderParamBindMode
@@ -96,6 +96,7 @@ private:
     CoreGraphics::ShaderFeature shaderFeature;
     CoreGraphics::ShaderFeature::Mask curShaderFeatureBits;
     Util::Dictionary<Resources::ResourceId,Ptr<CoreGraphics::Shader> > shaders;
+    Ptr<CoreGraphics::ShaderInstance> sharedVariableShaderInst;    
     Ptr<CoreGraphics::ShaderInstance> activeShaderInstance;
     ShaderParamBindMode paramBindMode;
     bool isOpen;
@@ -216,6 +217,60 @@ inline const Ptr<CoreGraphics::ShaderInstance>&
 ShaderServerBase::GetActiveShaderInstance() const
 {
     return this->activeShaderInstance;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline bool
+ShaderServerBase::HasSharedVariableByName(const CoreGraphics::ShaderVariable::Name& name) const
+{
+    return this->sharedVariableShaderInst->HasVariableByName(name);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline bool
+ShaderServerBase::HasSharedVariableBySemantic(const CoreGraphics::ShaderVariable::Semantic& sem) const
+{
+    return this->sharedVariableShaderInst->HasVariableBySemantic(sem);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline SizeT
+ShaderServerBase::GetNumSharedVariables() const
+{
+    return this->sharedVariableShaderInst->GetNumVariables();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline const Ptr<CoreGraphics::ShaderVariable>&
+ShaderServerBase::GetSharedVariableByIndex(IndexT i) const
+{
+    return this->sharedVariableShaderInst->GetVariableByIndex(i);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline const Ptr<CoreGraphics::ShaderVariable>&
+ShaderServerBase::GetSharedVariableByName(const CoreGraphics::ShaderVariable::Name& name) const
+{
+    return this->sharedVariableShaderInst->GetVariableByName(name);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline const Ptr<CoreGraphics::ShaderVariable>&
+ShaderServerBase::GetSharedVariableBySemantic(const CoreGraphics::ShaderVariable::Semantic& sem) const
+{
+    return this->sharedVariableShaderInst->GetVariableBySemantic(sem);
 }
 
 } // namespace Base

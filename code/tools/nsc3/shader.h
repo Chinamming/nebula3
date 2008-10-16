@@ -25,7 +25,7 @@ class ShaderFragment;
 
 class Shader : public Core::RefCounted
 {
-    DeclareClass(Shader);
+    __DeclareClass(Shader);
 public:
     /// constructor
     Shader();

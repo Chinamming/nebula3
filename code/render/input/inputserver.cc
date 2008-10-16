@@ -8,15 +8,15 @@
 namespace Input
 {
 #if __WIN32__
-ImplementClass(Input::InputServer, 'INPS', Win32::Win32InputServer);
-ImplementSingleton(Input::InputServer);
+__ImplementClass(Input::InputServer, 'INPS', Win32::Win32InputServer);
+__ImplementSingleton(Input::InputServer);
 #elif __XBOX360__
 // FIXME!
-ImplementClass(Input::InputServer, 'INPS', Xbox360::Xbox360InputServer);
-ImplementSingleton(Input::InputServer);
+__ImplementClass(Input::InputServer, 'INPS', Xbox360::Xbox360InputServer);
+__ImplementSingleton(Input::InputServer);
 #elif __WII__
-ImplementClass(Input::InputServer, 'INPS', Wii::WiiInputServer);
-ImplementSingleton(Input::InputServer);
+__ImplementClass(Input::InputServer, 'INPS', Wii::WiiInputServer);
+__ImplementSingleton(Input::InputServer);
 #else
 #error "InputServer class not implemented on this platform!"
 #endif
@@ -26,7 +26,7 @@ ImplementSingleton(Input::InputServer);
 */
 InputServer::InputServer()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ InputServer::InputServer()
 */
 InputServer::~InputServer()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 } // namespace Input

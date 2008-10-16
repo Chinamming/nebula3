@@ -9,8 +9,8 @@
 
 namespace Http
 {
-ImplementClass(Http::HttpServer, 'HTPS', Core::RefCounted);
-ImplementSingleton(Http::HttpServer);
+__ImplementClass(Http::HttpServer, 'HTPS', Core::RefCounted);
+__ImplementSingleton(Http::HttpServer);
 
 using namespace Util;
 using namespace Net;
@@ -22,7 +22,7 @@ using namespace IO;
 HttpServer::HttpServer() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
     this->ipAddress.SetHostName("any");
     this->ipAddress.SetPort(2100);
 }
@@ -33,7 +33,7 @@ HttpServer::HttpServer() :
 HttpServer::~HttpServer()
 {
     n_assert(!this->IsOpen());
-    DestructSingleton;        
+    __DestructSingleton;        
 }
 
 //------------------------------------------------------------------------------
@@ -62,7 +62,10 @@ void
 HttpServer::Close()
 {
     n_assert(this->isOpen);
-    
+
+    // clear pending requests
+    this->pendingRequests.Clear();
+
     // destroy the default http request handler
     this->defaultRequestHandler = 0;
 
@@ -83,8 +86,8 @@ HttpServer::AttachRequestHandler(const Ptr<HttpRequestHandler>& requestHandler)
 {
     n_assert(requestHandler.isvalid());
     n_assert(this->isOpen);
-    n_assert(InvalidIndex == this->requestHandlers.FindIndex(requestHandler));
-    this->requestHandlers.Append(requestHandler);
+    n_assert(!this->requestHandlers.Contains(requestHandler->GetRootLocation()));
+    this->requestHandlers.Add(requestHandler->GetRootLocation(), requestHandler);
 }
 
 //------------------------------------------------------------------------------
@@ -94,10 +97,8 @@ void
 HttpServer::RemoveRequestHandler(const Ptr<HttpRequestHandler>& requestHandler)
 {
     n_assert(requestHandler.isvalid());
-    n_assert(this->isOpen);    
-    IndexT index = this->requestHandlers.FindIndex(requestHandler);
-    n_assert(InvalidIndex != index);
-    this->requestHandlers.EraseIndex(index);
+    n_assert(this->isOpen);
+    this->requestHandlers.Erase(requestHandler->GetRootLocation());
 }
 
 //------------------------------------------------------------------------------
@@ -113,15 +114,24 @@ HttpServer::OnFrame()
     IndexT i;
     for (i = 0; i < recvConns.Size(); i++)
     {
-        if (this->HandleHttpRequest(recvConns[i]->GetRecvStream(), recvConns[i]->GetSendStream()))
+        if (!this->HandleHttpRequest(recvConns[i]))
         {
-            // send response back to HTTP client
-            recvConns[i]->Send();
-        }
-        else
-        {
-            // hmm, this is not a HTTP client on the other side
             recvConns[i]->Shutdown();
+        }
+    }
+
+    // handle processed http requests
+    for (i = 0; i < this->pendingRequests.Size();)
+    {
+        const Ptr<HttpRequest>& httpRequest = this->pendingRequests[i].httpRequest;
+        if (httpRequest->Handled())
+        {
+            const Ptr<TcpClientConnection>& conn = this->pendingRequests[i].clientConnection;
+            if (this->BuildHttpResponse(conn, httpRequest))
+            {
+                conn->Send();
+            }
+            this->pendingRequests.EraseIndex(i);
         }
     }
 }
@@ -130,11 +140,11 @@ HttpServer::OnFrame()
 /**
 */
 bool
-HttpServer::HandleHttpRequest(const Ptr<Stream>& recvStream, const Ptr<Stream>& sendStream)
+HttpServer::HandleHttpRequest(const Ptr<TcpClientConnection>& clientConnection)  
 {
     // decode the request
     Ptr<HttpRequestReader> httpRequestReader = HttpRequestReader::Create();
-    httpRequestReader->SetStream(recvStream);
+    httpRequestReader->SetStream(clientConnection->GetRecvStream());
     if (httpRequestReader->Open())
     {
         httpRequestReader->ReadRequest();
@@ -155,45 +165,34 @@ HttpServer::HandleHttpRequest(const Ptr<Stream>& recvStream, const Ptr<Stream>& 
         httpRequest->SetStatus(HttpStatus::NotFound);
 
         // find a request handler which accepts the request
-        IndexT i;
-        for (i = 0; i < this->requestHandlers.Size(); i++)
+        Ptr<HttpRequestHandler> requestHandler;
+        Array<String> tokens = requestURI.LocalPath().Tokenize("/");
+        if (tokens.Size() > 0)
         {
-            if (this->requestHandlers[i]->AcceptsRequest(httpRequest))
+            if (this->requestHandlers.Contains(tokens[0]))
             {
-                this->requestHandlers[i]->HandleRequest(httpRequest);
-                break;
+                requestHandler = this->requestHandlers[tokens[0]];
             }
         }
-
-        // if not attached request handler felt responsible, ask the default request handler
-        // (which usually displays the home page)
-        if (HttpStatus::NotFound == httpRequest->GetStatus())
+        if (requestHandler.isvalid())
         {
+            // asynchronously handle the request
+            requestHandler->PutRequest(httpRequest);
+        }
+        else
+        {
+            // no request handler accepts the request, let the default
+            // request handler handle the request
             this->defaultRequestHandler->HandleRequest(httpRequest);
+            httpRequest->SetHandled(true);
         }
 
-        // configure and send the response
-        Ptr<HttpResponseWriter> responseWriter = HttpResponseWriter::Create();
-        responseWriter->SetStream(sendStream);
-        responseWriter->SetStatusCode(httpRequest->GetStatus());
-        if (HttpStatus::OK != httpRequest->GetStatus())
-        {
-            // an error occured, need to write an error message to the response stream
-            Ptr<TextWriter> textWriter = TextWriter::Create();
-            textWriter->SetStream(httpRequest->GetResponseContentStream());
-            textWriter->Open();
-            textWriter->WriteFormatted("%s %s", HttpStatus::ToString(httpRequest->GetStatus()).AsCharPtr(), HttpStatus::ToHumanReadableString(httpRequest->GetStatus()).AsCharPtr());
-            textWriter->Close();
-            responseContentStream->SetMediaType(MediaType("text/plain"));
-        }
-        if (httpRequest->GetResponseContentStream()->GetSize() > 0)
-        {
-            httpRequest->GetResponseContentStream()->GetMediaType().IsValid();
-            responseWriter->SetContent(httpRequest->GetResponseContentStream());
-        }
-        responseWriter->Open();
-        responseWriter->WriteResponse();
-        responseWriter->Close();
+        // append request to pending queue
+        PendingRequest pendingRequest;
+        pendingRequest.clientConnection = clientConnection;
+        pendingRequest.httpRequest = httpRequest;
+        this->pendingRequests.Append(pendingRequest);
+
         return true;
     }
     else
@@ -201,6 +200,36 @@ HttpServer::HandleHttpRequest(const Ptr<Stream>& recvStream, const Ptr<Stream>& 
         // the received data was not a valid HTTP request
         return false;
     }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+HttpServer::BuildHttpResponse(const Ptr<TcpClientConnection>& conn, const Ptr<HttpRequest>& httpRequest)
+{
+    Ptr<HttpResponseWriter> responseWriter = HttpResponseWriter::Create();
+    responseWriter->SetStream(conn->GetSendStream());
+    responseWriter->SetStatusCode(httpRequest->GetStatus());
+    if (HttpStatus::OK != httpRequest->GetStatus())
+    {
+        // an error occured, need to write an error message to the response stream
+        Ptr<TextWriter> textWriter = TextWriter::Create();
+        textWriter->SetStream(httpRequest->GetResponseContentStream());
+        textWriter->Open();
+        textWriter->WriteFormatted("%s %s", HttpStatus::ToString(httpRequest->GetStatus()).AsCharPtr(), HttpStatus::ToHumanReadableString(httpRequest->GetStatus()).AsCharPtr());
+        textWriter->Close();
+        httpRequest->GetResponseContentStream()->SetMediaType(MediaType("text/plain"));
+    }
+    if (httpRequest->GetResponseContentStream()->GetSize() > 0)
+    {
+        httpRequest->GetResponseContentStream()->GetMediaType().IsValid();
+        responseWriter->SetContent(httpRequest->GetResponseContentStream());
+    }
+    responseWriter->Open();
+    responseWriter->WriteResponse();
+    responseWriter->Close();
+    return true;
 }
 
 } // namespace Http

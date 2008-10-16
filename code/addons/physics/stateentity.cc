@@ -8,7 +8,7 @@
 
 namespace Physics
 {
-ImplementClass(Physics::StateEntity, 'PSTE', Physics::PhysicsEntity);
+__ImplementClass(Physics::StateEntity, 'PSTE', Physics::PhysicsEntity);
 
 //------------------------------------------------------------------------------
 /**

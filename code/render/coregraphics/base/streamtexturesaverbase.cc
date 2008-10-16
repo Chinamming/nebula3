@@ -7,7 +7,7 @@
 
 namespace Base
 {
-ImplementClass(Base::StreamTextureSaverBase, 'STSB', Resources::ResourceSaver);
+__ImplementClass(Base::StreamTextureSaverBase, 'STSB', Resources::ResourceSaver);
 
 using namespace CoreGraphics;
 

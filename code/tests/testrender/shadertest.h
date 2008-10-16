@@ -16,7 +16,7 @@ namespace Test
 {
 class ShaderTest : public CoreGraphicsTest
 {
-    DeclareClass(ShaderTest);
+    __DeclareClass(ShaderTest);
 public:
     /// run the test
     virtual void Run();

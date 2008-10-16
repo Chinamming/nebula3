@@ -10,11 +10,11 @@
 
 namespace Lighting
 {
-ImplementClass(Lighting::SM30LightServer, 'S3LS', Lighting::LightServerBase);
+__ImplementClass(Lighting::SM30LightServer, 'S3LS', Lighting::LightServerBase);
 
 using namespace Math;
 using namespace Util;
-using namespace Graphics;
+using namespace InternalGraphics;
 using namespace CoreGraphics;
 using namespace Resources;
 
@@ -128,10 +128,10 @@ SM30LightServer::Close()
     bool array with active per-model-entity-lights here!
 */
 void
-SM30LightServer::ApplyModelEntityLights(const Ptr<ModelEntity>& modelEntity)
+SM30LightServer::ApplyModelEntityLights(const Ptr<InternalModelEntity>& modelEntity)
 {
     // get light entities which influence the model entity
-    const Array<Ptr<GraphicsEntity> >& localLights = modelEntity->GetLinks(GraphicsEntity::LightLink);
+    const Array<Ptr<InternalGraphicsEntity> >& localLights = modelEntity->GetLinks(InternalGraphicsEntity::LightLink);
         
     // @todo: if model influenced by more then max number of lights,
     // sort by priority and drop the least-priority-lights
@@ -146,7 +146,7 @@ SM30LightServer::ApplyModelEntityLights(const Ptr<ModelEntity>& modelEntity)
     IndexT i;
     for (i = 0; i < numLights; i++)
     {
-        const Ptr<AbstractLightEntity>& lightEntity = localLights[i].downcast<AbstractLightEntity>();
+        const Ptr<InternalAbstractLightEntity>& lightEntity = localLights[i].downcast<InternalAbstractLightEntity>();
         this->lightPos[i]             = lightEntity->GetTransform().getrow3();
         this->lightInvRange[i]        = 1.0f / lightEntity->GetTransform().getrow2().length();
         this->lightProjTransform[i]   = lightEntity->GetInvLightProjTransform();

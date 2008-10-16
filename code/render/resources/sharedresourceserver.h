@@ -12,14 +12,15 @@
 #include "core/refcounted.h"
 #include "core/singleton.h"
 #include "resources/resource.h"
+#include "resources/resourcedictionary.h"
 
 //------------------------------------------------------------------------------
 namespace Resources
 {
 class SharedResourceServer : public Core::RefCounted
 {
-    DeclareClass(SharedResourceServer);
-    DeclareSingleton(SharedResourceServer);
+    __DeclareClass(SharedResourceServer);
+    __DeclareSingleton(SharedResourceServer);
 public:
     /// constructor
     SharedResourceServer();
@@ -57,6 +58,7 @@ public:
 private:
     bool isOpen;
     Util::Dictionary<ResourceId, Ptr<Resource> > resources;
+    Ptr<ResourceDictionary> resourceDictionary;
 };
 
 //------------------------------------------------------------------------------

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef CORE_SYSFUNC_H
-#define CORE_SYSFUNC_H
 //------------------------------------------------------------------------------
 /**
     @class Core::SysFunc
@@ -49,4 +47,3 @@ class SysFunc : public Posix::SysFunc
 #error "Core::SysFunc not implemented on this platform!"
 #endif
 //------------------------------------------------------------------------------
-#endif

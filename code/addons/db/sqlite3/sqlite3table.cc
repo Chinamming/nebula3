@@ -12,7 +12,7 @@
 
 namespace Db
 {
-ImplementClass(Db::Sqlite3Table, 'S3TB', Db::Table);
+__ImplementClass(Db::Sqlite3Table, 'S3TB', Db::Table);
 
 // static strings to prevent excessive string object construction
 const Util::String Sqlite3Table::InsertIntoFrag("INSERT INTO ");

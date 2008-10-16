@@ -16,7 +16,7 @@ namespace Test
 {
 class SimpleMeshMapperTest : public CoreGraphicsTest
 {
-    DeclareClass(SimpleMeshMapperTest);
+    __DeclareClass(SimpleMeshMapperTest);
 public:
     /// run the test
     virtual void Run();

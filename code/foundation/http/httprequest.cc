@@ -7,7 +7,7 @@
 
 namespace Http
 {
-ImplementClass(Http::HttpRequest, 'HTRQ', Messaging::Message);
+__ImplementClass(Http::HttpRequest, 'HTRQ', Messaging::Message);
 ImplementMsgId(HttpRequest);
 
 //------------------------------------------------------------------------------

@@ -17,7 +17,7 @@ namespace CoreGraphics
 {
 class RenderTarget : public Direct3D9::D3D9RenderTarget
 {
-    DeclareClass(RenderTarget);
+    __DeclareClass(RenderTarget);
 };
 }
 #elif __XBOX360__
@@ -26,7 +26,7 @@ namespace CoreGraphics
 {
 class RenderTarget : public Xbox360::Xbox360RenderTarget
 {
-    DeclareClass(RenderTarget);
+    __DeclareClass(RenderTarget);
 };
 }
 #elif __WII__
@@ -35,7 +35,7 @@ namespace CoreGraphics
 {
 class RenderTarget : public Wii::WiiRenderTarget
 {
-    DeclareClass(RenderTarget);
+    __DeclareClass(RenderTarget);
 };
 }
 #else

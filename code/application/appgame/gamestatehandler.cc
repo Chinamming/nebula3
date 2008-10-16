@@ -9,7 +9,7 @@
 
 namespace App
 {
-ImplementClass(App::GameStateHandler, 'AGST', App::StateHandler);
+__ImplementClass(App::GameStateHandler, 'AGST', App::StateHandler);
 
 //------------------------------------------------------------------------------
 /**
@@ -43,6 +43,8 @@ GameStateHandler::OnStateEnter(const Util::String& prevState)
     this->defaultGameFeature->SetCmdLineArgs(app->GetCmdLineArgs()); 
     Game::GameServer::Instance()->AttachGameFeature(this->defaultGameFeature.upcast<Game::FeatureUnit>());
 
+    this->defaultGameFeature->SetRenderDebug(true);
+    
     // setup the game
     switch (this->setupMode)
     {

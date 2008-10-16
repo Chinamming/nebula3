@@ -8,15 +8,16 @@
 #include "coregraphics/displaydevice.h"
 #include "coregraphics/vertexbuffer.h"
 #include "coregraphics/indexbuffer.h"
-#include "coregraphics/d3d9/d3d9types.h"
+#include "coregraphics/win360/d3d9types.h"
 
 #include <dxerr9.h>
 
 namespace Direct3D9
 {
-ImplementClass(Direct3D9::D3D9RenderDevice, 'D9RD', Base::RenderDeviceBase);
-ImplementSingleton(Direct3D9::D3D9RenderDevice);
+__ImplementClass(Direct3D9::D3D9RenderDevice, 'D9RD', Base::RenderDeviceBase);
+__ImplementSingleton(Direct3D9::D3D9RenderDevice);
 
+using namespace Win360;
 using namespace CoreGraphics;
 
 IDirect3D9* D3D9RenderDevice::d3d9 = 0;
@@ -30,7 +31,7 @@ D3D9RenderDevice::D3D9RenderDevice() :
     displayFormat(D3DFMT_X8R8G8B8),
     deviceBehaviourFlags(0)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
     Memory::Clear(&this->presentParams, sizeof(this->presentParams));
     Memory::Clear(&this->d3d9DeviceCaps, sizeof(this->d3d9DeviceCaps));
     this->OpenDirect3D();
@@ -46,7 +47,7 @@ D3D9RenderDevice::~D3D9RenderDevice()
         this->Close();
     }
     this->CloseDirect3D();
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -476,8 +477,8 @@ D3D9RenderDevice::BeginFrame()
 
 //------------------------------------------------------------------------------
 /**
-    End a complete frame. Call this once per frame after rendering and
-    presentation has happened, and only if BeginFrame() returns true.
+    End a complete frame. Call this once per frame after rendering
+    has happened and before Present(), and only if BeginFrame() returns true.
 */
 void
 D3D9RenderDevice::EndFrame()
@@ -491,7 +492,7 @@ D3D9RenderDevice::EndFrame()
 //------------------------------------------------------------------------------
 /**
     End the current rendering pass. This will flush all texture stages
-    in order to keep the d3d9 resource reference consistent without too
+    in order to keep the d3d9 resource reference counts consistent without too
     much hassle.
 */
 void
@@ -609,6 +610,9 @@ D3D9RenderDevice::Draw()
                 this->primitiveGroup.GetNumPrimitives());           // PrimitiveCount
         n_assert(SUCCEEDED(hr));
     }
+
+    // update debug stats
+    _incr_counter(RenderDeviceNumPrimitives, this->primitiveGroup.GetNumPrimitives());
 }
 
 //------------------------------------------------------------------------------

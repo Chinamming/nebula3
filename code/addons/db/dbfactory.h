@@ -27,8 +27,8 @@ class Writer;
 
 class DbFactory : public Core::RefCounted
 {
-    DeclareClass(DbFactory);
-    DeclareSingleton(DbFactory);
+    __DeclareClass(DbFactory);
+    __DeclareSingleton(DbFactory);
 public:
     /// constructor
     DbFactory();

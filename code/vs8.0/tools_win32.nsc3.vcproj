@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="nsc3"
-	ProjectGUID="{F983A17F-4907-4255-959C-40711D3DE470}"
+	ProjectGUID="{857F0847-D549-4EAB-BBE3-FEB072983051}"
 	>
 	<Platforms>
 		<Platform
@@ -78,7 +78,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dinput8.lib xinput.lib dxerr9.lib  d_foundation_win32.lib d_render_win32.lib d_lua_win32.lib d_tinyxml_win32.lib d_zlib_win32.lib "
+				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dinput8.lib xinput.lib dxerr9.lib  "
 				OutputFile="..\..\bin\win32\nsc3.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"
@@ -173,7 +173,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dinput8.lib xinput.lib dxerr9.lib  foundation_win32.lib render_win32.lib lua_win32.lib tinyxml_win32.lib zlib_win32.lib "
+				AdditionalDependencies="dbghelp.lib dxguid.lib wsock32.lib rpcrt4.lib wininet.lib d3d9.lib d3dx9.lib dinput8.lib xinput.lib dxerr9.lib  "
 				OutputFile="..\..\bin\win32\nsc3.exe"
 				LinkIncremental="0"
 				SuppressStartupBanner="true"

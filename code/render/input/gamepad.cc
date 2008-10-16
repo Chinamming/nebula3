@@ -7,12 +7,12 @@
 #if (__WIN32__ || __XBOX360__)
 namespace Input
 {
-ImplementClass(Input::GamePad, 'GMPD', XInput::XInputGamePad);
+__ImplementClass(Input::GamePad, 'GMPD', XInput::XInputGamePad);
 }
 #elif (__WII__)
 namespace Input
 {
-ImplementClass(Input::GamePad, 'GMPD', Wii::WiiGamePad);
+__ImplementClass(Input::GamePad, 'GMPD', Wii::WiiGamePad);
 }
 #else
 #error "GamePad class not implemented on this platform!"

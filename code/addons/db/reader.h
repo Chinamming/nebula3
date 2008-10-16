@@ -20,7 +20,7 @@ namespace Db
 {
 class Reader : public Core::RefCounted
 {
-    DeclareClass(Reader);
+    __DeclareClass(Reader);
 public:
     /// constructor
     Reader();

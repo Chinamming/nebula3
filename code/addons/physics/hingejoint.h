@@ -16,7 +16,7 @@ namespace Physics
 {
 class HingeJoint : public Joint
 {
-	DeclareClass(HingeJoint);
+	__DeclareClass(HingeJoint);
 public:
     /// constructor
     HingeJoint();

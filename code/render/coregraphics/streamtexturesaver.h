@@ -9,26 +9,24 @@
     
     (C) 2007 Radon Labs GmbH
 */
-#if __WIN32__
-#include "coregraphics/d3d9/d3d9streamtexturesaver.h"
+#if (__WIN32__ || __XBOX360__)
+#include "coregraphics/win360/d3d9streamtexturesaver.h"
 namespace CoreGraphics
 {
-class StreamTextureSaver : public Direct3D9::D3D9StreamTextureSaver
+class StreamTextureSaver : public Win360::D3D9StreamTextureSaver
 {
-    DeclareClass(StreamTextureSaver);
-};
-}
-#elif __XBOX360__
-#include "coregraphics/xbox360/xbox360streamtexturesaver.h"
-namespace CoreGraphics
-{
-class StreamTextureSaver : public Xbox360::Xbox360StreamTextureSaver
-{
-    DeclareClass(StreamTextureSaver);
+    __DeclareClass(StreamTextureSaver);
 };
 }
 #elif __WII__
-
+#include "coregraphics/wii/wiistreamtexturesaver.h"
+namespace CoreGraphics
+{
+class StreamTextureSaver : public Wii::WiiStreamTextureSaver
+{
+    __DeclareClass(StreamTextureSaver);
+};
+}
 #else
 #error "StreamTextureSaver class not implemented on this platform!"
 #endif

@@ -14,17 +14,16 @@ namespace Tools
 using namespace Graphics;
 using namespace Math;
 using namespace Util;
-using namespace Lighting;
 using namespace Resources;
 using namespace Timing;
 
-ImplementSingleton(TestGameApplication);   
+__ImplementSingleton(TestGameApplication);   
 //------------------------------------------------------------------------------
 /**
 */
 TestGameApplication::TestGameApplication()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------

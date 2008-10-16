@@ -15,7 +15,7 @@ namespace Test
 {
 class MemoryStreamTest : public TestCase
 {
-    DeclareClass(MemoryStreamTest);
+    __DeclareClass(MemoryStreamTest);
 public:
     /// run the test
     virtual void Run();

@@ -188,56 +188,12 @@ PrimitiveGroup::GetNumPrimitives() const
 {
     if (this->numIndices > 0)
     {
-        // use indexed rendering
-        switch (this->primitiveTopology)
-        {
-            case PrimitiveTopology::PointList:
-                return this->numIndices;
-
-            case PrimitiveTopology::LineList:
-            case PrimitiveTopology::LineListWithAdjacency:
-                return this->numIndices / 2;
-
-            case PrimitiveTopology::LineStrip:
-            case PrimitiveTopology::LineStripWithAdjacency:
-                return this->numIndices - 1;
-
-            case PrimitiveTopology::TriangleList:
-            case PrimitiveTopology::TriangleListWithAdjacency:
-                return this->numIndices / 3;
-
-            case PrimitiveTopology::TriangleStrip:
-            case PrimitiveTopology::TriangleStripWithAdjacency:
-                return this->numIndices - 2;
-        }
+        return PrimitiveTopology::NumberOfPrimitives(this->primitiveTopology, this->numIndices);
     }
     else
     {
-        // use non-indexed rendering
-        switch (this->primitiveTopology)
-        {
-            case PrimitiveTopology::PointList:
-                return this->numVertices;
-
-            case PrimitiveTopology::LineList:
-            case PrimitiveTopology::LineListWithAdjacency:
-                return this->numVertices / 2;
-
-            case PrimitiveTopology::LineStrip:
-            case PrimitiveTopology::LineStripWithAdjacency:
-                return this->numVertices - 1;
-
-            case PrimitiveTopology::TriangleList:
-            case PrimitiveTopology::TriangleListWithAdjacency:
-                return this->numVertices / 3;
-
-            case PrimitiveTopology::TriangleStrip:
-            case PrimitiveTopology::TriangleStripWithAdjacency:
-                return this->numVertices - 2;
-        }
+        return PrimitiveTopology::NumberOfPrimitives(this->primitiveTopology, this->numVertices);
     }
-    n_error("Can't happen");
-    return 0;
 }
 
 } // namespace PrimitiveGroup

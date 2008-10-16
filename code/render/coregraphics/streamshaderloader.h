@@ -15,7 +15,7 @@ namespace CoreGraphics
 {
 class StreamShaderLoader : public Direct3D9::D3D9StreamShaderLoader
 {
-    DeclareClass(StreamShaderLoader);
+    __DeclareClass(StreamShaderLoader);
 };
 }
 #elif __XBOX360__
@@ -24,7 +24,7 @@ namespace CoreGraphics
 {
 class StreamShaderLoader : public Xbox360::Xbox360StreamShaderLoader
 {
-    DeclareClass(StreamShaderLoader);
+    __DeclareClass(StreamShaderLoader);
 };
 }
 #elif __WII__
@@ -33,7 +33,7 @@ namespace CoreGraphics
 {
 class StreamShaderLoader : public Wii::WiiStreamShaderLoader
 {
-    DeclareClass(StreamShaderLoader);
+    __DeclareClass(StreamShaderLoader);
 };
 }
 #else

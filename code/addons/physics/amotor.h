@@ -19,7 +19,7 @@ namespace Physics
 {
 class AMotor : public Joint
 {
-	DeclareClass(AMotor);
+	__DeclareClass(AMotor);
 public:
     /// constructor
     AMotor();

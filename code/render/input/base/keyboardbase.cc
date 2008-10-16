@@ -8,7 +8,7 @@
 
 namespace Base
 {
-ImplementClass(Base::KeyboardBase, 'KBBS', Input::InputHandler);
+__ImplementClass(Base::KeyboardBase, 'KBBS', Input::InputHandler);
 
 using namespace Input;
 
@@ -57,7 +57,7 @@ KeyboardBase::OnAttach()
 {
     InputHandler::OnAttach();
     KeyState initialKeyState;
-    this->keyStates.Clear(initialKeyState);
+    this->keyStates.Fill(initialKeyState);
     this->charInput.Clear();
 }
 

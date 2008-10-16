@@ -24,8 +24,8 @@ namespace BaseGameFeature
 {
 class EnvQueryManager : public Game::Manager
 {
-	DeclareClass(EnvQueryManager);
-    DeclareSingleton(EnvQueryManager);
+	__DeclareClass(EnvQueryManager);
+    __DeclareSingleton(EnvQueryManager);
 public:
     /// constructor
     EnvQueryManager();

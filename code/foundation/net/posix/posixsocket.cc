@@ -11,7 +11,7 @@
 
 namespace Posix
 {
-ImplementClass(Posix::PosixSocket, 'WSCK', Core::RefCounted);
+__ImplementClass(Posix::PosixSocket, 'WSCK', Core::RefCounted);
 using namespace Util;
 
 bool PosixSocket::NetworkInitialized = false;

@@ -20,7 +20,7 @@ namespace Models
 {
 class TransformNodeInstance : public ModelNodeInstance
 {
-    DeclareClass(TransformNodeInstance);
+    __DeclareClass(TransformNodeInstance);
 public:
     /// constructor
     TransformNodeInstance();

@@ -15,7 +15,7 @@ namespace Test
 {
 class FixedTableTest : public TestCase
 {
-    DeclareClass(FixedTableTest);
+    __DeclareClass(FixedTableTest);
 public:
     /// run the test
     virtual void Run();

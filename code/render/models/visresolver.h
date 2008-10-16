@@ -26,8 +26,8 @@ class ModelNodeInstance;
 
 class VisResolver : public Core::RefCounted
 {
-    DeclareClass(VisResolver);
-    DeclareSingleton(VisResolver);
+    __DeclareClass(VisResolver);
+    __DeclareSingleton(VisResolver);
 public:
     /// constructor
     VisResolver();

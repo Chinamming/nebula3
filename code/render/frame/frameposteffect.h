@@ -6,7 +6,10 @@
     @class Frame::FramePostEffect
     
     A frame post-effect implements draws a fullscreen quad through a
-    shader which implements the post effect.
+    shader which implements the post effect. Additionally it is
+    possible to add render batches to a post effect, these will
+    be called after the fullscreen quad is rendered, allowing the
+    application to render stuff on top of the final frame.
     
     (C) 2007 Radon Labs GmbH
 */
@@ -17,13 +20,14 @@
 #include "coregraphics/shadervariableinstance.h"
 #include "coregraphics/vertexbuffer.h"
 #include "coregraphics/primitivegroup.h"
+#include "frame/framebatch.h"
 
 //------------------------------------------------------------------------------
 namespace Frame
 {
 class FramePostEffect : public Core::RefCounted
 {
-    DeclareClass(FramePostEffect);
+    __DeclareClass(FramePostEffect);
 public:
     /// constructor
     FramePostEffect();
@@ -56,6 +60,13 @@ public:
     /// get shader variable by index
     const Ptr<CoreGraphics::ShaderVariableInstance>& GetVariableByIndex(IndexT i) const;
 
+    /// add a frame batch to the frame pass
+    void AddBatch(const Ptr<FrameBatch>& batch);
+    /// get number of frame batches
+    SizeT GetNumBatches() const;
+    /// get batch by index
+    const Ptr<FrameBatch>& GetBatchByIndex(IndexT i) const;
+
 private:
     Resources::ResourceId name;
     Ptr<CoreGraphics::VertexBuffer> vertexBuffer;
@@ -64,6 +75,7 @@ private:
     Util::Array<Ptr<CoreGraphics::ShaderVariableInstance> > shaderVariables;
     CoreGraphics::PrimitiveGroup primGroup;
     Ptr<CoreGraphics::ShaderVariable> shdPixelSize;
+    Util::Array<Ptr<FrameBatch> > batches;
 };
 
 //------------------------------------------------------------------------------
@@ -145,6 +157,33 @@ inline const Ptr<CoreGraphics::ShaderVariableInstance>&
 FramePostEffect::GetVariableByIndex(IndexT i) const
 {
     return this->shaderVariables[i];
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+FramePostEffect::AddBatch(const Ptr<FrameBatch>& batch)
+{
+    this->batches.Append(batch);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline SizeT
+FramePostEffect::GetNumBatches() const
+{
+    return this->batches.Size();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline const Ptr<FrameBatch>&
+FramePostEffect::GetBatchByIndex(IndexT i) const
+{
+    return this->batches[i];
 }
 
 } // namespace Frame

@@ -10,13 +10,14 @@
     (C) 2007 Radon Labs GmbH
 */
 #include "input/base/gamepadbase.h"
+#include "timing/timer.h"
 
 //------------------------------------------------------------------------------
 namespace XInput
 {
 class XInputGamePad : public Base::GamePadBase
 {
-    DeclareClass(XInputGamePad);
+    __DeclareClass(XInputGamePad);
 public:
     /// constructor
     XInputGamePad();
@@ -24,6 +25,8 @@ public:
     virtual ~XInputGamePad();
 
 protected:
+    /// called when the handler is attached to the input server
+    virtual void OnAttach();
     /// called on InputServer::BeginFrame()
     virtual void OnBeginFrame();
     /// update the state of a game pad button
@@ -33,7 +36,10 @@ protected:
     /// update the state of a thumb stick axis
     void UpdateThumbAxis(const XINPUT_GAMEPAD& curState, Axis axis);
 
+    static const Timing::Tick CheckConnectedInterval = 500;     // 500 ms between connection checks
     DWORD lastPacketNumber;
+    Timing::Timer timer;
+    Timing::Tick lastCheckConnectedTime;
 };
 
 } // namespace XInput

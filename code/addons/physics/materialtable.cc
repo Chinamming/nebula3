@@ -4,12 +4,15 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "physics/materialtable.h"
-#include "io/xmlreader.h"
+#include "io/excelxmlreader.h"
+#include "io/filestream.h"
 
 namespace Physics
 {
-Util::Array<struct MaterialTable::Material> MaterialTable::materials;
-Util::Array<Util::Array<struct MaterialTable::Interaction> > MaterialTable::interactions;
+using namespace Util;
+
+Util::FixedArray<struct MaterialTable::Material> MaterialTable::materials;
+Util::FixedArray<Util::FixedArray<struct MaterialTable::Interaction> > MaterialTable::interactions;
 Util::String MaterialTable::invalidTypeString = "InvalidMaterial";
 
 //------------------------------------------------------------------------------
@@ -33,48 +36,117 @@ Util::String MaterialTable::invalidTypeString = "InvalidMaterial";
 void 
 MaterialTable::Setup()
 {
-    /// Soil:Stone:Asphalt:Metal:Wood:HollowWood:Glass:Ice:Gold:Flesh:Bone
-    /// create some default materials with densities and interactions
-    AddMaterialType("HollowWood",   0.6f);
-    AddMaterialType("Wood",         0.8f);
-    AddMaterialType("Ice",          0.919f);
-    AddMaterialType("Bone",         0.85f);
-    AddMaterialType("Water",        1.0f);
-    AddMaterialType("Character",    1.0f);
-    AddMaterialType("Flesh",        1.0f);
-    AddMaterialType("Asphalt",      1.4f);
-    AddMaterialType("Glass",        2.579f);
-    AddMaterialType("Stone",        2.691f);
-    AddMaterialType("Metal",        7.8f);
-    AddMaterialType("Soil",         10.0f);
-    AddMaterialType("Gold",         19.32f);
-    AddMaterialType("Probe",         0.1f);
+	// open file via filestream
+	Ptr<IO::FileStream> fileStream = IO::FileStream::Create();
+	fileStream->SetURI(IO::URI("data:tables/materials.xml"));
+	fileStream->Open();
 
-    uint characterIndex = StringToMaterialType("Character");
-    for (uint i = 0; i < materials.Size(); i++)
-    {
-        for (uint j = 0; j < materials.Size(); j++)
-        {
-            // set special friction and bouncyness for character
-            if (characterIndex == i
-                || characterIndex == j)
+	// open xml file
+	Ptr<IO::ExcelXmlReader> excelReader = IO::ExcelXmlReader::Create();
+	excelReader->SetStream(fileStream.cast<IO::Stream>());
+    bool materialTableExists = excelReader->Open();
+    n_assert(materialTableExists);
+
+	// now find the tables
+	int matTabIdx = -1; 
+	int fricTabIdx = -1;
+	int bouncTabIdx = -1;
+	int soundTabIdx = -1;
+	uint index;
+	for(index = 0; index < excelReader->GetNumTables(); index++)
+	{
+		if (excelReader->GetTableName(index) == "materials")		{ matTabIdx = index;   continue; }
+		if (excelReader->GetTableName(index) == "friction")			{ fricTabIdx = index;  continue; }
+		if (excelReader->GetTableName(index) == "bouncyness")		{ bouncTabIdx = index; continue; }
+		if (excelReader->GetTableName(index) == "sound")			{ soundTabIdx = index; continue; }
+	}
+	n_assert(matTabIdx != -1);
+	n_assert(fricTabIdx != -1);
+	n_assert(bouncTabIdx != -1);
+	n_assert(soundTabIdx != -1);
+	
+	// set sizes
+	SizeT materialsCount = excelReader->GetNumRows(matTabIdx) - 2;
+	materials.SetSize(materialsCount);
+	interactions.SetSize(materialsCount);
+	for(index = 0; index < interactions.Size(); index++)
+	{
+		interactions[index].SetSize(materialsCount);
+	}
+
+	// read materials table
+	uint row;
+	for(row = 2; row < excelReader->GetNumRows(matTabIdx); ++row)
+	{
+		struct Material& material = materials[row - 2];
+		material.name = excelReader->GetElement(row, "Name", matTabIdx);
+		material.density = excelReader->GetElement(row, "Density", matTabIdx).AsFloat();
+	}
+
+	// load friction data
+	n_assert(excelReader->GetNumRows(fricTabIdx) == materials.Size() + 2);
+	n_assert(excelReader->GetNumColumns(fricTabIdx) == materials.Size() + 1);
+	for(row = 2; row < excelReader->GetNumRows(fricTabIdx); ++row)
+	{
+		MaterialType mat1 = StringToMaterialType(excelReader->GetElement(row, 0, fricTabIdx));
+		
+		uint col;
+		for(col = row - 1; col < excelReader->GetNumColumns(fricTabIdx); ++col)
+		{
+			MaterialType mat2 = StringToMaterialType(excelReader->GetElement(0, col, fricTabIdx));
+			
+            interactions[mat1][mat2].friction = excelReader->GetElement(row, col, fricTabIdx).AsFloat();            
+			interactions[mat2][mat1].friction = excelReader->GetElement(row, col, fricTabIdx).AsFloat();            
+		}
+	}
+
+	// load bounce data
+	n_assert(excelReader->GetNumRows(bouncTabIdx) == materialsCount + 2);
+	n_assert(excelReader->GetNumColumns(bouncTabIdx) == materialsCount + 1);
+	for(row = 2; row < excelReader->GetNumRows(bouncTabIdx); ++row)
+	{
+		MaterialType mat1 = StringToMaterialType(excelReader->GetElement(row, 0, bouncTabIdx));
+
+		uint col;
+		for(col = row - 1; col < excelReader->GetNumColumns(bouncTabIdx); ++col)
+		{
+			MaterialType mat2 = StringToMaterialType(excelReader->GetElement(0, col, bouncTabIdx));
+
+			interactions[mat1][mat2].bouncyness = excelReader->GetElement(row, col, bouncTabIdx).AsFloat();            
+			interactions[mat2][mat1].bouncyness = excelReader->GetElement(row, col, bouncTabIdx).AsFloat();            
+		}
+	}
+
+	// load sound data
+	n_assert(excelReader->GetNumRows(soundTabIdx) == materialsCount + 2);
+	n_assert(excelReader->GetNumColumns(soundTabIdx) == materialsCount + 1);
+	for(row = 2; row < excelReader->GetNumRows(soundTabIdx); ++row)
+	{
+		MaterialType mat1 = StringToMaterialType(excelReader->GetElement(row, 0, soundTabIdx));
+
+		uint col;
+		for(col = row + 1; col < excelReader->GetNumColumns(soundTabIdx); ++col)
+		{
+			MaterialType mat2 = StringToMaterialType(excelReader->GetElement(0, col, soundTabIdx));
+
+			if (excelReader->GetElement(row, col, soundTabIdx) != "")
+			{
+				interactions[mat1][mat2].collSound = excelReader->GetElement(row, col, soundTabIdx);
+				interactions[mat2][mat1].collSound = excelReader->GetElement(row, col, soundTabIdx);
+			}
+			else
             {
-                SetFriction(i, j, 1.5f);
-                SetBouncyness(i, j, 0.0f);
+                interactions[mat1][mat2].collSound.Clear();
+                interactions[mat2][mat1].collSound.Clear();
             }
-            else
-            {
-                SetFriction(i, j, 8.0f);
-                SetBouncyness(i, j, 0.5f);
-            }            
-        }
-    }
+		}
+	}
 };
 
 //------------------------------------------------------------------------------
 /**
 */
-const String& 
+const Util::String& 
 MaterialTable::MaterialTypeToString(MaterialType t)
 {
     if (-1 == t)
@@ -92,7 +164,7 @@ MaterialTable::MaterialTypeToString(MaterialType t)
 /**
 */
 MaterialType 
-MaterialTable::StringToMaterialType(const String& str)
+MaterialTable::StringToMaterialType(const Util::String& str)
 {
     for (uint i = 0; i < materials.Size(); ++i)
     {
@@ -146,35 +218,6 @@ MaterialTable::GetCollisionSound(MaterialType t0, MaterialType t1)
     n_assert(t0 >= 0 && (uint)t0 < materials.Size());
     n_assert(t1 >= 0 && (uint)t1 < materials.Size());
     return interactions[t0][t1].collSound;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void 
-MaterialTable::AddMaterialType(const Util::String& matName, float density)
-{
-    n_assert(StringToMaterialType(matName) == InvalidMaterial);
-    Material newMat;
-    newMat.name = matName;
-    newMat.density = density;
-    materials.Append(newMat);
-    
-    // add new interactions row
-    Interaction newInteraction;
-    Array<Interaction> interactionRow;
-    if (interactions.Size() > 0 )
-    {
-        interactionRow = interactions[interactions.Size()-1];   
-    }
-    interactions.Append(interactionRow);
-
-    // go thru all interactions and add our new material
-    uint i;
-    for (i = 0; i < interactions.Size(); i++)
-    {
-        interactions[i].Append(newInteraction);        
-    }
 }
 
 //------------------------------------------------------------------------------

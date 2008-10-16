@@ -7,7 +7,7 @@
 
 namespace IO
 {
-ImplementClass(IO::ConsoleHandler, 'CONH', Core::RefCounted);
+__ImplementClass(IO::ConsoleHandler, 'CONH', Core::RefCounted);
 
 using namespace Util;
 

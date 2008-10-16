@@ -1,6 +1,4 @@
 #pragma once
-#ifndef CORE_CORESERVER_H
-#define CORE_CORESERVER_H
 //------------------------------------------------------------------------------
 /**
     @class Core::CoreServer
@@ -22,8 +20,8 @@ namespace Core
 {
 class CoreServer : public RefCounted
 {
-    DeclareClass(CoreServer);
-    DeclareSingleton(CoreServer);
+    __DeclareClass(CoreServer);
+    __DeclareSingleton(CoreServer);
 public:
     /// constructor
     CoreServer();
@@ -43,6 +41,8 @@ public:
     void Close();
     /// return true if currently open
     bool IsOpen() const;
+    /// trigger core server, updates console
+    void Trigger();
 
 private:
     Ptr<IO::Console> con;
@@ -98,4 +98,3 @@ CoreServer::GetAppName() const
 
 } // namespace Core
 //------------------------------------------------------------------------------
-#endif

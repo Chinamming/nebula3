@@ -1,6 +1,4 @@
 #pragma once
-#ifndef WIN32_SYSFUNC_H
-#define WIN32_SYSFUNC_H
 //------------------------------------------------------------------------------
 /**
     @class Win32::SysFunc
@@ -10,7 +8,6 @@
     (C) 2006 Radon Labs GmbH
 */
 #include "core/types.h"
-#include "util/string.h"
 
 //------------------------------------------------------------------------------
 namespace Win32
@@ -29,13 +26,10 @@ public:
     static void DebugOut(const char* msg);
     /// sleep for a specified amount of seconds
     static void Sleep(double sec);
-    /// returns GetLastError() as string
-    static Util::String GetLastError();
 
 private:
     static bool volatile SetupCalled;
 };
 
-};
+} // namespace Win32
 //------------------------------------------------------------------------------
-#endif

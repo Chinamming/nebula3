@@ -17,7 +17,7 @@ namespace Physics
 {
 class AreaImpulse : public Core::RefCounted
 {
-	DeclareClass(AreaImpulse);
+	__DeclareClass(AreaImpulse);
 public:
     /// constructor
     AreaImpulse();

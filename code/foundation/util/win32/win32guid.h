@@ -1,6 +1,4 @@
 #pragma once
-#ifndef WIN32_WIN32GUID_H
-#define WIN32_WIN32GUID_H
 //------------------------------------------------------------------------------
 /**
     @class Win32::Win32Guid
@@ -129,6 +127,5 @@ Win32Guid::Win32Guid(const unsigned char* ptr, SizeT size)
     Memory::Copy(ptr, &this->uuid, sizeof(UUID));
 }
 
-}; // namespace Win32
+} // namespace Win32
 //------------------------------------------------------------------------------
-#endif

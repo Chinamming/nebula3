@@ -24,7 +24,7 @@ namespace Base
 {
 class ShaderVariationBase : public Core::RefCounted
 {
-    DeclareClass(ShaderVariationBase);
+    __DeclareClass(ShaderVariationBase);
 public:
     typedef Util::Atom<Util::String> Name;
         

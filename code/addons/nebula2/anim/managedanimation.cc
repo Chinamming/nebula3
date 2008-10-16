@@ -7,5 +7,5 @@
 
 namespace Nebula2
 {
-ImplementClass(Nebula2::ManagedAnimation, 'MANI', Resources::ManagedResource);
+__ImplementClass(Nebula2::ManagedAnimation, 'MANI', Resources::ManagedResource);
 } // namespace Models

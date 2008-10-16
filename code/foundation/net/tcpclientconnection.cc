@@ -8,7 +8,7 @@
 
 namespace Net
 {
-ImplementClass(Net::TcpClientConnection, 'NTCC', Core::RefCounted);
+__ImplementClass(Net::TcpClientConnection, 'NTCC', Core::RefCounted);
 
 using namespace Util;
 using namespace IO;

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_STRING_H
-#define UTIL_STRING_H
 //------------------------------------------------------------------------------
 /**
     @class Util::String
@@ -27,6 +25,7 @@
 #include "core/types.h"
 #include "util/array.h"
 #include "math/float4.h"
+#include "math/float2.h"
 #include "math/matrix44.h"
 #include "memory/heap.h"
 
@@ -101,6 +100,8 @@ public:
 	void ToLower();
     /// convert string to upper case
 	void ToUpper();
+    /// convert first char of string to upper case
+    void FirstCharToUpper();
     /// tokenize string into a provided String array
     Array<String> Tokenize(const String& whiteSpace) const;
     /// tokenize string, keep strings within fence characters intact
@@ -158,7 +159,9 @@ public:
     /// set as float value
     void SetFloat(float val);
     /// set as bool value
-    void SetBool(bool val);
+    void SetBool(bool val);	
+    /// set as float2 value
+    void SetFloat2(const Math::float2& v);
     /// set as float4 value
     void SetFloat4(const Math::float4& v);
     /// set as matrix44 value
@@ -170,6 +173,8 @@ public:
     void AppendFloat(float val);
     /// append bool value
     void AppendBool(bool val);
+	/// append float2 value
+	void AppendFloat2(const Math::float2& v);
     /// append float4 value
     void AppendFloat4(const Math::float4& v);
     /// append matrix44 value
@@ -183,6 +188,8 @@ public:
     float AsFloat() const;
     /// return contents as bool
     bool AsBool() const;
+	/// return contents as float2
+	Math::float2 AsFloat2() const;
     /// return contents as float4
     Math::float4 AsFloat4() const;
     /// return contents as matrix44
@@ -194,6 +201,8 @@ public:
     bool IsValidFloat() const;
     /// return true if the content is a valid bool
     bool IsValidBool() const;
+	/// return true if the content is a valid float2
+	bool IsValidFloat2() const;
     /// return true if the content is a valid float4
     bool IsValidFloat4() const;
     /// return true if content is a valid matrix44
@@ -205,6 +214,8 @@ public:
     static String FromFloat(float f);
     /// construct a string from a bool
     static String FromBool(bool b);
+	/// construct a string from float2
+	static String FromFloat2(const Math::float2& v);
     /// construct a string from float4
     static String FromFloat4(const Math::float4& v);
     /// construct a string from matrix44
@@ -235,9 +246,9 @@ private:
     /// get pointer to last directory separator
     char* GetLastSlash() const;
     /// allocate the string buffer (discards old content)
-    void Allocate(SizeT size);
+    void Alloc(SizeT size);
     /// (re-)allocate the string buffer (copies old content)
-    void Reallocate(SizeT newSize);
+    void Realloc(SizeT newSize);
 
     enum
     {
@@ -247,7 +258,6 @@ private:
     char localBuffer[LocalStringSize];
     SizeT strLen;
     SizeT heapBufferSize;
-    static Memory::Heap* DataHeap;
     static Memory::Heap* ObjectHeap;
 };
 
@@ -257,10 +267,8 @@ private:
 inline void
 String::Setup()
 {
-    n_assert(0 == DataHeap);
     n_assert(0 == ObjectHeap);
     ObjectHeap = new Memory::Heap("Util.String.ObjectHeap");
-    DataHeap = new Memory::Heap("Util.String.DataHeap");
 }
 
 //------------------------------------------------------------------------------
@@ -303,8 +311,7 @@ String::Delete()
 {
     if (this->heapBuffer)
     {
-        n_assert(0 != DataHeap);
-        DataHeap->Free((void*)this->heapBuffer);
+        Memory::Free(Memory::StringHeap, (void*) this->heapBuffer);
         this->heapBuffer = 0;
     }
     this->localBuffer[0] = 0;
@@ -326,21 +333,20 @@ String::~String()
     Allocate a new heap buffer, discards old contents.
 */
 inline void
-String::Allocate(SizeT newSize)
+String::Alloc(SizeT newSize)
 {
     n_assert(newSize > (this->strLen + 1));
     n_assert(newSize > this->heapBufferSize);
-    n_assert(0 != DataHeap);
 
     // free old buffer
     if (this->heapBuffer)
     {
-        DataHeap->Free((void*) this->heapBuffer);
+        Memory::Free(Memory::StringHeap, (void*) this->heapBuffer);
         this->heapBuffer = 0;
     }
 
     // allocate new buffer
-    this->heapBuffer = (char*) DataHeap->Alloc(newSize);
+    this->heapBuffer = (char*) Memory::Alloc(Memory::StringHeap, newSize);
     this->heapBufferSize = newSize;
     this->localBuffer[0] = 0;
 }
@@ -350,14 +356,13 @@ String::Allocate(SizeT newSize)
     (Re-)allocate external buffer and copy existing string contents there.
 */
 inline void
-String::Reallocate(SizeT newSize)
+String::Realloc(SizeT newSize)
 {
     n_assert(newSize > (this->strLen + 1));
     n_assert(newSize > this->heapBufferSize);
-    n_assert(0 != DataHeap);
 
     // allocate a new buffer
-    char* newBuffer = (char*) DataHeap->Alloc(newSize);
+    char* newBuffer = (char*) Memory::Alloc(Memory::StringHeap, newSize);
 
     // copy existing contents there...
     if (this->strLen > 0)
@@ -370,7 +375,7 @@ String::Reallocate(SizeT newSize)
     // assign new buffer
     if (this->heapBuffer)
     {
-        DataHeap->Free((void*) this->heapBuffer);
+        Memory::Free(Memory::StringHeap, (void*) this->heapBuffer);
         this->heapBuffer = 0;
     }
     this->localBuffer[0] = 0;
@@ -388,7 +393,7 @@ String::Reserve(SizeT newSize)
 {
     if (newSize > this->heapBufferSize)
     {
-        this->Reallocate(newSize);
+        this->Realloc(newSize);
     }
 }
 
@@ -438,6 +443,15 @@ String::SetBool(bool val)
     {
         this->SetCharPtr("false");
     }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+String::SetFloat2(const Math::float2& v)
+{
+    this->Format("%.6f,%.6f", v.x(), v.y());
 }
 
 //------------------------------------------------------------------------------
@@ -744,6 +758,16 @@ String::ToUpper()
 //------------------------------------------------------------------------------
 /**
 */
+inline void
+String::FirstCharToUpper()
+{
+    char* str = const_cast<char*>(this->AsCharPtr());    
+    *str = (char) toupper(*str);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 static inline String
 operator+(const String& s0, const String& s1)
 {
@@ -968,6 +992,16 @@ String::IsValidBool() const
     Note: this method is not 100% correct, it just checks for invalid characters.
 */
 inline bool
+String::IsValidFloat2() const
+{
+    return this->CheckValidCharSet(" \t-+.,e1234567890");
+}
+
+//------------------------------------------------------------------------------
+/**
+    Note: this method is not 100% correct, it just checks for invalid characters.
+*/
+inline bool
 String::IsValidFloat4() const
 {
     return this->CheckValidCharSet(" \t-+.,e1234567890");
@@ -1031,6 +1065,22 @@ String::AsBool() const
 
 //------------------------------------------------------------------------------
 /**
+    Returns content as float2. Note: this method doesn't check whether the
+    contents is actually a valid float4. Use the IsValidFloat2() method
+    for this!
+*/
+inline Math::float2
+String::AsFloat2() const
+{
+    Array<String> tokens = this->Tokenize(", \t");
+    n_assert(tokens.Size() == 2);
+    Math::float2 v(tokens[0].AsFloat(), tokens[1].AsFloat());
+    return v;
+}
+
+
+//------------------------------------------------------------------------------
+/**
     Returns content as float4. Note: this method doesn't check whether the
     contents is actually a valid float4. Use the IsValidFloat4() method
     for this!
@@ -1090,6 +1140,17 @@ String::FromBool(bool b)
 /**
 */
 inline String
+String::FromFloat2(const Math::float2& v)
+{
+    String str;
+    str.SetFloat2(v);
+    return str;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline String
 String::FromFloat4(const Math::float4& v)
 {
     String str;
@@ -1139,6 +1200,15 @@ String::AppendBool(bool val)
 /**
 */
 inline void
+String::AppendFloat2(const Math::float2& val)
+{
+    this->Append(FromFloat2(val));
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
 String::AppendFloat4(const Math::float4& val)
 {
     this->Append(FromFloat4(val));
@@ -1155,5 +1225,4 @@ String::AppendMatrix44(const Math::matrix44& val)
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif
 

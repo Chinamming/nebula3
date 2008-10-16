@@ -16,7 +16,7 @@ namespace BaseGameFeature
 {
 using namespace Game;
 
-ImplementClass(EntityLoader, 'LOEL', EntityLoaderBase);
+__ImplementClass(EntityLoader, 'LOEL', EntityLoaderBase);
 
 //------------------------------------------------------------------------------
 /**

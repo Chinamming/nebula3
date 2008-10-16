@@ -7,11 +7,10 @@
 #include "coregraphics/memoryvertexbufferloader.h"
 #include "coregraphics/indexbuffer.h"
 #include "coregraphics/renderdevice.h"
-#include "preshaders/preshaders.h"
 
 namespace Frame
 {
-ImplementClass(Frame::FramePostEffect, 'FPEF', Core::RefCounted);
+__ImplementClass(Frame::FramePostEffect, 'FPEF', Core::RefCounted);
 
 using namespace Util;
 using namespace Resources;
@@ -34,6 +33,7 @@ FramePostEffect::~FramePostEffect()
     n_assert(!this->shader.isvalid());
     n_assert(!this->renderTarget.isvalid());
     n_assert(this->shaderVariables.IsEmpty());
+    n_assert(this->batches.IsEmpty());
 }
 
 //------------------------------------------------------------------------------
@@ -134,6 +134,12 @@ FramePostEffect::Discard()
         this->vertexBuffer->Unload();
         this->vertexBuffer = 0;
     }
+    IndexT i;
+    for (i = 0; i < this->batches.Size(); i++)
+    {
+        this->batches[i]->Discard();
+    }
+    this->batches.Clear();
     this->shaderVariables.Clear();
 }
 
@@ -159,11 +165,16 @@ FramePostEffect::Render()
         this->shaderVariables[varIndex]->Apply();
     }
 
-    // render fullscreen quad...
+    // first render fullscreen quad, then any render batches 
     renderDevice->BeginPass(this->renderTarget, this->shader);
     renderDevice->SetVertexBuffer(this->vertexBuffer);
     renderDevice->SetPrimitiveGroup(this->primGroup);
     renderDevice->Draw();
+    IndexT batchIndex;
+    for (batchIndex = 0; batchIndex < this->batches.Size(); batchIndex++)
+    {
+        this->batches[batchIndex]->Render();
+    }
     renderDevice->EndPass();
 }
 

@@ -15,7 +15,7 @@ namespace Attr
 
 namespace BaseGameFeature
 {
-ImplementClass(TimeSource, 'TTSC', Core::RefCounted);
+__ImplementClass(TimeSource, 'TTSC', Core::RefCounted);
 
 using namespace Timing;
 //------------------------------------------------------------------------------

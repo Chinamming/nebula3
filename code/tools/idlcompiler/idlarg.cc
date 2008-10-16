@@ -7,7 +7,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::IDLArg, 'ILAG', Core::RefCounted);
+__ImplementClass(Tools::IDLArg, 'ILAG', Core::RefCounted);
 
 using namespace Util;
 using namespace IO;
@@ -30,6 +30,7 @@ IDLArg::Parse(XmlReader* reader)
     this->name = reader->GetString("name");
     this->type = reader->GetString("type");
     this->defaultValue = reader->GetOptString("default", "");
+    this->serialize = reader->GetOptBool("serialize", false);
     if (reader->SetToFirstChild("Encode"))
     {
         this->encodeCode = reader->GetContent();
@@ -41,6 +42,32 @@ IDLArg::Parse(XmlReader* reader)
         reader->SetToParent();
     }
     return true;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+bool
+IDLArg::IsValidType(const Util::String& str)
+{
+    if ((str == "Char")
+        ||(str == "String")
+        ||(str == "Float")
+        ||(str == "Float4")
+        ||(str == "Int")
+        ||(str == "Uint")
+        ||(str == "Bool")
+        ||(str == "Matrix44")
+        ||(str == "Double")
+        ||(str == "Short")
+        ||(str == "UShort")
+        ||(str == "Blob")
+        ||(str == "Guid"))
+    {
+        return true;
+    }   
+
+    return false;
 }
 
 } // namespace Tools

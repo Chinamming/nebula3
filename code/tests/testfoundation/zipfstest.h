@@ -15,7 +15,7 @@ namespace Test
 {
 class ZipFSTest : public TestCase
 {
-    DeclareClass(ZipFSTest);
+    __DeclareClass(ZipFSTest);
 public:
     /// run the test
     virtual void Run();

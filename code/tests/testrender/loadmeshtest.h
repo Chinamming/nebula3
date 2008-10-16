@@ -16,7 +16,7 @@ namespace Test
 {
 class LoadMeshTest : public CoreGraphicsTest
 {
-    DeclareClass(LoadMeshTest);
+    __DeclareClass(LoadMeshTest);
 public:
     /// run the test
     virtual void Run();

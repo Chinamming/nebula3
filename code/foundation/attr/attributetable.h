@@ -41,7 +41,7 @@ namespace Attr
 {
 class AttributeTable : public Core::RefCounted
 {
-    DeclareClass(AttributeTable);
+    __DeclareClass(AttributeTable);
 public:
     /// constructor
     AttributeTable();
@@ -208,7 +208,7 @@ public:
 
 private:
     /// (re-)allocate the current buffer
-    void Reallocate(SizeT newPitch, SizeT newAllocRows);
+    void Realloc(SizeT newPitch, SizeT newAllocRows);
     /// update the column byte offset and return new pitch
     SizeT UpdateColumnOffsets();
     /// returns the byte size of the given value type

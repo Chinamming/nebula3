@@ -19,7 +19,7 @@ namespace Tools
 {
 class IDLCodeGenerator : public Core::RefCounted
 {
-    DeclareClass(IDLCodeGenerator);
+    __DeclareClass(IDLCodeGenerator);
 public:
     /// constructor
     IDLCodeGenerator();
@@ -27,6 +27,10 @@ public:
     void SetURI(const IO::URI& uri);
     /// get the output base filename
     const IO::URI& GetURI() const;
+    /// build the header file uri
+    IO::URI BuildHeaderUri() const;
+    /// build the source file uri
+    IO::URI BuildSourceUri() const;
     /// set the parser object tree
     void SetDocument(IDLDocument* doc);
     /// get the parser object tree
@@ -39,10 +43,6 @@ public:
     const Util::String& GetError() const;
 
 private:
-    /// build the header file uri
-    IO::URI BuildHeaderUri() const;
-    /// build the source file uri
-    IO::URI BuildSourceUri() const;
     /// set an error string
     void __cdecl SetError(const char* fmt, ...);
     /// convert IDL data type to Nebula C++ reference type
@@ -79,6 +79,10 @@ private:
     void WriteSourceFooter(IO::TextWriter* writer) const;
     /// write a command implementation to the source file
     void WriteCommandImplementation(IDLCommand* cmd, IO::TextWriter* writer) const;
+    /// write encode function
+    void WriteEncodeImplementation(IDLMessage* msg, IO::TextWriter* writer) const;
+    /// write decode function
+    void WriteDecodeImplementation(IDLMessage* msg, IO::TextWriter* writer) const;
 
     IO::URI uri;
     Util::String error;

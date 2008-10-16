@@ -16,7 +16,7 @@ namespace Benchmarking
 {
 class Float4Math : public Benchmark
 {
-    DeclareClass(Float4Math);
+    __DeclareClass(Float4Math);
 public:
     /// run the benchmark
     virtual void Run(Timing::Timer& timer);

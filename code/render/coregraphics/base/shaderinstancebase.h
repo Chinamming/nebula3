@@ -18,7 +18,6 @@
 #include "coregraphics/shadervariable.h"
 #include "coregraphics/shaderfeature.h"
 #include "coregraphics/shadervariation.h"
-#include "coregraphics/preshader.h"
 
 namespace CoreGraphics
 {
@@ -30,7 +29,7 @@ namespace Base
 {
 class ShaderInstanceBase : public Core::RefCounted
 {
-    DeclareClass(ShaderInstanceBase);
+    __DeclareClass(ShaderInstanceBase);
 public:
     /// constructor
     ShaderInstanceBase();
@@ -70,13 +69,6 @@ public:
     /// get currently active variation
     const Ptr<CoreGraphics::ShaderVariation>& GetActiveVariation() const;
 
-    /// add a pre-shader
-    void AddPreShader(const Ptr<CoreGraphics::PreShader>& preShader);
-    /// remove a pre-shader
-    void RemovePreShader(const Ptr<CoreGraphics::PreShader>& preShader);
-    /// get array of pre-shaders
-    const Util::Array<Ptr<CoreGraphics::PreShader> >& GetPreShaders() const;
-
     /// begin rendering through the currently selected variation, returns no. passes
     SizeT Begin();
     /// begin pass
@@ -103,7 +95,6 @@ protected:
     Util::Dictionary<CoreGraphics::ShaderVariable::Name, Ptr<CoreGraphics::ShaderVariable> > variablesByName;
     Util::Dictionary<CoreGraphics::ShaderVariable::Semantic, Ptr<CoreGraphics::ShaderVariable> > variablesBySemantic;
     Util::Dictionary<CoreGraphics::ShaderFeature::Mask, Ptr<CoreGraphics::ShaderVariation> > variations;
-    Util::Array<Ptr<CoreGraphics::PreShader> > preShaders;
     Ptr<CoreGraphics::ShaderVariation> activeVariation;
 };
 
@@ -213,15 +204,6 @@ inline const Ptr<CoreGraphics::ShaderVariation>&
 ShaderInstanceBase::GetActiveVariation() const
 {
     return this->activeVariation;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-inline const Util::Array<Ptr<CoreGraphics::PreShader> >&
-ShaderInstanceBase::GetPreShaders() const
-{
-    return this->preShaders;
 }
 
 } // namespace CoreGraphics

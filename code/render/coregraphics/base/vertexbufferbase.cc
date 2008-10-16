@@ -7,7 +7,7 @@
 
 namespace Base
 {
-ImplementClass(Base::VertexBufferBase, 'VXBB', Base::ResourceBase);
+__ImplementClass(Base::VertexBufferBase, 'VXBB', Base::ResourceBase);
 
 //------------------------------------------------------------------------------
 /**

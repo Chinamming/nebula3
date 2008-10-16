@@ -11,7 +11,7 @@
 
 namespace Db
 {
-ImplementClass(Db::Sqlite3Dataset, 'S3DS', Db::Dataset);
+__ImplementClass(Db::Sqlite3Dataset, 'S3DS', Db::Dataset);
 
 using namespace Util;
 

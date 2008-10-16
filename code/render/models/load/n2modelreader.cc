@@ -11,14 +11,11 @@
 #include "models/nodes/shapenode.h"
 #include "models/nodes/skinshapenode.h"
 #include "models/nodes/characternode.h"
-
-#include "models/nodes/particlesystemnode.h"
-
 #include "system/byteorder.h"
 
 namespace Models
 {
-ImplementClass(Models::N2ModelReader, 'N2MR', Models::ModelReader);
+__ImplementClass(Models::N2ModelReader, 'N2MR', Models::ModelReader);
 
 using namespace IO;
 using namespace Util;
@@ -391,10 +388,6 @@ N2ModelReader::ReadModelNodeData()
     {
         newModelNode = SkinShapeNode::Create();          
     }
-	else if(objClass == "nparticleshapenode2")
-	{
-		newModelNode = ParticleSystemNode::Create();
-	}
     else
     {
         // unknown class, just simulate this with a transform node
@@ -488,10 +481,6 @@ N2ModelReader::ReadModelNodeAttributes(const Ptr<ModelNode>& modelNode)
                 // .settexture
                 String shaderParam = this->binaryReader->ReadString();
                 String texResId = this->binaryReader->ReadString();
-            #if __WII__
-                // substitute .dds extension with tpl
-                texResId.SubstituteString(".dds", ".tpl");   
-            #endif
                 
                 if (AttrId::IsValidName(shaderParam))
                 {
@@ -525,9 +514,11 @@ N2ModelReader::ReadModelNodeAttributes(const Ptr<ModelNode>& modelNode)
                 shaderResId.Append(this->binaryReader->ReadString());
                 // FIXME: n2 -> n3 shader mapping
                 if (shaderResId == "shd:hair" 
-                    || shaderResId == "shd:environment_skinned")
+                    || shaderResId == "shd:environment_skinned"
+                    || shaderResId == "shd:skinned_alpha")
                 {
-                    if (shaderResId == "shd:hair")
+                    if (shaderResId == "shd:hair"
+                        || shaderResId == "shd:skinned_alpha")
                     {
                         modelNode->SetType(Models::ModelNodeType::Alpha);
                     }
@@ -541,6 +532,11 @@ N2ModelReader::ReadModelNodeAttributes(const Ptr<ModelNode>& modelNode)
                         modelNode->SetType(Models::ModelNodeType::Alpha);
                     }
 					shaderResId = "shd:static";
+				}
+				else if(shaderResId == "shd:environment_alpha")
+				{
+					modelNode->SetType(Models::ModelNodeType::Refractive);
+					shaderResId = "shd:refractive";
 				}
 
                 modelNode->SetString(Attr::Shader, shaderResId);                          
@@ -691,277 +687,6 @@ N2ModelReader::ReadModelNodeAttributes(const Ptr<ModelNode>& modelNode)
                 SkinShapeNode* skinShapeNode = modelNode.downcast<SkinShapeNode>().get();
                 skinShapeNode->EndJointPalette(this->binaryReader->ReadInt());
             }
-			//Particle System cases
-			else if(FourCC('SINV') == curFourCC)//cl->AddCmd("v_setinvisible_b", 'SINV', n_p2setinvisible);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particlesystemnode = modelNode.downcast<ParticleSystemNode>().get();
-				particlesystemnode->SetInvisible(this->binaryReader->ReadBool());
-			}
-			else if(FourCC('SEMD') == curFourCC)//cl->AddCmd("v_setemissionduration_f", 'SEMD', n_p2setemissionduration);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetEmissionDuration(this->binaryReader->ReadFloat());
-			}
-			else if(FourCC('SLOP') == curFourCC)//cl->AddCmd("v_setloop_b", 'SLOP', n_p2setloop);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetLoop(this->binaryReader->ReadBool());
-			}
-			else if(FourCC('SACD') == curFourCC)//cl->AddCmd("v_setactivitydistance_f", 'SACD', n_p2setactivitydistance);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetActivityDistance(this->binaryReader->ReadFloat());
-			}
-			else if(FourCC('SROF') == curFourCC)//cl->AddCmd("v_setrenderoldestfirst_b", 'SROF', n_p2setrenderoldestfirst);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetRenderOldestFirst(this->binaryReader->ReadBool());
-			}
-			else if(FourCC('SBBO') == curFourCC)//cl->AddCmd("v_setbillboardorientation_b", 'SBBO', n_p2setbillboardorientation);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetBillboardOrientation(this->binaryReader->ReadBool());
-			}
-			else if(FourCC('SRMN') == curFourCC)//cl->AddCmd("v_setstartrotationmin_f", 'SRMN', n_p2setstartrotationmin);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetStartRotationMin(this->binaryReader->ReadFloat());
-
-			}
-			else if(FourCC('SRMX') == curFourCC)//cl->AddCmd("v_setstartrotationmax_f", 'SRMX', n_p2setstartrotationmax);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetStartRotationMax(this->binaryReader->ReadFloat());
-			}
-			else if(FourCC('SGRV') == curFourCC)//cl->AddCmd("v_setgravity_f", 'SGRV', n_p2setgravity);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetGravity(this->binaryReader->ReadFloat());
-			}
-			else if(FourCC('SPST') == curFourCC)//cl->AddCmd("v_setparticlestretch_f", 'SPST', n_p2setparticlestretch);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetParticleStretch(this->binaryReader->ReadFloat());
-			}
-			else if(FourCC('STTX') == curFourCC)//cl->AddCmd("v_settiletexture_i", 'STTX', n_p2settiletexture);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetTileTexture(this->binaryReader->ReadInt());
-
-			}
-			else if(FourCC('SSTS') == curFourCC)//cl->AddCmd("v_setstretchtostart_b", 'SSTS', n_p2setstretchtostart);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetStretchToStart(this->binaryReader->ReadBool());
-			}
-			else if(FourCC('SPCT') == curFourCC)//cl->AddCmd("v_setprecalctime_f", 'SPCT', n_p2setprecalctime);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetPrecalcTime(this->binaryReader->ReadFloat());
-			}
-			else if(FourCC('SSDT') == curFourCC)//cl->AddCmd("v_setstretchdetail_i", 'SSDT', n_p2setstretchdetail);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetStretchDetail(this->binaryReader->ReadInt());
-			}
-			else if(FourCC('SVAF') == curFourCC)//cl->AddCmd("v_setviewanglefade_b", 'SVAF', n_p2setviewanglefade);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetViewAngleFade(this->binaryReader->ReadBool());
-			}
-			else if(FourCC('STDL') == curFourCC)//cl->AddCmd("v_setstartdelay_f", 'STDL', n_p2setstartdelay);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetStartDelay(this->binaryReader->ReadFloat());
-			}
-			else if(FourCC('SCVA') == curFourCC)//cl->AddCmd("v_setemissionfrequency_ffffffffi", 'SCVA', n_p2setemissionfrequency);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				float values[8];
-				for(int i = 0; i < 8; i++) values[i] = binaryReader->ReadFloat();
-				particleSystemNode->SetCurve(ParticleSystem::ParticleEmitter::EmissionFrequency, ParticleSystem::EnvelopeCurve(
-					values[0], values[1], values[2], values[3],
-					values[4], values[5], values[6], values[7],
-					this->binaryReader->ReadInt()));
-			}
-			else if(FourCC('SCVB') == curFourCC)//cl->AddCmd("v_setparticlelifetime_ffffffffi", 'SCVB', n_p2setparticlelifetime);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				float values[8];
-				for(int i = 0; i < 8; i++) values[i] = this->binaryReader->ReadFloat();
-				particleSystemNode->SetCurve(ParticleSystem::ParticleEmitter::ParticleLifeTime, ParticleSystem::EnvelopeCurve(
-					values[0], values[1], values[2], values[3],
-					values[4], values[5], values[6], values[7],
-					this->binaryReader->ReadInt()));
-			}
-			else if(FourCC('SCVC') == curFourCC)//cl->AddCmd("v_setparticlergb_ffffffffffffff", 'SCVC', n_p2setparticlergb);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				float values[14];
-				for(int i = 0; i < 14; i++) values[i] = this->binaryReader->ReadFloat();   
-				particleSystemNode->SetRGBCurve(ParticleSystem::Vector3EnvelopeCurve(
-					float4(values[0], values[1], values[2],1),
-					float4(values[3], values[4], values[5],1),
-					float4(values[6], values[7], values[8],1),
-					float4(values[9], values[10], values[11],1),
-					values[12], values[13]));
-			}
-			else if(FourCC('SCVD') == curFourCC)//cl->AddCmd("v_setparticlespreadmin_ffffffffi", 'SCVD', n_p2setparticlespreadmin);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				float values[8];
-				for(int i = 0; i < 8; i++) values[i] = this->binaryReader->ReadFloat();
-				particleSystemNode->SetCurve(ParticleSystem::ParticleEmitter::ParticleSpreadMin, ParticleSystem::EnvelopeCurve(
-					values[0], values[1], values[2], values[3],
-					values[4], values[5], values[6], values[7],
-					this->binaryReader->ReadInt()));
-				
-			}
-			else if(FourCC('SCVE') == curFourCC)//cl->AddCmd("v_setparticlespreadmax_ffffffffi", 'SCVE', n_p2setparticlespreadmax);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				float values[8];
-				for(int i = 0; i < 8; i++) values[i] = this->binaryReader->ReadFloat();
-				particleSystemNode->SetCurve(ParticleSystem::ParticleEmitter::ParticleSpreadMax, ParticleSystem::EnvelopeCurve(
-					values[0], values[1], values[2], values[3],
-					values[4], values[5], values[6], values[7],
-					this->binaryReader->ReadInt()));
-			}
-			else if(FourCC('SCVF') == curFourCC)//cl->AddCmd("v_setparticlestartvelocity_ffffffffi", 'SCVF', n_p2setparticlestartvelocity);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				float values[8];
-				for(int i = 0; i < 8; i++) values[i] = this->binaryReader->ReadFloat();
-				particleSystemNode->SetCurve(ParticleSystem::ParticleEmitter::ParticleStartVelocity, ParticleSystem::EnvelopeCurve(
-					values[0], values[1], values[2], values[3],
-					values[4], values[5], values[6], values[7],
-					this->binaryReader->ReadInt()));
-			}
-			else if(FourCC('SCVH') == curFourCC)//cl->AddCmd("v_setparticlerotationvelocity_ffffffffi", 'SCVH', n_p2setparticlerotationvelocity);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				float values[8];
-				for(int i = 0; i < 8; i++) values[i] = this->binaryReader->ReadFloat();
-				particleSystemNode->SetCurve(ParticleSystem::ParticleEmitter::ParticleRotationVelocity, ParticleSystem::EnvelopeCurve(
-					values[0], values[1], values[2], values[3],
-					values[4], values[5], values[6], values[7],
-					this->binaryReader->ReadInt()));
-			}
-			else if(FourCC('SCVJ') == curFourCC)//cl->AddCmd("v_setparticlesize_ffffffffi", 'SCVJ', n_p2setparticlesize);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				float values[8];
-				for(int i = 0; i < 8; i++) values[i] = this->binaryReader->ReadFloat();
-				particleSystemNode->SetCurve(ParticleSystem::ParticleEmitter::ParticleScale, ParticleSystem::EnvelopeCurve(
-					values[0], values[1], values[2], values[3],
-					values[4], values[5], values[6], values[7],
-					this->binaryReader->ReadInt()));
-			}
-			else if(FourCC('SCVL') == curFourCC)//cl->AddCmd("v_setparticlemass_ffffffffi", 'SCVL', n_p2setparticlemass);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				float values[8];
-				for(int i = 0; i < 8; i++) values[i] = this->binaryReader->ReadFloat();
-				particleSystemNode->SetCurve(ParticleSystem::ParticleEmitter::ParticleMass, ParticleSystem::EnvelopeCurve(
-					values[0], values[1], values[2], values[3],
-					values[4], values[5], values[6], values[7],
-					this->binaryReader->ReadInt()));
-			}
-			else if(FourCC('STMM') == curFourCC)//cl->AddCmd("v_settimemanipulator_ffffffffi", 'STMM', n_p2settimemanipulator);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				float values[8];
-				for(int i = 0; i < 8; i++) values[i] = this->binaryReader->ReadFloat();
-				particleSystemNode->SetCurve(ParticleSystem::ParticleEmitter::TimeManipulator, ParticleSystem::EnvelopeCurve(
-					values[0], values[1], values[2], values[3],
-					values[4], values[5], values[6], values[7],
-					this->binaryReader->ReadInt()));
-			}
-			else if(FourCC('SCVM') == curFourCC)//cl->AddCmd("v_setparticlealpha_ffffffffi", 'SCVM', n_p2setparticlealpha);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				float values[8];
-				for(int i = 0; i < 8; i++) values[i] = this->binaryReader->ReadFloat();
-				particleSystemNode->SetCurve(ParticleSystem::ParticleEmitter::ParticleAlpha, ParticleSystem::EnvelopeCurve(
-					values[0], values[1], values[2], values[3],
-					values[4], values[5], values[6], values[7],
-					this->binaryReader->ReadInt()));
-			}
-			else if(FourCC('SCVN') == curFourCC)//cl->AddCmd("v_setparticlevelocityfactor_ffffffffi", 'SCVN', n_p2setparticlevelocityfactor);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				float values[8];
-				for(int i = 0; i < 8; i++) values[i] = this->binaryReader->ReadFloat();
-				particleSystemNode->SetCurve(ParticleSystem::ParticleEmitter::ParticleVelocityFactor, ParticleSystem::EnvelopeCurve(
-					values[0], values[1], values[2], values[3],
-					values[4], values[5], values[6], values[7],
-					this->binaryReader->ReadInt()));
-			}
-			else if(FourCC('SCVQ') == curFourCC)//cl->AddCmd("v_setparticleairresistance_ffffffffi", 'SCVQ', n_p2setparticleairresistance);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				float values[8];
-				for(int i = 0; i < 8; i++) values[i] = this->binaryReader->ReadFloat();
-				particleSystemNode->SetCurve(ParticleSystem::ParticleEmitter::ParticleAirResistance, ParticleSystem::EnvelopeCurve(
-					values[0], values[1], values[2], values[3],
-					values[4], values[5], values[6], values[7],
-					this->binaryReader->ReadInt()));
-			}
-
-			else if(FourCC('SCVR') == curFourCC)//cl->AddCmd("v_setparticlevelocityrandomize_f", 'SCVR', n_p2setparticlevelocityrandomize);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetParticleVelocityRandomize(this->binaryReader->ReadFloat());
-			}
-			else if(FourCC('SCVS') == curFourCC)//cl->AddCmd("v_setparticlerotationrandomize_f", 'SCVS', n_p2setparticlerotationrandomize);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetParticleRotationRandomize(this->binaryReader->ReadFloat());
-				
-			}
-			else if(FourCC('SCVT') == curFourCC)//cl->AddCmd("v_setparticlesizerandomize_f", 'SCVT', n_p2setparticlesizerandomize);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetParticleSizeRandomize(this->binaryReader->ReadFloat());
-			}
-			else if(FourCC('SCVU') == curFourCC)//cl->AddCmd("v_setrandomrotdir_b", 'SCVU', n_p2setrandomrotdir);
-			{
-				n_assert(modelNode->IsA(ParticleSystemNode::RTTI));                
-                ParticleSystemNode* particleSystemNode = modelNode.downcast<ParticleSystemNode>().get();
-				particleSystemNode->SetRandomRotDir(this->binaryReader->ReadBool());
-			}
 			else
             {
                 // skip data block if unknown attribute

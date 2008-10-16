@@ -15,7 +15,7 @@ namespace Test
 {
 class BinaryReaderWriterTest : public TestCase
 {
-    DeclareClass(BinaryReaderWriterTest);
+    __DeclareClass(BinaryReaderWriterTest);
 public:
     /// run the test
     virtual void Run();

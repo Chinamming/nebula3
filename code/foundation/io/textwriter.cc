@@ -7,7 +7,7 @@
 
 namespace IO
 {
-ImplementClass(IO::TextWriter, 'TXTW', IO::StreamWriter);
+__ImplementClass(IO::TextWriter, 'TXTW', IO::StreamWriter);
 
 using namespace Util;
 

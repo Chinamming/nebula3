@@ -8,8 +8,8 @@
 
 namespace Nebula2
 {
-ImplementClass(Nebula2::AnimTable, 'ANTA', Core::RefCounted);
-ImplementSingleton(Nebula2::AnimTable);
+__ImplementClass(Nebula2::AnimTable, 'ANTA', Core::RefCounted);
+__ImplementSingleton(Nebula2::AnimTable);
 
 using namespace Util;
 using namespace Timing;
@@ -20,7 +20,7 @@ using namespace Timing;
 AnimTable::AnimTable() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ AnimTable::AnimTable() :
 */
 AnimTable::~AnimTable()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

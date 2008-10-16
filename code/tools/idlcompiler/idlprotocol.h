@@ -20,7 +20,7 @@ namespace Tools
 {
 class IDLProtocol : public Core::RefCounted
 {
-    DeclareClass(IDLProtocol);
+    __DeclareClass(IDLProtocol);
 public:
     /// constructor
     IDLProtocol();

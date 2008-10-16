@@ -26,6 +26,8 @@ public:
         Occluder,               // an occluder
         ShadowCaster,           // a shadow caster
 
+		Refractive,				// a refraction model type
+
         NumModelNodeTypes,
         InvalidModelNodeType,
     };

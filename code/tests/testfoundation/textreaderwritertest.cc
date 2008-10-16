@@ -11,7 +11,7 @@
 
 namespace Test
 {
-ImplementClass(Test::TextReaderWriterTest, 'TRWT', Test::TestCase);
+__ImplementClass(Test::TextReaderWriterTest, 'TRWT', Test::TestCase);
 
 using namespace Util;
 using namespace IO;

@@ -7,7 +7,7 @@
 
 namespace Benchmarking
 {
-ImplementClass(Benchmarking::CreateObjects, 'BCOB', Benchmarking::Benchmark);
+__ImplementClass(Benchmarking::CreateObjects, 'BCOB', Benchmarking::Benchmark);
 
 using namespace Core;
 using namespace Timing;

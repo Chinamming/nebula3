@@ -7,7 +7,7 @@
 
 namespace Physics
 {
-ImplementClass(Physics::AMotor, 'PMOT', Physics::Joint);
+__ImplementClass(Physics::AMotor, 'PMOT', Physics::Joint);
 
 //------------------------------------------------------------------------------
 /**

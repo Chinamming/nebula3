@@ -8,7 +8,7 @@
 
 namespace Base
 {
-ImplementClass(Base::IOInterfaceHandlerBase, 'IIOH', Messaging::Handler);
+__ImplementClass(Base::IOInterfaceHandlerBase, 'IIOH', Messaging::Handler);
 
 using namespace IO;
 using namespace Messaging;
@@ -43,7 +43,8 @@ IOInterfaceHandlerBase::Open()
     this->console = Console::Create();
     this->console->Open();
     this->ioServer = IO::IoServer::Create();
-    this->ioServer->RegisterUriScheme("file", FileStream::RTTI);
+    this->ioServer->RegisterStandardUriSchemes();
+    this->ioServer->MountStandardZipArchives();
 }
 
 //------------------------------------------------------------------------------

@@ -10,7 +10,7 @@
 
 namespace Test
 {
-ImplementClass(Test::SimpleTextureMapperTest, 'STMT', Test::CoreGraphicsTest);
+__ImplementClass(Test::SimpleTextureMapperTest, 'STMT', Test::CoreGraphicsTest);
 
 using namespace CoreGraphics;
 using namespace Resources;

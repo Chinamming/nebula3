@@ -9,8 +9,8 @@
 
 namespace Db
 {
-ImplementClass(Db::DbServer, 'DBSV', Core::RefCounted);
-ImplementSingleton(Db::DbServer);
+__ImplementClass(Db::DbServer, 'DBSV', Core::RefCounted);
+__ImplementSingleton(Db::DbServer);
 
 using namespace Util;
 
@@ -20,7 +20,7 @@ using namespace Util;
 DbServer::DbServer():
     workDbInMemory(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
     this->dbFactory = Db::Sqlite3Factory::Create();
 }
 
@@ -32,7 +32,7 @@ DbServer::~DbServer()
     n_assert(!this->IsStaticDatabaseOpen());
     n_assert(!this->IsGameDatabaseOpen());
     this->dbFactory = 0;
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

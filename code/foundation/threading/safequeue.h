@@ -5,7 +5,14 @@
 /**
     @class Threading::SafeQueue
     
-    Thread-safe version of Util::Queue.
+    Thread-safe version of Util::Queue. The SafeQueue is normally configured
+    to signal an internal Event object when an element is enqueued, so that
+    a worker-thread can wait for new elements to arrive. This is the default
+    behaviour. This doesn't make sense for a continously running thread 
+    (i.e. a rendering thread), thus this behaviour can be disabled
+    using the SetSignalOnEnqueueEnabled(). In this case, the
+    Enqueue() method won't signal the internal event, and the Wait()
+    method will return immediately without ever waiting.
     
     (C) 2007 Radon Labs GmbH
 */
@@ -26,6 +33,10 @@ public:
 
     /// assignment operator
     void operator=(const SafeQueue<TYPE>& rhs);
+    /// enable/disable signalling on Enqueue() (default is enabled)
+    void SetSignalOnEnqueueEnabled(bool b);
+    /// return signalling-on-Enqueue() flag
+    bool IsSignalOnEnqueueEnabled() const;
     /// returns number of elements in the queue
     SizeT Size() const;
     /// return true if queue is empty
@@ -42,6 +53,8 @@ public:
     TYPE Peek() const;
     /// wait until queue contains at least one element
     void Wait();
+    /// wait until queue contains at least one element, or time-out happens
+    void WaitTimeout(int ms);
     /// signal the internal event, so that Wait() will return
     void Signal();
     /// erase all matching elements
@@ -50,13 +63,15 @@ public:
 protected:
     CriticalSection criticalSection;
     Event enqueueEvent;
+    bool signalOnEnqueueEnabled;
 };
 
 //------------------------------------------------------------------------------
 /**
 */
 template<class TYPE>
-SafeQueue<TYPE>::SafeQueue()
+SafeQueue<TYPE>::SafeQueue() :
+    signalOnEnqueueEnabled(true)
 {
     // empty
 }
@@ -69,6 +84,7 @@ SafeQueue<TYPE>::SafeQueue(const SafeQueue<TYPE>& rhs)
 {
     this->criticalSection.Enter();
     this->queueArray = rhs.queueArray;
+    this->signalOnEnqueueEnabled = rhs.signalOnEnqueueEnabled;
     this->criticalSection.Leave();
 }
 
@@ -80,6 +96,18 @@ SafeQueue<TYPE>::operator=(const SafeQueue<TYPE>& rhs)
 {
     this->criticalSection.Enter();
     this->queueArray = rhs.queueArray;
+    this->signalOnEnqueueEnabled = rhs.signalOnEnqueueEnabled;
+    this->criticalSection.Leave();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+template<class TYPE> void
+SafeQueue<TYPE>::SetSignalOnEnqueueEnabled(bool b)
+{
+    this->criticalSection.Enter();
+    this->signalOnEnqueueEnabled = b;
     this->criticalSection.Leave();
 }
 
@@ -121,7 +149,10 @@ SafeQueue<TYPE>::Enqueue(const TYPE& e)
     this->criticalSection.Enter();
     this->queueArray.Append(e);
     this->criticalSection.Leave();
-    this->enqueueEvent.Signal();
+    if (this->signalOnEnqueueEnabled)
+    {
+        this->enqueueEvent.Signal();
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -168,9 +199,21 @@ SafeQueue<TYPE>::Peek() const
 template<class TYPE> void
 SafeQueue<TYPE>::Wait()
 {
-    if (this->queueArray.Size() == 0)
+    if (this->signalOnEnqueueEnabled && (this->queueArray.Size() == 0))
     {
         this->enqueueEvent.Wait();
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+template<class TYPE> void
+SafeQueue<TYPE>::WaitTimeout(int ms)
+{
+    if (this->signalOnEnqueueEnabled && (this->queueArray.Size() == 0))
+    {
+        this->enqueueEvent.WaitTimeout(ms);
     }
 }
 

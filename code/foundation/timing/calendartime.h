@@ -13,10 +13,10 @@
 */
 #include "core/config.h"
 #if (__WIN32__ || __XBOX360__)
-#include "timing/win32/win32calendartime.h"
+#include "timing/win360/win360calendartime.h"
 namespace Timing
 {
-class CalendarTime : public Win32::Win32CalendarTime
+class CalendarTime : public Win360::Win360CalendarTime
 { };
 }
 #elif (__WII__)

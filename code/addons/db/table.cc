@@ -10,7 +10,7 @@
 
 namespace Db
 {
-ImplementClass(Db::Table, 'TABL', Core::RefCounted);
+__ImplementClass(Db::Table, 'TABL', Core::RefCounted);
 
 using namespace Util;
 

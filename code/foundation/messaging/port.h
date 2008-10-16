@@ -30,7 +30,7 @@ namespace Messaging
 {
 class Port : public Core::RefCounted
 {
-    DeclareClass(Port);
+    __DeclareClass(Port);
 public:
     /// override to register accepted messages
     virtual void SetupAcceptedMessages();
@@ -38,6 +38,8 @@ public:
     void AttachHandler(const Ptr<Handler>& h);
     /// remove a message handler from the port
     void RemoveHandler(const Ptr<Handler>& h);
+    /// remove all message handlers from the port
+    void RemoveAllHandlers();
     /// return number of handlers attached to the port
     SizeT GetNumHandlers() const;
     /// get a message handler by index

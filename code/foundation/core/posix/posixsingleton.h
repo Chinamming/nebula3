@@ -7,10 +7,10 @@
 
     Provides helper macros to implement singleton objects:
     
-    - DeclareSingleton      put this into class declaration
-    - ImplementSingleton    put this into the implemention file
-    - ConstructSingleton    put this into the constructor
-    - DestructSingleton     put this into the destructor
+    - __DeclareSingleton      put this into class declaration
+    - __ImplementSingleton    put this into the implemention file
+    - __ConstructSingleton    put this into the constructor
+    - __DestructSingleton     put this into the destructor
 
     Get a pointer to a singleton object using the static Instance() method:
 
@@ -21,30 +21,30 @@
 #include "core/types.h"
 
 //------------------------------------------------------------------------------
-#define DeclareSingleton(type) \
+#define __DeclareSingleton(type) \
 public: \
     ThreadLocal static type * Singleton; \
     static type * Instance() { n_assert(0 != Singleton); return Singleton; }; \
     static bool HasInstance() { return 0 != Singleton; }; \
 private:
 
-#define DeclareInterfaceSingleton(type) \
+#define __DeclareInterfaceSingleton(type) \
 public: \
     static type * Singleton; \
     static type * Instance() { n_assert(0 != Singleton); return Singleton; }; \
     static bool HasInstance() { return 0 != Singleton; }; \
 private:
 
-#define ImplementSingleton(type) \
+#define __ImplementSingleton(type) \
     ThreadLocal type * type::Singleton = 0;
 
-#define ImplementInterfaceSingleton(type) \
+#define __ImplementInterfaceSingleton(type) \
     type * type::Singleton = 0;
 
-#define ConstructSingleton \
+#define __ConstructSingleton \
     n_assert(0 == Singleton); Singleton = this;
 
-#define DestructSingleton \
+#define __DestructSingleton \
     n_assert(Singleton); Singleton = 0;
 //------------------------------------------------------------------------------
 #endif

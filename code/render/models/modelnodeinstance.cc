@@ -8,7 +8,7 @@
 
 namespace Models
 {
-ImplementClass(Models::ModelNodeInstance, 'MNDI', Core::RefCounted);
+__ImplementClass(Models::ModelNodeInstance, 'MNDI', Core::RefCounted);
 
 using namespace Util;
 

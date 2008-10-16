@@ -27,7 +27,7 @@ class ResourceSaver;
     
 class Resource : public Core::RefCounted
 {
-    DeclareClass(Resource);
+    __DeclareClass(Resource);
 public:
     /// resource states (DO NOT CHANGE ORDER!)
     enum State

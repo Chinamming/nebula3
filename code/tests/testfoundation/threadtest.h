@@ -20,8 +20,8 @@ namespace Test
 
 class TestSingle : public Core::RefCounted
 {
-    DeclareClass(TestSingle);
-    DeclareSingleton(TestSingle);
+    __DeclareClass(TestSingle);
+    __DeclareSingleton(TestSingle);
 public:
     /// constructor
     TestSingle();
@@ -32,7 +32,7 @@ public:
 
 class MyThread : public Threading::Thread
 {
-    DeclareClass(MyThread);
+    __DeclareClass(MyThread);
 public:
     virtual void DoWork();
     /// attach a message handler (called by OnCreateHandlers())
@@ -42,7 +42,7 @@ public:
 
 class ThreadTest : public TestCase
 {
-    DeclareClass(ThreadTest);
+    __DeclareClass(ThreadTest);
 public:
     /// run the test
     virtual void Run();

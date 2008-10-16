@@ -21,8 +21,8 @@ namespace Tools
 {
 class ShaderFragmentManager : public Core::RefCounted
 {
-    DeclareClass(ShaderFragmentManager);
-    DeclareSingleton(ShaderFragmentManager);
+    __DeclareClass(ShaderFragmentManager);
+    __DeclareSingleton(ShaderFragmentManager);
 public:
     /// constructor
     ShaderFragmentManager();

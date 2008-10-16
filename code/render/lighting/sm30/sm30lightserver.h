@@ -20,7 +20,7 @@ namespace Lighting
 {
 class SM30LightServer : public LightServerBase
 {
-    DeclareClass(SM30LightServer);
+    __DeclareClass(SM30LightServer);
 public:
     /// constructor
     SM30LightServer();
@@ -32,7 +32,7 @@ public:
     /// close the light server
     void Close();
     /// apply lighting parameters for a visible model entity 
-    void ApplyModelEntityLights(const Ptr<Graphics::ModelEntity>& modelEntity);
+    void ApplyModelEntityLights(const Ptr<InternalGraphics::InternalModelEntity>& modelEntity);
 
 private:
     static const SizeT MaxLights = 4;

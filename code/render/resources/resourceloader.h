@@ -18,7 +18,7 @@ namespace Resources
 {
 class ResourceLoader : public Core::RefCounted
 {
-    DeclareClass(ResourceLoader);
+    __DeclareClass(ResourceLoader);
 public:
     /// constructor
     ResourceLoader();
