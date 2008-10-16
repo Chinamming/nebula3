@@ -64,7 +64,7 @@ SetupHeaps()
         }
         if (0 != initialSize)
         {
-            Heaps[i] = HeapCreate(HEAP_GENERATE_EXCEPTIONS, initialSize, maxSize);
+            Heaps[i] = NULL; // XXX: HeapCreate(HEAP_GENERATE_EXCEPTIONS, initialSize, maxSize);
             if (useLowFragHeap)
             {
                 #if __WIN32__

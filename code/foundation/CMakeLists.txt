@@ -70,6 +70,8 @@ SET(Nebula3Foundation_SRCS
     http/httpstatus.h
     interface/base/iointerfacehandlerbase.cc
     interface/base/iointerfacehandlerbase.h
+    interface/interfaceprotocol.cc
+    interface/interfaceprotocol.h
     interface/iointerface.cc
     interface/iointerface.h
     interface/iointerfacehandler.cc
@@ -85,6 +87,8 @@ SET(Nebula3Foundation_SRCS
     io/consolehandler.h
     io/debug/iopagehandler.cc
     io/debug/iopagehandler.h
+    io/excelxmlreader.cc
+    io/excelxmlreader.h
     io/filestream.cc
     io/filestream.h
     io/filetime.h
@@ -147,6 +151,10 @@ SET(Nebula3Foundation_SRCS
     memory/debug/memorypagehandler.h
     memory/heap.h
     memory/memory.h
+    memory/memorypool.cc
+    memory/memorypool.h
+    memory/memorypoolpage.cc
+    memory/memorypoolpage.h
     messaging/asyncport.cc
     messaging/asyncport.h
     messaging/dispatcher.cc
@@ -171,6 +179,27 @@ SET(Nebula3Foundation_SRCS
     net/tcpclientconnection.h
     net/tcpserver.cc
     net/tcpserver.h
+    remote/remotecontrol.cc
+    remote/remotecontrol.h
+    remote/remotecontrolproxy.cc
+    remote/remotecontrolproxy.h
+    remote/remoteinterface.cc
+    remote/remoteinterface.h
+    remote/remotemessagehandler.cc
+    remote/remotemessagehandler.h
+    remote/remoteprotocol.cc
+    remote/remoteprotocol.h
+    remote/remoteprotocol.nidl
+    remote/remoterequest.cc
+    remote/remoterequest.h
+    remote/remoterequesthandler.cc
+    remote/remoterequesthandler.h
+    remote/remoterequestreader.cc
+    remote/remoterequestreader.h
+    remote/remoteresponsewriter.cc
+    remote/remoteresponsewriter.h
+    remote/remotestatus.cc
+    remote/remotestatus.h
     scripting/arg.h
     scripting/argsblock.cc
     scripting/argsblock.h
@@ -221,6 +250,8 @@ SET(Nebula3Foundation_SRCS
     util/proxy.h
     util/quadtree.h
     util/queue.h
+    util/runlengthcodec.cc
+    util/runlengthcodec.h
     util/simpletree.h
     util/stack.h
     util/string.cc

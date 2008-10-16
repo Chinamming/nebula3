@@ -33,7 +33,7 @@ Alloc(HeapType heapType, size_t size)
     n_assert(heapType < NumHeapTypes);
     void* allocPtr = 0;
     {
-        n_assert(0 != Heaps[heapType]);
+        // XXX: n_assert(0 != Heaps[heapType]);
         // allocPtr =  HeapAlloc(Heaps[heapType], HEAP_GENERATE_EXCEPTIONS, size);
         allocPtr = malloc(size);
     }
@@ -54,7 +54,8 @@ Alloc(HeapType heapType, size_t size)
 __forceinline void*
 Realloc(HeapType heapType, void* ptr, size_t size)
 {
-    n_assert((heapType < NumHeapTypes) && (0 != Heaps[heapType]));
+    // XXX: n_assert((heapType < NumHeapTypes) && (0 != Heaps[heapType]));
+    n_assert(heapType < NumHeapTypes);
     #if NEBULA3_MEMORY_STATS
         SIZE_T oldSize = HeapSize(Heaps[heapType], 0, ptr);
     #endif
@@ -83,7 +84,7 @@ Free(HeapType heapType, void* ptr)
             SIZE_T size = 0;
         #endif    
         {
-            n_assert(0 != Heaps[heapType]);
+            // XXX: n_assert(0 != Heaps[heapType]);
             #if NEBULA3_MEMORY_STATS
                 size = HeapSize(Heaps[heapType], 0, ptr);
             #endif

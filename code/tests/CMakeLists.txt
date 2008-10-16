@@ -35,6 +35,8 @@ ADD_EXECUTABLE(testfoundation
     testfoundation/cmdlineargstest.h
     testfoundation/dictionarytest.cc
     testfoundation/dictionarytest.h
+    testfoundation/excelxmlreadertest.cc
+    testfoundation/excelxmlreadertest.h
     testfoundation/fileservertest.cc
     testfoundation/fileservertest.h
     testfoundation/fixedarraytest.cc
@@ -58,6 +60,8 @@ ADD_EXECUTABLE(testfoundation
     testfoundation/matrix44test.h
     testfoundation/mediatypetest.cc
     testfoundation/mediatypetest.h
+    testfoundation/memorypooltest.cc
+    testfoundation/memorypooltest.h
     testfoundation/memorystreamtest.cc
     testfoundation/memorystreamtest.h
     testfoundation/messagereaderwritertest.cc
@@ -66,6 +70,10 @@ ADD_EXECUTABLE(testfoundation
     testfoundation/proxytest.h
     testfoundation/queuetest.cc
     testfoundation/queuetest.h
+    testfoundation/ringbuffertest.cc
+    testfoundation/ringbuffertest.h
+    testfoundation/runlengthcodectest.cc
+    testfoundation/runlengthcodectest.h
     testfoundation/simpletreetest.cc
     testfoundation/simpletreetest.h
     testfoundation/stacktest.cc
