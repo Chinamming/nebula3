@@ -19,7 +19,7 @@ using namespace Messaging;
 */
 IOInterface::IOInterface()
 {
-    __ConstructSingleton;
+    __ConstructInterfaceSingleton;
     this->SetThreadCpuCoreId(System::Cpu::IoThreadCore);
 }
 
@@ -28,7 +28,7 @@ IOInterface::IOInterface()
 */
 IOInterface::~IOInterface()
 {
-    __DestructSingleton;
+    __DestructInterfaceSingleton;
 }
 
 //------------------------------------------------------------------------------

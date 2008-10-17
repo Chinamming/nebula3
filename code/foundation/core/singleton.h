@@ -14,7 +14,7 @@
 #elif __WII__
 #include "core/wii/wiisingleton.h"
 #elif __APPLE__
-#include "core/posix/posixsingleton.h"
+#include "core/darwin/darwinsingleton.h"
 #else
 #error "IMPLEMENT ME!"
 #endif

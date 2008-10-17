@@ -16,7 +16,7 @@ __ImplementInterfaceSingleton(Remote::RemoteInterface);
 */
 RemoteInterface::RemoteInterface()
 {
-    __ConstructSingleton;
+    __ConstructInterfaceSingleton;
     this->SetThreadCpuCoreId(System::Cpu::MiscThreadCore);
 }
 
@@ -25,7 +25,7 @@ RemoteInterface::RemoteInterface()
 */
 RemoteInterface::~RemoteInterface()
 {
-    __DestructSingleton;
+    __DestructInterfaceSingleton;
 }
 
 //------------------------------------------------------------------------------

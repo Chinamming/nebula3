@@ -44,9 +44,14 @@ private:
 #define __ConstructSingleton \
     n_assert(0 == Singleton); Singleton = this;
 
+#define __ConstructInterfaceSingleton \
+    n_assert(0 == Singleton); Singleton = this;
+
 #define __DestructSingleton \
+    n_assert(Singleton); Singleton = 0;
+
+#define __DestructInterfaceSingleton \
     n_assert(Singleton); Singleton = 0;
 //------------------------------------------------------------------------------
 #endif
 
-    

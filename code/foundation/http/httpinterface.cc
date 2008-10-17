@@ -16,7 +16,7 @@ __ImplementInterfaceSingleton(Http::HttpInterface);
 */
 HttpInterface::HttpInterface()
 {
-    __ConstructSingleton;
+    __ConstructInterfaceSingleton;
     this->SetThreadCpuCoreId(System::Cpu::MiscThreadCore);
 }
 
@@ -25,7 +25,7 @@ HttpInterface::HttpInterface()
 */
 HttpInterface::~HttpInterface()
 {
-    __DestructSingleton;
+    __DestructInterfaceSingleton;
 }
 
 //------------------------------------------------------------------------------
