@@ -16,7 +16,7 @@ __ImplementInterfaceSingleton(Debug::DebugInterface);
 */
 DebugInterface::DebugInterface()
 {
-    __ConstructSingleton;
+    __ConstructInterfaceSingleton;
     this->SetThreadCpuCoreId(System::Cpu::MiscThreadCore);
 }
 
@@ -25,7 +25,7 @@ DebugInterface::DebugInterface()
 */
 DebugInterface::~DebugInterface()
 {
-    __DestructSingleton;
+    __DestructInterfaceSingleton;
 }
 
 //------------------------------------------------------------------------------

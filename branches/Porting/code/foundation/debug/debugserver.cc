@@ -20,7 +20,7 @@ using namespace Util;
 DebugServer::DebugServer() :
     isOpen(false)
 {
-    __ConstructSingleton;
+    __ConstructInterfaceSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ DebugServer::DebugServer() :
 DebugServer::~DebugServer()
 {
     n_assert(!this->isOpen);
-    __DestructSingleton;
+    __DestructInterfaceSingleton;
 }
 
 //------------------------------------------------------------------------------
