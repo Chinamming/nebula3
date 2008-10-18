@@ -9,7 +9,7 @@
 
 namespace Messaging
 {
-ImplementClass(Messaging::MessageReader, 'MGRR', IO::StreamReader);
+__ImplementClass(Messaging::MessageReader, 'MGRR', IO::StreamReader);
 
 using namespace IO;
 using namespace Util;

@@ -11,15 +11,13 @@
 */
 #include "core/refcounted.h"
 #include "coregraphics/primitivegroup.h"
-#include "coregraphics/cpuvertexbuffer.h"
-#include "coregraphics/cpuindexbuffer.h"
 
 //------------------------------------------------------------------------------
 namespace Physics
 {
 class PhysicsMesh : public Core::RefCounted
 {
-    DeclareClass(PhysicsMesh);
+    __DeclareClass(PhysicsMesh);
 public:
     /// constructor
     PhysicsMesh();
@@ -49,10 +47,6 @@ public:
     float* GetVertexPointer() const;
     /// get pointer to index buffer
     int* GetIndexPointer() const;
-    /// unmap vertex buffer
-    void UnmapVertexBuffer();
-    /// unmap index buffer
-    void UnmapIndexBuffer();
     /// get number of vertices in group
     int GetGroupNumVertices(int groupIndex) const;
     /// get number of indices in group
@@ -62,37 +56,25 @@ public:
     /// get pointer to first index in group
     int* GetGroupIndexPointer(int groupIndex) const;
 
-    /// begin append mesh
-    void BeginAppendMesh(int numVertices, int numIndices, int vertexWidth);
-    /// append mesh from file to buffer
-    bool AppendMesh(const Ptr<PhysicsMesh>& mesh, const Math::matrix44& transform);
-    /// end append
-    void EndAppendMesh();
-    /// free buffer
-    void FreeBuffer();    
-
 private:
     /// update the group bounding boxes (slow!)
     void UpdateGroupBoundingBoxes(float* vertexBufferData, int* indexBufferData);
 
     Util::String filename;
-   
-    Ptr<CoreGraphics::CPUVertexBuffer> vertexBuffer;
-    Ptr<CoreGraphics::CPUIndexBuffer> indexBuffer;
-    
+    SizeT numVertices;
+    SizeT numIndices;
+    SizeT vertexByteSize;
+    SizeT vertexNumFloats;
+    float* vertexData;
+    int* indexData;
+    Util::Array<CoreGraphics::PrimitiveGroup> meshGroups;    
     bool isLoaded;
-    bool inAppend;
-    uint vertexIndex;
-    uint indicesIndex;
-
-    Util::Array<CoreGraphics::PrimitiveGroup> meshGroups;
 };
 
 //------------------------------------------------------------------------------
 /**
 */
-inline
-void
+inline void
 PhysicsMesh::SetFilename(const Util::String& n)
 {
     this->filename = n;
@@ -101,8 +83,7 @@ PhysicsMesh::SetFilename(const Util::String& n)
 //------------------------------------------------------------------------------
 /**
 */
-inline
-const Util::String&
+inline const Util::String&
 PhysicsMesh::GetFilename() const
 {
     return this->filename;
@@ -111,8 +92,7 @@ PhysicsMesh::GetFilename() const
 //------------------------------------------------------------------------------
 /**
 */
-inline
-bool
+inline bool
 PhysicsMesh::IsLoaded() const
 {
     return this->isLoaded;
@@ -121,8 +101,7 @@ PhysicsMesh::IsLoaded() const
 //------------------------------------------------------------------------------
 /**
 */
-inline
-int
+inline int
 PhysicsMesh::GetNumGroups() const
 {
     n_assert(this->isLoaded);
@@ -132,8 +111,7 @@ PhysicsMesh::GetNumGroups() const
 //------------------------------------------------------------------------------
 /**
 */
-inline
-const CoreGraphics::PrimitiveGroup& 
+inline const CoreGraphics::PrimitiveGroup& 
 PhysicsMesh::GetGroupAt(int index) const
 {
     n_assert(this->isLoaded);
@@ -143,77 +121,53 @@ PhysicsMesh::GetGroupAt(int index) const
 //------------------------------------------------------------------------------
 /**
 */
-inline
-int
+inline int
 PhysicsMesh::GetNumVertices() const
 {
     n_assert(this->isLoaded);
-    n_assert(this->vertexBuffer.isvalid());
-    return this->vertexBuffer->GetNumVertices();
+    return this->numVertices;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-inline
-int
+inline int
 PhysicsMesh::GetNumIndices() const
 {
     n_assert(this->isLoaded);
-    n_assert(this->indexBuffer.isvalid());
-    return this->indexBuffer->GetNumIndices();
+    return this->numIndices;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-inline
-int
+inline int
 PhysicsMesh::GetVertexByteSize() const
 {
     n_assert(this->isLoaded);
-    n_assert(this->vertexBuffer.isvalid());
-    return this->vertexBuffer->GetVertexLayout()->GetVertexByteSize();
+    return this->vertexByteSize;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-inline
-float*
+inline float*
 PhysicsMesh::GetVertexPointer() const
 {
-    n_assert(this->isLoaded && this->vertexBuffer.isvalid());    
-    return (float*)this->vertexBuffer->Map(Base::ResourceBase::MapRead);
+    n_assert(this->isLoaded);
+    n_assert(0 != this->vertexData);
+    return this->vertexData;
 }
 
 //------------------------------------------------------------------------------
 /**
 */
-inline
-int*
+inline int*
 PhysicsMesh::GetIndexPointer() const
 {
-    n_assert(this->isLoaded && this->indexBuffer.isvalid());
-    return (int*)this->indexBuffer->Map(Base::ResourceBase::MapRead);
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-inline void 
-PhysicsMesh::UnmapVertexBuffer()
-{
-    this->vertexBuffer->Unmap();
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-inline void 
-PhysicsMesh::UnmapIndexBuffer()
-{
-    this->indexBuffer->Unmap();
+    n_assert(this->isLoaded);
+    n_assert(0 != this->indexData);
+    return this->indexData;
 }
 
 }

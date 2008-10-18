@@ -8,7 +8,7 @@
 
 namespace Messaging
 {
-ImplementClass(Messaging::Dispatcher, 'MDIS', Messaging::Port);
+__ImplementClass(Messaging::Dispatcher, 'MDIS', Messaging::Port);
 
 //------------------------------------------------------------------------------
 /**

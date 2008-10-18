@@ -18,8 +18,8 @@ namespace CoreGraphics
 {
 class RenderDevice : public Direct3D9::D3D9RenderDevice
 {
-    DeclareClass(RenderDevice);
-    DeclareSingleton(RenderDevice);
+    __DeclareClass(RenderDevice);
+    __DeclareSingleton(RenderDevice);
 public:
     /// constructor
     RenderDevice();
@@ -33,8 +33,8 @@ namespace CoreGraphics
 {
 class RenderDevice : public Xbox360::Xbox360RenderDevice
 {
-    DeclareClass(RenderDevice);
-    DeclareSingleton(RenderDevice);
+    __DeclareClass(RenderDevice);
+    __DeclareSingleton(RenderDevice);
 public:
     /// constructor
     RenderDevice();
@@ -48,8 +48,8 @@ namespace CoreGraphics
 {
 class RenderDevice : public Wii::WiiRenderDevice
 {
-    DeclareClass(RenderDevice);
-    DeclareSingleton(RenderDevice);
+    __DeclareClass(RenderDevice);
+    __DeclareSingleton(RenderDevice);
 public:
     /// constructor
     RenderDevice();

@@ -11,7 +11,7 @@
 #if NEBULA3_LEGACY_SUPPORT
 namespace Legacy
 {
-ImplementClass(Legacy::Nvx2StreamReader, 'N2SR', IO::StreamReader);
+__ImplementClass(Legacy::Nvx2StreamReader, 'N2SR', IO::StreamReader);
 
 using namespace CoreGraphics;
 using namespace Util;
@@ -19,10 +19,34 @@ using namespace Math;
 using namespace Resources;
 using namespace System;
 
+// file format structs
+#pragma pack(push, 1)
+struct Nvx2Header
+{
+    uint magic;
+    uint numGroups;
+    uint numVertices;
+    uint vertexWidth;
+    uint numIndices;
+    uint numEdges;
+    uint vertexComponentMask;
+};
+struct Nvx2Group
+{
+    uint firstVertex;
+    uint numVertices;
+    uint firstTriangle;
+    uint numTriangles;
+    uint firstEdge;
+    uint numEdges;
+};
+#pragma pack(pop)
+
 //------------------------------------------------------------------------------
 /**
 */
 Nvx2StreamReader::Nvx2StreamReader() :
+    rawMode(false),
     mapPtr(0),
     groupDataPtr(0),
     vertexDataPtr(0),
@@ -71,11 +95,12 @@ Nvx2StreamReader::Open()
         this->ReadHeaderData();
         this->ReadPrimitiveGroups();
         this->SetupVertexComponents();
-        this->SetupVertexBuffer();
-        this->SetupIndexBuffer();
+        if (!this->rawMode)
+        {
+            this->SetupVertexBuffer();
+            this->SetupIndexBuffer();
+        }
         this->UpdateGroupBoundingBoxes();
-
-        stream->Unmap();
         return true;
     }
     return false;
@@ -95,6 +120,7 @@ Nvx2StreamReader::Close()
     this->indexBuffer = 0;
     this->primGroups.Clear();
     this->vertexComponents.Clear();
+    stream->Unmap();
     StreamReader::Close();
 }
 
@@ -109,25 +135,35 @@ void
 Nvx2StreamReader::ReadHeaderData()
 {
     n_assert(0 != this->mapPtr);
-    uint* headerPtr = (uint*) this->mapPtr;
+    ByteOrder byteOrder(ByteOrder::LittleEndian, ByteOrder::Host);
+    
+    // endian-convert header
+    struct Nvx2Header* header = (struct Nvx2Header*) this->mapPtr;
+    byteOrder.Convert<uint>(header->magic);
+    byteOrder.Convert<uint>(header->numGroups);
+    byteOrder.Convert<uint>(header->numVertices);
+    byteOrder.Convert<uint>(header->vertexWidth);
+    byteOrder.Convert<uint>(header->numIndices);
+    header->numIndices *= 3; // header holds number of tris, not indices
+    byteOrder.Convert<uint>(header->numEdges);
+    byteOrder.Convert<uint>(header->vertexComponentMask);
 
-    // check nvx2 magic number
-    FourCC magic = ByteOrder::ConvertUInt(ByteOrder::LittleEndian, ByteOrder::Host, *headerPtr++);
-    if (magic != FourCC('NVX2'))
+    // check magic number
+    if (FourCC(header->magic) != FourCC('NVX2'))
     {
         // not a nvx2 file, break hard
         n_error("Nvx2StreamReader: '%s' is not a nvx2 file!", this->stream->GetURI().AsString().AsCharPtr());
-    }
-    this->numGroups = ByteOrder::ConvertUInt(ByteOrder::LittleEndian, ByteOrder::Host, *headerPtr++);
-    this->numVertices = ByteOrder::ConvertUInt(ByteOrder::LittleEndian, ByteOrder::Host,*headerPtr++);
-    this->vertexWidth = ByteOrder::ConvertUInt(ByteOrder::LittleEndian, ByteOrder::Host,*headerPtr++);
-    this->numIndices = ByteOrder::ConvertUInt(ByteOrder::LittleEndian, ByteOrder::Host,*headerPtr++) * 3;
-    this->numEdges = ByteOrder::ConvertUInt(ByteOrder::LittleEndian, ByteOrder::Host,*headerPtr++);
-    this->vertexComponentMask = ByteOrder::ConvertUInt(ByteOrder::LittleEndian, ByteOrder::Host,*headerPtr++);
+    }    
+    this->numGroups = header->numGroups;
+    this->numVertices = header->numVertices;
+    this->vertexWidth = header->vertexWidth;
+    this->numIndices = header->numIndices;
+    this->numEdges = header->numEdges;
+    this->vertexComponentMask = header->vertexComponentMask;
     this->groupDataSize = 6 * sizeof(uint) * this->numGroups;
     this->vertexDataSize = this->numVertices * this->vertexWidth * sizeof(float);
     this->indexDataSize = this->numIndices * sizeof(ushort);
-    this->groupDataPtr = headerPtr;
+    this->groupDataPtr = header + 1;
     this->vertexDataPtr = ((uchar*)this->groupDataPtr) + this->groupDataSize;
     this->indexDataPtr = ((uchar*)this->vertexDataPtr) + this->vertexDataSize;
 }
@@ -141,18 +177,28 @@ Nvx2StreamReader::ReadPrimitiveGroups()
     n_assert(this->primGroups.IsEmpty());
     n_assert(this->numGroups > 0);
     n_assert(0 != this->groupDataPtr);
-    uint* ptr = (uint*) this->groupDataPtr;
+    ByteOrder byteOrder(ByteOrder::LittleEndian, ByteOrder::Host);    
+    Nvx2Group* group = (Nvx2Group*) this->groupDataPtr;
     IndexT i;
     for (i = 0; i < this->numGroups; i++)
     {
+        // endian-conversion
+        byteOrder.Convert<uint>(group->firstVertex);
+        byteOrder.Convert<uint>(group->numVertices);
+        byteOrder.Convert<uint>(group->firstTriangle);
+        byteOrder.Convert<uint>(group->numTriangles);
+
+        // setup a primitive group object
         PrimitiveGroup primGroup;
-        primGroup.SetBaseVertex(ByteOrder::ConvertUInt(ByteOrder::LittleEndian, ByteOrder::Host, *ptr++));
-        primGroup.SetNumVertices(ByteOrder::ConvertUInt(ByteOrder::LittleEndian, ByteOrder::Host, *ptr++));
-        primGroup.SetBaseIndex(ByteOrder::ConvertUInt(ByteOrder::LittleEndian, ByteOrder::Host, *ptr++) * 3);   // firstTriangle
-        primGroup.SetNumIndices(ByteOrder::ConvertUInt(ByteOrder::LittleEndian, ByteOrder::Host, *ptr++) * 3);   // numTriangles
-        ptr += 2; // skip firstEdge and numEdges
+        primGroup.SetBaseVertex(group->firstVertex);
+        primGroup.SetNumVertices(group->numVertices);
+        primGroup.SetBaseIndex(group->firstTriangle * 3);
+        primGroup.SetNumIndices(group->numTriangles * 3);
         primGroup.SetPrimitiveTopology(PrimitiveTopology::TriangleList);
         this->primGroups.Append(primGroup);
+
+        // set top next group
+        group++;
     }
 }
 
@@ -165,28 +211,38 @@ Nvx2StreamReader::SetupVertexComponents()
     n_assert(this->vertexComponents.IsEmpty());
 
     IndexT i;
-    for (i = 0; i < 11; i++)
+    for (i = 0; i < N2NumVertexComponents; i++)
     {
         VertexComponent::SemanticName sem;
         VertexComponent::Format fmt;
         IndexT index = 0;
         if (vertexComponentMask & (1<<i))
         {
-            switch (i)
+            switch (1<<i)
             {
-                case 0:     sem = VertexComponent::Position;     fmt=VertexComponent::Float3; break;
-                case 1:     sem = VertexComponent::Normal;       fmt=VertexComponent::Float3; break;
-                case 2:     sem = VertexComponent::TexCoord;     fmt=VertexComponent::Float2; index = 0; break;
-                case 3:     sem = VertexComponent::TexCoord;     fmt=VertexComponent::Float2; index = 1; break;
-                case 4:     sem = VertexComponent::TexCoord;     fmt=VertexComponent::Float2; index = 2; break;
-                case 5:     sem = VertexComponent::TexCoord;     fmt=VertexComponent::Float2; index = 3; break;
-                case 6:     sem = VertexComponent::Color;        fmt=VertexComponent::Float4; break;
-                case 7:     sem = VertexComponent::Tangent;      fmt=VertexComponent::Float3; break;
-                case 8:     sem = VertexComponent::Binormal;     fmt=VertexComponent::Float3; break;
-                case 9:     sem = VertexComponent::SkinWeights;  fmt=VertexComponent::Float4; break;
-                case 10:    sem = VertexComponent::SkinJIndices; fmt=VertexComponent::Float4; break;
+                case N2Coord:        sem = VertexComponent::Position;     fmt = VertexComponent::Float3; break;
+                case N2Normal:       sem = VertexComponent::Normal;       fmt = VertexComponent::Float3; break;
+                case N2NormalUB4N:   sem = VertexComponent::Normal;       fmt = VertexComponent::UByte4N; break;
+                case N2Uv0:          sem = VertexComponent::TexCoord;     fmt = VertexComponent::Float2; index = 0; break;
+                case N2Uv0S2:        sem = VertexComponent::TexCoord;     fmt = VertexComponent::Short2; index = 0; break;
+                case N2Uv1:          sem = VertexComponent::TexCoord;     fmt = VertexComponent::Float2; index = 1; break;
+                case N2Uv1S2:        sem = VertexComponent::TexCoord;     fmt = VertexComponent::Short2; index = 1; break;
+                case N2Uv2:          sem = VertexComponent::TexCoord;     fmt = VertexComponent::Float2; index = 2; break;
+                case N2Uv2S2:        sem = VertexComponent::TexCoord;     fmt = VertexComponent::Short2; index = 2; break;
+                case N2Uv3:          sem = VertexComponent::TexCoord;     fmt = VertexComponent::Float2; index = 3; break;
+                case N2Uv3S2:        sem = VertexComponent::TexCoord;     fmt = VertexComponent::Short2; index = 3; break;
+                case N2Color:        sem = VertexComponent::Color;        fmt = VertexComponent::Float4; break;
+                case N2ColorUB4N:    sem = VertexComponent::Color;        fmt = VertexComponent::UByte4N; break;
+                case N2Tangent:      sem = VertexComponent::Tangent;      fmt = VertexComponent::Float3; break;
+                case N2TangentUB4N:  sem = VertexComponent::Tangent;      fmt = VertexComponent::UByte4N; break;
+                case N2Binormal:     sem = VertexComponent::Binormal;     fmt = VertexComponent::Float3; break;
+                case N2BinormalUB4N: sem = VertexComponent::Binormal;     fmt = VertexComponent::UByte4N; break;
+                case N2Weights:      sem = VertexComponent::SkinWeights;  fmt = VertexComponent::Float4; break;
+                case N2WeightsUB4N:  sem = VertexComponent::SkinWeights;  fmt = VertexComponent::UByte4N; break;
+                case N2JIndices:     sem = VertexComponent::SkinJIndices; fmt = VertexComponent::Float4; break;
+                case N2JIndicesUB4:  sem = VertexComponent::SkinJIndices; fmt = VertexComponent::UByte4; break;
                 default:
-                    n_error("Can't happen!");
+                    n_error("Invalid Nebula2 VertexComponent in Nvx2StreamReader::SetupVertexComponents");
                     sem = VertexComponent::Position;
                     fmt = VertexComponent::Float3;
                     break;
@@ -236,6 +292,7 @@ Nvx2StreamReader::UpdateGroupBoundingBoxes()
 void
 Nvx2StreamReader::SetupVertexBuffer()
 {
+    n_assert(!this->rawMode);
     n_assert(0 != this->vertexDataPtr);
     n_assert(this->vertexDataSize > 0);
     n_assert(this->numVertices > 0);    
@@ -246,13 +303,7 @@ Nvx2StreamReader::SetupVertexBuffer()
     #pragma warning(disable : 4127)  // expression is constant
     if (ByteOrder::Host != ByteOrder::LittleEndian)
     {
-        IndexT i;
-        SizeT num = this->vertexDataSize / sizeof(float);
-        float* ptr = (float*) this->vertexDataPtr;
-        for (i = 0; i < num; i++)
-        {
-            ptr[i] = ByteOrder::ConvertFloat(ByteOrder::LittleEndian, ByteOrder::Host, ptr[i]);
-        }
+        this->ConvertVertexBufferEndianess(this->vertexDataPtr, this->numVertices, this->vertexComponents);
     }
     #pragma warning(pop)
 
@@ -277,8 +328,75 @@ Nvx2StreamReader::SetupVertexBuffer()
 /**
 */
 void
+Nvx2StreamReader::ConvertVertexBufferEndianess(void* vertexPtr, SizeT numVertices, const Util::Array<VertexComponent>& vertexComps)
+{
+    ByteOrder byteOrder(ByteOrder::LittleEndian, ByteOrder::Host);
+    IndexT vertexIndex;
+    IndexT compIndex;
+    char* ptr = (char*) vertexPtr;
+    for (vertexIndex = 0; vertexIndex < numVertices; vertexIndex++)
+    {      
+        for (compIndex = 0; compIndex < vertexComps.Size(); compIndex++)
+        {   
+            VertexComponent::Format format = vertexComps[compIndex].GetFormat();    
+            switch(format)
+            {
+                case VertexComponent::Float:
+                    byteOrder.Convert<float>(((float*)ptr)[0]);
+                    break;
+
+                case VertexComponent::Float2:
+                    byteOrder.Convert<float>(((float*)ptr)[0]);
+                    byteOrder.Convert<float>(((float*)ptr)[1]);
+                    break;
+
+                case VertexComponent::Float3:
+                    byteOrder.Convert<float>(((float*)ptr)[0]);
+                    byteOrder.Convert<float>(((float*)ptr)[1]);
+                    byteOrder.Convert<float>(((float*)ptr)[2]);
+                    break;
+
+                case VertexComponent::Float4:
+                    byteOrder.Convert<float>(((float*)ptr)[0]);
+                    byteOrder.Convert<float>(((float*)ptr)[1]);
+                    byteOrder.Convert<float>(((float*)ptr)[2]);
+                    byteOrder.Convert<float>(((float*)ptr)[3]);
+                    break;
+
+                case VertexComponent::Short2:
+                case VertexComponent::Short2N:
+                    byteOrder.Convert<short>(((short*)ptr)[0]);
+                    byteOrder.Convert<short>(((short*)ptr)[1]);
+                    break;
+
+                case VertexComponent::Short4:
+                case VertexComponent::Short4N:
+                    byteOrder.Convert<short>(((short*)ptr)[0]);
+                    byteOrder.Convert<short>(((short*)ptr)[1]);
+                    byteOrder.Convert<short>(((short*)ptr)[2]);
+                    byteOrder.Convert<short>(((short*)ptr)[3]);
+                    break;
+
+                case VertexComponent::UByte4:
+                case VertexComponent::UByte4N:
+                    // nothing to do
+                    break;
+
+                default:
+                    n_error("Invalid VertexComponent Format!");
+            }
+            ptr += vertexComps[compIndex].GetByteSize();
+        }
+    }    
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 Nvx2StreamReader::SetupIndexBuffer()
 {
+    n_assert(!this->rawMode);
     n_assert(0 != this->indexDataPtr);
     n_assert(this->indexDataSize > 0);
     n_assert(this->numIndices > 0);
@@ -288,11 +406,12 @@ Nvx2StreamReader::SetupIndexBuffer()
     #pragma warning(disable : 4127) // expression is constant
     if (ByteOrder::Host != ByteOrder::LittleEndian)
     {
+        ByteOrder byteOrder(ByteOrder::LittleEndian, ByteOrder::Host);
         IndexT i;
         ushort* ptr = (ushort*) this->indexDataPtr;
         for (i = 0; i < this->numIndices; i++)
         {
-            ptr[i] = ByteOrder::ConvertUShort(ByteOrder::LittleEndian, ByteOrder::Host, ptr[i]);
+            byteOrder.Convert<ushort>(ptr[i]);
         }
     }
     #pragma warning(pop)

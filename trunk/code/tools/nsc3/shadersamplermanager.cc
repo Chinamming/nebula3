@@ -8,8 +8,8 @@
 
 namespace Tools
 {
-ImplementClass(Tools::ShaderSamplerManager, 'SSMM', Core::RefCounted);
-ImplementSingleton(Tools::ShaderSamplerManager);
+__ImplementClass(Tools::ShaderSamplerManager, 'SSMM', Core::RefCounted);
+__ImplementSingleton(Tools::ShaderSamplerManager);
 
 using namespace Util;
 using namespace IO;
@@ -19,7 +19,7 @@ using namespace IO;
 */
 ShaderSamplerManager::ShaderSamplerManager()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ ShaderSamplerManager::ShaderSamplerManager()
 */
 ShaderSamplerManager::~ShaderSamplerManager()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

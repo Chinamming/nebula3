@@ -15,7 +15,7 @@ namespace Physics
 {
 class SphereShape : public Shape
 {
-	DeclareClass(SphereShape);
+	__DeclareClass(SphereShape);
 public:
     /// constructor
     SphereShape();

@@ -8,18 +8,18 @@
 #if __WIN32__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::Shader, 'SHDR', Direct3D9::D3D9Shader);
+__ImplementClass(CoreGraphics::Shader, 'SHDR', Direct3D9::D3D9Shader);
 }
 #elif __XBOX360__
 // FIXME!
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::Shader, 'SHDR', Xbox360::Xbox360Shader);
+__ImplementClass(CoreGraphics::Shader, 'SHDR', Xbox360::Xbox360Shader);
 }
 #elif __WII__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::Shader, 'SHDR', Wii::WiiShader);
+__ImplementClass(CoreGraphics::Shader, 'SHDR', Wii::WiiShader);
 }
 #else
 #error "Shader class not implemented on this platform!"

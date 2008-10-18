@@ -25,7 +25,7 @@ namespace Physics
 {
 class MouseGripper : public Core::RefCounted
 {
-	DeclareClass(MouseGripper);
+	__DeclareClass(MouseGripper);
 public:
     /// constructor
     MouseGripper();

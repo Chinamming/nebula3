@@ -7,17 +7,17 @@
 #if __WIN32__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::Mesh, 'MESH', Base::MeshBase);
+__ImplementClass(CoreGraphics::Mesh, 'MESH', Base::MeshBase);
 }
 #elif __XBOX360__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::Mesh, 'MESH', Base::MeshBase);
+__ImplementClass(CoreGraphics::Mesh, 'MESH', Base::MeshBase);
 }
 #elif __WII__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::Mesh, 'MESH', Wii::WiiMesh);
+__ImplementClass(CoreGraphics::Mesh, 'MESH', Wii::WiiMesh);
 }
 #else
 #error "Mesh class not implemented on this platform!"

@@ -9,22 +9,13 @@
     
     (C) 2007 Radon Labs GmbH
 */    
-#if __WIN32__
-#include "coregraphics/d3d9/d3d9vertexbuffer.h"
+#if (__WIN32__ || __XBOX360__)
+#include "coregraphics/win360/d3d9vertexbuffer.h"
 namespace CoreGraphics
 {
-class VertexBuffer : public Direct3D9::D3D9VertexBuffer
+class VertexBuffer : public Win360::D3D9VertexBuffer
 {
-    DeclareClass(VertexBuffer);
-};
-}
-#elif __XBOX360__
-#include "coregraphics/xbox360/xbox360vertexbuffer.h"
-namespace CoreGraphics
-{
-class VertexBuffer : public Xbox360::Xbox360VertexBuffer
-{
-    DeclareClass(VertexBuffer);
+    __DeclareClass(VertexBuffer);
 };
 }
 #elif __WII__
@@ -33,7 +24,7 @@ namespace CoreGraphics
 {
 class VertexBuffer : public Wii::WiiVertexBuffer
 {
-    DeclareClass(VertexBuffer);
+    __DeclareClass(VertexBuffer);
 };
 }
 #else

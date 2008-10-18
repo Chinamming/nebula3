@@ -8,7 +8,7 @@
 
 namespace Messaging
 {
-ImplementClass(Messaging::MessageWriter, 'MGWR', IO::StreamWriter);
+__ImplementClass(Messaging::MessageWriter, 'MGWR', IO::StreamWriter);
 
 using namespace IO;
 using namespace Util;

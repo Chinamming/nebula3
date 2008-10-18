@@ -4,13 +4,13 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "scripting/debug/scriptingpagehandler.h"
-#include "http/htmlpagewriter.h"
+#include "http/html/htmlpagewriter.h"
 #include "scripting/scriptserver.h"
 #include "scripting/command.h"
 
 namespace Debug
 {
-ImplementClass(Debug::ScriptingPageHandler, 'DSPH', Http::HttpRequestHandler);
+__ImplementClass(Debug::ScriptingPageHandler, 'DSPH', Http::HttpRequestHandler);
 
 using namespace Scripting;
 using namespace Http;
@@ -24,16 +24,7 @@ ScriptingPageHandler::ScriptingPageHandler()
 {
     this->SetName("Scripting");
     this->SetDesc("show debug information about Scripting subsystem");
-    this->SetRootLocation("/scripting");
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-ScriptingPageHandler::AcceptsRequest(const Ptr<HttpRequest>& request)
-{
-    return (HttpMethod::Get == request->GetMethod()) && String::MatchPattern(request->GetURI().LocalPath(), "scripting*");
+    this->SetRootLocation("scripting");
 }
 
 //------------------------------------------------------------------------------

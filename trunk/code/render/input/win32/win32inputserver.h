@@ -21,8 +21,8 @@ namespace Win32
 {
 class Win32InputServer : public Base::InputServerBase
 {
-    DeclareClass(Win32InputServer);
-    DeclareSingleton(Win32InputServer);
+    __DeclareClass(Win32InputServer);
+    __DeclareSingleton(Win32InputServer);
 public:
     /// constructor
     Win32InputServer();

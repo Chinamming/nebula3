@@ -10,7 +10,7 @@
 
 namespace Models
 {
-ImplementClass(Models::Model, 'MODL', Resources::Resource);
+__ImplementClass(Models::Model, 'MODL', Resources::Resource);
 
 using namespace Util;
 using namespace Attr;

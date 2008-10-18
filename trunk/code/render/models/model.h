@@ -31,7 +31,7 @@ class ModelInstance;
 
 class Model : public Resources::Resource
 {
-    DeclareClass(Model);
+    __DeclareClass(Model);
 public:
     /// constructor
     Model();

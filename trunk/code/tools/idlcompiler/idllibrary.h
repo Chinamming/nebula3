@@ -20,7 +20,7 @@ namespace Tools
 {
 class IDLLibrary : public Core::RefCounted
 {
-    DeclareClass(IDLLibrary);
+    __DeclareClass(IDLLibrary);
 public:
     /// constructor
     IDLLibrary();

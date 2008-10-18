@@ -12,7 +12,6 @@
 #include "util/string.h"
 #include "util/fixedarray.h"
 
-using namespace Util;
 //------------------------------------------------------------------------------
 namespace Physics
 {
@@ -26,9 +25,9 @@ public:
     static void Setup();
 
     /// translate material type to string
-    static const String&  MaterialTypeToString(MaterialType t);
+    static const Util::String&  MaterialTypeToString(MaterialType t);
     /// translate string to material type
-    static MaterialType StringToMaterialType(const String& str);
+    static MaterialType StringToMaterialType(const Util::String& str);
 
     /// get density for a material type
     static float GetDensity(MaterialType t);
@@ -39,8 +38,6 @@ public:
     /// get collision sound for two material
     static const Util::String& GetCollisionSound(MaterialType t0, MaterialType t1);
 
-    /// add new material type
-    static void AddMaterialType(const Util::String& matName, float density);
     /// set density of material type
     static void SetDensity(MaterialType type, float density);
     /// set friction of two material types
@@ -68,9 +65,9 @@ private:
         Util::String collSound;
     };
 
-    static String invalidTypeString;
-    static Array<struct Material> materials;
-    static Array<Array<struct Interaction> > interactions;
+    static Util::String invalidTypeString;
+    static Util::FixedArray<Material> materials;
+    static Util::FixedArray<Util::FixedArray<Interaction> > interactions;
 };
 
 }; // namespace Physics

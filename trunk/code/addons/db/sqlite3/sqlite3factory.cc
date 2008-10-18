@@ -12,15 +12,15 @@
 
 namespace Db
 {
-ImplementClass(Db::Sqlite3Factory, 'S3FC', Db::DbFactory);
-ImplementSingleton(Db::Sqlite3Factory);
+__ImplementClass(Db::Sqlite3Factory, 'S3FC', Db::DbFactory);
+__ImplementSingleton(Db::Sqlite3Factory);
 
 //------------------------------------------------------------------------------
 /**
 */
 Sqlite3Factory::Sqlite3Factory()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ Sqlite3Factory::Sqlite3Factory()
 */
 Sqlite3Factory::~Sqlite3Factory()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

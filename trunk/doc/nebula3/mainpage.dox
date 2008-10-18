@@ -33,14 +33,17 @@ and design decisions. Check here: http://flohofwoe.blogspot.com
 Enjoy!
 -Floh.
 
-@section Nebula3ExtLibs Used Open Source Projects
+@section Nebula3ExtLibs 3rd Party Lib and Licensing Information
 
-Nebula3 depends on the following excellent Open Source libraries:
+Nebula3 depends on the following excellent 3rd Party Open Source libraries:
 
-- LUA (http://www.lua.org)
-- SQLite (http://www.sqlite.org)
-- TinyXML (http://www.grinninglizard.com/tinyxml)
-- ZLib (http://www.zlib.net)
+- LUA (http://www.lua.org, license: http://www.lua.org/license.html)
+- SQLite (http://www.sqlite.org, license: http://www.sqlite.org/copyright.html)
+- TinyXML (http://www.grinninglizard.com/tinyxml, license: http://www.grinninglizard.com/tinyxmldocs/index.html)
+- ZLib (http://www.zlib.net, license: http://www.zlib.net/zlib_license.html)
+- ODE / OPCODE / GIMPACT (http://www.ode.org, http://www.ode.org/ode-license.html)
+- SQLite (http://www.sqlite.org/, license http://www.sqlite.org/copyright.html)
+- RakNet (http://www.jenkinssoftware.com/, non-commercial license: http://creativecommons.org/licenses/by-nc/3.0/)
 
 Kudos to them.
 
@@ -48,17 +51,27 @@ The source code to those packages has been included with the Nebula3 SDK under I
 This was done for better integration with the Nebula3 build process and to prevent any
 version incompatibilities. 
 
+As far as I'm aware, the licenses of those projects are all compatible with the Nebula3 license (except
+RakNet, see below!), so there shouldn't arise any problems for projects using Nebula3.
+
+<b>*** RAKNET SPECIAL CASE NOTICE ***</b>
+
+Please be aware that RakNet has both a non-commercial and commercial license, basically,
+if you want to use RakNet for a commercial project, you need to obtain a license from
+the RakNet creator. License fees are very reasonable though :)
+
+To get a clean RakNet-less application, do not use the network add-on (code/addons/network, namespaces
+are CoreNetwork and Multiplayer), and don't link against RakNetLibStatic.lib.
+
+<b>*** RAKNET SPECIAL CASE NOTICE ***</b>
+
+<b>TinyXML modification:</b>
 There is also a small change to TinyXML's IO code so that it works 
 directly with Nebula3 streams. The affected methods are TiXmlDocument::LoadStream()
 and TiXmlDocument::SaveStream().
 
-As far as I'm aware, the licenses of those projects are all compatible with the Nebula3 license, so there
-shouldn't arise any problems for projects using Nebula3:
+Test sounds are taken from here: http://www.pacdv.com/sounds/index.html
 
-- http://www.lua.org/license.html
-- http://www.sqlite.org/copyright.html
-- http://www.grinninglizard.com/tinyxmldocs/index.html (check towards end of page for license)
-- http://www.zlib.net/zlib_license.html
 
 @section Nebula3Motivation Motivation
 
@@ -124,6 +137,8 @@ documentation pages:
     - @ref Util
     - @ref IO
     - @ref App
+    - @ref Graphics
+    - @ref Audio
 
 @section FoundationLayer Foundation Layer Subsystems
 
@@ -137,6 +152,7 @@ documentation pages:
     - @ref Memory
     - @ref Messaging
     - @ref Net
+    - @ref Remote
     - @ref Scripting
     - @ref System
     - @ref Threading
@@ -145,9 +161,11 @@ documentation pages:
     
 @section RenderLayer Render Layer Subsystems
 
-    - @ref CoreGraphics
-    - @ref Frame
     - @ref Graphics
+    - @ref Audio    
+    - @ref CoreGraphics
+    - @ref CoreAudio
+    - @ref Frame
     - @ref Input
     - @ref Lighting
     - @ref Models

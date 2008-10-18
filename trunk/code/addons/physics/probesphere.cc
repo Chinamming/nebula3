@@ -9,11 +9,14 @@
 #include "physics/contactpoint.h"
 #include "physics/filterset.h"
 #include "physics/physicsserver.h"
-#include "coregraphics/shaperenderer.h"
+#include "debugrender/debugshaperenderer.h"
 
 namespace Physics
 {
-ImplementClass(Physics::ProbeSphere, 'PPSP', Physics::SphereShape);
+__ImplementClass(Physics::ProbeSphere, 'PPSP', Physics::SphereShape);
+
+using namespace Math;
+using namespace Debug;
 
 //------------------------------------------------------------------------------
 /**
@@ -80,7 +83,7 @@ ProbeSphere::Collide()
             if (this->contactPoints[i].GetDepth() > this->staticDepth)
             {
                 this->staticDepth = this->contactPoints[i].GetDepth();
-                this->staticCollideDir = this->contactPoints[i].GetPosition() - this->GetTransform().getpos_component();
+                this->staticCollideDir = this->contactPoints[i].GetPosition() - this->GetTransform().get_position();
                 this->staticCollideDir = vector::normalize(this->staticCollideDir);
             }
 			this->staticCollision = true;
@@ -137,8 +140,7 @@ ProbeSphere::RenderDebug(const Math::matrix44& parentTransform)
 		{
 			color = Math::float4(1.0f, 1.0f, 1.0f, 0.1f);
 		}
-
-        CoreGraphics::ShapeRenderer::Instance()->DrawShape(m, CoreGraphics::ShapeRenderer::Sphere, color);
+        DebugShapeRenderer::Instance()->DrawSphere(m, color);
     }
 }
 

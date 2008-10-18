@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::CmdLineArgsTest, 'CLAT', Test::TestCase);
+__ImplementClass(Test::CmdLineArgsTest, 'CLAT', Test::TestCase);
 
 using namespace Util;
 using namespace Math;

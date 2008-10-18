@@ -9,8 +9,8 @@
 
 namespace Scripting
 {
-ImplementClass(Scripting::ScriptServer, 'SCRS', Core::RefCounted);
-ImplementSingleton(Scripting::ScriptServer);
+__ImplementClass(Scripting::ScriptServer, 'SCRS', Core::RefCounted);
+__ImplementSingleton(Scripting::ScriptServer);
 
 using namespace Util;
 using namespace IO;
@@ -21,7 +21,7 @@ using namespace IO;
 ScriptServer::ScriptServer() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ ScriptServer::ScriptServer() :
 ScriptServer::~ScriptServer()
 {
     n_assert(!this->isOpen);
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

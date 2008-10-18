@@ -11,7 +11,7 @@
 
 namespace Test
 {
-ImplementClass(Test::BinaryReaderWriterTest, 'BRWT', Test::TestCase);
+__ImplementClass(Test::BinaryReaderWriterTest, 'BRWT', Test::TestCase);
 
 using namespace IO;
 using namespace Util;

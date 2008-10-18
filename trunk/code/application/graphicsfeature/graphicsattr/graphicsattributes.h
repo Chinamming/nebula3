@@ -2,6 +2,8 @@
 #define ATTR_GRAPHICSATTR_H
 //------------------------------------------------------------------------------
 /**
+    @file graphicsattr/graphicsattributes.h    
+
     This is the central attribute registry for this feature. For more information
     on attributes, see Attr::Attribute.
 

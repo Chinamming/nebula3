@@ -1,6 +1,4 @@
 #pragma once
-#ifndef CORE_TYPES_H
-#define CORE_TYPES_H
 //------------------------------------------------------------------------------
 /**
     @class core/types.h
@@ -26,10 +24,13 @@ typedef unsigned long  ulong;
 typedef unsigned int   uint;
 typedef unsigned short ushort;
 typedef unsigned char  uchar;
+typedef unsigned char  ubyte;
 
+#if !ENABLE_NEBULA2_COMPATIBILITY
 typedef unsigned int IndexT;    // the index type
 typedef unsigned int SizeT;     // the size type
 static const unsigned int InvalidIndex = 0xffffffff;
+#endif
 
 #define N_ARGB(a,r,g,b) ((uint)((((a)&0xff)<<24)|(((r)&0xff)<<16)|(((g)&0xff)<<8)|((b)&0xff)))
 #define N_RGBA(r,g,b,a) N_ARGB(a,r,g,b)
@@ -58,16 +59,4 @@ static const unsigned int InvalidIndex = 0xffffffff;
 #else
 #error "Unsupported platform!"
 #endif
-
-// alignment macro
-/*
-#if __WIN32__
-#define n_align(X) __declspec(align(X))
-#elif __XBOX360__
-#define n_align(X) __declspec(align(X))
-#else
-#error "Unsupported platform!"
-#endif*/
-
 //------------------------------------------------------------------------------
-#endif

@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::StackTest, 'STKT', Test::TestCase);
+__ImplementClass(Test::StackTest, 'STKT', Test::TestCase);
 
 using namespace Util;
 

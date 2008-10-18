@@ -2,7 +2,7 @@
 #define TIMING_TIMESOURCE_H
 //------------------------------------------------------------------------------
 /**
-    @class Timing::TimeSource
+    @class BaseGameFeature::TimeSource
     
     A generic time source object which is attached to the TimeManager.
     Each time source tracks its own time independently from the other
@@ -48,7 +48,7 @@ class TimeManager;
 
 class TimeSource : public Core::RefCounted
 {
-    DeclareClass(TimeSource);
+    __DeclareClass(TimeSource);
 
 public:
     /// constructor

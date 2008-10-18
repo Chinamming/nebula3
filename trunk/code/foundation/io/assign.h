@@ -55,8 +55,8 @@ inline
 const Util::String&
 Assign::GetName() const
 {
-    n_assert(this->key.IsValid());
-    return this->key;
+    n_assert(this->keyData.IsValid());
+    return this->keyData;
 }
 
 //------------------------------------------------------------------------------
@@ -66,8 +66,8 @@ inline
 const Util::String&
 Assign::GetPath() const
 {
-    n_assert(this->value.IsValid());
-    return this->value;
+    n_assert(this->valueData.IsValid());
+    return this->valueData;
 }
 
 } // namespace IO

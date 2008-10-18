@@ -7,8 +7,8 @@
 
 namespace Direct3D9
 {
-ImplementClass(Direct3D9::D3D9ShaderServer, 'D9SS', Base::ShaderServerBase);
-ImplementSingleton(Direct3D9::D3D9ShaderServer);
+__ImplementClass(Direct3D9::D3D9ShaderServer, 'D9SS', Base::ShaderServerBase);
+__ImplementSingleton(Direct3D9::D3D9ShaderServer);
 
 using namespace Resources;
 
@@ -18,7 +18,7 @@ using namespace Resources;
 D3D9ShaderServer::D3D9ShaderServer() :
     d3d9EffectPool(0)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ D3D9ShaderServer::~D3D9ShaderServer()
     {
         this->Close();
     }
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -49,9 +49,6 @@ D3D9ShaderServer::Open()
     // let parent class load all shaders
     ShaderServerBase::Open();
 
-    // create standard shader for access to shared variables
-    this->sharedVariableShaderInst = this->CreateShaderInstance(ResourceId("shd:shared"));
-    n_assert(this->sharedVariableShaderInst.isvalid());
     return true;
 }
 
@@ -62,12 +59,7 @@ void
 D3D9ShaderServer::Close()
 {
     n_assert(this->IsOpen());
-    n_assert(this->sharedVariableShaderInst.isvalid());
     
-    // release shared instance shader
-    this->sharedVariableShaderInst->Discard();
-    this->sharedVariableShaderInst = 0;
-
     // release the d3dx effect pool object
     this->d3d9EffectPool->Release();
     this->d3d9EffectPool = 0;

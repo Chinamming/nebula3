@@ -9,8 +9,8 @@
 #include "../nebula2wrapper.h"
 #include "resources/resourcemanager.h"
 
-ImplementClass(Nebula2::nAnimationServer, 'ASRV', Core::RefCounted);
-ImplementSingleton(Nebula2::nAnimationServer);
+__ImplementClass(Nebula2::nAnimationServer, 'ASRV', Core::RefCounted);
+__ImplementSingleton(Nebula2::nAnimationServer);
 
 namespace Nebula2
 {
@@ -19,7 +19,7 @@ namespace Nebula2
 */
 nAnimationServer::nAnimationServer()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ nAnimationServer::~nAnimationServer()
 {
     // TODO: unload all animation resources
     
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

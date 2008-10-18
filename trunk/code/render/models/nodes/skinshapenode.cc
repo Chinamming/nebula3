@@ -14,7 +14,7 @@
 
 namespace Models
 {
-ImplementClass(Models::SkinShapeNode, 'SKSN', Models::ShapeNode);
+__ImplementClass(Models::SkinShapeNode, 'SKSN', Models::ShapeNode);
 
 using namespace Util;
 using namespace Attr;

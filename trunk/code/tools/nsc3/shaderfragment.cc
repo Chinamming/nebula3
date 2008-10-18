@@ -7,7 +7,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::ShaderFragment, 'SFRG', Core::RefCounted);
+__ImplementClass(Tools::ShaderFragment, 'SFRG', Core::RefCounted);
 
 using namespace Util;
 using namespace IO;

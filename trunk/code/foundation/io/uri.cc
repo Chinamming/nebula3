@@ -26,7 +26,15 @@ URI::Split(const String& s)
     this->isEmpty = false;
     
     // resolve assigns
-    String str = IoServer::Instance()->ResolveAssignsInString(s);
+    String str;
+    if (IoServer::HasInstance())
+    {
+        str = IoServer::Instance()->ResolveAssignsInString(s);
+    }
+    else
+    {
+        str = s;
+    }
 
     // scheme is the first components and ends with a :
     IndexT schemeColonIndex = str.FindCharIndex(':');

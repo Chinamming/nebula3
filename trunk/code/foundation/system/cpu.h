@@ -9,33 +9,24 @@
     
     (C) 2007 Radon Labs GmbH
 */
-#include "core/types.h"
-
-//------------------------------------------------------------------------------
+#if __WIN32__
+#include "system/win32/win32cpu.h"
 namespace System
 {
-class Cpu
+typedef Win32::Win32Cpu Cpu;
+}
+#elif __XBOX360__
+#include "system/xbox360/xbox360cpu.h"
+namespace System
 {
-public:
-    /// core id's
-    enum CoreId
-    {
-        Core0 = 0,
-        Core1,
-        Core2,
-        Core3,
-        Core4,
-        Core5,
-        Core6,
-        Core7,
-        Core8,
-        
-        MaxNumCores,
-        UndefinedCoreId,
-    };
-};
-
-} // namespace System
+typedef Xbox360::Xbox360Cpu Cpu;
+}
+#elif __WII__
+namespace System
+{
+typedef Wii::WiiCpu Cpu;
+}
+#endif
 //------------------------------------------------------------------------------
 #endif
     

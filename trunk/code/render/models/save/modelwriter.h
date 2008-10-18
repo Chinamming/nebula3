@@ -20,7 +20,7 @@ namespace Models
 {
 class ModelWriter : public IO::StreamWriter
 {
-    DeclareAbstractClass(ModelWriter);
+    __DeclareAbstractClass(ModelWriter);
 public:
     /// destructor
     virtual ~ModelWriter(); 

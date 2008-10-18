@@ -21,7 +21,7 @@ namespace App
 {
 class GameStateHandler : public App::StateHandler
 {
-    DeclareClass(GameStateHandler);
+    __DeclareClass(GameStateHandler);
 public:    
     /// setup modes
     enum SetupMode

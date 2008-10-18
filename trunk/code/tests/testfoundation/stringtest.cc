@@ -9,7 +9,7 @@
 
 namespace Test
 {
-ImplementClass(Test::StringTest, 'STRT', Test::TestCase);
+__ImplementClass(Test::StringTest, 'STRT', Test::TestCase);
 
 using namespace Util;
 

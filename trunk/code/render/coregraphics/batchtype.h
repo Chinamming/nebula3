@@ -26,6 +26,8 @@ public:
         Solid,
         Alpha,
         SolidAutoZ,     // Xbox360 specific
+        Shapes,         // ShapeRenderer shapes
+        Text,           // TextRenderer elements
     
         InvalidBatchType
     };
@@ -42,10 +44,12 @@ public:
 inline BatchType::Code
 BatchType::FromString(const Util::String& str)
 {
-    if (str == "Depth")           return Depth;
-    else if (str == "Solid")      return Solid;
-    else if (str == "Alpha")      return Alpha;
-    else if (str == "SolidAutoZ") return SolidAutoZ;
+    if (str == "Depth")            return Depth;
+    else if (str == "Solid")       return Solid;
+    else if (str == "Alpha")       return Alpha;
+    else if (str == "SolidAutoZ")  return SolidAutoZ;
+    else if (str == "Shapes")      return Shapes;
+    else if (str == "Text")        return Text;
     else
     {
         n_error("BatchType::FromString(): invalid string '%s'!", str.AsCharPtr());
@@ -65,6 +69,8 @@ BatchType::ToString(BatchType::Code c)
         case Solid:         return "Solid";
         case Alpha:         return "Alpha";
         case SolidAutoZ:    return "SolidAutoZ";
+        case Shapes:        return "Shapes";
+        case Text:          return "Text";
         default:
             n_error("BatchType::ToString(): invalid batch type!");
             return "";

@@ -20,7 +20,7 @@ namespace Tools
 {
 class ShaderSampler : public Core::RefCounted
 {
-    DeclareClass(ShaderSampler);
+    __DeclareClass(ShaderSampler);
 public:
     /// constructor
     ShaderSampler();

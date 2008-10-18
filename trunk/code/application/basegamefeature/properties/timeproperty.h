@@ -2,6 +2,8 @@
 #define PROPERTIES_TIMEPROPERTY_H
 //------------------------------------------------------------------------------
 /**
+    @class BaseGameFeature::TimePropoerty
+
     The time property adds the attribute "Time" to the entity. This 
     attributes contains the time since the time property has been
     attached to the entity.
@@ -16,7 +18,7 @@ namespace BaseGameFeature
 {
 class TimeProperty : public Game::Property
 {
-	DeclareClass(TimeProperty);
+	__DeclareClass(TimeProperty);
 public:
     /// constructor
     TimeProperty();
@@ -34,7 +36,7 @@ public:
 private:
     Timing::Time attachTime;
 };
-RegisterClass(TimeProperty);
+__RegisterClass(TimeProperty);
 }; // namespace Property
 //------------------------------------------------------------------------------
 #endif

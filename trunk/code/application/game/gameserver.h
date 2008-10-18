@@ -24,14 +24,12 @@
 */
 #include "core/refcounted.h"
 #include "core/ptr.h"
-//#include "core/profiler.h"
 #include "math/bbox.h"
 #include "appgame/appconfig.h"
 #include "core/singleton.h"
 #include "game/featureunit.h"
+#include "debug/debugtimer.h"
 
-using namespace Util;
-using namespace Math;
 //------------------------------------------------------------------------------
 namespace Game
 {
@@ -40,8 +38,8 @@ class Manager;
 
 class GameServer : public Core::RefCounted
 {
-    DeclareClass(GameServer);
-    DeclareSingleton(GameServer);
+    __DeclareClass(GameServer);
+    __DeclareSingleton(GameServer);
 public:
     /// constructor
     GameServer();
@@ -70,22 +68,26 @@ public:
     void AttachGameFeature(const Ptr<FeatureUnit>& feature);
     /// remove game feature
     void RemoveGameFeature(const Ptr<FeatureUnit>& feature);
+    /// is feature attached
+    bool IsFeatureAttached(const Util::String& stringName) const;
 
     /// is quit requested
     bool IsQuitRequested() const;
     /// request quit
-    void RequestQuit();
+    void SetQuitRequested();
 
 protected:
-    /// render a debug visualization 
-    void RenderDebug();   
+	
+	/// check input for render debug and return feature for rendering
+	void CheckDebugRendering();
 
     bool isOpen;
     bool isStarted;
     bool quitRequested;
     Util::Array<Ptr<FeatureUnit> > gameFeatures;
-    
-    //PROFILER_DECLARE(profGameServerFrame);
+	Ptr<FeatureUnit> debugRenderFeature;
+
+    _declare_timer(GameServerOnFrame);
 };
 
 //------------------------------------------------------------------------------
@@ -101,7 +103,7 @@ GameServer::IsQuitRequested() const
 /**
 */
 inline void 
-GameServer::RequestQuit()
+GameServer::SetQuitRequested()
 {
     this->quitRequested = true;
 }

@@ -18,7 +18,7 @@ namespace Win32
 {
 class Win32ConsoleHandler : public IO::ConsoleHandler
 {
-    DeclareClass(Win32ConsoleHandler);
+    __DeclareClass(Win32ConsoleHandler);
 public:
     /// constructor
     Win32ConsoleHandler();

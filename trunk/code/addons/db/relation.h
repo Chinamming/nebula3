@@ -18,7 +18,7 @@ namespace Db
 {
 class Relation : public Core::RefCounted
 {
-    DeclareClass(Relation);
+    __DeclareClass(Relation);
 public:
     /// constructor
     Relation();

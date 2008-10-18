@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_KEYVALUEPAIR_H
-#define UTIL_KEYVALUEPAIR_H
 //------------------------------------------------------------------------------
 /**
     @class Util::KeyValuePair
@@ -48,8 +46,8 @@ public:
     const VALUETYPE& Value() const;
 
 protected:
-    KEYTYPE key;
-    VALUETYPE value;
+    KEYTYPE keyData;
+    VALUETYPE valueData;
 };
 
 //------------------------------------------------------------------------------
@@ -66,8 +64,8 @@ KeyValuePair<KEYTYPE, VALUETYPE>::KeyValuePair()
 */
 template<class KEYTYPE, class VALUETYPE>
 KeyValuePair<KEYTYPE, VALUETYPE>::KeyValuePair(const KEYTYPE& k, const VALUETYPE& v) :
-    key(k),
-    value(v)
+    keyData(k),
+    valueData(v)
 {
     // empty
 }
@@ -79,7 +77,7 @@ KeyValuePair<KEYTYPE, VALUETYPE>::KeyValuePair(const KEYTYPE& k, const VALUETYPE
 */
 template<class KEYTYPE, class VALUETYPE>
 KeyValuePair<KEYTYPE, VALUETYPE>::KeyValuePair(const KEYTYPE& k) :
-    key(k)
+    keyData(k)
 {
     // empty
 }
@@ -89,8 +87,8 @@ KeyValuePair<KEYTYPE, VALUETYPE>::KeyValuePair(const KEYTYPE& k) :
 */
 template<class KEYTYPE, class VALUETYPE>
 KeyValuePair<KEYTYPE, VALUETYPE>::KeyValuePair(const KeyValuePair<KEYTYPE, VALUETYPE>& rhs) :
-    key(rhs.key),
-    value(rhs.value)
+    keyData(rhs.keyData),
+    valueData(rhs.valueData)
 {
     // empty
 }
@@ -102,8 +100,8 @@ template<class KEYTYPE, class VALUETYPE>
 void
 KeyValuePair<KEYTYPE, VALUETYPE>::operator=(const KeyValuePair<KEYTYPE, VALUETYPE>& rhs)
 {
-    this->key = rhs.key;
-    this->value = rhs.value;
+    this->keyData = rhs.keyData;
+    this->valueData = rhs.valueData;
 }
 
 //------------------------------------------------------------------------------
@@ -113,7 +111,7 @@ template<class KEYTYPE, class VALUETYPE>
 bool
 KeyValuePair<KEYTYPE, VALUETYPE>::operator==(const KeyValuePair<KEYTYPE, VALUETYPE>& rhs) const
 {
-    return (this->key == rhs.key);
+    return (this->keyData == rhs.keyData);
 }
 
 //------------------------------------------------------------------------------
@@ -123,7 +121,7 @@ template<class KEYTYPE, class VALUETYPE>
 bool
 KeyValuePair<KEYTYPE, VALUETYPE>::operator!=(const KeyValuePair<KEYTYPE, VALUETYPE>& rhs) const
 {
-    return (this->key != rhs.key);
+    return (this->keyData != rhs.keyData);
 }
 
 //------------------------------------------------------------------------------
@@ -133,7 +131,7 @@ template<class KEYTYPE, class VALUETYPE>
 bool
 KeyValuePair<KEYTYPE, VALUETYPE>::operator>(const KeyValuePair<KEYTYPE, VALUETYPE>& rhs) const
 {
-    return (this->key > rhs.key);
+    return (this->keyData > rhs.keyData);
 }
 
 //------------------------------------------------------------------------------
@@ -143,7 +141,7 @@ template<class KEYTYPE, class VALUETYPE>
 bool
 KeyValuePair<KEYTYPE, VALUETYPE>::operator>=(const KeyValuePair<KEYTYPE, VALUETYPE>& rhs) const
 {
-    return (this->key >= rhs.key);
+    return (this->keyData >= rhs.keyData);
 }
 
 //------------------------------------------------------------------------------
@@ -153,7 +151,7 @@ template<class KEYTYPE, class VALUETYPE>
 bool
 KeyValuePair<KEYTYPE, VALUETYPE>::operator<(const KeyValuePair<KEYTYPE, VALUETYPE>& rhs) const
 {
-    return (this->key < rhs.key);
+    return (this->keyData < rhs.keyData);
 }
 
 //------------------------------------------------------------------------------
@@ -163,7 +161,7 @@ template<class KEYTYPE, class VALUETYPE>
 bool
 KeyValuePair<KEYTYPE, VALUETYPE>::operator<=(const KeyValuePair<KEYTYPE, VALUETYPE>& rhs) const
 {
-    return (this->key <= rhs.key);
+    return (this->keyData <= rhs.keyData);
 }
 
 //------------------------------------------------------------------------------
@@ -173,7 +171,7 @@ template<class KEYTYPE, class VALUETYPE>
 VALUETYPE&
 KeyValuePair<KEYTYPE, VALUETYPE>::Value()
 {
-    return this->value;
+    return this->valueData;
 }
 
 //------------------------------------------------------------------------------
@@ -183,7 +181,7 @@ template<class KEYTYPE, class VALUETYPE>
 const KEYTYPE&
 KeyValuePair<KEYTYPE, VALUETYPE>::Key() const
 {
-    return this->key;
+    return this->keyData;
 }
 
 //------------------------------------------------------------------------------
@@ -193,10 +191,9 @@ template<class KEYTYPE, class VALUETYPE>
 const VALUETYPE&
 KeyValuePair<KEYTYPE, VALUETYPE>::Value() const
 {
-    return this->value;
+    return this->valueData;
 }
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif
     

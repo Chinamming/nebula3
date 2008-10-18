@@ -7,7 +7,7 @@
 
 namespace IO
 {
-ImplementClass(IO::StreamReader, 'STRR', Core::RefCounted);
+__ImplementClass(IO::StreamReader, 'STRR', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

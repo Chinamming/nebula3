@@ -29,7 +29,7 @@ class Composite;
 
 class CharEntity : public PhysicsEntity
 {
-	DeclareClass(CharEntity);
+	__DeclareClass(CharEntity);
 public:
     /// constructor
     CharEntity();

@@ -3,7 +3,7 @@
 #define COREGRAPHICS_VERTEXLAYOUTSERVER_H
 //------------------------------------------------------------------------------
 /**
-    @class CoreGraphics::VertexLayoutServer
+    @class CoreGraphics::VertexLayoutServer    
     
     The VertexLayoutServer creates VertexLayout objects shared by their
     vertex component signature. On some platforms it is more efficient
@@ -14,52 +14,38 @@
     is called.
     
     (C) 2007 Radon Labs GmbH
-*/
-#include "core/refcounted.h"
-#include "core/singleton.h"
-#include "coregraphics/vertexcomponent.h"
-#include "util/stringatom.h"
-
-//------------------------------------------------------------------------------
+*/    
+#if __WIN32__
+#include "coregraphics/base/vertexlayoutserverbase.h"
 namespace CoreGraphics
 {
-class VertexLayout;
-
-class VertexLayoutServer : public Core::RefCounted
+class VertexLayoutServer : public Base::VertexLayoutServerBase
 {
-    DeclareClass(VertexLayoutServer);
-    DeclareSingleton(VertexLayoutServer);
-public:
-    /// constructor
-    VertexLayoutServer();
-    /// destructor
-    virtual ~VertexLayoutServer();
-    
-    /// open the server
-    void Open();
-    /// close the server
-    void Close();
-    /// return true if open
-    bool IsOpen() const;
-    
-    /// create shared vertex layout object
-    Ptr<VertexLayout> CreateSharedVertexLayout(const Util::Array<VertexComponent>& vertexComponents);
-
-private:
-    bool isOpen;
-    Util::Dictionary<Util::StringAtom, Ptr<VertexLayout> > vertexLayouts;
+    __DeclareClass(VertexLayoutServer);
 };
-
-//------------------------------------------------------------------------------
-/**
-*/
-inline bool
-VertexLayoutServer::IsOpen() const
-{
-    return this->isOpen;
 }
+#elif __XBOX360__
+#include "coregraphics/base/vertexlayoutserverbase.h"
+namespace CoreGraphics
+{
+class VertexLayoutServer : public Base::VertexLayoutServerBase
+{
+    __DeclareClass(VertexLayoutServer);
+};
+}
+#elif __WII__
+#include "coregraphics/wii/wiivertexlayoutserver.h"
+namespace CoreGraphics
+{
+class VertexLayoutServer : public Wii::WiiVertexLayoutServer
+{
+    __DeclareClass(VertexLayoutServer);
+};
+}
+#else
+#error "VertexLayoutServer class not implemented on this platform!"
+#endif
 
-} // namespace VertexLayoutServer
 //------------------------------------------------------------------------------
 #endif
 

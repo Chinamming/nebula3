@@ -10,7 +10,7 @@
 
 namespace Test
 {
-ImplementClass(Test::StreamServerTest, 'SSVT', Core::RefCounted);
+__ImplementClass(Test::StreamServerTest, 'SSVT', Core::RefCounted);
 
 using namespace Util;
 using namespace IO;

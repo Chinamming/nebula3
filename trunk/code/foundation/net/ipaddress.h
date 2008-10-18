@@ -21,17 +21,17 @@
 
     (C) 2006 Radon Labs GmbH
 */
-#if __WIN32__
-#include "net/win32/win32ipaddress.h"
+#if (__WIN32__ || __XBOX360__)
+#include "net/win360/win360ipaddress.h"
 namespace Net
 {
-typedef Win32::Win32IpAddress IpAddress;
+typedef Win360::Win360IpAddress IpAddress;
 }
-#elif __XBOX360__
-#include "net/xbox360/xbox360ipaddress.h"
+#elif __WII__
+#include "net/wii/wiiipaddress.h"
 namespace Net
 {
-typedef Xbox360::Xbox360IpAddress IpAddress;
+typedef Wii::WiiIpAddress IpAddress;
 }
 #else
 #error "IpAddress class not implemented on this platform"

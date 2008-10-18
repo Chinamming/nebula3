@@ -14,7 +14,7 @@ using namespace Util;
 
 namespace BaseGameFeature
 {
-ImplementClass(UserProfile, 'LOUP', Core::RefCounted);
+__ImplementClass(UserProfile, 'LOUP', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

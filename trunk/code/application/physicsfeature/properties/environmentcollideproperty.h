@@ -2,6 +2,8 @@
 #define PROPERTIES_ENVIRONMENTCOLLIDEPROPERTY_H
 //------------------------------------------------------------------------------
 /**
+    @class PhysicsFeature::EnvironmentCollideProperty
+
     This property adds pieces of static collide geometry to the game world.
     It is very similar to the class EnvironmentGraphicsProperty, but instead
     of graphics it handles collision. All static collide geometry in a level
@@ -16,7 +18,7 @@
     by the level loader which automatically collects all environment objects
     into a single game entity.
 
-    (C) 2005 Radon Labs GmbH
+    (C) 2008 Radon Labs GmbH
 */    
 #include "game/property.h"
 #include "physics/shape.h"
@@ -27,7 +29,7 @@ namespace PhysicsFeature
 {
 class EnvironmentCollideProperty : public Game::Property
 {
-	DeclareClass(EnvironmentCollideProperty);
+	__DeclareClass(EnvironmentCollideProperty);
 public:
     /// constructor
     EnvironmentCollideProperty();
@@ -54,7 +56,7 @@ private:
     };
     Util::Dictionary<Util::String, Entry> entries;
 };
-RegisterClass(EnvironmentCollideProperty);
+__RegisterClass(EnvironmentCollideProperty);
 
 }; // namespace Properties
 //------------------------------------------------------------------------------

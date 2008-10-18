@@ -7,7 +7,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::IDLDependency, 'ILDP', Core::RefCounted);
+__ImplementClass(Tools::IDLDependency, 'ILDP', Core::RefCounted);
 
 using namespace Util;
 using namespace IO;

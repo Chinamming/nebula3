@@ -29,7 +29,7 @@ namespace Base
 {
 class ShaderVariableInstanceBase : public Core::RefCounted
 {
-    DeclareClass(ShaderVariableInstanceBase);
+    __DeclareClass(ShaderVariableInstanceBase);
 public:
     /// constructor
     ShaderVariableInstanceBase();
@@ -63,6 +63,8 @@ public:
     void SetBoolArray(const bool* values, SizeT count);
     /// set texture value
     void SetTexture(const Ptr<CoreGraphics::Texture>& value);
+    /// set value directly
+    void SetValue(const Util::Variant& v);
 
 private:
     friend class ShaderVariableBase;
@@ -183,6 +185,16 @@ ShaderVariableInstanceBase::SetTexture(const Ptr<CoreGraphics::Texture>& value)
 {
     n_assert(this->value.GetType() == Util::Variant::Object);
     this->value.SetObject((Core::RefCounted*)value.get());
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+ShaderVariableInstanceBase::SetValue(const Util::Variant& v)
+{
+    n_assert(value.GetType() == v.GetType());
+    this->value = v;
 }
 
 } // namespace Base

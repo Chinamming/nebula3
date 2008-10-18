@@ -7,7 +7,7 @@
 
 namespace Physics
 {
-ImplementClass(Physics::AreaImpulse, 'PAIM', Core::RefCounted);
+__ImplementClass(Physics::AreaImpulse, 'PAIM', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

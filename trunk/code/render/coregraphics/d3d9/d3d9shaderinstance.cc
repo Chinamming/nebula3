@@ -11,7 +11,7 @@
 
 namespace Direct3D9
 {
-ImplementClass(Direct3D9::D3D9ShaderInstance, 'D9SI', Base::ShaderInstanceBase);
+__ImplementClass(Direct3D9::D3D9ShaderInstance, 'D9SI', Base::ShaderInstanceBase);
 
 using namespace Util;
 using namespace CoreGraphics;

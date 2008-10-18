@@ -9,8 +9,8 @@
 
 namespace Base
 {
-ImplementClass(Base::ShaderServerBase, 'SSRV', Core::RefCounted);
-ImplementSingleton(Base::ShaderServerBase);
+__ImplementClass(Base::ShaderServerBase, 'SSRV', Core::RefCounted);
+__ImplementSingleton(Base::ShaderServerBase);
 
 using namespace CoreGraphics;
 using namespace IO;
@@ -25,7 +25,7 @@ ShaderServerBase::ShaderServerBase() :
     paramBindMode(BindBySemantic),
     curShaderFeatureBits(0)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ ShaderServerBase::ShaderServerBase() :
 ShaderServerBase::~ShaderServerBase()
 {
     n_assert(!this->IsOpen());
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -68,6 +68,11 @@ ShaderServerBase::Open()
             n_error("Failed to load shader '%s'!", files[i].AsCharPtr());
         }
     }
+
+    // create standard shader for access to shared variables
+    this->sharedVariableShaderInst = this->CreateShaderInstance(ResourceId("shd:shared"));
+    n_assert(this->sharedVariableShaderInst.isvalid());
+
     this->isOpen = true;
     return true;
 }
@@ -79,6 +84,10 @@ void
 ShaderServerBase::Close()
 {
     n_assert(this->isOpen);
+
+    // release shared instance shader
+    this->sharedVariableShaderInst->Discard();
+    this->sharedVariableShaderInst = 0;
 
     // unload all currently loaded shaders
     IndexT i;

@@ -7,5 +7,5 @@
 
 namespace Models
 {
-ImplementClass(Models::ManagedModel, 'MGMD', Resources::ManagedResource);
+__ImplementClass(Models::ManagedModel, 'MGMD', Resources::ManagedResource);
 } // namespace Models

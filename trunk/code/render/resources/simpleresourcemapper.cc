@@ -8,7 +8,7 @@
 
 namespace Resources
 {
-ImplementClass(Resources::SimpleResourceMapper, 'SRSM', Resources::ResourceMapper);
+__ImplementClass(Resources::SimpleResourceMapper, 'SRSM', Resources::ResourceMapper);
 
 using namespace Core;
 using namespace Util;
@@ -179,11 +179,13 @@ SimpleResourceMapper::OnDiscardManagedResource(const Ptr<ManagedResource>& manag
             this->pendingResources.Erase(managedResource->GetResourceId());
         }
 
-        // finally drop the managed resource itself
-        this->managedResources.Erase(managedResource->GetResourceId());
-
         // clear the contained resource
         managedResource->Clear();
+
+        // finally drop the managed resource itself, this must be the last
+        // call in this method, since the managedResource pointer
+        // may become invalid at this point
+        this->managedResources.Erase(managedResource->GetResourceId());
     }
 }
 
@@ -235,6 +237,15 @@ void
 SimpleResourceMapper::OnUpdate()
 {
     // @todo: do we need to do anything here?
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+SizeT
+SimpleResourceMapper::GetNumPendingResources() const
+{
+    return this->pendingResources.Size();
 }
 
 } // namespace Resources

@@ -16,7 +16,7 @@ namespace Test
 {
 class ProxyTest : public TestCase
 {
-    DeclareClass(ProxyTest);
+    __DeclareClass(ProxyTest);
 public:
     /// run the test
     virtual void Run();

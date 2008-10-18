@@ -18,7 +18,7 @@ namespace Tools
 {
 class IDLCommand : public Core::RefCounted
 {
-    DeclareClass(IDLCommand);
+    __DeclareClass(IDLCommand);
 public:
     /// constructor
     IDLCommand();

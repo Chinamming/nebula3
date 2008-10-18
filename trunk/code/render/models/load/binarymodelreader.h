@@ -17,7 +17,7 @@ namespace Models
 {
 class BinaryModelReader : public ModelReader
 {
-    DeclareClass(BinaryModelReader);
+    __DeclareClass(BinaryModelReader);
 public:
     /// constructor
     BinaryModelReader();

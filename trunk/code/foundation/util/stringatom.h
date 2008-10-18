@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_STRINGATOM_H
-#define UTIL_STRINGATOM_H
 //------------------------------------------------------------------------------
 /**
     @class Util::StringAtom
@@ -18,4 +16,3 @@ namespace Util
 typedef Atom<String> StringAtom;
 }
 //------------------------------------------------------------------------------
-#endif

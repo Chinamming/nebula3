@@ -7,15 +7,15 @@
 
 namespace BaseGameFeature
 {
-ImplementClass(InputTimeSource, 'TSIN', TimeSource);
-ImplementSingleton(InputTimeSource);
+__ImplementClass(InputTimeSource, 'TSIN', TimeSource);
+__ImplementSingleton(InputTimeSource);
 
 //------------------------------------------------------------------------------
 /**
 */
 InputTimeSource::InputTimeSource()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ InputTimeSource::InputTimeSource()
 */
 InputTimeSource::~InputTimeSource()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 }; // namespace Timing

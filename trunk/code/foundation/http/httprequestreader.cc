@@ -8,7 +8,7 @@
 
 namespace Http
 {
-ImplementClass(Http::HttpRequestReader, 'HRQR', IO::StreamReader);
+__ImplementClass(Http::HttpRequestReader, 'HRQR', IO::StreamReader);
 
 using namespace Util;
 using namespace IO;

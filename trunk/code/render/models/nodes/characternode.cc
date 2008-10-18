@@ -17,7 +17,7 @@ namespace Attr
 
 namespace Models
 {
-ImplementClass(Models::CharacterNode, 'CHAN', Models::TransformNode);
+__ImplementClass(Models::CharacterNode, 'CHAN', Models::TransformNode);
 
 using namespace Util;
 using namespace Attr;

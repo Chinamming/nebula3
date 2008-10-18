@@ -32,7 +32,7 @@ namespace Net
 {
 class TcpClientConnection : public Core::RefCounted
 {
-    DeclareClass(TcpClientConnection);
+    __DeclareClass(TcpClientConnection);
 public:
     /// constructor
     TcpClientConnection();

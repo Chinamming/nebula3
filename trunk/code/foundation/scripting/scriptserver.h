@@ -23,8 +23,8 @@ class Command;
 
 class ScriptServer : public Core::RefCounted
 {
-    DeclareClass(ScriptServer);
-    DeclareSingleton(ScriptServer);
+    __DeclareClass(ScriptServer);
+    __DeclareSingleton(ScriptServer);
 public:
     /// constructor
     ScriptServer();

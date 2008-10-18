@@ -13,6 +13,7 @@
 #include "physics/materialtable.h"
 #include "physics/collidecategory.h"
 #include "ode/ode.h"
+#include "physics/contactpoint.h"
 
 //------------------------------------------------------------------------------
 namespace Physics
@@ -20,11 +21,10 @@ namespace Physics
 class RigidBody;
 class PhysicsEntity;
 class FilterSet;
-class ContactPoint;
 
 class Shape : public Core::RefCounted
 {
-    DeclareClass(Shape);
+    __DeclareClass(Shape);
 public:
     /// shape types
     enum Type
@@ -91,6 +91,12 @@ public:
     void AttachToSpace(dSpaceID spaceId);
     /// remove the shape from its current collide space
     void RemoveFromSpace();
+    /// set contact points
+    void SetContactPoints(const Util::Array<Physics::ContactPoint>& contacts);
+    /// get contact points
+    const Util::Array<Physics::ContactPoint>&  GetContactPoints() const;
+    /// clear contact points
+    void ClearContactPoints();
 
 protected:
     friend class RigidBody;
@@ -130,6 +136,7 @@ protected:
     dGeomID odeGeomId;      // the proxy geom id
     dMass odeMass;          // the mass structure
     dSpaceID odeSpaceId;    // the collide space we're currently attached to
+    Util::Array<Physics::ContactPoint> contactPoints;
 };
 
 //------------------------------------------------------------------------------
@@ -219,7 +226,6 @@ inline
 void
 Shape::SetMaterialType(MaterialType t)
 {
-    n_assert(!this->IsAttached());
     this->materialType = t;
 }
 
@@ -312,6 +318,32 @@ Shape::GetShapeFromGeom(dGeomID geom)
     return (Shape*) dGeomGetData(geom);
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+inline void 
+Shape::SetContactPoints(const Util::Array<Physics::ContactPoint>& contacts)
+{
+    this->contactPoints =  contacts;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline const Util::Array<Physics::ContactPoint>&  
+Shape::GetContactPoints() const
+{
+    return this->contactPoints;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+Shape::ClearContactPoints()
+{
+    this->contactPoints.Clear();
+}
 }; // namespace Physics
 //------------------------------------------------------------------------------
 #endif

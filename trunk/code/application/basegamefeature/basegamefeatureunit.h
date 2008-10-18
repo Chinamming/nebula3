@@ -28,18 +28,20 @@
 #include "addons/db/dbserver.h"
 #include "loader/loaderserver.h"
 #include "managers/enventitymanager.h"
+#include "http/httprequesthandler.h"
 
 #if __USE_PHYSICS__
 #include "managers/envquerymanager.h"
 #endif
+
 //------------------------------------------------------------------------------
 namespace BaseGameFeature
 {
 
 class BaseGameFeatureUnit : public Game::FeatureUnit    
 {
-    DeclareClass(BaseGameFeatureUnit);
-    DeclareSingleton(BaseGameFeatureUnit);    
+    __DeclareClass(BaseGameFeatureUnit);
+    __DeclareSingleton(BaseGameFeatureUnit);    
 
 public:
 
@@ -60,10 +62,6 @@ public:
 
     /// return true if a current game exists
     static bool CurrentGameExists();
-    /// optional method to override start level for NewGame()
-    void SetStartLevelOverride(const Util::String& levelName);
-    /// get optional override start level
-    const Util::String& GetStartLevelOverride() const;
     /// setup a new game
     virtual bool NewGame();
     /// continue game 
@@ -111,8 +109,8 @@ protected:
     Ptr<EnvQueryManager> envQueryManager;
 #endif    
 
+    Ptr<Http::HttpRequestHandler> debugRequestHandler;
     Math::bbox worldBox;
-    Util::String overrideStartLevel;
 };
 
 //------------------------------------------------------------------------------
@@ -131,25 +129,6 @@ inline const Math::bbox&
 BaseGameFeatureUnit::GetWorldDimensions() const
 {
     return this->worldBox;
-}
-
-//------------------------------------------------------------------------------
-/**
-    Override the startup level. Normally this is read from the world database.
-*/
-inline void
-BaseGameFeatureUnit::SetStartLevelOverride(const Util::String& levelName)
-{
-    this->overrideStartLevel = levelName;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-inline const Util::String&
-BaseGameFeatureUnit::GetStartLevelOverride() const
-{
-    return this->overrideStartLevel;
 }
 
 }; // namespace BaseGameFeature

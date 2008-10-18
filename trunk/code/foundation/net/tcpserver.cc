@@ -8,8 +8,8 @@
 
 namespace Net
 {
-ImplementClass(Net::TcpServer, 'NTCS', Core::RefCounted);
-ImplementClass(Net::TcpServer::ListenerThread, 'tclt', Threading::Thread);
+__ImplementClass(Net::TcpServer, 'NTCS', Core::RefCounted);
+__ImplementClass(Net::TcpServer::ListenerThread, 'tclt', Threading::Thread);
 
 Threading::CriticalSection TcpServer::connectionCritSect;
 
@@ -49,6 +49,7 @@ TcpServer::Open()
     this->listenerThread->SetName("TcpServer::ListenerThread");
     this->listenerThread->SetTcpServer(this);
     this->listenerThread->SetAddress(this->ipAddress);
+    this->listenerThread->SetCoreId(System::Cpu::MiscThreadCore);
     this->listenerThread->Start();
     
     this->isOpen = true;
@@ -97,10 +98,10 @@ TcpServer::AddClientConnection(const Ptr<TcpClientConnection>& conn)
 //------------------------------------------------------------------------------
 /**
 */
-Array<Ptr<TcpClientConnection>>
+Array<Ptr<TcpClientConnection> >
 TcpServer::Recv()
 {
-    Array<Ptr<TcpClientConnection>> clientsWithData;
+    Array<Ptr<TcpClientConnection> > clientsWithData;
 
     // iterate over all clients, and check for new data,
     // if the client connection has been closed, remove

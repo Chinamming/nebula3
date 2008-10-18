@@ -17,7 +17,7 @@ namespace Physics
 {
 class StateEntity :  public PhysicsEntity
 {
-    DeclareClass(StateEntity);
+    __DeclareClass(StateEntity);
 public:
     /// constructor
     StateEntity();

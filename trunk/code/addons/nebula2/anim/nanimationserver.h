@@ -20,8 +20,8 @@ class ManagedAnimation;
 //------------------------------------------------------------------------------
 class nAnimationServer : public Core::RefCounted
 {    
-    DeclareClass(nAnimationServer);
-    DeclareSingleton(nAnimationServer);
+    __DeclareClass(nAnimationServer);
+    __DeclareSingleton(nAnimationServer);
 public:
     /// constructor
     nAnimationServer();

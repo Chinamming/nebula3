@@ -7,7 +7,7 @@
 
 namespace Messaging
 {
-ImplementClass(Messaging::Port, 'PORT', Core::RefCounted);
+__ImplementClass(Messaging::Port, 'PORT', Core::RefCounted);
 
 using namespace Util;
 
@@ -28,8 +28,9 @@ void
 Port::AttachHandler(const Ptr<Handler>& h)
 {
     n_assert(h.isvalid());
-    n_assert(InvalidIndex != this->handlers.FindIndex(h));
+    n_assert(InvalidIndex == this->handlers.FindIndex(h));
     this->handlers.Append(h);
+    h->Open();
 }
 
 //------------------------------------------------------------------------------
@@ -42,6 +43,7 @@ Port::RemoveHandler(const Ptr<Handler>& h)
     n_assert(h.isvalid());
     IndexT index = this->handlers.FindIndex(h);
     n_assert(InvalidIndex != index);
+    h->Close();
     this->handlers.EraseIndex(index);
 }
 
@@ -78,4 +80,20 @@ Port::HandleMessage(const Ptr<Messaging::Message>& msg)
     // empty
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+void 
+Port::RemoveAllHandlers()
+{
+    IndexT i;
+    for (i = 0; i < this->handlers.Size(); i++)
+    {
+        if (this->handlers[i]->IsOpen())
+        {
+            this->handlers[i]->Close();
+        }
+    }
+    this->handlers.Clear();
+}
 } // namespace Messaging

@@ -7,7 +7,7 @@
 
 namespace IO
 {
-ImplementClass(IO::FileStream, 'FSTR', IO::Stream);
+__ImplementClass(IO::FileStream, 'FSTR', IO::Stream);
 
 using namespace Util;
 using namespace Core;
@@ -207,7 +207,7 @@ FileStream::Map()
     
     Size size = this->GetSize();
     n_assert(size > 0);
-    this->mappedContent = Memory::Alloc(size);
+    this->mappedContent = Memory::Alloc(Memory::ScratchHeap, size);
     this->Seek(0, Begin);
     Size readSize = this->Read(this->mappedContent, size);
     n_assert(readSize == size);
@@ -223,7 +223,7 @@ FileStream::Unmap()
 {
     n_assert(0 != this->mappedContent);
     Stream::Unmap();
-    Memory::Free(this->mappedContent);
+    Memory::Free(Memory::ScratchHeap, this->mappedContent);
     this->mappedContent = 0;
 }
 

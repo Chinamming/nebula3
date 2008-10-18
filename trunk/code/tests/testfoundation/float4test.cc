@@ -7,7 +7,7 @@
 
 namespace Test
 {
-ImplementClass(Test::Float4Test, 'F4TS', Test::TestCase);
+__ImplementClass(Test::Float4Test, 'F4TS', Test::TestCase);
 
 using namespace Math;
 

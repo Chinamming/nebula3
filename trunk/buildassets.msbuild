@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Export Nebula3 project assets for multiple platforms.
+    
+    (C) 2007 Radon Labs GmbH
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="All">
+
+    <!-- define properties -->
+    <PropertyGroup>
+        <ProjDir>d:\nebula3</ProjDir>
+        <ToolkitDir>c:\Programme\Nebula2 Toolkit For Maya\bin\win32</ToolkitDir>
+        <MayaDir>c:\Programme\Alias\Maya7.0\bin</MayaDir>
+        <Platform>win32</Platform>
+        <ExportDir>$(ProjDir)\export</ExportDir>
+        <Rebuild>false</Rebuild>
+        <Debug>false</Debug>
+    </PropertyGroup>
+    <Choose>
+        <When Condition="$(Rebuild)=='true'">
+            <PropertyGroup>
+                <ForceArg>-force</ForceArg>
+            </PropertyGroup>
+        </When>
+        <Otherwise>
+            <PropertyGroup>
+                <ForceArg></ForceArg>
+            </PropertyGroup>
+        </Otherwise>
+    </Choose>
+
+    <!-- define items -->
+    <ItemGroup>
+        <DataFiles Include="$(ProjDir)\data\**\*.xml"/>
+        <TestData Include="$(ProjDir)\work\testdata\*.*"/>
+        <Textures Include="$(ProjDir)\work\textures\**\*.*"/>
+    </ItemGroup>
+    
+    <!-- preparation -->
+    <Target Name="Prepare">
+        <Exec Command="nsetpath -projdir $(ProjDir)" WorkingDirectory="$(ToolkitDir)"/>
+        <RemoveDir Condition="$(Rebuild)=='true'" Directories="$(ExportDir)" ContinueOnError="true"/>
+        <RemoveDir Condition="$(Rebuild)=='true'" Directories="$(ExportDir)_$(Platform)" ContinueOnError="true"/>
+    </Target>
+    
+    <!-- export graphics objects -->
+    <Target Name="ExportAssets" DependsOnTargets="Prepare">
+        <Copy SourceFiles="@(DataFiles)" DestinationFiles="@(DataFiles->'$(ProjDir)\export\data\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="true"/>
+        <Exec Command="nmayabatcher70 $(ForceArg)" WorkingDirectory="$(MayaDir)"/>
+        <Exec Command="\nebula3\bin\win32\texturebatcher3 $(ForceArg) -platform $(Platform)"/>
+        <Exec Command="\nebula3\bin\win32\shaderbatcher3 $(ForceArg) -platform $(Platform)"/>
+        <Exec Command="\nebula3\bin\win32\audiobatcher3 $(ForceArg) -platform $(Platform)"/>
+        <Exec Command="\nebula3\bin\win32\buildresdict3 -platform $(Platform)"/>
+        <Copy SourceFiles="@(TestData)" DestinationFolder="$(ExportDir)\testdata"/>
+    </Target>
+
+    <!-- zip everything up -->
+    <Target Name="Pack" DependsOnTargets="ExportAssets">
+        <!-- generate platform-agnostic zip archive -->
+        <Exec Command="zip -r export.zip export\* -x export\db\static.db4 export\db\game.db4" WorkingDirectory="$(ProjDir)"/>
+        
+        <!-- then generate platform-specific zip archive -->
+        <Exec Command="ren export export_orig"/>
+        <Exec Command="ren export_$(Platform) export"/>
+        <Exec Command="zip -r export_$(Platform).zip export\*" WorkingDirectory="$(ProjDir)"/>
+        <Exec Command="ren export export_$(Platform)"/>
+        <Exec Command="ren export_orig export"/>            
+    </Target>
+    
+    <!-- final target -->
+    <Target Name="All" DependsOnTargets="Pack" />
+    
+</Project>
+

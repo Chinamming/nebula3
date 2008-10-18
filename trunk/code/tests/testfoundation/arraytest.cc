@@ -7,7 +7,7 @@
 
 namespace Test
 {
-ImplementClass(Test::ArrayTest, 'ARRT', Test::TestCase);
+__ImplementClass(Test::ArrayTest, 'ARRT', Test::TestCase);
 
 using namespace Util;
 
@@ -23,7 +23,6 @@ ArrayTest::Run()
     array0.Append(1);
     array0.Append(2);
     array0.Append(3);
-
     array1.Append(4);
     array1.Append(5);
     array1.Append(6);
@@ -60,22 +59,19 @@ ArrayTest::Run()
     this->Verify(array2[0] == 1);
     this->Verify(array2[3] == 4);
     this->Verify(array2[6] == 7);
-    array2.Set(7, 8);
-    this->Verify(array2.Size() == 8);
-    this->Verify(array2[7] == 8);
 
     // Front, Back, IsEmpty, Clear, Erase, FindIndex, Fill
     this->Verify(array2.Front() == 1);
-    this->Verify(array2.Back() == 8);
+    this->Verify(array2.Back() == 7);
     this->Verify(!array2.IsEmpty());
     array2.EraseIndex(0);
-    this->Verify(array2.Size() == 7);
+    this->Verify(array2.Size() == 6);
     this->Verify(array2[0] == 2);
     this->Verify(array2[1] == 3);
-    this->Verify(array2[6] == 8);
-    array2.EraseIndex(6);
-    this->Verify(array2.Size() == 6);
     this->Verify(array2[5] == 7);
+    array2.EraseIndex(5);
+    this->Verify(array2.Size() == 5);
+    this->Verify(array2[4] == 6);
     this->Verify(array2.FindIndex(4) == 2);
     this->Verify(array2.FindIndex(8) == -1);
     array2.Fill(1, 2, 0);
@@ -98,6 +94,30 @@ ArrayTest::Run()
     this->Verify(array2[0] == 1);
     this->Verify(array2[1] == 4);
     */
+
+    // test InsertSorted()
+    array0.Clear();
+    this->Verify(array0.InsertSorted(3));
+    this->Verify(array0.InsertSorted(1));
+    this->Verify(array0.InsertSorted(4));
+    this->Verify(array0.InsertSorted(0));
+    this->Verify(array0.InsertSorted(2));
+    this->Verify(array0.InsertSorted(10));
+    this->Verify(array0.InsertSorted(100));
+    this->Verify(array0.InsertSorted(-2));
+    this->Verify(array0.InsertSorted(6));
+    this->Verify(array0.InsertSorted(12));
+    this->Verify(!array0.InsertSorted(12));
+    this->Verify(array0.IsSorted());
+
+    // test InsertSorted randomly
+    array0.Clear();
+    IndexT i;
+    for (i = 0; i < 20000; i++)
+    {
+        array0.InsertSorted(rand());
+    }
+    this->Verify(array0.IsSorted());
 
     // test Sort()
     array0.Clear();

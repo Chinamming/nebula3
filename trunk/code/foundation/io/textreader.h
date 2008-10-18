@@ -16,7 +16,7 @@ namespace IO
 {
 class TextReader : public StreamReader
 {
-    DeclareClass(TextReader);
+    __DeclareClass(TextReader);
 public:
     /// read a single character from the stream
     unsigned char ReadChar();

@@ -4,13 +4,15 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "physics/hingejoint.h"
-#include "coregraphics/shaperenderer.h"
+#include "debugrender/debugshaperenderer.h"
 
 namespace Physics
 {
-ImplementClass(Physics::HingeJoint, 'PHJO', Physics::Joint);
+__ImplementClass(Physics::HingeJoint, 'PHJO', Physics::Joint);
 
 using namespace Math;
+using namespace Debug;
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -72,7 +74,7 @@ HingeJoint::UpdateTransform(const Math::matrix44& m)
     Math::vector p = vector::transform(this->GetAnchor(), m);
     dJointSetHingeAnchor(this->odeJointId, p.x(), p.y(), p.z());
 
-    matrix44 m44(m.getx_component(), m.gety_component(), m.getz_component(), vector::nullvec());
+    matrix44 m44(m.get_xaxis(), m.get_yaxis(), m.get_zaxis(), vector::nullvec());
     Math::vector a = vector::transform(this->axisParams.GetAxis(), m44);
     dJointSetHingeAxis(this->odeJointId, a.x(), a.y(), a.z());
 }
@@ -90,7 +92,7 @@ HingeJoint::RenderDebug()
         dJointGetHingeAnchor(this->odeJointId, curAnchor);
         m.scale(Math::vector(0.1f, 0.1f, 0.1f));
         m.translate(Math::vector(curAnchor[0], curAnchor[1], curAnchor[2]));
-        CoreGraphics::ShapeRenderer::Instance()->DrawShape(m, CoreGraphics::ShapeRenderer::Sphere, this->GetDebugVisualizationColor());
+        DebugShapeRenderer::Instance()->DrawSphere(m, this->GetDebugVisualizationColor());
     }
 }
 

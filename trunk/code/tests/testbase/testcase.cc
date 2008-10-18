@@ -7,7 +7,7 @@
 
 namespace Test
 {
-ImplementClass(Test::TestCase, 'TSTC', Core::RefCounted);
+__ImplementClass(Test::TestCase, 'TSTC', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

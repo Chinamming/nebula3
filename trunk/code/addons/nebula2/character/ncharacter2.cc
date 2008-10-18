@@ -8,7 +8,7 @@
 
 namespace Nebula2
 {
-ImplementClass(nCharacter2, 'CHA2', Core::RefCounted);
+__ImplementClass(nCharacter2, 'CHA2', Core::RefCounted);
 
 Math::float4 nCharacter2::scratchKeyArray[MaxCurves];
 Math::float4 nCharacter2::keyArray[MaxCurves];
@@ -149,7 +149,6 @@ nCharacter2::Sample(Timing::Time time, Math::float4* keyArray, Math::float4* scr
         return false;
     }
 
-    const int numClips = this->clipScheduler->GetNumClips();
     const Util::Array<int>& activeClipIndices = this->clipScheduler->GetActiveClipIndices();
     
     // scale weightAccum so that 1 == (weightAccum + weight)

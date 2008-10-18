@@ -11,8 +11,8 @@
 
 namespace Models
 {
-ImplementClass(Models::VisResolver, 'VSRV', Core::RefCounted);
-ImplementSingleton(Models::VisResolver);
+__ImplementClass(Models::VisResolver, 'VSRV', Core::RefCounted);
+__ImplementSingleton(Models::VisResolver);
 
 using namespace Util;
 
@@ -24,7 +24,7 @@ VisResolver::VisResolver() :
     inResolve(false),
     frameIndex(InvalidIndex)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ VisResolver::~VisResolver()
 {
     n_assert(!this->isOpen);
     n_assert(!this->inResolve);
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

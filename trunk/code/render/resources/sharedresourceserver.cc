@@ -6,14 +6,17 @@
 #include "resources/sharedresourceserver.h"
 #include "resources/resourceloader.h"
 #include "resources/resourcesaver.h"
+#include "resources/resourcedictionary.h"
+#include "io/ioserver.h"
 
 namespace Resources
 {
-ImplementClass(Resources::SharedResourceServer, 'SRSV', Core::RefCounted);
-ImplementSingleton(Resources::SharedResourceServer);
+__ImplementClass(Resources::SharedResourceServer, 'SRSV', Core::RefCounted);
+__ImplementSingleton(Resources::SharedResourceServer);
 
 using namespace Util;
 using namespace Core;
+using namespace IO;
 
 //------------------------------------------------------------------------------
 /**
@@ -21,7 +24,8 @@ using namespace Core;
 SharedResourceServer::SharedResourceServer() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
+    this->resourceDictionary = ResourceDictionary::Create();
 }
 
 //------------------------------------------------------------------------------
@@ -33,7 +37,8 @@ SharedResourceServer::~SharedResourceServer()
     {
         this->Close();
     }
-    DestructSingleton;
+    this->resourceDictionary = 0;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -43,6 +48,25 @@ bool
 SharedResourceServer::Open()
 {
     n_assert(!this->IsOpen());
+
+    // setup shared resource server
+    // FIXME: resource dictionary handling may have to be more
+    // advanced in the future, when there are many thousand resources
+    // in a project it may be useful to have several smaller resource dictionaries
+    // (i.e. one per level)
+    URI resDictUri("home:export/resources.dic");
+    if (IoServer::Instance()->FileExists(resDictUri))
+    {
+        this->resourceDictionary->SetURI(resDictUri);
+        if (!this->resourceDictionary->Load())
+        {
+            n_error("Failed to load resource dictionary ('%s')", resDictUri.AsString().AsCharPtr());
+        }
+    }
+    else
+    {
+        n_printf("WARNING: no resource dictionary file found ('%s')\n", resDictUri.AsString().AsCharPtr());
+    }
     this->isOpen = true;
     return true;
 }
@@ -54,7 +78,8 @@ void
 SharedResourceServer::Close()
 {
     n_assert(this->IsOpen());
-    
+    this->isOpen = false;
+
     // discard all shared resource
     IndexT i;
     for (i = 0; i < this->resources.Size(); i++)
@@ -65,6 +90,12 @@ SharedResourceServer::Close()
         res->SetSaver(0);
     }
     this->resources.Clear();
+
+    // shutdown resource dictionary
+    if (this->resourceDictionary->IsValid())
+    {
+        this->resourceDictionary->Unload();
+    }
 }
 
 //------------------------------------------------------------------------------

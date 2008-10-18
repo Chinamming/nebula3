@@ -2,7 +2,7 @@
 #define TIMING_TIMEMANAGER_H
 //------------------------------------------------------------------------------
 /**
-    @class Timing::TimeManager
+    @class BaseGameFeature::TimeManager
 
     Singleton object which manages the current game time. These are
     the standard time source objects provided by Mangalore:
@@ -24,8 +24,8 @@ namespace BaseGameFeature
 {
 class TimeManager : public Game::Manager
 {
-	DeclareClass(TimeManager);
-    DeclareSingleton(TimeManager);
+	__DeclareClass(TimeManager);
+    __DeclareSingleton(TimeManager);
 
 public:
     /// constructor

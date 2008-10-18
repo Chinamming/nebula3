@@ -18,7 +18,7 @@ namespace Http
 {
 class HttpRequestReader : public IO::StreamReader
 {
-    DeclareClass(HttpRequestReader);
+    __DeclareClass(HttpRequestReader);
 public:
     /// constructor
     HttpRequestReader();

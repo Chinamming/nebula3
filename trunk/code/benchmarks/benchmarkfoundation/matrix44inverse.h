@@ -16,7 +16,7 @@ namespace Benchmarking
 {
 class Matrix44Inverse : public Benchmark
 {
-    DeclareClass(Matrix44Inverse);
+    __DeclareClass(Matrix44Inverse);
 public:
     /// run the benchmark
     virtual void Run(Timing::Timer& timer);

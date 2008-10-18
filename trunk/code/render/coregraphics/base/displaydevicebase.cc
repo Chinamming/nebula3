@@ -7,8 +7,8 @@
 
 namespace Base
 {
-ImplementClass(Base::DisplayDeviceBase, 'DSDB', Core::RefCounted);
-ImplementSingleton(Base::DisplayDeviceBase);
+__ImplementClass(Base::DisplayDeviceBase, 'DSDB', Core::RefCounted);
+__ImplementSingleton(Base::DisplayDeviceBase);
 
 using namespace CoreGraphics;
 
@@ -29,7 +29,7 @@ DisplayDeviceBase::DisplayDeviceBase() :
     iconName("Icon"),
     inNotifyEventHandlers(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ DisplayDeviceBase::DisplayDeviceBase() :
 DisplayDeviceBase::~DisplayDeviceBase()
 {
     n_assert(!this->IsOpen());
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

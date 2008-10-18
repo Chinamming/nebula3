@@ -54,4 +54,74 @@ PrimitiveTopology::ToString(Code code)
     }
 }
 
+//------------------------------------------------------------------------------
+/**
+    Computes the number of required vertices for a given primitive
+    topology and number of primitives.
+*/
+SizeT
+PrimitiveTopology::NumberOfVertices(Code topology, SizeT numPrimitives)
+{
+    switch (topology)
+    {
+        case PointList: 
+            return numPrimitives;
+
+        case LineList:
+        case LineListWithAdjacency:
+            return numPrimitives * 2;
+
+        case LineStrip:
+        case LineStripWithAdjacency:
+            return numPrimitives + 1;
+
+        case TriangleList:
+        case TriangleListWithAdjacency:
+            return numPrimitives * 3;
+
+        case TriangleStrip:
+        case TriangleStripWithAdjacency:
+            return numPrimitives + 2;
+
+        default:
+            n_error("PrimitiveTopology::NumberOfVertices(): invalid topology!");
+            return InvalidIndex;
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+    Computes the number of primitives from a given primitive topology
+    and number of vertices (the opposite of ComputeNumberOfVertices()).
+*/
+SizeT
+PrimitiveTopology::NumberOfPrimitives(Code topology, SizeT numVertices)
+{
+    switch (topology)
+    {
+        case PointList:
+            return numVertices;
+
+        case LineList:
+        case LineListWithAdjacency:
+            return numVertices / 2;
+
+        case LineStrip:
+        case LineStripWithAdjacency:
+            return numVertices - 1;
+
+        case TriangleList:
+        case TriangleListWithAdjacency:
+            return numVertices / 3;
+
+        case TriangleStrip:
+        case TriangleStripWithAdjacency:
+            return numVertices - 2;
+
+        default:
+            n_error("PrimitiveTopology::NumberOfPrimitives(): invalid topology!");
+            return InvalidIndex;
+    }
+}
+
 } // namespace CoreGraphics

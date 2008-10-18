@@ -9,7 +9,7 @@
 
 namespace Models
 {
-ImplementClass(Models::ShapeNodeInstance, 'SPNI', Models::StateNodeInstance);
+__ImplementClass(Models::ShapeNodeInstance, 'SPNI', Models::StateNodeInstance);
 
 using namespace CoreGraphics;
 

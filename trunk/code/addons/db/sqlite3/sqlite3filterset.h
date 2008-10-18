@@ -15,7 +15,7 @@ namespace Db
 {
 class Sqlite3FilterSet : public FilterSet
 {
-    DeclareClass(Sqlite3FilterSet);
+    __DeclareClass(Sqlite3FilterSet);
 public:
     /// compile into an SQL WHERE statement
     virtual Util::String AsSqlWhere() const;

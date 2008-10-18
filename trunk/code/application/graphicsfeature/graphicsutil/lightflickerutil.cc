@@ -9,8 +9,8 @@
 
 namespace GraphicsFeature
 {
-
 using namespace Math;
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -46,7 +46,7 @@ LightFlickerUtil::Update()
         vector v(this->positionAmplitude * noise::gen(t, 1.1f, 0.0f), 
                   this->positionAmplitude * noise::gen(t, 2.2f, 0.0f), 
                   this->positionAmplitude * noise::gen(t, 3.3f, 0.0f));
-        m.setpos_component(v);
+        m.set_position(v);
         //this->lightEntity->SetTransformOffset(m);
     }
 }

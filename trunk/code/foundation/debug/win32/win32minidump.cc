@@ -4,14 +4,20 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "debug/win32/win32minidump.h"
-#include "io/win32/win32fswrapper.h"
-#include "timing/calendartime.h"
 
 namespace Win32
 {
 using namespace Util;
-using namespace Timing;
-using namespace IO;
+
+//------------------------------------------------------------------------------
+/**
+    This static method registers our own exception handler with Windows.
+*/
+void
+Win32MiniDump::Setup()
+{
+    SetUnhandledExceptionFilter(Win32MiniDump::ExceptionCallback);
+}
 
 //------------------------------------------------------------------------------
 /**
@@ -21,17 +27,49 @@ using namespace IO;
 bool
 Win32MiniDump::WriteMiniDump()
 {
+    return Win32MiniDump::WriteMiniDumpInternal(0);
+}
+
+//------------------------------------------------------------------------------
+/**
+    Private method to write a mini-dump with extra exception info. This 
+    method is either called from the public WriteMiniDump() method or
+    from the ExceptionCallback() function.
+*/
+bool
+Win32MiniDump::WriteMiniDumpInternal(EXCEPTION_POINTERS* exceptionInfo)
+{
 #if (NEBULA3_ENABLE_MINIDUMPS)
     String dumpFilename = BuildMiniDumpFilename();
     if (dumpFilename.IsValid())
     {
-        Win32FSWrapper::Handle hFile = Win32FSWrapper::OpenFile(dumpFilename, Stream::WriteAccess, Stream::Sequential);
+        HANDLE hFile = CreateFile(dumpFilename.AsCharPtr(), // lpFileName
+                                  GENERIC_WRITE,            // dwDesiredAccess
+                                  FILE_SHARE_READ,          // dwShareMode
+                                  0,                        // lpSecurityAttributes
+                                  CREATE_ALWAYS,            // dwCreationDisposition,
+                                  FILE_ATTRIBUTE_NORMAL,    // dwFlagsAndAttributes
+                                  NULL);                    // hTemplateFile
         if (NULL != hFile)
         {
             HANDLE hProc = GetCurrentProcess();
             DWORD procId = GetCurrentProcessId();
-            BOOL res = MiniDumpWriteDump(hProc, procId, hFile, MiniDumpNormal, NULL, NULL, NULL);
-            Win32FSWrapper::CloseFile(hFile);
+            BOOL res = FALSE;
+            if (NULL != exceptionInfo)
+            {
+                // extended exception info is available
+                MINIDUMP_EXCEPTION_INFORMATION extInfo = { 0 };
+                extInfo.ThreadId = GetCurrentThreadId();
+                extInfo.ExceptionPointers = exceptionInfo;
+                extInfo.ClientPointers = TRUE;
+                res = MiniDumpWriteDump(hProc, procId, hFile, MiniDumpNormal, &extInfo, NULL, NULL);
+            }
+            else
+            {
+                // extended exception info is not available
+                res = MiniDumpWriteDump(hProc, procId, hFile, MiniDumpNormal, NULL, NULL, NULL);
+            }
+            CloseHandle(hFile);
             return true;
         }
     }
@@ -59,13 +97,27 @@ Win32MiniDump::BuildMiniDumpFilename()
         modulePath = modulePath.ExtractToLastSlash();
 
         // get the current calender time
-        CalendarTime calTime = CalendarTime::GetLocalTime();
-        String timeStr = CalendarTime::Format("{YEAR}-{MONTH}-{DAY}_{HOUR}-{MINUTE}-{SECOND}", calTime);
+        SYSTEMTIME t;
+        ::GetLocalTime(&t);
+        String timeStr;
+        timeStr.Format("%04d-%02d-%02d_%02d-%02d-%02d", t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
         
         // build the dump filename
         dumpFilename.Format("%s%s_%s.dmp", modulePath.AsCharPtr(), moduleName.AsCharPtr(), timeStr.AsCharPtr());
     }
     return dumpFilename;
+}
+
+//------------------------------------------------------------------------------
+/**
+    Exception handler function called back by Windows when something
+    unexpected happens.
+*/
+LONG WINAPI
+Win32MiniDump::ExceptionCallback(EXCEPTION_POINTERS* exceptionInfo)
+{
+    Win32MiniDump::WriteMiniDumpInternal(exceptionInfo);
+    return EXCEPTION_CONTINUE_SEARCH;
 }
 
 } // namespace Debug

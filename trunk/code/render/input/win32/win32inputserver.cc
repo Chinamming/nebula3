@@ -8,12 +8,12 @@
 #include "input/keyboard.h"
 #include "input/mouse.h"
 #include "input/gamepad.h"
-#include "asyncgraphics/displayproxy.h"
+#include "graphics/display.h"
 
 namespace Win32
 {
-ImplementClass(Win32::Win32InputServer, 'W3IS', Base::InputServerBase);
-ImplementSingleton(Win32::Win32InputServer);
+__ImplementClass(Win32::Win32InputServer, 'W3IS', Base::InputServerBase);
+__ImplementSingleton(Win32::Win32InputServer);
 
 using namespace Input;
 using namespace CoreGraphics;
@@ -25,7 +25,7 @@ Win32InputServer::Win32InputServer() :
     di8(0),
     di8Mouse(0)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ Win32InputServer::~Win32InputServer()
     {
         this->Close();
     }
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -55,16 +55,7 @@ Win32InputServer::Open()
     // setup a display event handler which translates
     // some display events into input events
     this->eventHandler = Win32InputDisplayEventHandler::Create();
-    if (DisplayDevice::HasInstance())
-    {
-        // non-multithreaded rendering
-        DisplayDevice::Instance()->AttachEventHandler(this->eventHandler.upcast<DisplayEventHandler>());
-    }
-    else if (AsyncGraphics::DisplayProxy::HasInstance())
-    {
-        // multithreaded rendering
-        AsyncGraphics::DisplayProxy::Instance()->AttachDisplayEventHandler(this->eventHandler.upcast<ThreadSafeDisplayEventHandler>());
-    }
+    Graphics::Display::Instance()->AttachDisplayEventHandler(this->eventHandler.upcast<ThreadSafeDisplayEventHandler>());
 
     // create a default keyboard and mouse handler
     this->defaultKeyboard = Keyboard::Create();
@@ -74,7 +65,7 @@ Win32InputServer::Open()
 
     // create 4 default gamepads (none of them have to be connected)
     IndexT playerIndex;
-    for (playerIndex = 0; playerIndex < GamePad::GetMaxNumPlayers(); playerIndex++)
+    for (playerIndex = 0; playerIndex < this->maxNumLocalPlayers; playerIndex++)
     {
         this->defaultGamePad[playerIndex] = GamePad::Create();
         this->defaultGamePad[playerIndex]->SetPlayerIndex(playerIndex);
@@ -91,14 +82,7 @@ Win32InputServer::Close()
     n_assert(this->IsOpen());
 
     // remove our event handler from the display device
-    if (DisplayDevice::HasInstance())
-    {
-        DisplayDevice::Instance()->RemoveEventHandler(this->eventHandler.upcast<DisplayEventHandler>());
-    }
-    else if (AsyncGraphics::DisplayProxy::HasInstance())
-    {
-        AsyncGraphics::DisplayProxy::Instance()->RemoveDisplayEventHandler(this->eventHandler.upcast<ThreadSafeDisplayEventHandler>());
-    }
+    Graphics::Display::Instance()->RemoveDisplayEventHandler(this->eventHandler.upcast<ThreadSafeDisplayEventHandler>());
 
     // shutdown the DirectInput mouse device
     this->CloseDInputMouse();

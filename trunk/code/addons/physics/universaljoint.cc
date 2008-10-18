@@ -4,13 +4,15 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "physics/universaljoint.h"
-#include "coregraphics/shaperenderer.h"
+#include "debugrender/debugshaperenderer.h"
 
 namespace Physics
 {
-ImplementClass(Physics::UniversalJoint, 'UJOI', Physics::Joint);
+__ImplementClass(Physics::UniversalJoint, 'UJOI', Physics::Joint);
 
 using namespace Math;
+using namespace Debug;
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -79,7 +81,7 @@ UniversalJoint::UpdateTransform(const Math::matrix44& m)
     Math::vector p = vector::transform(this->GetAnchor(), m);
     dJointSetUniversalAnchor(this->odeJointId, p.x(), p.y(), p.z());
 
-    matrix44 m44(m.getx_component(), m.gety_component(), m.getz_component(), vector::nullvec());
+    matrix44 m44(m.get_xaxis(), m.get_yaxis(), m.get_zaxis(), vector::nullvec());
     Math::vector a0 = vector::transform(this->axisParams[0].GetAxis(), m44);
     Math::vector a1 = vector::transform(this->axisParams[1].GetAxis(), m44);
     dJointSetUniversalAxis1(this->odeJointId, a0.x(), a0.y(), a0.z());
@@ -99,7 +101,7 @@ UniversalJoint::RenderDebug()
         dJointGetUniversalAnchor(this->odeJointId, curAnchor);
         m.scale(Math::vector(0.1f, 0.1f, 0.1f));
         m.translate(Math::vector(curAnchor[0], curAnchor[1], curAnchor[2]));
-        CoreGraphics::ShapeRenderer::Instance()->DrawShape(m, CoreGraphics::ShapeRenderer::Sphere, this->GetDebugVisualizationColor());
+        DebugShapeRenderer::Instance()->DrawSphere(m, this->GetDebugVisualizationColor());
     }
 }
 

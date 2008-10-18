@@ -7,7 +7,7 @@
 
 namespace Frame
 {
-ImplementClass(Frame::FrameShader, 'FSHD', Core::RefCounted);
+__ImplementClass(Frame::FrameShader, 'FSHD', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

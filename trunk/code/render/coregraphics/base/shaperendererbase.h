@@ -17,27 +17,17 @@
 #include "coregraphics/primitivetopology.h"
 #include "coregraphics/indextype.h"
 #include "coregraphics/shaderinstance.h"
+#include "coregraphics/shape.h"
+#include "threading/threadid.h"
 
 //------------------------------------------------------------------------------
 namespace Base
 {
 class ShapeRendererBase : public Core::RefCounted
 {
-    DeclareClass(ShapeRendererBase);
-    DeclareSingleton(ShapeRendererBase);
+    __DeclareClass(ShapeRendererBase);
+    __DeclareSingleton(ShapeRendererBase);
 public:
-    /// shape type
-    enum ShapeType
-    {
-        Box,
-        Sphere,
-        Cylinder,
-        Torus,
-        Teapot,
-
-        NumShapeTypes,
-    };
-
     /// constructor
     ShapeRendererBase();
     /// destructor
@@ -49,22 +39,20 @@ public:
     void Close();
     /// return true if open
     bool IsOpen() const;
-    
-    /// begin drawing shapes
-    void Begin();
-    /// draw a unit box
-    void DrawShape(const Math::matrix44& modelTransform, ShapeType shapeType, const Math::float4& color);
-    /// draw primitives
-    void DrawPrimitives(const Math::matrix44& modelTransform, CoreGraphics::PrimitiveTopology::Code topology, SizeT numPrimitives, float* vertices, SizeT vertexWidth, const Math::float4& color);
-    /// draw indexed primitives
-    void DrawIndexedPrimitives(const Math::matrix44& modelTransform, CoreGraphics::PrimitiveTopology::Code topology, SizeT numPrimitives, float* vertices, SizeT numVertices, SizeT vertexWidth, void* indices, CoreGraphics::IndexType::Code indexType, const Math::float4& color);
-    /// end drawing shapes
-    void End();
+
+    /// delete shapes of given thread id
+    void DeleteShapesByThreadId(Threading::ThreadId threadId);
+    /// add a shape for deferred rendering (can be called from outside render loop)
+    void AddShape(const CoreGraphics::Shape& shape);
+    /// add multiple shapes
+    void AddShapes(const Util::Array<CoreGraphics::Shape>& shapeArray);
+    /// draw deferred shapes and clear deferred stack, must be called inside render loop
+    void DrawShapes();
 
 protected:
     bool isOpen;
-    bool inBegin;
     Ptr<CoreGraphics::ShaderInstance> shapeShader;
+    Util::Array<CoreGraphics::Shape> shapes;
 };
 
 //------------------------------------------------------------------------------

@@ -28,8 +28,8 @@ namespace BaseGameFeature
 {
 class FactoryManager : public Game::Manager
 {
-    DeclareClass(FactoryManager);
-    DeclareSingleton(FactoryManager);
+    __DeclareClass(FactoryManager);
+    __DeclareSingleton(FactoryManager);
 public:
     /// constructor
     FactoryManager();
@@ -57,6 +57,8 @@ public:
     virtual Ptr<Game::Property> CreateProperty(const Util::String& type) const;
     /// add properties to entity according to blue print
     void AddProperties(const Ptr<Game::Entity>& entity, const Util::String& categoryName) const;
+    /// set a optional blueprints.xml, which is used instead of standard blueprint.xml
+    static void SetBlueprintsFilename(const Util::String& name);
 
 protected:
     /// parse entity blueprints file
@@ -72,6 +74,7 @@ protected:
         Util::Array<Util::String> properties;
     };
     Util::Array<BluePrint> bluePrints;
+    static Util::String blueprintFilename;
 };
 
 }; // namespace Managers

@@ -9,7 +9,7 @@
 
 namespace Db
 {
-ImplementClass(Db::Sqlite3Command, 'S3CD', Core::RefCounted);    // skip virtual base class
+__ImplementClass(Db::Sqlite3Command, 'S3CD', Core::RefCounted);    // skip virtual base class
 
 using namespace Util;
 using namespace Math;
@@ -247,6 +247,7 @@ Sqlite3Command::ReadRow()
     // add a row to the result value table
     IndexT rowIndex = this->valueTable->AddRow();
 
+    ByteOrder byteOrder(System::ByteOrder::LittleEndian, System::ByteOrder::Host);
     // for each column...
     IndexT resultColumnIndex;
     const SizeT numResultColumns = sqlite3_data_count(this->sqliteStatement);
@@ -307,7 +308,7 @@ Sqlite3Command::ReadRow()
                             value.set(ptr->x(), ptr->y(), ptr->z(), ptr->w());
                         }
                         
-                        value = ByteOrder::ConvertFloat4(ByteOrder::LittleEndian, ByteOrder::Host, value);
+                        byteOrder.Convert<Math::float4>(value);
                         this->valueTable->SetFloat4(valueTableColumnIndex, rowIndex, value);
                     #else
                         n_assert(size == sizeof(float4));
@@ -342,7 +343,7 @@ Sqlite3Command::ReadRow()
                         wiiM = ByteOrder::ConvertMatrix44(ByteOrder::LittleEndian, ByteOrder::Host, wiiM);                    
                         this->valueTable->SetMatrix44(valueTableColumnIndex, rowIndex, wiiM);                                            
                         #else
-                        *ptr = ByteOrder::ConvertMatrix44(ByteOrder::LittleEndian, ByteOrder::Host, *ptr);
+                        byteOrder.Convert<Math::matrix44>(*ptr);
                         this->valueTable->SetMatrix44(valueTableColumnIndex, rowIndex, *ptr);                                            
                         #endif                        
                     }                   
@@ -473,7 +474,9 @@ Sqlite3Command::BindFloat4(IndexT index, const float4& val)
     n_assert(0 != this->sqliteStatement);
     // NOTE: float4's will be saved as blobs in the database, since the 
     // float4 may go away at any time, let SQLite make its own copy of the data
-    float4 convertedVal = ByteOrder::ConvertFloat4(ByteOrder::LittleEndian, ByteOrder::Host, val);
+    ByteOrder byteOrder(System::ByteOrder::LittleEndian, System::ByteOrder::Host);
+    float4 convertedVal = val;
+    byteOrder.Convert<Math::float4>(convertedVal);
     int err = sqlite3_bind_blob(this->sqliteStatement, index + 1, &convertedVal, sizeof(val), SQLITE_TRANSIENT);
     n_assert(SQLITE_OK == err);
 }
@@ -489,7 +492,9 @@ Sqlite3Command::BindMatrix44(IndexT index, const Math::matrix44& val)
     n_assert(0 != this->sqliteStatement);
     // NOTE: Math::matrix44's will be saved as blobs in the database, since the 
     // Math::matrix44 may go away at any time, let SQLite make its own copy of the data
-    matrix44 convertedVal = ByteOrder::ConvertMatrix44(ByteOrder::LittleEndian, ByteOrder::Host, val);
+    ByteOrder byteOrder(System::ByteOrder::LittleEndian, System::ByteOrder::Host);
+    matrix44 convertedVal = val;
+    byteOrder.Convert<Math::matrix44>(convertedVal);
     int err = sqlite3_bind_blob(this->sqliteStatement, index + 1, &val, sizeof(val), SQLITE_TRANSIENT);
     n_assert(SQLITE_OK == err);
 }

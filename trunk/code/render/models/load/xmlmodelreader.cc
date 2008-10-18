@@ -7,7 +7,7 @@
 
 namespace Models
 {
-ImplementClass(Models::XmlModelReader, 'XMMR', Models::ModelReader);
+__ImplementClass(Models::XmlModelReader, 'XMMR', Models::ModelReader);
 
 using namespace Core;
 using namespace Util;

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_ATOM_H
-#define UTIL_ATOM_H
 //------------------------------------------------------------------------------
 /**
     @class Util::Atom
@@ -412,4 +410,3 @@ Atom<TYPE>::BinarySearch(const TYPE& elm) const
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif

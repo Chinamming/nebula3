@@ -33,10 +33,10 @@ private:
     static Ptr<CoreGraphics::ShaderVariableInstance> ParseShaderVariableInstance(const Ptr<IO::XmlReader>& xmlReader, const Ptr<CoreGraphics::ShaderInstance>& shd);
     /// parse frame pass from XML
     static void ParseFramePass(const Ptr<IO::XmlReader>& xmlReader, const Ptr<FrameShader>& frameShader);
-    /// parse frame batch from XML
-    static void ParseFrameBatch(const Ptr<IO::XmlReader>& xmlReader, const Ptr<FramePass>& framePass);
     /// parse posteffect from XML
     static void ParsePostEffect(const Ptr<IO::XmlReader>& xmlReader, const Ptr<FrameShader>& frameShader);
+    /// parse frame batch from XML
+    static Ptr<FrameBatch> ParseFrameBatch(const Ptr<IO::XmlReader>& xmlReader);
 };
 
 } // namespace Frame

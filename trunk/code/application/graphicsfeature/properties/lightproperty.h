@@ -2,13 +2,15 @@
 #define PROPERTIES_LIGHTPROPERTY_H
 //------------------------------------------------------------------------------
 /**
+    @class Properties::LightProperty
+
     A light property adds a light source object (Graphics::LightEntity) 
     to a game entity.
     
     (C) 2005 Radon Labs GmbH
 */
 #include "game/property.h"
-#include "lighting/abstractlightentity.h"
+#include "graphics/abstractlightentity.h"
 #include "basegameattr/basegameattributes.h"
 #include "graphicsutil/lightflickerutil.h"
 
@@ -32,7 +34,7 @@ namespace GraphicsFeature
 {
 class LightProperty : public Game::Property
 {
-	DeclareClass(LightProperty);
+	__DeclareClass(LightProperty);
 public:
     /// constructor
     LightProperty();
@@ -59,11 +61,10 @@ private:
     /// update the light flicker utility from entity attributes
     void UpdateLightFlickerUtilFromAttributes();
 
-    Ptr<Lighting::AbstractLightEntity> lightEntity;
-    static bool globalLightExists;
+    Ptr<Graphics::AbstractLightEntity> lightEntity;
     LightFlickerUtil lightFlickerUtil;
 };
-RegisterClass(LightProperty);
+__RegisterClass(LightProperty);
 
 }; // namespace GraphicsFeature
 //------------------------------------------------------------------------------

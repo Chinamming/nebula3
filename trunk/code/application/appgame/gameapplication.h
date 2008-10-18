@@ -17,13 +17,18 @@
 #include "core/singleton.h"
 #include "util/dictionary.h"
 #include "util/stringatom.h"
+#include "core/coreserver.h"
+#include "debug/debuginterface.h"
+#include "io/ioserver.h"
+#include "interface/iointerface.h"
+#include "remote/remoteinterface.h"
+#include "remote/remotecontrolproxy.h"
+#if __NEBULA3_SCRIPTING__    
+#include "scripting/scriptserver.h"
+#endif
+#include "http/httpinterface.h"
+#include "http/httpserverproxy.h"
 
-using namespace Util;
-
-namespace CoreFeature
-{
-    class CoreFeatureUnit;
-}
 namespace GraphicsFeature
 {
     class GraphicsFeatureUnit;
@@ -34,7 +39,7 @@ namespace App
 {
 class GameApplication : public Application
 {
-    DeclareSingleton(GameApplication);   
+    __DeclareSingleton(GameApplication);   
 
 public:
     /// constructor
@@ -75,20 +80,34 @@ protected:
     /// perform a state transition
     virtual void DoStateTransition();
     /// set an application state
-    void SetState(const String& s);
+    void SetState(const Util::String& s);
 
-    /// state handlers
-    String requestedState;
-    String curState;
-    String nextState;
+    Ptr<Core::CoreServer> coreServer;
+    Ptr<Debug::DebugInterface> debugInterface;
+    Ptr<IO::IoServer> ioServer;
+    Ptr<Interface::IOInterface> ioInterface;  
+    #if __NEBULA3_SCRIPTING__    
+    Ptr<Scripting::ScriptServer> scriptServer; 
+    #endif    
+    Ptr<Http::HttpInterface> httpInterface;
+    Ptr<Http::HttpServerProxy> httpServerProxy;
+    Ptr<Remote::RemoteInterface> remoteInterface;
+    Ptr<Remote::RemoteControlProxy> remoteControlProxy;
+
+    // state handlers
+    Util::String requestedState;
+    Util::String curState;
+    Util::String nextState;
     Util::Dictionary<Util::StringAtom, Ptr<StateHandler> > stateHandlers;
 
-    /// game server
+    // game server
     Ptr<Game::GameServer> gameServer;
 
-    /// default game features
-    Ptr<CoreFeature::CoreFeatureUnit> coreFeature;
+    // default game features
     Ptr<GraphicsFeature::GraphicsFeatureUnit> graphicsFeature;
+
+    // profiling
+    _declare_timer(GameApplicationFrameTimeAll);
 };
 //------------------------------------------------------------------------------
 /**
@@ -113,7 +132,7 @@ GameApplication::GetStateHandlerAt(int index) const
     Returns the currently active application state. Can be 0 if no valid 
     state is set.
 */
-inline const String&
+inline const Util::String&
 GameApplication::GetCurrentState() const
 {
     return this->curState;

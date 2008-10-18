@@ -14,6 +14,6 @@
 
 namespace Models
 {
-    RegisterClass(ModelNode);
+    __RegisterClass(ModelNode);
 };
 #endif

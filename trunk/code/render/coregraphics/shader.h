@@ -16,7 +16,7 @@ namespace CoreGraphics
 {
 class Shader : public Direct3D9::D3D9Shader
 {
-    DeclareClass(Shader);
+    __DeclareClass(Shader);
 };
 }
 #elif __XBOX360__
@@ -26,7 +26,7 @@ namespace CoreGraphics
 {
 class Shader : public Xbox360::Xbox360Shader
 {
-    DeclareClass(Shader);
+    __DeclareClass(Shader);
 };
 }
 #elif __WII__
@@ -35,7 +35,7 @@ namespace CoreGraphics
 {
 class Shader : public Wii::WiiShader
 {
-    DeclareClass(Shader);
+    __DeclareClass(Shader);
 };
 }
 #else

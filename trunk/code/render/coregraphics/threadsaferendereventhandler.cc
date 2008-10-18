@@ -7,7 +7,7 @@
 
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::ThreadSafeRenderEventHandler, 'TREH', CoreGraphics::RenderEventHandler);
+__ImplementClass(CoreGraphics::ThreadSafeRenderEventHandler, 'TREH', CoreGraphics::RenderEventHandler);
 
 using namespace Util;
 

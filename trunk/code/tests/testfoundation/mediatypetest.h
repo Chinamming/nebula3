@@ -15,7 +15,7 @@ namespace Test
 {
 class MediaTypeTest : public TestCase
 {
-    DeclareClass(MediaTypeTest);
+    __DeclareClass(MediaTypeTest);
 public:
     /// run the test
     virtual void Run();

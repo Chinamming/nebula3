@@ -18,7 +18,7 @@ namespace Models
 {
 class StateNodeInstance : public TransformNodeInstance
 {
-    DeclareClass(StateNodeInstance);
+    __DeclareClass(StateNodeInstance);
 public:
     /// constructor
     StateNodeInstance();

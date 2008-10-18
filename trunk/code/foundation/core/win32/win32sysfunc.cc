@@ -8,6 +8,9 @@
 #include "debug/minidump.h"
 #include "util/blob.h"
 #include "util/guid.h"
+#include "net/socket.h"
+#include "debug/minidump.h"
+#include "threading/thread.h"
 
 namespace Win32
 {
@@ -28,10 +31,14 @@ SysFunc::Setup()
     if (!SetupCalled)
     {
         SetupCalled = true;
+        Threading::Thread::SetMyThreadName("MainThread");
+        Memory::SetupHeaps();
         Memory::Heap::Setup();
         Blob::Setup();
         String::Setup();
         Guid::Setup();
+        Net::Socket::InitNetwork();
+        Debug::MiniDump::Setup();
     }
 }
 
@@ -90,28 +97,6 @@ SysFunc::Sleep(double sec)
 {
     int milliSecs = int(sec * 1000.0);
     ::Sleep(milliSecs);
-}
-
-//------------------------------------------------------------------------------
-/**
-    Returns the last Win32 system error as string.
-*/
-String
-SysFunc::GetLastError()
-{
-    // get system error code
-    DWORD err = ::GetLastError();
-    LPVOID lpMsgBuf;
-    FormatMessage(
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-        NULL,
-        err,
-        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-        (LPTSTR) &lpMsgBuf,
-        0, NULL);
-    String msg = (const char*) lpMsgBuf;
-    LocalFree(lpMsgBuf);
-    return msg;
 }
 
 //------------------------------------------------------------------------------

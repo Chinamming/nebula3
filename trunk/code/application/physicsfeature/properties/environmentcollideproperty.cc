@@ -10,7 +10,7 @@
 
 namespace PhysicsFeature
 {
-ImplementClass(PhysicsFeature::EnvironmentCollideProperty, 'ENCO', Game::Property);
+__ImplementClass(PhysicsFeature::EnvironmentCollideProperty, 'ENCO', Game::Property);
 
 using namespace Math;
 

@@ -18,7 +18,7 @@ namespace Http
 {
 class DefaultHttpRequestHandler : public HttpRequestHandler
 {
-    DeclareClass(DefaultHttpRequestHandler);
+    __DeclareClass(DefaultHttpRequestHandler);
 public:
     /// handle a http request, the handler is expected to fill the content stream with response data
     virtual void HandleRequest(const Ptr<HttpRequest>& request);

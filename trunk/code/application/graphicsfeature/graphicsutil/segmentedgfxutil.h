@@ -2,7 +2,7 @@
 #define UTIL_SEGMENTEDGFXUTIL_H
 //------------------------------------------------------------------------------
 /**
-    @class Util::SegmentedGfxUtil
+    @class GraphicsFeature::SegmentedGfxUtil
 
     Check if a Nebula3 graphics resource consists of hierarchy nodes below
     the toplevel node, and if yes, create one graphics entity for each

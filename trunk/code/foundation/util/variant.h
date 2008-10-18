@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_VARIANT_H
-#define UTIL_VARIANT_H
 //------------------------------------------------------------------------------
 /**
     @class Util::Variant
@@ -1624,4 +1622,3 @@ Variant::StringToType(const Util::String& str)
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif

@@ -17,7 +17,7 @@ namespace Test
 {
 class AttributeTableTest : public TestCase
 {
-    DeclareClass(AttributeTableTest);
+    __DeclareClass(AttributeTableTest);
 public:
     /// run the test
     virtual void Run();

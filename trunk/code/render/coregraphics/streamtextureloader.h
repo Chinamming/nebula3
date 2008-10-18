@@ -10,22 +10,13 @@
     
     (C) 2007 Radon Labs GmbH
 */    
-#if __WIN32__
-#include "coregraphics/d3d9/d3d9streamtextureloader.h"
+#if (__WIN32__ || __XBOX360__)
+#include "coregraphics/win360/d3d9streamtextureloader.h"
 namespace CoreGraphics
 {
-class StreamTextureLoader : public Direct3D9::D3D9StreamTextureLoader
+class StreamTextureLoader : public Win360::D3D9StreamTextureLoader
 {
-    DeclareClass(StreamTextureLoader);
-};
-}
-#elif __XBOX360__
-#include "coregraphics/xbox360/xbox360streamtextureloader.h"
-namespace CoreGraphics
-{
-class StreamTextureLoader : public Xbox360::Xbox360StreamTextureLoader
-{
-    DeclareClass(StreamTextureLoader);
+    __DeclareClass(StreamTextureLoader);
 };
 }
 #elif __WII__
@@ -34,7 +25,7 @@ namespace CoreGraphics
 {
 class StreamTextureLoader : public Wii::WiiStreamTextureLoader
 {
-    DeclareClass(StreamTextureLoader);
+    __DeclareClass(StreamTextureLoader);
 };
 }
 #else

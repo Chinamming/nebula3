@@ -19,7 +19,7 @@
 
 namespace PhysicsFeature
 {
-ImplementClass(PhysicsFeature::MouseGripperProperty, 'MGRP', GraphicsFeature::InputProperty);
+__ImplementClass(PhysicsFeature::MouseGripperProperty, 'MGRP', GraphicsFeature::InputProperty);
 
 using namespace Input;
 using namespace Game;
@@ -98,25 +98,28 @@ MouseGripperProperty::SetupDefaultAttributes()
 void
 MouseGripperProperty::OnBeginFrame()
 {
-    InputServer* inputServer = InputServer::Instance();        
-    float2 mousePos = inputServer->GetDefaultMouse()->GetScreenPosition();
-    float length = physicsGripper->GetMaxDistance();
-    line worldRay = EnvQueryManager::Instance()->ComputeMouseWorldRay(mousePos, length, GraphicsFeature::GraphicsFeatureUnit::Instance()->GetDefaultView());
-    this->physicsGripper->SetWorldMouseRay(worldRay);
-
-    this->physicsGripper->OnFrameBefore();
-
-    // only do something if we have the input focus
-    if (FocusManager::Instance()->GetInputFocusEntity() == this->entity)
+    if (InputServer::HasInstance())
     {
         InputServer* inputServer = InputServer::Instance();        
-        if (inputServer->GetDefaultMouse()->ButtonDown(MouseButton::LeftButton))
+        float2 mousePos = inputServer->GetDefaultMouse()->GetScreenPosition();
+        float length = physicsGripper->GetMaxDistance();
+        line worldRay = EnvQueryManager::Instance()->ComputeMouseWorldRay(mousePos, length, GraphicsFeature::GraphicsFeatureUnit::Instance()->GetDefaultView());
+        this->physicsGripper->SetWorldMouseRay(worldRay);
+
+        this->physicsGripper->OnFrameBefore();
+
+        // only do something if we have the input focus
+        if (FocusManager::Instance()->GetInputFocusEntity() == this->entity)
         {
-            this->HandleLeftMouseBtnDown();
-        }
-        else if (inputServer->GetDefaultMouse()->ButtonUp(MouseButton::LeftButton))
-        {
-            this->HandleLeftMouseBtnUp();
+            InputServer* inputServer = InputServer::Instance();        
+            if (inputServer->GetDefaultMouse()->ButtonDown(MouseButton::LeftButton))
+            {
+                this->HandleLeftMouseBtnDown();
+            }
+            else if (inputServer->GetDefaultMouse()->ButtonUp(MouseButton::LeftButton))
+            {
+                this->HandleLeftMouseBtnUp();
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Test
 {
 class TestCase : public Core::RefCounted
 {
-    DeclareClass(TestCase);
+    __DeclareClass(TestCase);
 public:
     /// constructor
     TestCase();

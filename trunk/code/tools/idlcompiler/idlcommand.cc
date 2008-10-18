@@ -7,7 +7,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::IDLCommand, 'ILCM', Core::RefCounted);
+__ImplementClass(Tools::IDLCommand, 'ILCM', Core::RefCounted);
 
 using namespace Util;
 using namespace IO;

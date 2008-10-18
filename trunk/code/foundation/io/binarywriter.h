@@ -22,7 +22,7 @@ namespace IO
 {
 class BinaryWriter : public StreamWriter
 {
-    DeclareClass(BinaryWriter);
+    __DeclareClass(BinaryWriter);
 public:
     /// constructor
     BinaryWriter();
@@ -68,11 +68,13 @@ public:
     void WriteBlob(const Util::Blob& blob);
     /// write a guid
     void WriteGuid(const Util::Guid& guid);
+    /// write raw data
+    void WriteRawData(const void* ptr, SizeT numBytes);
 
 public:
     bool enableMapping;
     bool isMapped;
-    System::ByteOrder::Type streamByteOrder;
+    System::ByteOrder byteOrder;
     unsigned char* mapCursor;
     unsigned char* mapEnd;
 };
@@ -101,9 +103,9 @@ BinaryWriter::IsMemoryMappingEnabled() const
 /**
 */
 inline void
-BinaryWriter::SetStreamByteOrder(System::ByteOrder::Type byteOrder)
+BinaryWriter::SetStreamByteOrder(System::ByteOrder::Type order)
 {
-    this->streamByteOrder = byteOrder;
+    this->byteOrder.SetToByteOrder(order);
 }
 
 //------------------------------------------------------------------------------
@@ -112,7 +114,7 @@ BinaryWriter::SetStreamByteOrder(System::ByteOrder::Type byteOrder)
 inline System::ByteOrder::Type
 BinaryWriter::GetStreamByteOrder() const
 {
-    return this->streamByteOrder;
+    return this->byteOrder.GetToByteOrder();
 }
 
 } // namespace IO

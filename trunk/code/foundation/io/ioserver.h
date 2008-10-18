@@ -37,14 +37,16 @@ class URI;
 
 class IoServer : public Core::RefCounted
 {
-    DeclareClass(IoServer);
-    DeclareSingleton(IoServer);
+    __DeclareClass(IoServer);
+    __DeclareSingleton(IoServer);
 public:
     /// constructor
     IoServer();
     /// destructor
     virtual ~IoServer();
 
+    /// register standard URI schemes
+    void RegisterStandardUriSchemes();
     /// associate an uri scheme with a stream class
     void RegisterUriScheme(const Util::String& uriScheme, const Core::Rtti& classRtti);
     /// unregister an uri scheme
@@ -58,17 +60,25 @@ public:
     /// create a stream object for the given uri
     Ptr<Stream> CreateStream(const URI& uri) const;
 
+    #ifndef __NOZIP__
     /// mount a zip file archive
     bool MountZipArchive(const URI& uri);
     /// unmount a zip file archive
     void UnmountZipArchive(const URI& uri);
     /// return true if a zip archive is mounted
     bool IsZipArchiveMounted(const URI& uri) const;
+    #endif
     /// enable/disable transparent zip filesystem layering (default is yes)
     void SetZipFileSystemEnabled(bool b);
     /// return true if transparent zip filesystem is enabled
     bool IsZipFileSystemEnabled() const;
+    /// mount standard zip archives (home:export.zip and home:export_$(platform).zip)
+    void MountStandardZipArchives();
+    /// unmount standard zip archives
+    void UnmountStandardZipArchives();
 
+    /// setup standard assigns
+    void SetupStandardAssigns();
     /// define a directory assign
     void SetAssign(const Assign& assign);
     /// return true if an assign exists

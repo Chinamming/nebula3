@@ -19,7 +19,7 @@ class Message;
 
 class MessageReader : public IO::StreamReader
 {
-    DeclareClass(MessageReader);
+    __DeclareClass(MessageReader);
 public:
     /// constructor
     MessageReader();

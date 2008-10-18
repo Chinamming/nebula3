@@ -7,7 +7,7 @@
 
 namespace Input
 {
-ImplementClass(Input::InputHandler, 'INPH', Core::RefCounted);
+__ImplementClass(Input::InputHandler, 'INPH', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

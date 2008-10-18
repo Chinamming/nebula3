@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::HashTableTest, 'HSTT', Test::TestCase);
+__ImplementClass(Test::HashTableTest, 'HSTT', Test::TestCase);
 
 using namespace Util;
 

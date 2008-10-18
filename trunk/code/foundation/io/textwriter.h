@@ -16,7 +16,7 @@ namespace IO
 {
 class TextWriter : public StreamWriter
 {
-    DeclareClass(TextWriter);
+    __DeclareClass(TextWriter);
 public:
     /// write a single character
     void WriteChar(unsigned char c);

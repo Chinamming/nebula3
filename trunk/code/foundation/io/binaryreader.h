@@ -25,7 +25,7 @@ namespace IO
 {
 class BinaryReader : public StreamReader
 {
-    DeclareClass(BinaryReader);
+    __DeclareClass(BinaryReader);
 public:
     /// constructor
     BinaryReader();
@@ -71,11 +71,13 @@ public:
     Util::Blob ReadBlob();
     /// read a guid
     Util::Guid ReadGuid();
+    /// read raw data
+    void ReadRawData(void* ptr, SizeT numBytes);
 
 public:
     bool enableMapping;
     bool isMapped;
-    System::ByteOrder::Type streamByteOrder;
+    System::ByteOrder byteOrder;
     unsigned char* mapCursor;
     unsigned char* mapEnd;
 };
@@ -102,9 +104,9 @@ BinaryReader::IsMemoryMappingEnabled() const
 /**
 */
 inline void
-BinaryReader::SetStreamByteOrder(System::ByteOrder::Type byteOrder)
+BinaryReader::SetStreamByteOrder(System::ByteOrder::Type order)
 {
-    this->streamByteOrder = byteOrder;
+    this->byteOrder.SetFromByteOrder(order);
 }
 
 //------------------------------------------------------------------------------
@@ -113,7 +115,7 @@ BinaryReader::SetStreamByteOrder(System::ByteOrder::Type byteOrder)
 inline System::ByteOrder::Type
 BinaryReader::GetStreamByteOrder() const
 {
-    return this->streamByteOrder;
+    return this->byteOrder.GetFromByteOrder();
 }
 
 } // namespace IO

@@ -25,19 +25,115 @@ typedef float scalar;
 #endif
 #define N_TINY TINY
 
-#define n_max(a,b)      (((a) > (b)) ? (a) : (b))
-#define n_min(a,b)      (((a) < (b)) ? (a) : (b))
-#define n_abs(a)        (((a)<0.0f) ? (-(a)) : (a))
-#define n_sgn(a)        (((a)<0.0f) ? (-1) : (1))
-
-#define n_max(a,b)      (((a) > (b)) ? (a) : (b))
-#define n_min(a,b)      (((a) < (b)) ? (a) : (b))
-#define n_abs(a)        (((a)<0.0f) ? (-(a)) : (a))
-#define n_sgn(a)        (((a)<0.0f) ? (-1) : (1))
-#define n_deg2rad(d)    (((d)*PI)/180.0f)
-#define n_rad2deg(r)    (((r)*180.0f)/PI)
-
 const scalar LN_2 = 0.693147180559945f;
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline scalar
+n_max(scalar a, scalar b)
+{
+    return (a > b) ? a : b;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline double
+n_max(double a, double b)
+{
+    return (a > b) ? a : b;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline int
+n_max(int a, int b)
+{
+    return (a > b) ? a : b;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline scalar
+n_min(scalar a, scalar b)
+{
+    return (a < b) ? a : b;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline double
+n_min(double a, double b)
+{
+    return (a < b) ? a : b;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline int
+n_min(int a, int b)
+{
+    return (a < b) ? a : b;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline scalar
+n_abs(scalar a)
+{
+    return (a < 0.0f) ? -a : a;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline double
+n_abs(double a)
+{
+    return (a < 0.0f) ? -a : a;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline int
+n_abs(int a)
+{
+    return (a < 0.0f) ? -a : a;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline scalar
+n_sgn(scalar a)
+{
+    return (a < 0.0f) ? -1.0f : 1.0f;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline scalar
+n_deg2rad(scalar d)
+{
+    return (d * PI) / 180.0f;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline scalar
+n_rad2deg(scalar r)
+{
+    return (r * 180.0f) / PI;
+}
 
 //------------------------------------------------------------------------------
 /**
@@ -61,6 +157,15 @@ n_cos(scalar x)
 /**
 */
 __forceinline scalar
+n_tan(scalar x)
+{
+    return tanf(x);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline scalar
 n_asin(scalar x)
 {
     return asinf(x);
@@ -73,6 +178,15 @@ __forceinline scalar
 n_acos(scalar x)
 {
     return acosf(x);
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+__forceinline scalar
+n_atan(scalar x)
+{
+    return atanf(x);
 }
 
 //------------------------------------------------------------------------------
@@ -148,40 +262,6 @@ n_fgreater(scalar f0, scalar f1, scalar tol)
 
 //------------------------------------------------------------------------------
 /**
-    Smooth a new value towards an old value using a change value.
-*/
-__forceinline scalar
-n_smooth(scalar newVal, scalar curVal, scalar maxChange)
-{
-    scalar diff = newVal - curVal;
-    if (fabs(diff) > maxChange)
-    {
-        if (diff > 0.0f)
-        {
-            curVal += maxChange;
-            if (curVal > newVal)
-            {
-                curVal = newVal;
-            }
-        }
-        else if (diff < 0.0f)
-        {
-            curVal -= maxChange;
-            if (curVal < newVal)
-            {
-                curVal = newVal;
-            }
-        }
-    }
-    else
-    {
-        curVal = newVal;
-    }
-    return curVal;
-}
-
-//------------------------------------------------------------------------------
-/**
     Clamp a value against lower und upper boundary.
 */
 __forceinline scalar
@@ -208,7 +288,8 @@ n_saturate(scalar val)
 /**
     Return a pseudo random number between 0 and 1.
 */
-__forceinline scalar n_rand()
+__forceinline
+scalar n_rand()
 {
     return scalar(rand()) / scalar(RAND_MAX);
 }
@@ -319,7 +400,5 @@ n_pow(scalar x, scalar y)
 #endif
 
 
-
-    
 
     

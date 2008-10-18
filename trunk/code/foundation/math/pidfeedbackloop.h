@@ -10,11 +10,10 @@
     (C) 2007 RadonLabs GmbH
 */
 #include "core/types.h"
+#include "timing/time.h"
 
 namespace Math
 {
-using namespace Timing;
-
 class PIDFeedbackLoop
 {
 public:
@@ -35,7 +34,7 @@ public:
     /// last delta of error
 	double GetLastDelta() const;
     /// update current value
-    void Update(nTime time); 
+    void Update(Timing::Time time); 
     /// reset running error
 	void ResetError();
 
@@ -53,9 +52,9 @@ private:
 	double runningError;		// summed errors (using as the integral value) 
 	bool validError;			// prevents numerical problems on the first adjustment	
            
-	Time lastDeltaTime; 
+    Timing::Time lastDeltaTime; 
     
-    Time maxAllowableDeltaTime;	// if more time (in seconds) than this has passed, no PID adjustments will be made
+    Timing::Time maxAllowableDeltaTime; // if more time (in seconds) than this has passed, no PID adjustments will be made
 };
 
 //------------------------------------------------------------------------------
@@ -159,7 +158,7 @@ PIDFeedbackLoop::GetLastDelta() const
 */
 inline
 void 
-PIDFeedbackLoop::Update(nTime time) 
+PIDFeedbackLoop::Update(Timing::Time time) 
 { 
 	// if too much time has passed, do nothing
 	if (time != 0.0f)

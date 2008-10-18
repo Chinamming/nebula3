@@ -1,6 +1,4 @@
 #pragma once
-#ifndef CORE_REFCOUNTED_H
-#define CORE_REFCOUNTED_H
 //------------------------------------------------------------------------------
 /**
     @class Core::RefCounted
@@ -10,6 +8,13 @@
     application shutdown for propert cleanup of all 
     RefCounted objects. Refcounting leaks will generate a log
     on the debug output.
+
+    FIXME: The RefCounted class uses Interlocked functions and
+    a CriticalSection to guarantee thread-safe refcounting and
+    destruction, but only some classes need this (mostly messages
+    which are passed between threads). If it is guaranteed that an
+    object is only manipulated from the same thread then this 
+    thread-synchronization adds unnecessary overhead.
 
     (C) 2006 RadonLabs GmbH
 */
@@ -29,7 +34,7 @@ namespace Core
 {
 class RefCounted
 {
-    DeclareClass(RefCounted);
+    __DeclareClass(RefCounted);
 public:
     /// constructor
     RefCounted();
@@ -65,6 +70,7 @@ public:
         Util::FourCC classFourCC;
         SizeT numObjects;
         SizeT overallRefCount;
+        SizeT instanceSize;
     };
     /// get overall statistics
     static Util::Dictionary<Util::String,Stats> GetOverallStats();
@@ -108,8 +114,7 @@ RefCounted::RefCounted() :
 /**
     Increment the refcount of the object.
 */
-inline
-void
+inline void
 RefCounted::AddRef()
 {
     Threading::Interlocked::Increment(this->refCount);
@@ -119,13 +124,10 @@ RefCounted::AddRef()
 /**
     Decrement the refcount and destroy object if refcount is zero.
 */
-inline
-void
+inline void
 RefCounted::Release()
 {
-    n_assert(this->refCount > 0);
-    Threading::Interlocked::Decrement(this->refCount);
-    if (this->refCount == 0)
+    if (0 == Threading::Interlocked::Decrement(this->refCount))
     {
         n_delete(this);
     }
@@ -135,8 +137,7 @@ RefCounted::Release()
 /**
     Return the current refcount of the object.
 */
-inline
-int
+inline int
 RefCounted::GetRefCount() const
 {
     return this->refCount;
@@ -145,8 +146,7 @@ RefCounted::GetRefCount() const
 //------------------------------------------------------------------------------
 /**
 */
-inline
-bool
+inline bool
 RefCounted::IsInstanceOf(const Rtti& other) const
 {
     return this->GetRtti() == &other;
@@ -155,8 +155,7 @@ RefCounted::IsInstanceOf(const Rtti& other) const
 //------------------------------------------------------------------------------
 /**
 */
-inline
-bool
+inline bool
 RefCounted::IsInstanceOf(const Util::String& other) const
 {
     return this->GetRtti()->GetName() == other;
@@ -165,8 +164,7 @@ RefCounted::IsInstanceOf(const Util::String& other) const
 //------------------------------------------------------------------------------
 /**
 */
-inline
-bool
+inline bool
 RefCounted::IsInstanceOf(const Util::FourCC& other) const
 {
     return this->GetRtti()->GetFourCC() == other;
@@ -175,8 +173,7 @@ RefCounted::IsInstanceOf(const Util::FourCC& other) const
 //------------------------------------------------------------------------------
 /**
 */
-inline
-bool
+inline bool
 RefCounted::IsA(const Rtti& other) const
 {
     return this->GetRtti()->IsDerivedFrom(other);
@@ -185,8 +182,7 @@ RefCounted::IsA(const Rtti& other) const
 //------------------------------------------------------------------------------
 /**
 */
-inline
-bool
+inline bool
 RefCounted::IsA(const Util::String& other) const
 {
     return this->GetRtti()->IsDerivedFrom(other);
@@ -195,8 +191,7 @@ RefCounted::IsA(const Util::String& other) const
 //------------------------------------------------------------------------------
 /**
 */
-inline
-bool
+inline bool
 RefCounted::IsA(const Util::FourCC& other) const
 {
     return this->GetRtti()->IsDerivedFrom(other);
@@ -206,8 +201,7 @@ RefCounted::IsA(const Util::FourCC& other) const
 /**
     Get the class name of the object.
 */
-inline
-const Util::String&
+inline const Util::String&
 RefCounted::GetClassName() const
 {
     return this->GetRtti()->GetName();
@@ -217,8 +211,7 @@ RefCounted::GetClassName() const
 /**
     Get the class FourCC of the object.
 */
-inline
-Util::FourCC
+inline Util::FourCC
 RefCounted::GetClassFourCC() const
 {
     return this->GetRtti()->GetFourCC();
@@ -226,7 +219,6 @@ RefCounted::GetClassFourCC() const
 
 } // namespace Core
 //------------------------------------------------------------------------------
-#endif
 
 
 

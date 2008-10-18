@@ -8,7 +8,7 @@
 
 namespace Base
 {
-ImplementClass(Base::ShaderVariableInstanceBase, 'SVIB', Core::RefCounted);
+__ImplementClass(Base::ShaderVariableInstanceBase, 'SVIB', Core::RefCounted);
 
 using namespace CoreGraphics;
 using namespace Util;

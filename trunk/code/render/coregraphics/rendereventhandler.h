@@ -20,7 +20,7 @@ namespace CoreGraphics
 {
 class RenderEventHandler : public Core::RefCounted
 {
-    DeclareClass(RenderEventHandler);
+    __DeclareClass(RenderEventHandler);
 public:
     /// constructor
     RenderEventHandler();

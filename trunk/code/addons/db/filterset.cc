@@ -7,7 +7,7 @@
 
 namespace Db
 {
-ImplementClass(Db::FilterSet, 'DBFS', Core::RefCounted);
+__ImplementClass(Db::FilterSet, 'DBFS', Core::RefCounted);
 
 using namespace Util;
 

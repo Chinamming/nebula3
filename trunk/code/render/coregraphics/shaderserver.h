@@ -16,8 +16,8 @@ namespace CoreGraphics
 {
 class ShaderServer : public Direct3D9::D3D9ShaderServer
 {
-    DeclareClass(ShaderServer);
-    DeclareSingleton(ShaderServer);
+    __DeclareClass(ShaderServer);
+    __DeclareSingleton(ShaderServer);
 public:
     /// constructor
     ShaderServer();
@@ -31,8 +31,8 @@ namespace CoreGraphics
 {
 class ShaderServer : public Xbox360::Xbox360ShaderServer
 {
-    DeclareClass(ShaderServer);
-    DeclareSingleton(ShaderServer);
+    __DeclareClass(ShaderServer);
+    __DeclareSingleton(ShaderServer);
 public:
     /// constructor
     ShaderServer();
@@ -46,8 +46,8 @@ namespace CoreGraphics
 {
 class ShaderServer : public Wii::WiiShaderServer
 {
-    DeclareClass(ShaderServer);
-    DeclareSingleton(ShaderServer);
+    __DeclareClass(ShaderServer);
+    __DeclareSingleton(ShaderServer);
 public:
     /// constructor
     ShaderServer();

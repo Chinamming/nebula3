@@ -21,7 +21,7 @@ namespace CoreGraphics
 {
 class DisplayEventHandler : public Core::RefCounted
 {
-    DeclareClass(DisplayEventHandler);
+    __DeclareClass(DisplayEventHandler);
 public:
     /// constructor
     DisplayEventHandler();
