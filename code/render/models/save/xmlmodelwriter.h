@@ -18,7 +18,7 @@ namespace Models
 {
 class XmlModelWriter : public ModelWriter
 {
-    DeclareClass(XmlModelWriter);
+    __DeclareClass(XmlModelWriter);
 public:
     /// constructor
     XmlModelWriter();

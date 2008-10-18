@@ -4,20 +4,15 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "coregraphics/vertexbuffer.h"
-#if __WIN32__
+#if (__WIN32__ || __XBOX360__)
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::VertexBuffer, 'VTXB', Direct3D9::D3D9VertexBuffer);
-}
-#elif __XBOX360__
-namespace CoreGraphics
-{
-ImplementClass(CoreGraphics::VertexBuffer, 'VTXB', Xbox360::Xbox360VertexBuffer);
+__ImplementClass(CoreGraphics::VertexBuffer, 'VTXB', Win360::D3D9VertexBuffer);
 }
 #elif __WII__
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::VertexBuffer, 'VTXB', Wii::WiiVertexBuffer);
+__ImplementClass(CoreGraphics::VertexBuffer, 'VTXB', Wii::WiiVertexBuffer);
 }
 #else
 #error "VertexBuffer class not implemented on this platform!"

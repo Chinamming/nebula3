@@ -20,7 +20,7 @@ namespace CoreGraphics
 {
 class ThreadSafeDisplayEventHandler : public DisplayEventHandler
 {
-    DeclareClass(ThreadSafeDisplayEventHandler);
+    __DeclareClass(ThreadSafeDisplayEventHandler);
 public:
     /// constructor
     ThreadSafeDisplayEventHandler();

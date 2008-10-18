@@ -4,11 +4,13 @@
 //------------------------------------------------------------------------------
 #include "stdneb.h"
 #include "physics/balljoint.h"
-#include "coregraphics/shaperenderer.h"
+#include "debugrender/debugshaperenderer.h"
 
 namespace Physics
 {
-ImplementClass(Physics::BallJoint, 'PBJT', Physics::Joint);
+__ImplementClass(Physics::BallJoint, 'PBJT', Physics::Joint);
+
+using namespace Debug;
 
 //------------------------------------------------------------------------------
 /**
@@ -69,7 +71,7 @@ BallJoint::RenderDebug()
         dJointGetBallAnchor(this->odeJointId, curAnchor);
         m.scale(Math::vector(0.1f, 0.1f, 0.1f));
         m.translate(Math::vector(curAnchor[0], curAnchor[1], curAnchor[2]));
-        CoreGraphics::ShapeRenderer::Instance()->DrawShape(m, CoreGraphics::ShapeRenderer::Sphere, this->GetDebugVisualizationColor());
+        DebugShapeRenderer::Instance()->DrawSphere(m, this->GetDebugVisualizationColor());
     }
 }
 

@@ -16,8 +16,8 @@ namespace Lighting
 {
 class ShadowServer : public SM30ShadowServer
 {
-    DeclareClass(ShadowServer);
-    DeclareSingleton(ShadowServer);
+    __DeclareClass(ShadowServer);
+    __DeclareSingleton(ShadowServer);
 public:
     /// constructor
     ShadowServer();
@@ -31,8 +31,8 @@ namespace Lighting
 {
 class ShadowServer : public WiiShadowServer
 {
-    DeclareClass(ShadowServer);
-    DeclareSingleton(ShadowServer);
+    __DeclareClass(ShadowServer);
+    __DeclareSingleton(ShadowServer);
 public:
     /// constructor
     ShadowServer();

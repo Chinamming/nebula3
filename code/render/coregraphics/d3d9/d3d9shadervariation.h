@@ -17,7 +17,7 @@ namespace Direct3D9
 {
 class D3D9ShaderVariation : public Base::ShaderVariationBase
 {
-    DeclareClass(D3D9ShaderVariation);
+    __DeclareClass(D3D9ShaderVariation);
 public:
     /// constructor
     D3D9ShaderVariation();

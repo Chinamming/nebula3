@@ -17,7 +17,7 @@ namespace Http
 {
 class Base64Writer : public IO::StreamWriter
 {
-    DeclareClass(Base64Writer);
+    __DeclareClass(Base64Writer);
 public:
     /// constructor
     Base64Writer();

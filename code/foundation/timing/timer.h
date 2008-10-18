@@ -12,10 +12,10 @@
 */
 #include "core/config.h"
 #if (__WIN32__ || __XBOX360__)
-#include "timing/win32/win32timer.h"
+#include "timing/win360/win360timer.h"
 namespace Timing
 {
-class Timer : public Win32::Win32Timer
+class Timer : public Win360::Win360Timer
 { };
 }
 #elif (__WII__)

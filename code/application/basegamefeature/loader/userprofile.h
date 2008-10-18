@@ -23,7 +23,7 @@ namespace BaseGameFeature
 {
 class UserProfile : public Core::RefCounted
 {
-	DeclareClass(UserProfile);
+	__DeclareClass(UserProfile);
 public:
     /// constructor
     UserProfile();

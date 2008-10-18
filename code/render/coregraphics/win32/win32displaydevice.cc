@@ -7,8 +7,8 @@
 
 namespace Win32
 {
-ImplementClass(Win32::Win32DisplayDevice, 'W32D', Base::DisplayDeviceBase);
-ImplementSingleton(Win32::Win32DisplayDevice);
+__ImplementClass(Win32::Win32DisplayDevice, 'W32D', Base::DisplayDeviceBase);
+__ImplementSingleton(Win32::Win32DisplayDevice);
 
 using namespace CoreGraphics;
 using namespace Math;
@@ -23,7 +23,7 @@ Win32DisplayDevice::Win32DisplayDevice() :
     windowedStyle(WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_VISIBLE),
     fullscreenStyle(WS_POPUP | WS_SYSMENU | WS_VISIBLE)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
     this->hInst = GetModuleHandle(0);
 }
 
@@ -36,7 +36,7 @@ Win32DisplayDevice::~Win32DisplayDevice()
     {
         this->Close();
     }
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

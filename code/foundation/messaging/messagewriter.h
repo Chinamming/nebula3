@@ -19,7 +19,7 @@ class Message;
 
 class MessageWriter : public IO::StreamWriter
 {
-    DeclareClass(MessageWriter);
+    __DeclareClass(MessageWriter);
 public:
     /// constructor
     MessageWriter();

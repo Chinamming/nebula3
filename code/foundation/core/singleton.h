@@ -1,6 +1,4 @@
 #pragma once
-#ifndef CORE_SINGLETON_H
-#define CORE_SINGLETON_H
 //------------------------------------------------------------------------------
 /**
     @class Core::Singleton
@@ -17,5 +15,4 @@
 #include "core/wii/wiisingleton.h"
 #else
 #error "IMPLEMENT ME!"
-#endif
 #endif

@@ -39,7 +39,7 @@ class Table;
 
 class Dataset : public Core::RefCounted
 {
-    DeclareClass(Dataset);
+    __DeclareClass(Dataset);
 public:
     /// constructor
     Dataset();

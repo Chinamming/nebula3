@@ -25,7 +25,7 @@ namespace Net
 {
 class TcpServer : public Core::RefCounted
 {
-    DeclareClass(TcpServer);
+    __DeclareClass(TcpServer);
 public:
     /// constructor
     TcpServer();
@@ -42,13 +42,13 @@ public:
     /// return true if server is open
     bool IsOpen() const;
     /// poll clients connections for received data, call this frequently!
-    Util::Array<Ptr<TcpClientConnection>> Recv();
+    Util::Array<Ptr<TcpClientConnection> > Recv();
 
 private:
     /// a private listener thread class
     class ListenerThread : public Threading::Thread
     {
-        DeclareClass(ListenerThread);
+        __DeclareClass(ListenerThread);
     public:
         /// set pointer to parent tcp server
         void SetTcpServer(TcpServer* tcpServer);
@@ -71,7 +71,7 @@ private:
     IpAddress ipAddress;
     Ptr<ListenerThread> listenerThread;
     bool isOpen;
-    Util::Array<Ptr<TcpClientConnection>> clientConnections;
+    Util::Array<Ptr<TcpClientConnection> > clientConnections;
     static Threading::CriticalSection connectionCritSect;
 };
 

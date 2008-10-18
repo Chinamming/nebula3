@@ -15,7 +15,7 @@ namespace Test
 {
 class StackTest : public TestCase
 {
-    DeclareClass(StackTest);
+    __DeclareClass(StackTest);
 public:
     /// run the test
     virtual void Run();

@@ -9,9 +9,7 @@
 #include "game/entity.h"
 #include "graphics/stage.h"
 #include "graphics/cameraentity.h"
-#include "msg/cameraorbit.h"
-#include "msg/camerareset.h"
-#include "msg/cameradistance.h"
+#include "graphicsprotocol.h"
 #include "math/quaternion.h"
 #include "io/console.h"
 
@@ -21,6 +19,8 @@
 #include "physics/filterset.h"
 #include "physics/physicsutil.h"
 #endif
+
+using namespace Math;
 
 // chase camera specific attributes
 namespace Attr
@@ -41,7 +41,7 @@ namespace Attr
 
 namespace GraphicsFeature
 {
-ImplementClass(GraphicsFeature::ChaseCameraProperty, 'PCHC', GraphicsFeature::CameraProperty);
+__ImplementClass(GraphicsFeature::ChaseCameraProperty, 'PCHC', GraphicsFeature::CameraProperty);
 
 using namespace Game;
 using namespace Messaging;
@@ -120,8 +120,8 @@ ChaseCameraProperty::OnObtainFocus()
     // that we get a smooth interpolation to the new position    
     const matrix44 m = this->entity->GetMatrix44(Attr::Transform);
     Timing::Time time = InputTimeSource::Instance()->GetTime();
-    this->cameraPos.Reset(time, 0.0001f, this->entity->GetFloat(Attr::CameraLinearGain), m.getpos_component()- (m.getz_component() * 5.0f));
-    this->cameraLookat.Reset(time, 0.0001f, this->entity->GetFloat(Attr::CameraAngularGain), m.getpos_component() - (m.getz_component() * 10.0f));
+    this->cameraPos.Reset(time, 0.0001f, this->entity->GetFloat(Attr::CameraLinearGain), m.get_position()- (m.get_zaxis() * 5.0f));
+    this->cameraLookat.Reset(time, 0.0001f, this->entity->GetFloat(Attr::CameraAngularGain), m.get_position() - (m.get_zaxis() * 10.0f));
     this->UpdateCamera(false);
     CameraProperty::OnObtainFocus();
 }
@@ -204,7 +204,7 @@ ChaseCameraProperty::HandleCameraReset()
     float curTheta = this->entity->GetFloat(Attr::CameraDefaultTheta);     
     float curRho = this->entity->GetFloat(Attr::CameraDefaultRho);     
     const matrix44 m = this->entity->GetMatrix44(Attr::Transform);
-    this->cameraAngles.set(m.getz_component());
+    this->cameraAngles.set(m.get_zaxis());
     this->cameraAngles.theta = curTheta;
     this->cameraAngles.rho = curRho;
     this->cameraDistance = this->entity->GetFloat(Attr::CameraDistance);
@@ -239,7 +239,7 @@ ChaseCameraProperty::DoCollideCheck(const point& from, const point& to)
     matrix44 m = matrix44::lookatrh(from, to, up);
     float outContactDist = 1.0f;
 #if __USE_PHYSICS__    
-    Physics::PhysicsUtil::RayBundleCheck(from, to, up, m.getx_component(), 0.25f, this->collideExcludeSet, outContactDist);
+    Physics::PhysicsUtil::RayBundleCheck(from, to, up, m.get_xaxis(), 0.25f, this->collideExcludeSet, outContactDist);
 #endif    
     vector vec = vector::normalize(to - from);    
     point newTo = from + vec * outContactDist;
@@ -256,20 +256,20 @@ ChaseCameraProperty::UpdateCamera(bool interpolate)
 {
     // compute the lookat point in global space
     matrix44 m44 = this->entity->GetMatrix44(Attr::Transform);    
-    const point pos = m44.getpos_component();
+    const point pos = m44.get_position();
     matrix44 rot = m44;
-    rot.setpos_component(point(0,0,0));
+    rot.set_position(point(0,0,0));
     vector lookatPoint = pos + float4::transform(this->entity->GetFloat4(Attr::CameraOffset), rot);    
 
     matrix44 m = matrix44::translation(0, 0, this->cameraDistance);
     m = matrix44::multiply(m, matrix44::rotationx(this->cameraAngles.theta));
     m = matrix44::multiply(m, matrix44::rotationy(this->cameraAngles.rho));
-    float4 newpos = m.getpos_component();
+    float4 newpos = m.get_position();
     newpos += pos;
-    m.setpos_component(newpos);
+    m.set_position(newpos);
 
     // compute the collided goal position        
-    point goalPos = m.getpos_component();
+    point goalPos = m.get_position();
 #if __USE_PHYSICS__    
     goalPos = this->DoCollideCheck(lookatPoint, goalPos);
 #endif	    

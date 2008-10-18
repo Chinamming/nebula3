@@ -46,8 +46,8 @@ class ZipArchive;
 
 class ZipFileSystem : public Core::RefCounted
 {
-    DeclareClass(ZipFileSystem);
-    DeclareSingleton(ZipFileSystem);
+    __DeclareClass(ZipFileSystem);
+    __DeclareSingleton(ZipFileSystem);
 public:
     /// constructor
     ZipFileSystem();

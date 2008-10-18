@@ -9,7 +9,7 @@
 
 namespace Resources
 {
-ImplementClass(Resources::ResourceLoader, 'RSLD', Core::RefCounted);
+__ImplementClass(Resources::ResourceLoader, 'RSLD', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

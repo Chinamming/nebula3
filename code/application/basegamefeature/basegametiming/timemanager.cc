@@ -16,8 +16,8 @@
 
 namespace BaseGameFeature
 {
-ImplementClass(TimeManager, 'TIMA', Game::Manager);
-ImplementSingleton(TimeManager);
+__ImplementClass(TimeManager, 'TIMA', Game::Manager);
+__ImplementSingleton(TimeManager);
 
 using namespace Timing;
 
@@ -28,7 +28,7 @@ TimeManager::TimeManager() :
     time(0.0),
     timeFactor(1.0)
 {    
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ TimeManager::TimeManager() :
 */
 TimeManager::~TimeManager()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

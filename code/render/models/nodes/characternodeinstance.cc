@@ -13,7 +13,7 @@
 
 namespace Models
 {
-ImplementClass(Models::CharacterNodeInstance, 'CHNI', Models::TransformNodeInstance);
+__ImplementClass(Models::CharacterNodeInstance, 'CHNI', Models::TransformNodeInstance);
 
 using namespace CoreGraphics;
 using namespace Math;

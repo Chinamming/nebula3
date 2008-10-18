@@ -17,7 +17,7 @@ namespace Benchmarking
 {
 class DatabaseQuery : public Benchmark
 {
-    DeclareClass(DatabaseQuery);
+    __DeclareClass(DatabaseQuery);
 public:
     /// run the benchmark
     virtual void Run(Timing::Timer& timer);

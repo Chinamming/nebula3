@@ -19,8 +19,8 @@ namespace Frame
 {
 class FrameServer : public Core::RefCounted
 {
-    DeclareClass(FrameServer);
-    DeclareSingleton(FrameServer);
+    __DeclareClass(FrameServer);
+    __DeclareSingleton(FrameServer);
 public:
     /// constructor
     FrameServer();

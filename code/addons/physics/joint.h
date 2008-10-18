@@ -20,7 +20,7 @@ class RigidBody;
 
 class Joint : public Core::RefCounted
 {
-    DeclareClass(Joint);
+    __DeclareClass(Joint);
 public:
     /// joint types
     enum Type

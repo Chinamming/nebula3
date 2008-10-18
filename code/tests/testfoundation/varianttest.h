@@ -15,7 +15,7 @@ namespace Test
 {
 class VariantTest : public TestCase
 {
-    DeclareClass(VariantTest);
+    __DeclareClass(VariantTest);
 public:
     /// run the test
     virtual void Run();

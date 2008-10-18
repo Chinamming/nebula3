@@ -7,7 +7,7 @@
 
 namespace IO
 {
-ImplementClass(IO::XmlWriter, 'XMLW', IO::StreamWriter);
+__ImplementClass(IO::XmlWriter, 'XMLW', IO::StreamWriter);
 
 using namespace Util;
 using namespace Math;

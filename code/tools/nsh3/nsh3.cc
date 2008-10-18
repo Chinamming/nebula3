@@ -10,6 +10,8 @@ using namespace Util;
 
 //------------------------------------------------------------------------------
 /**
+    NOTE: we cannot use ImplementNebulaApplication here, since nsh3 is 
+    a command line tool.
 */
 void __cdecl
 main(int argc, const char** argv)

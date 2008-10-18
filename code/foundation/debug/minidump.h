@@ -17,11 +17,6 @@ namespace Debug
 class MiniDump : public Win32::Win32MiniDump
 { };
 }
-#elif __XBOX360__
-#include "debug/xbox360/xbox360minidump.h"
-class MiniDump : public Xbox360MiniDump
-{ };
-}
 #else
 #error "Debug::MiniDump class not implemented on this platform!"
 #endif

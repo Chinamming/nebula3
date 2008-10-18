@@ -30,7 +30,7 @@ class Dataset;
 
 class Table : public Core::RefCounted
 {
-    DeclareClass(Table);
+    __DeclareClass(Table);
 public:
     /// connection modes
     enum ConnectMode

@@ -9,22 +9,13 @@
     
     (C) 2007 Radon Labs GmbH
 */
-#if __WIN32__
-#include "coregraphics/d3d9/d3d9memoryindexbufferloader.h"
+#if (__WIN32__ || __XBOX360__)
+#include "coregraphics/win360/d3d9memoryindexbufferloader.h"
 namespace CoreGraphics
 {
-class MemoryIndexBufferLoader : public Direct3D9::D3D9MemoryIndexBufferLoader
+class MemoryIndexBufferLoader : public Win360::D3D9MemoryIndexBufferLoader
 {
-    DeclareClass(MemoryIndexBufferLoader);
-};
-}
-#elif __XBOX360__
-#include "coregraphics/xbox360/xbox360memoryindexbufferloader.h"
-namespace CoreGraphics
-{
-class MemoryIndexBufferLoader : public Xbox360::Xbox360MemoryIndexBufferLoader
-{
-    DeclareClass(MemoryIndexBufferLoader);
+    __DeclareClass(MemoryIndexBufferLoader);
 };
 }
 #elif __WII__
@@ -33,7 +24,7 @@ namespace CoreGraphics
 {
 class MemoryIndexBufferLoader : public Wii::WiiMemoryIndexBufferLoader
 {
-    DeclareClass(MemoryIndexBufferLoader);
+    __DeclareClass(MemoryIndexBufferLoader);
 };
 }
 #else

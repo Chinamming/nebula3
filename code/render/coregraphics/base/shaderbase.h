@@ -23,7 +23,7 @@ namespace Base
 {
 class ShaderBase : public Resources::Resource
 {
-    DeclareClass(ShaderBase);
+    __DeclareClass(ShaderBase);
 public:
     /// constructor
     ShaderBase();

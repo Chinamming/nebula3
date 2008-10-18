@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_QUADTREE_H
-#define UTIL_QUADTREE_H
 //------------------------------------------------------------------------------
 /**
     @class QuadTree
@@ -220,8 +218,10 @@ QuadTree<TYPE>::GetNumNodes(uchar level) const
 template<class TYPE> int
 QuadTree<TYPE>::GetNodeIndex(uchar level, ushort col, ushort row) const
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert((col >= 0) && (col < (1 << level)));
     n_assert((row >= 0) && (row < (1 << level)));
+    #endif
     return this->GetNumNodes(level) + (row << level) + col;
 }
 
@@ -240,7 +240,9 @@ QuadTree<TYPE>::Node::ClearDataPtr()
 template<class TYPE> void
 QuadTree<TYPE>::Node::SetDataPtr(TYPE* elem)
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(0 != elem);
+    #endif
     this->data = elem;
 }
 
@@ -272,9 +274,11 @@ QuadTree<TYPE>::~QuadTree()
 template<class TYPE> void
 QuadTree<TYPE>::Initialize()
 {
+    #if NEBULA3_BOUNDSCHECKS    
     n_assert(this->treeDepth > 0);
     n_assert(float4::all(float4::greater(this->boundingBox.extents().abs(), float4(0,0,0,0))));
-    
+    #endif
+
     int baseDimension = 1 << (this->treeDepth - 1);
     this->baseNodeSize.set(this->boundingBox.size().x() / baseDimension,
                            this->boundingBox.size().y(),                                                                          
@@ -285,12 +289,14 @@ QuadTree<TYPE>::Initialize()
     this->nodeArray[0].Initialize(this, 0, 0, 0);
 
     // make sure all nodes have been initialized
+    #if NEBULA3_BOUNDSCHECKS
     int i;
     int num = this->nodeArray.Size();
     for (i = 0; i < num; i++)
     {
         n_assert(this->nodeArray[i].Level() >= 0);
     }
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -300,7 +306,9 @@ QuadTree<TYPE>::Initialize()
 template<class TYPE> void
 QuadTree<TYPE>::Insert(TYPE* elm, const Math::bbox& box)
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(elm);
+    #endif
 
     // find the smallest node which completely encloses the element's bbox
     Node<TYPE>* node = this->nodeArray[0].FindContainmentNode(box);
@@ -323,7 +331,9 @@ QuadTree<TYPE>::Insert(TYPE* elm, const Math::bbox& box)
 template<class TYPE> void
 QuadTree<TYPE>::Remove(TYPE* elm)
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(elm);
+    #endif
     elm->ClearDataPtr();
 }
 
@@ -334,11 +344,13 @@ QuadTree<TYPE>::Remove(TYPE* elm)
 template<class TYPE> void
 QuadTree<TYPE>::Node::Initialize(QuadTree* tree, uchar _level, ushort _col, ushort _row)
 {
+    #if NEBULA3_BOUNDSCHECKS
     n_assert(tree);
     n_assert(this->level == -1);
     n_assert(_level >= 0);
     n_assert((_col >= 0) && (_col < (1 << _level)));
     n_assert((_row >= 0) && (_row < (1 << _level)));
+    #endif
 
     // store address
     this->level = _level;
@@ -416,4 +428,3 @@ QuadTree<TYPE>::Node::FindContainmentNode(const Math::bbox& checkBox)
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif

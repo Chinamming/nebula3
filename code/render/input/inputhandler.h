@@ -27,7 +27,7 @@ namespace Input
 {
 class InputHandler : public Core::RefCounted
 {
-    DeclareClass(InputHandler);
+    __DeclareClass(InputHandler);
 public:
     /// constructor
     InputHandler();

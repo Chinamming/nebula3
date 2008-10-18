@@ -17,7 +17,7 @@ namespace Physics
 {
 class MeshCache : public Core::RefCounted
 {
-    DeclareClass(MeshCache);
+    __DeclareClass(MeshCache);
 public:
     /// constructor
     MeshCache();

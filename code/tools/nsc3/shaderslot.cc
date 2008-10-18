@@ -7,7 +7,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::ShaderSlot,'SHDS', Core::RefCounted);
+__ImplementClass(Tools::ShaderSlot,'SHDS', Core::RefCounted);
 
 using namespace Util;
 

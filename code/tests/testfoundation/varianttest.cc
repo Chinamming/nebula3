@@ -9,7 +9,7 @@
 
 namespace Test
 {
-ImplementClass(Test::VariantTest, 'VART', Test::TestCase);
+__ImplementClass(Test::VariantTest, 'VART', Test::TestCase);
 
 using namespace Util;
 using namespace Math;
@@ -40,7 +40,8 @@ VariantTest::Run()
     Variant boolVar(true);
     Variant float4Var(float4(1.0f, 2.0f, 3.0f, 4.0f));
     matrix44 m;
-    m.setrow3(float4(1.0f, 2.0f, 3.0f, 1.0f));
+    float4 value(1.0f, 2.0f, 3.0f, 1.0f);
+    m.setrow3(value);
     Variant matrixVar(m);
     Variant charPtrVar("Bla Bla");
     Variant strVar(bla);

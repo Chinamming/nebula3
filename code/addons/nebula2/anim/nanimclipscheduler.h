@@ -22,7 +22,7 @@ namespace Nebula2
 //------------------------------------------------------------------------------
 class nAnimClipScheduler : public Core::RefCounted
 {
-    DeclareClass(nAnimClipScheduler);
+    __DeclareClass(nAnimClipScheduler);
 public:
     enum FadeType
     {

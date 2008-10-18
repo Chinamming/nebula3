@@ -15,15 +15,15 @@
 
 namespace Db
 {
-ImplementClass(Db::DbFactory, 'DBFC', Core::RefCounted);
-ImplementSingleton(Db::DbFactory);
+__ImplementClass(Db::DbFactory, 'DBFC', Core::RefCounted);
+__ImplementSingleton(Db::DbFactory);
 
 //------------------------------------------------------------------------------
 /**
 */
 DbFactory::DbFactory()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ DbFactory::DbFactory()
 */
 DbFactory::~DbFactory()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

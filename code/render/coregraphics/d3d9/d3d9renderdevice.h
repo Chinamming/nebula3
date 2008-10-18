@@ -18,8 +18,8 @@ namespace Direct3D9
 {
 class D3D9RenderDevice : public Base::RenderDeviceBase
 {
-    DeclareClass(D3D9RenderDevice);
-    DeclareSingleton(D3D9RenderDevice);
+    __DeclareClass(D3D9RenderDevice);
+    __DeclareSingleton(D3D9RenderDevice);
 public:
     /// constructor
     D3D9RenderDevice();

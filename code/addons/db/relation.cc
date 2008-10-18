@@ -7,7 +7,7 @@
 
 namespace Db
 {
-ImplementClass(Db::Relation, 'RLTN', Core::RefCounted);
+__ImplementClass(Db::Relation, 'RLTN', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

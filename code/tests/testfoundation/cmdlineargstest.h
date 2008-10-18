@@ -15,7 +15,7 @@ namespace Test
 {
 class CmdLineArgsTest : public TestCase
 {
-    DeclareClass(CmdLineArgsTest);
+    __DeclareClass(CmdLineArgsTest);
 public:
     /// run the test
     virtual void Run();

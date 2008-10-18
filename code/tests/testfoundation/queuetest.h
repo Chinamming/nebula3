@@ -15,7 +15,7 @@ namespace Test
 {
 class QueueTest : public TestCase
 {
-    DeclareClass(QueueTest);
+    __DeclareClass(QueueTest);
 public:
     /// run the test
     virtual void Run();

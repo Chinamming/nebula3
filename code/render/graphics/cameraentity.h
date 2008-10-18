@@ -4,30 +4,34 @@
 //------------------------------------------------------------------------------
 /**
     @class Graphics::CameraEntity
-  
-    Represents a camera attached to a graphics stage. Any number of
-    cameras can be attached to a stage.
+    
+    Client-side proxy of an InternalGraphics::InternalCameraEntity. 
+    NOTE: all getter-methods of this class return client-side cached values, 
+    not the actual server-side values. Thus they may be off by some amount, 
+    since the render thread may run at a different frame rate then the client 
+    thread!
     
     (C) 2007 Radon Labs GmbH
-*/    
+*/
 #include "graphics/graphicsentity.h"
+#include "graphics/view.h"
 
 //------------------------------------------------------------------------------
 namespace Graphics
 {
 class CameraEntity : public GraphicsEntity
 {
-    DeclareClass(CameraEntity);
+    __DeclareClass(CameraEntity);
 public:
     /// constructor
     CameraEntity();
     /// destructor
     virtual ~CameraEntity();
-    
-    /// return true if camera is attached to a View
+
+    /// return true if this camera is currently attached to a view
     bool IsAttachedToView() const;
-    /// compute clip status against bounding box
-    virtual Math::ClipStatus::Type ComputeClipStatus(const Math::bbox& box);
+    /// get the view this camera is currently attached to
+    const Ptr<View>& GetView() const;
 
     /// setup camera for perspective field-of-view projection transform
     void SetupPerspectiveFov(float fov, float aspect, float zNear, float zFar);
@@ -65,24 +69,24 @@ public:
 protected:
     friend class View;
 
-    /// called before entity is destroyed
-    virtual void OnDeactivate();
-    /// called by View when camera is attached to that view
-    void OnAttachToView(const Ptr<View>& view);
-    /// called by View when camera becomes detached from view
-    void OnRemoveFromView(const Ptr<View>& view);
+    /// called by stage when entity should setup itself
+    virtual void Setup(const Ptr<Stage>& stage);
+    /// called by stage when entity should discard itself
+    virtual void Discard();
     /// called when transform matrix changed
     virtual void OnTransformChanged();
     /// update the view projection matrix
     void UpdateViewProjMatrix();
-
-    Ptr<View> view;
-
+    /// called by view when this camera entity should become the view's camera
+    void OnAttachToView(const Ptr<View>& view);
+    /// called by view when this camera is no longer the view's camera
+    void OnRemoveFromView(const Ptr<View>& view);    
+    
     Math::matrix44 projMatrix;
     Math::matrix44 viewMatrix;
     Math::matrix44 viewProjMatrix;
     bool viewProjDirty;
-    
+
     bool isPersp;
     float zNear;
     float zFar;
@@ -92,7 +96,27 @@ protected:
     float nearHeight;
     float farWidth;
     float farHeight;
+
+    Ptr<View> view;
 };
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline bool
+CameraEntity::IsAttachedToView() const
+{
+    return this->view.isvalid();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline const Ptr<View>&
+CameraEntity::GetView() const
+{
+    return this->view;
+}
 
 //------------------------------------------------------------------------------
 /**
@@ -105,6 +129,11 @@ CameraEntity::GetProjTransform() const
 
 //------------------------------------------------------------------------------
 /**
+    NOTE: The matrix returned here may be off a little bit from view
+    matrix used in the render thread because the game thread may run
+    at a slower frame rate then rendering!
+    It is not possible to get an exact view matrix outside of the render
+    thread.
 */
 inline const Math::matrix44&
 CameraEntity::GetViewTransform() const
@@ -114,6 +143,11 @@ CameraEntity::GetViewTransform() const
 
 //------------------------------------------------------------------------------
 /**
+    NOTE: The matrix returned here may be off a little bit from viewProj
+    matrix used in the render thread because the game thread may run
+    at a slower frame rate then rendering!
+    It is not possible to get an exact viewProj matrix outside of the render
+    thread.
 */
 inline const Math::matrix44&
 CameraEntity::GetViewProjTransform()
@@ -218,3 +252,4 @@ CameraEntity::GetFarHeight() const
 } // namespace Graphics
 //------------------------------------------------------------------------------
 #endif
+    

@@ -20,7 +20,7 @@ namespace Scripting
 {
 class Command : public Core::RefCounted
 {
-    DeclareClass(Command);
+    __DeclareClass(Command);
 public:
     /// constructor
     Command();

@@ -17,7 +17,7 @@ namespace Physics
 {
 class UniversalJoint : public Joint
 {
-	DeclareClass(UniversalJoint);
+	__DeclareClass(UniversalJoint);
 public:
     /// constructor
     UniversalJoint();

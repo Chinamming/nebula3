@@ -19,7 +19,7 @@ namespace Http
 {
 class HttpRequest : public Messaging::Message
 {
-    DeclareClass(HttpRequest);
+    __DeclareClass(HttpRequest);
     DeclareMsgId;
 public:
     /// constructor

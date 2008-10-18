@@ -16,7 +16,7 @@ namespace Direct3D9
 {
 class D3D9RenderTarget : public Base::RenderTargetBase
 {
-    DeclareClass(D3D9RenderTarget);
+    __DeclareClass(D3D9RenderTarget);
 public:
     /// constructor
     D3D9RenderTarget();

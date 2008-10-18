@@ -9,7 +9,7 @@
 
 namespace Test
 {
-ImplementClass(Test::ListTest, 'LSTT', Test::TestCase);
+__ImplementClass(Test::ListTest, 'LSTT', Test::TestCase);
 
 using namespace Util;
 

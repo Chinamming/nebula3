@@ -22,7 +22,7 @@ class Shape;
 
 class PhysicsEntity : public Core::RefCounted
 {
-	DeclareClass(PhysicsEntity);
+	__DeclareClass(PhysicsEntity);
 public:
     /// an entity id
     typedef unsigned int Id;

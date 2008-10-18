@@ -7,7 +7,7 @@
 
 namespace Models
 {
-ImplementClass(Models::XmlModelWriter, 'XMMW', Models::ModelWriter);
+__ImplementClass(Models::XmlModelWriter, 'XMMW', Models::ModelWriter);
 
 using namespace Util;
 using namespace IO;

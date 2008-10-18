@@ -17,7 +17,7 @@ namespace Win32
 {
 class Win32InputDisplayEventHandler : public CoreGraphics::ThreadSafeDisplayEventHandler
 {
-    DeclareClass(Win32InputDisplayEventHandler);
+    __DeclareClass(Win32InputDisplayEventHandler);
 public:
     /// called when an event happens
     virtual bool HandleEvent(const CoreGraphics::DisplayEvent& event);

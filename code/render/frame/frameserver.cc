@@ -10,8 +10,8 @@
 
 namespace Frame
 {
-ImplementClass(Frame::FrameServer, 'FSRV', Core::RefCounted);
-ImplementSingleton(Frame::FrameServer);
+__ImplementClass(Frame::FrameServer, 'FSRV', Core::RefCounted);
+__ImplementSingleton(Frame::FrameServer);
 
 using namespace Util;
 using namespace IO;
@@ -22,7 +22,7 @@ using namespace IO;
 FrameServer::FrameServer() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }        
 
 //------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ FrameServer::~FrameServer()
     {
         this->Close();
     }
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

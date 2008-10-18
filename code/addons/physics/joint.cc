@@ -8,7 +8,7 @@
 
 namespace Physics
 {
-ImplementClass(Physics::Joint, 'PJOI', Core::RefCounted);
+__ImplementClass(Physics::Joint, 'PJOI', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

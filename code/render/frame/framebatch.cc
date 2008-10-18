@@ -6,17 +6,19 @@
 #include "frame/framebatch.h"
 #include "coregraphics/renderdevice.h"
 #include "coregraphics/shaderserver.h"
+#include "coregraphics/shaperenderer.h"
+#include "coregraphics/textrenderer.h"
 #include "models/visresolver.h"
 #include "models/model.h"
 #include "models/modelnodeinstance.h"
-#include "graphics/modelentity.h"
+#include "internalgraphics/internalmodelentity.h"
 #include "lighting/lightserver.h"
 
 namespace Frame
 {
-ImplementClass(Frame::FrameBatch, 'FBTH', Core::RefCounted);
+__ImplementClass(Frame::FrameBatch, 'FBTH', Core::RefCounted);
 
-using namespace Graphics;
+using namespace InternalGraphics;
 using namespace CoreGraphics;
 using namespace Models;
 using namespace Util;
@@ -90,74 +92,86 @@ FrameBatch::RenderBatch()
     VisResolver* visResolver = VisResolver::Instance();      
     LightServer* lightServer = LightServer::Instance(); 
 
-    // for each visible model...
-    const Array<Ptr<Model> >& models = visResolver->GetVisibleModels(this->nodeFilter);
-    IndexT modelIndex;
-    for (modelIndex = 0; modelIndex < models.Size(); modelIndex++)
+    // handle special cases
+    if (BatchType::Shapes == this->batchType)
     {
-        // for each visible model node of the model...
-        const Array<Ptr<ModelNode> >& modelNodes = visResolver->GetVisibleModelNodes(this->nodeFilter, models[modelIndex]);
-        IndexT modelNodeIndex;  
-        for (modelNodeIndex = 0; modelNodeIndex < modelNodes.Size(); modelNodeIndex++)
+        ShapeRenderer::Instance()->DrawShapes();
+    }
+    else if (BatchType::Text == this->batchType)
+    {
+        TextRenderer::Instance()->DrawTextElements();
+    }
+    else
+    {
+        // default case: render models...
+        const Array<Ptr<Model> >& models = visResolver->GetVisibleModels(this->nodeFilter);
+        IndexT modelIndex;
+        for (modelIndex = 0; modelIndex < models.Size(); modelIndex++)
         {
-            // apply render state which is shared by all instances
-            shaderServer->ResetFeatureBits();
-            shaderServer->SetFeatureBits(this->shaderFeatures);
-            const Ptr<ModelNode>& modelNode = modelNodes[modelNodeIndex];            
-            modelNode->ApplySharedState();
-
-            // if lighting mode is Off, we can render all node instances with the same shader
-            const Ptr<ShaderInstance>& shaderInst = shaderServer->GetActiveShaderInstance();
-            if (LightingMode::None == this->lightingMode)
+            // for each visible model node of the model...
+            const Array<Ptr<ModelNode> >& modelNodes = visResolver->GetVisibleModelNodes(this->nodeFilter, models[modelIndex]);
+            IndexT modelNodeIndex;  
+            for (modelNodeIndex = 0; modelNodeIndex < modelNodes.Size(); modelNodeIndex++)
             {
-                shaderInst->SelectActiveVariation(shaderServer->GetFeatureBits());
-                SizeT numPasses = shaderInst->Begin();
-                n_assert(1 == numPasses);
-                shaderInst->BeginPass(0);
-            }
+                // apply render state which is shared by all instances
+                shaderServer->ResetFeatureBits();
+                shaderServer->SetFeatureBits(this->shaderFeatures);
+                const Ptr<ModelNode>& modelNode = modelNodes[modelNodeIndex];            
+                modelNode->ApplySharedState();
 
-            // render instances
-            const Array<Ptr<ModelNodeInstance> >& nodeInstances = visResolver->GetVisibleModelNodeInstances(this->nodeFilter, modelNode);
-            IndexT nodeInstIndex;
-            for (nodeInstIndex = 0; nodeInstIndex < nodeInstances.Size(); nodeInstIndex++)
-            {
-                const Ptr<ModelNodeInstance>& nodeInstance = nodeInstances[nodeInstIndex];
-
-                // if single-pass lighting is enabled, we need to setup the lighting 
-                // shader states
-                // FIXME: This may set a new shader variation for every node instance
-                // which is expensive! Would be better to sort node instances by number
-                // of active lights!!!
-                if (LightingMode::SinglePass == this->lightingMode)
+                // if lighting mode is Off, we can render all node instances with the same shader
+                const Ptr<ShaderInstance>& shaderInst = shaderServer->GetActiveShaderInstance();
+                if (LightingMode::None == this->lightingMode)
                 {
-                    // setup lighting render states
-                    // NOTE: this may change the shader feature bit mask which may select
-                    // a different shader variation per entity
-                    const Ptr<ModelEntity>& modelEntity = nodeInstance->GetModelInstance()->GetModelEntity();
-                    lightServer->ApplyModelEntityLights(modelEntity);
                     shaderInst->SelectActiveVariation(shaderServer->GetFeatureBits());
                     SizeT numPasses = shaderInst->Begin();
                     n_assert(1 == numPasses);
                     shaderInst->BeginPass(0);
                 }
 
-                // render the node instance
-                nodeInstance->ApplyState();
-                shaderInst->Commit();
-                nodeInstance->Render();
+                // render instances
+                const Array<Ptr<ModelNodeInstance> >& nodeInstances = visResolver->GetVisibleModelNodeInstances(this->nodeFilter, modelNode);
+                IndexT nodeInstIndex;
+                for (nodeInstIndex = 0; nodeInstIndex < nodeInstances.Size(); nodeInstIndex++)
+                {
+                    const Ptr<ModelNodeInstance>& nodeInstance = nodeInstances[nodeInstIndex];
 
-                if (LightingMode::SinglePass == this->lightingMode)
+                    // if single-pass lighting is enabled, we need to setup the lighting 
+                    // shader states
+                    // FIXME: This may set a new shader variation for every node instance
+                    // which is expensive! Would be better to sort node instances by number
+                    // of active lights!!!
+                    if (LightingMode::SinglePass == this->lightingMode)
+                    {
+                        // setup lighting render states
+                        // NOTE: this may change the shader feature bit mask which may select
+                        // a different shader variation per entity
+                        const Ptr<InternalGraphics::InternalModelEntity>& modelEntity = nodeInstance->GetModelInstance()->GetModelEntity();
+                        lightServer->ApplyModelEntityLights(modelEntity);
+                        shaderInst->SelectActiveVariation(shaderServer->GetFeatureBits());
+                        SizeT numPasses = shaderInst->Begin();
+                        n_assert(1 == numPasses);
+                        shaderInst->BeginPass(0);
+                    }
+
+                    // render the node instance
+                    nodeInstance->ApplyState();
+                    shaderInst->Commit();
+                    nodeInstance->Render();
+
+                    if (LightingMode::SinglePass == this->lightingMode)
+                    {
+                        shaderInst->EndPass();
+                        shaderInst->End();
+                    }
+                }
+
+                if (LightingMode::None == this->lightingMode)
                 {
                     shaderInst->EndPass();
                     shaderInst->End();
-                }
+                }                
             }
-
-            if (LightingMode::None == this->lightingMode)
-            {
-                shaderInst->EndPass();
-                shaderInst->End();
-            }                
         }
     }
 }

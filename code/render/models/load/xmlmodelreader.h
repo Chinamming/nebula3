@@ -17,7 +17,7 @@ namespace Models
 {
 class XmlModelReader : public ModelReader
 {
-    DeclareClass(XmlModelReader);
+    __DeclareClass(XmlModelReader);
 public:
     /// constructor
     XmlModelReader();

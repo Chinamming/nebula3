@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::FixedArrayTest, 'FART' /* huhu, he said 'fart' */, Test::TestCase);
+__ImplementClass(Test::FixedArrayTest, 'FART' /* huhu, he said 'fart' */, Test::TestCase);
 
 using namespace Util;
 
@@ -68,7 +68,7 @@ FixedArrayTest::Run()
     this->Verify(stringArray1[4] == "Five");
 
     // clear
-    stringArray1.Clear("Clear");
+    stringArray1.Fill("Clear");
     this->Verify(stringArray1[0] == "Clear");
     this->Verify(stringArray1[1] == "Clear");
     this->Verify(stringArray1[2] == "Clear");

@@ -16,7 +16,7 @@ namespace Test
 {
 class LoadTextureTest : public CoreGraphicsTest
 {
-    DeclareClass(LoadTextureTest);
+    __DeclareClass(LoadTextureTest);
 public:
     /// run the test
     virtual void Run();

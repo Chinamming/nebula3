@@ -18,7 +18,7 @@ namespace Win32
 {
 class Win32Mouse : public Base::MouseBase
 {
-    DeclareClass(Win32Mouse);
+    __DeclareClass(Win32Mouse);
 public:
     /// get mouse movement
     const Math::float2& GetMovement() const;

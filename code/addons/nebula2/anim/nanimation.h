@@ -96,7 +96,7 @@ namespace Nebula2
 //------------------------------------------------------------------------------
 class nAnimation : public Resources::Resource
 {
-    DeclareClass(nAnimation);
+    __DeclareClass(nAnimation);
 
 public:
     /// holds anim curve information

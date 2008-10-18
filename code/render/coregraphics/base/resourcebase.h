@@ -16,12 +16,12 @@ namespace Base
 {
 class ResourceBase : public Resources::Resource
 {
-    DeclareClass(ResourceBase);
+    __DeclareClass(ResourceBase);
 public:
     /// resource usage flags
     enum Usage
     {
-        UsageDefault,        //> can be read and written by GPU
+        UsageDefault,        //> can be read and written by CPU (SLOWEST!!!)
         UsageImmutable,      //> can only be read by GPU, not written, cannot be accessed by CPU
         UsageDynamic,        //> can only be read by GPU, can only be written by CPU
         UsageStaging,        //> used to copy data from the GPU to the CPU
@@ -51,17 +51,16 @@ public:
     /// destructor
     virtual ~ResourceBase();
 
+    /// set resource usage type
+    void SetUsage(Usage usage);
     /// get resource usage type
     Usage GetUsage() const;
+    /// set resource cpu access type
+    void SetAccess(Access access);
     /// get cpu access type
     Access GetAccess() const;
 
 protected:
-    /// set resource usage type
-    void SetUsage(Usage usage);
-    /// set resource cpu access type
-    void SetAccess(Access access);
-
     Usage usage;
     Access access;
 };

@@ -13,8 +13,8 @@
 
 namespace Models
 {
-ImplementClass(Models::ModelServer, 'MDLS', Core::RefCounted);
-ImplementSingleton(Models::ModelServer);
+__ImplementClass(Models::ModelServer, 'MDLS', Core::RefCounted);
+__ImplementSingleton(Models::ModelServer);
 
 using namespace Core;
 using namespace Util;
@@ -28,7 +28,7 @@ using namespace Resources;
 ModelServer::ModelServer() :
     isOpen(false)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ ModelServer::~ModelServer()
     {
         this->Close();
     }
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

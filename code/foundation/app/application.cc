@@ -8,7 +8,7 @@
 
 namespace App
 {
-ImplementSingleton(App::Application);
+__ImplementSingleton(App::Application);
 
 //------------------------------------------------------------------------------
 /**
@@ -19,7 +19,7 @@ Application::Application() :
     isOpen(false),
     returnCode(0)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
     Core::SysFunc::Setup();
 }
 

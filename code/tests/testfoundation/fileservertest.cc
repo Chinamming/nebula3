@@ -13,7 +13,7 @@
 
 namespace Test
 {
-ImplementClass(Test::FileServerTest, 'FSRT', Test::TestCase);
+__ImplementClass(Test::FileServerTest, 'FSRT', Test::TestCase);
 
 using namespace IO;
 using namespace Util;
@@ -25,7 +25,7 @@ void
 FileServerTest::Run()
 {
     Ptr<IoServer> ioServer = IoServer::Create();
-    ioServer->RegisterUriScheme("file", FileStream::RTTI);
+    ioServer->RegisterStandardUriSchemes();
 
     // check for standard assigns
     this->Verify(ioServer->HasAssign("home"));

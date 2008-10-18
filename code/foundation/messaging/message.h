@@ -42,7 +42,7 @@ class Port;
 
 class Message : public Core::RefCounted
 {
-    DeclareClass(Message);
+    __DeclareClass(Message);
     DeclareMsgId;
 public:
     /// constructor

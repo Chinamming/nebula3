@@ -1,6 +1,4 @@
 #pragma once
-#ifndef UTIL_FOURCC_H
-#define UTIL_FOURCC_H
 //------------------------------------------------------------------------------
 /**
     @class Util::FourCC
@@ -224,4 +222,3 @@ FourCC::FromString(const String& s)
 
 } // namespace Util
 //------------------------------------------------------------------------------
-#endif

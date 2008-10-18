@@ -49,11 +49,15 @@ ShellApplication::Run()
     {
         Console* con = Console::Instance();
         ScriptServer* scriptServer = ScriptServer::Instance();
-        con->Print("Welcome! Enter 'listcmds()' to get started.\n");
+        con->Print("Welcome! Enter 'listcmds()' to get started or 'exit' to exit.\n");
         bool running = true;
         while (running)
         {
             con->Print("> ");
+            while (!con->HasInput())
+            {
+                n_sleep(0.1);
+            }
             String cmd = con->GetInput();
             if (cmd.IsValid())
             {

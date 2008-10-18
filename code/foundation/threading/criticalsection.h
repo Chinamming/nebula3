@@ -12,18 +12,11 @@
     (C) 2006 Radon Labs GmbH
 */
 #include "core/config.h"
-#if __WIN32__
-#include "threading/win32/win32criticalsection.h"
+#if (__WIN32__ || __XBOX360__)
+#include "threading/win360/win360criticalsection.h"
 namespace Threading
 {
-class CriticalSection : public Win32::Win32CriticalSection
-{ };
-};
-#elif __XBOX360__
-#include "threading/xbox360/xbox360criticalsection.h"
-namespace Threading
-{
-class CriticalSection : public Xbox360::Xbox360CriticalSection
+class CriticalSection : public Win360::Win360CriticalSection
 { };
 }
 #elif __WII__

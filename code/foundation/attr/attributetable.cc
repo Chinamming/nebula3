@@ -7,7 +7,7 @@
 
 namespace Attr
 {
-ImplementClass(Attr::AttributeTable, 'ATTT', Core::RefCounted);
+__ImplementClass(Attr::AttributeTable, 'ATTT', Core::RefCounted);
 
 using namespace Util;
 using namespace Math;
@@ -218,22 +218,22 @@ AttributeTable::Delete()
     }
     if (0 != this->valueBuffer)
     {
-        Memory::Free(this->valueBuffer);
+        Memory::Free(Memory::DefaultHeap, this->valueBuffer);
         this->valueBuffer = 0;
     }
     if (0 != this->rowModifiedBuffer)
     {
-        Memory::Free(this->rowModifiedBuffer);
+        Memory::Free(Memory::SmallBlockHeap, this->rowModifiedBuffer);
         this->rowModifiedBuffer = 0;
     }
     if (0 != this->rowDeletedBuffer)
     {
-        Memory::Free(this->rowDeletedBuffer);
+        Memory::Free(Memory::SmallBlockHeap, this->rowDeletedBuffer);
         this->rowDeletedBuffer = 0;
     }
     if (0 != this->rowNewBuffer)
     {
-        Memory::Free(this->rowNewBuffer);
+        Memory::Free(Memory::SmallBlockHeap, this->rowNewBuffer);
         this->rowNewBuffer = 0;
     }
     this->numRows = 0;
@@ -259,7 +259,7 @@ AttributeTable::Clear()
     the new buffer.
 */
 void
-AttributeTable::Reallocate(SizeT newPitch, SizeT newAllocRows)
+AttributeTable::Realloc(SizeT newPitch, SizeT newAllocRows)
 {
     n_assert(newAllocRows >= this->numRows);
     n_assert(newPitch >= this->rowPitch);
@@ -267,7 +267,7 @@ AttributeTable::Reallocate(SizeT newPitch, SizeT newAllocRows)
     // allocate new value buffer
     this->allocatedRows = newAllocRows;
     SizeT newValueBufferSize = newPitch * newAllocRows;
-    void* newValueBuffer = Memory::Alloc(newValueBufferSize);
+    void* newValueBuffer = Memory::Alloc(Memory::DefaultHeap, newValueBufferSize);
     Memory::Clear(newValueBuffer, newValueBufferSize);
 
     // copy over value buffer contents
@@ -293,37 +293,37 @@ AttributeTable::Reallocate(SizeT newPitch, SizeT newAllocRows)
         }
 
         // free old array 
-        Memory::Free(this->valueBuffer);
+        Memory::Free(Memory::DefaultHeap, this->valueBuffer);
         this->valueBuffer = 0;
     }
     
     // handle modified row buffer
-    uchar* newRowModifiedBuffer = (uchar*) Memory::Alloc(newAllocRows);
+    uchar* newRowModifiedBuffer = (uchar*) Memory::Alloc(Memory::SmallBlockHeap, newAllocRows);
     Memory::Clear(newRowModifiedBuffer, newAllocRows);
     if (0 != this->rowModifiedBuffer)
     {
         Memory::Copy(this->rowModifiedBuffer, newRowModifiedBuffer, this->numRows);
-        Memory::Free(this->rowModifiedBuffer);
+        Memory::Free(Memory::SmallBlockHeap, this->rowModifiedBuffer);
         this->rowModifiedBuffer = 0;
     }
 
     // handle deleted row buffer
-    uchar* newRowDeletedBuffer = (uchar*) Memory::Alloc(newAllocRows);
+    uchar* newRowDeletedBuffer = (uchar*) Memory::Alloc(Memory::SmallBlockHeap, newAllocRows);
     Memory::Clear(newRowDeletedBuffer, newAllocRows);
     if (0 != this->rowDeletedBuffer)
     {
         Memory::Copy(this->rowDeletedBuffer, newRowDeletedBuffer, this->numRows);
-        Memory::Free(this->rowDeletedBuffer);
+        Memory::Free(Memory::SmallBlockHeap, this->rowDeletedBuffer);
         this->rowDeletedBuffer = 0;
     }
 
     // handle new row buffer
-    uchar* newRowNewBuffer = (uchar*) Memory::Alloc(newAllocRows);
+    uchar* newRowNewBuffer = (uchar*) Memory::Alloc(Memory::SmallBlockHeap, newAllocRows);
     Memory::Clear(newRowNewBuffer, newAllocRows);
     if (0 != this->rowNewBuffer)
     {
         Memory::Copy(this->rowNewBuffer, newRowNewBuffer, this->numRows);
-        Memory::Free(this->rowNewBuffer);
+        Memory::Free(Memory::SmallBlockHeap, this->rowNewBuffer);
         this->rowNewBuffer = 0;
     }
 
@@ -446,7 +446,7 @@ AttributeTable::EndAddColumns()
         SizeT newPitch = this->UpdateColumnOffsets();
         if (this->numRows > 0)
         {
-            this->Reallocate(newPitch, this->numRows);
+            this->Realloc(newPitch, this->numRows);
         }
         else
         {
@@ -486,7 +486,7 @@ AttributeTable::AddColumn(const AttrId& id, bool recordAsNewColumn)
 	    // if necessary, re-allocate value buffer
 	    if (this->numRows > 0)
 	    {
-	        this->Reallocate(newPitch, this->numRows);
+	        this->Realloc(newPitch, this->numRows);
 	    }
 	    else
 	    {
@@ -668,7 +668,7 @@ void
 AttributeTable::ReserveRows(SizeT num)
 {
     n_assert(num > 0);
-    this->Reallocate(this->rowPitch, this->allocatedRows + num);
+    this->Realloc(this->rowPitch, this->allocatedRows + num);
 }
 
 //------------------------------------------------------------------------------
@@ -692,7 +692,7 @@ AttributeTable::AddRow()
         {
             newNumRows = 10;
         }
-        this->Reallocate(this->rowPitch, newNumRows);
+        this->Realloc(this->rowPitch, newNumRows);
     }
     if (this->trackModifications)
     {

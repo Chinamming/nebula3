@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Nebula3>
+    <Protocol namespace="CoreUI" name="DebugRenderProtocol">
+        <!-- dependencies -->
+        <Dependency header="util/array.h"/>
+        <Dependency header="threading/threadid.h"/>
+        <Dependency header="ui/uielement.h"/>
+
+        <!-- render a simple box for gui -->
+        <Message name="RenderUIElements" fourcc="ruie">            
+            <InArg name="ThreadId" type="Threading::ThreadId"/>
+            <InArg name="UIElements" type="Util::Array<Ptr<UI::UIElement>>" />
+        </Message>      
+    </Protocol>
+</Nebula3>    
+    

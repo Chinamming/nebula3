@@ -20,7 +20,7 @@ namespace App
 {
 class Application
 {
-    DeclareSingleton(Application);
+    __DeclareSingleton(Application);
 public:
     /// constructor
     Application();

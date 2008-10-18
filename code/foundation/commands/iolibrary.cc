@@ -6,19 +6,19 @@
 #include "scripting/arg.h"
 #include "iolibrary.h"
 
-ImplementClass(Commands::SetAssign, 'sasn', Scripting::Command);
-ImplementClass(Commands::GetAssign, 'gasn', Scripting::Command);
-ImplementClass(Commands::HasAssign, 'hasn', Scripting::Command);
-ImplementClass(Commands::ClearAssign, 'casn', Scripting::Command);
-ImplementClass(Commands::ResolveAssigns, 'rpth', Scripting::Command);
-ImplementClass(Commands::CreateDirectory, 'cdir', Scripting::Command);
-ImplementClass(Commands::CopyFile, 'cpfl', Scripting::Command);
-ImplementClass(Commands::DeleteFile, 'dlfl', Scripting::Command);
-ImplementClass(Commands::DeleteDirectory, 'dldr', Scripting::Command);
-ImplementClass(Commands::FileExists, 'fexs', Scripting::Command);
-ImplementClass(Commands::ListFiles, 'lsfl', Scripting::Command);
-ImplementClass(Commands::ListDirectories, 'lsdr', Scripting::Command);
-ImplementClass(Commands::Print, 'prnt', Scripting::Command);
+__ImplementClass(Commands::SetAssign, 'sasn', Scripting::Command);
+__ImplementClass(Commands::GetAssign, 'gasn', Scripting::Command);
+__ImplementClass(Commands::HasAssign, 'hasn', Scripting::Command);
+__ImplementClass(Commands::ClearAssign, 'casn', Scripting::Command);
+__ImplementClass(Commands::ResolveAssigns, 'rpth', Scripting::Command);
+__ImplementClass(Commands::CreateDirectory, 'cdir', Scripting::Command);
+__ImplementClass(Commands::CopyFile, 'cpfl', Scripting::Command);
+__ImplementClass(Commands::DeleteFile, 'dlfl', Scripting::Command);
+__ImplementClass(Commands::DeleteDirectory, 'dldr', Scripting::Command);
+__ImplementClass(Commands::FileExists, 'fexs', Scripting::Command);
+__ImplementClass(Commands::ListFiles, 'lsfl', Scripting::Command);
+__ImplementClass(Commands::ListDirectories, 'lsdr', Scripting::Command);
+__ImplementClass(Commands::Print, 'prnt', Scripting::Command);
 
 namespace Commands
 {

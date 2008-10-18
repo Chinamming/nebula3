@@ -24,8 +24,8 @@ namespace Base
 {
 class TransformDeviceBase : public Core::RefCounted
 {
-    DeclareClass(TransformDeviceBase);
-    DeclareSingleton(TransformDeviceBase);
+    __DeclareClass(TransformDeviceBase);
+    __DeclareSingleton(TransformDeviceBase);
 public:
     /// constructor
     TransformDeviceBase();

@@ -17,7 +17,7 @@ namespace Resources
 {
 class ManagedMesh : public ManagedResource
 {
-    DeclareClass(ManagedMesh);
+    __DeclareClass(ManagedMesh);
 public:
     /// get contained mesh resource
     const Ptr<CoreGraphics::Mesh>& GetMesh() const;

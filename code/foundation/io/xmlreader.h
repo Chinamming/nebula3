@@ -13,6 +13,7 @@
 */
 #include "io/streamreader.h"
 #include "math/float4.h"
+#include "math/float2.h"
 #include "math/matrix44.h"
 #include "tinyxml/tinyxml.h"
 
@@ -21,7 +22,7 @@ namespace IO
 {
 class XmlReader : public StreamReader
 {
-    DeclareClass(XmlReader);
+    __DeclareClass(XmlReader);
 public:
     /// constructor
     XmlReader();
@@ -69,6 +70,8 @@ public:
     int GetInt(const Util::String& attr) const;
     /// get float attribute value from current node
     float GetFloat(const Util::String& attr) const;
+	/// get float2 attribute value from current node
+	Math::float2 GetFloat2(const Util::String& attr) const;
     /// get float4 attribute value from current node
     Math::float4 GetFloat4(const Util::String& attr) const;
     /// get matrix44 attribute value from current node

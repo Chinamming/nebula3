@@ -6,12 +6,12 @@
 #include "core/coreserver.h"
 #include "http/defaulthttprequesthandler.h"
 #include "timing/calendartime.h"
-#include "http/htmlpagewriter.h"
+#include "http/html/htmlpagewriter.h"
 #include "http/httpserver.h"
 
 namespace Http
 {
-ImplementClass(Http::DefaultHttpRequestHandler, 'DHRH', Http::HttpRequestHandler);
+__ImplementClass(Http::DefaultHttpRequestHandler, 'DHRH', Http::HttpRequestHandler);
 
 using namespace Core;
 using namespace Util;
@@ -39,14 +39,6 @@ DefaultHttpRequestHandler::HandleRequest(const Ptr<HttpRequest>& request)
         htmlWriter->Element(HtmlElement::Heading1, "Main Page");
         htmlWriter->Element(HtmlElement::Heading3, "Application Info");
         htmlWriter->Begin(HtmlElement::Table);
-            htmlWriter->Begin(HtmlElement::TableRow);
-                htmlWriter->Element(HtmlElement::TableData, "Company Name:");
-                htmlWriter->Element(HtmlElement::TableData, CoreServer::Instance()->GetCompanyName());
-            htmlWriter->End(HtmlElement::TableRow);
-            htmlWriter->Begin(HtmlElement::TableRow);
-                htmlWriter->Element(HtmlElement::TableData, "Application Name:");
-                htmlWriter->Element(HtmlElement::TableData, CoreServer::Instance()->GetAppName());
-            htmlWriter->End(HtmlElement::TableRow);
             htmlWriter->Begin(HtmlElement::TableRow);            
                 htmlWriter->Element(HtmlElement::TableData, "Calendar Time:");
                 htmlWriter->Element(HtmlElement::TableData, CalendarTime::Format("{WEEKDAY} {DAY}.{MONTH}.{YEAR} {HOUR}:{MINUTE}:{SECOND}", CalendarTime::GetLocalTime()));
@@ -55,7 +47,7 @@ DefaultHttpRequestHandler::HandleRequest(const Ptr<HttpRequest>& request)
 
         // list registered HttpRequestHandlers
         htmlWriter->Element(HtmlElement::Heading3, "Available Pages");        
-        const Array<Ptr<HttpRequestHandler>>& handlers = HttpServer::Instance()->GetRequestHandlers();
+        const Array<Ptr<HttpRequestHandler> >& handlers = HttpServer::Instance()->GetRequestHandlers();
         if (handlers.Size() > 0)
         {
             htmlWriter->Begin(HtmlElement::UnorderedList);

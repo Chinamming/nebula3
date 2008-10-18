@@ -8,7 +8,9 @@
 
 namespace Physics
 {
-ImplementClass(Physics::SliderJoint, 'PSLJ', Physics::Joint);
+__ImplementClass(Physics::SliderJoint, 'PSLJ', Physics::Joint);
+
+using namespace Math;
 
 //------------------------------------------------------------------------------
 /**
@@ -68,7 +70,7 @@ SliderJoint::Attach(dWorldID worldID, dJointGroupID groupID, const Math::matrix4
 void 
 SliderJoint::UpdateTransform(const Math::matrix44& m)
 {
-    matrix44 m44(m.getx_component(), m.gety_component(), m.getz_component(), vector::nullvec());
+    matrix44 m44(m.get_xaxis(), m.get_yaxis(), m.get_zaxis(), vector::nullvec());
     Math::vector a = vector::transform(this->axisParams.GetAxis(), m44);
     dJointSetSliderAxis(this->odeJointId, a.x(), a.y(), a.z());
 }

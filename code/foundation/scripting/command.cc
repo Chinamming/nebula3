@@ -7,7 +7,7 @@
 
 namespace Scripting
 {
-ImplementClass(Scripting::Command, 'SCMD', Core::RefCounted);
+__ImplementClass(Scripting::Command, 'SCMD', Core::RefCounted);
 
 using namespace Util;
 

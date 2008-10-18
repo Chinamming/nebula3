@@ -16,7 +16,7 @@ namespace Benchmarking
 {
 class Matrix44Multiply : public Benchmark
 {
-    DeclareClass(Matrix44Multiply);
+    __DeclareClass(Matrix44Multiply);
 public:
     /// run the benchmark
     virtual void Run(Timing::Timer& timer);

@@ -8,7 +8,7 @@
 
 namespace Benchmarking
 {
-ImplementClass(Benchmarking::BenchmarkRunner, 'BNCR', Core::RefCounted);
+__ImplementClass(Benchmarking::BenchmarkRunner, 'BNCR', Core::RefCounted);
 
 using namespace Util;
 using namespace Timing;

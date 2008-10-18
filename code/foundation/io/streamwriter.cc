@@ -7,7 +7,7 @@
 
 namespace IO
 {
-ImplementClass(IO::StreamWriter, 'STWR', Core::RefCounted);
+__ImplementClass(IO::StreamWriter, 'STWR', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

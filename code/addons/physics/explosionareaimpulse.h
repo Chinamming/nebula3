@@ -24,7 +24,7 @@ class RigidBody;
 
 class ExplosionAreaImpulse : public AreaImpulse
 {
-	DeclareClass(ExplosionAreaImpulse);
+	__DeclareClass(ExplosionAreaImpulse);
 public:
     /// constructor
     ExplosionAreaImpulse();

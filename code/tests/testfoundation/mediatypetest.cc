@@ -8,7 +8,7 @@
 
 namespace Test
 {
-ImplementClass(Test::MediaTypeTest, 'MMTT', Test::TestCase);
+__ImplementClass(Test::MediaTypeTest, 'MMTT', Test::TestCase);
 
 using namespace IO;
 using namespace Util;

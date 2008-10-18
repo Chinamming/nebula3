@@ -18,8 +18,8 @@ namespace Input
 {
 class InputServer : public Win32::Win32InputServer
 {
-    DeclareClass(InputServer);
-    DeclareSingleton(InputServer);
+    __DeclareClass(InputServer);
+    __DeclareSingleton(InputServer);
 public:
     /// constructor
     InputServer();
@@ -33,8 +33,8 @@ namespace Input
 {
 class InputServer : public Xbox360::Xbox360InputServer
 {
-    DeclareClass(InputServer);
-    DeclareSingleton(InputServer);
+    __DeclareClass(InputServer);
+    __DeclareSingleton(InputServer);
 public:
     /// constructor
     InputServer();
@@ -48,8 +48,8 @@ namespace Input
 {
 class InputServer : public Wii::WiiInputServer
 {
-    DeclareClass(InputServer);
-    DeclareSingleton(InputServer);
+    __DeclareClass(InputServer);
+    __DeclareSingleton(InputServer);
 public:
     /// constructor
     InputServer();

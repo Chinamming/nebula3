@@ -7,7 +7,7 @@
 
 namespace Base
 {
-ImplementClass(Base::ShaderVariationBase, 'SVBS', Core::RefCounted);
+__ImplementClass(Base::ShaderVariationBase, 'SVBS', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

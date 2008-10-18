@@ -8,8 +8,8 @@
 
 namespace Tools
 {
-ImplementClass(Tools::ShaderFragmentManager, 'SFMG', Core::RefCounted);
-ImplementSingleton(Tools::ShaderFragmentManager);
+__ImplementClass(Tools::ShaderFragmentManager, 'SFMG', Core::RefCounted);
+__ImplementSingleton(Tools::ShaderFragmentManager);
 
 using namespace Util;
 using namespace IO;
@@ -22,7 +22,7 @@ ShaderFragmentManager::ShaderFragmentManager() :
     outerIndex(0),
     numGroups(0)
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ ShaderFragmentManager::ShaderFragmentManager() :
 */
 ShaderFragmentManager::~ShaderFragmentManager()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -197,7 +197,7 @@ ShaderFragmentManager::BeginIterateGroupFragments()
     this->innerIndex = 0;
     this->numGroups = this->fragmentGroups.Size();    
     this->fragIndices.SetSize(this->numGroups);
-    this->fragIndices.Clear(0);
+    this->fragIndices.Fill(0);
     this->ActivateCurrentGroupFragments();
     return true;
 }

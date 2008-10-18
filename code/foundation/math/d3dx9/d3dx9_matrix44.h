@@ -50,38 +50,38 @@ public:
     /// set content
     void set(const float4& row0, const float4& row1, const float4& row2, const float4& row3);
     /// write access to x component
-    void setrow0(float4& row0);
+    void setrow0(const float4& row0);
     /// write access to y component
-    void setrow1(float4& row1);
+    void setrow1(const float4& row1);
     /// write access to z component
-    void setrow2(float4& row2);
+    void setrow2(const float4& row2);
     /// write access to w component
-    void setrow3(float4& row3);
+    void setrow3(const float4& row3);
     /// read-only access to x component
-    float4 getrow0() const;
+    const float4& getrow0() const;
     /// read-only access to y component
-    float4 getrow1() const;
+    const float4& getrow1() const;
     /// read-only access to z component
-    float4 getrow2() const;
+    const float4& getrow2() const;
     /// read-only access to w component
-    float4 getrow3() const;
+    const float4& getrow3() const;
 
     /// write access to x component
-    void setx_component(float4& x);
+    void set_xaxis(const float4& x);
     /// write access to y component
-    void sety_component(float4& y);
+    void set_yaxis(const float4& y);
     /// write access to z component
-    void setz_component(float4& z);
+    void set_zaxis(const float4& z);
     /// write access to w component / pos component
-    void setpos_component(float4& pos);
+    void set_position(const float4& pos);
     /// read access to x component
-    float4 getx_component() const;
+    const float4& get_xaxis() const;
     /// read access to y component
-    float4 gety_component() const;
+    const float4& get_yaxis() const;
     /// read access to z component
-    float4 getz_component() const;
+    const float4& get_zaxis() const;
     /// read access to w component / pos component
-    float4 getpos_component() const;
+    const float4& get_position() const;
     /// add a translation to pos_component
     void translate(const float4& t);
     /// scale matrix
@@ -301,7 +301,7 @@ matrix44::set(const float4& row0, const float4& row1, const float4& row2, const 
 /**
 */
 __forceinline void
-matrix44::setrow0(float4& row0)
+matrix44::setrow0(const float4& row0)
 {
     this->r0 = row0;
 }
@@ -309,7 +309,7 @@ matrix44::setrow0(float4& row0)
 //------------------------------------------------------------------------------
 /**
 */
-__forceinline float4
+__forceinline const float4&
 matrix44::getrow0() const
 {
     return this->r0;
@@ -319,7 +319,7 @@ matrix44::getrow0() const
 /**
 */
 __forceinline void
-matrix44::setrow1(float4& row1)
+matrix44::setrow1(const float4& row1)
 {
     this->r1 = row1;
 }
@@ -327,7 +327,7 @@ matrix44::setrow1(float4& row1)
 //------------------------------------------------------------------------------
 /**
 */
-__forceinline float4
+__forceinline const float4&
 matrix44::getrow1() const
 {
     return this->r1;
@@ -337,7 +337,7 @@ matrix44::getrow1() const
 /**
 */
 __forceinline void
-matrix44::setrow2(float4& row2)
+matrix44::setrow2(const float4& row2)
 {
     this->r2 = row2;
 }
@@ -345,7 +345,7 @@ matrix44::setrow2(float4& row2)
 //------------------------------------------------------------------------------
 /**
 */
-__forceinline float4
+__forceinline const float4&
 matrix44::getrow2() const
 {
     return this->r2;
@@ -355,7 +355,7 @@ matrix44::getrow2() const
 /**
 */
 __forceinline void
-matrix44::setrow3(float4& row3)
+matrix44::setrow3(const float4& row3)
 {
     this->r3 = row3;
 }
@@ -363,7 +363,7 @@ matrix44::setrow3(float4& row3)
 //------------------------------------------------------------------------------
 /**
 */
-__forceinline float4
+__forceinline const float4&
 matrix44::getrow3() const
 {
     return this->r3;
@@ -373,7 +373,7 @@ matrix44::getrow3() const
 /**
 */
 __forceinline void
-matrix44::setx_component(float4& x)
+matrix44::set_xaxis(const float4& x)
 {
     this->r0 = x;
 }
@@ -382,7 +382,7 @@ matrix44::setx_component(float4& x)
 /**
 */
 __forceinline void
-matrix44::sety_component(float4& y)
+matrix44::set_yaxis(const float4& y)
 {
     this->r1 = y;
 }
@@ -391,7 +391,7 @@ matrix44::sety_component(float4& y)
 /**
 */
 __forceinline void
-matrix44::setz_component(float4& z)
+matrix44::set_zaxis(const float4& z)
 {
     this->r2 = z;
 }
@@ -400,7 +400,7 @@ matrix44::setz_component(float4& z)
 /**
 */
 __forceinline void
-matrix44::setpos_component(float4& pos)
+matrix44::set_position(const float4& pos)
 {
     this->r3 = pos;
 }
@@ -408,8 +408,8 @@ matrix44::setpos_component(float4& pos)
 //------------------------------------------------------------------------------
 /**
 */
-__forceinline float4
-matrix44::getx_component() const
+__forceinline const float4&
+matrix44::get_xaxis() const
 {
     return this->r0;
 }
@@ -417,8 +417,8 @@ matrix44::getx_component() const
 //------------------------------------------------------------------------------
 /**
 */
-__forceinline float4
-matrix44::gety_component() const
+__forceinline const float4&
+matrix44::get_yaxis() const
 {
     return this->r1;
 }
@@ -426,8 +426,8 @@ matrix44::gety_component() const
 //------------------------------------------------------------------------------
 /**
 */
-__forceinline float4
-matrix44::getz_component() const
+__forceinline const float4&
+matrix44::get_zaxis() const
 {
     return this->r2;
 }
@@ -435,16 +435,15 @@ matrix44::getz_component() const
 //------------------------------------------------------------------------------
 /**
 */
-__forceinline float4
-matrix44::getpos_component() const
+__forceinline const float4&
+matrix44::get_position() const
 {
     return this->r3;
 }
 //------------------------------------------------------------------------------
 /**
 */
-__forceinline
-void 
+__forceinline void 
 matrix44::translate(const float4& t)
 {
     n_assert2(t.w() == 0, "w component not 0, use vector for translation not a point!");
@@ -457,12 +456,14 @@ matrix44::translate(const float4& t)
 __forceinline void
 matrix44::scale(const float4& s) 
 {    
-    n_assert2(s.w() == 1, "w component should be 1 for matrix44::scale()!");
+    // need to make sure that last column isn't erased
+    float4 scl = s;
+    scl.w() = 1.0f;
 
-    this->r0 = float4::multiply(this->r0, s);
-    this->r1 = float4::multiply(this->r1, s);
-    this->r2 = float4::multiply(this->r2, s);
-    this->r3 = float4::multiply(this->r3, s);
+    this->r0 = float4::multiply(this->r0, scl);
+    this->r1 = float4::multiply(this->r1, scl);
+    this->r2 = float4::multiply(this->r2, scl);
+    this->r3 = float4::multiply(this->r3, scl);
 }
 
 //------------------------------------------------------------------------------

@@ -21,7 +21,7 @@ namespace Models
 {
 class CharacterNodeInstance : public TransformNodeInstance
 {
-    DeclareClass(CharacterNodeInstance);
+    __DeclareClass(CharacterNodeInstance);
 public:
     /// constructor
     CharacterNodeInstance();

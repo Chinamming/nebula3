@@ -2,6 +2,8 @@
 #define N_NEBULA2WRAPPER_H
 //------------------------------------------------------------------------------
 /**
+    @file addons/nebula2/nebula2wrapper.h
+
     Just a typedef wrapper for Nebula2 Legacy support.
 
     (C) 2007 RadonLabs GmbH
@@ -21,12 +23,13 @@
 #include "character/skininfo.h"
 #include "anim/animtable.h"
 
-#include "addons/nebula2/particle/envelopecurve.h"
-#include "addons/nebula2/particle/vector3envelopecurve.h"
-#include "addons/nebula2/particle/ndynamicmesh.h"
-#include "addons/nebula2/particle/nparticle2.h"
-#include "addons/nebula2/particle/nparticle2emitter.h"
-#include "addons/nebula2/particle/nparticleserver2.h"
+//#include "addons/nebula2/particle/envelopecurve.h"
+//#include "addons/nebula2/particle/vector3envelopecurve.h"
+///nebula2/particle/ndynamicmesh.h"
+//#include "addons/nebula2/particle/nparticle2.h"
+//#include "addons/nebula2/particle/nparticle2emitter.h"
+//#include "addons/nebula2/particle/particleemitterbase.h"
+//#include "addons/nebula2/particle/nparticleserver2.h"
 
 
 
@@ -54,16 +57,16 @@ typedef Nebula2::nAnimClip AnimClip;
 typedef Nebula2::AnimTable AnimTable;
 };
 
+/*
 namespace ParticleSystem
 {
 typedef Nebula2::EnvelopeCurve EnvelopeCurve;
-typedef Nebula2::nDynamicMesh DynamicMesh;
-typedef Nebula2::nParticle2 Particle;
-typedef Nebula2::nParticle2Emitter ParticleEmitter;
-typedef Nebula2::nParticleServer2 ParticleServer;
 typedef Nebula2::Vector3EnvelopeCurve Vector3EnvelopeCurve;
 };
-
-
+namespace CoreGraphics
+{
+typedef Nebula2::nDynamicMesh DynamicMesh;
+};
+*/
 //------------------------------------------------------------------------------
 #endif

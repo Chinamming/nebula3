@@ -7,13 +7,16 @@
 
 namespace XInput
 {
-ImplementClass(XInput::XInputGamePad, 'XIGP', Base::GamePadBase);
+__ImplementClass(XInput::XInputGamePad, 'XIGP', Base::GamePadBase);
+
+using namespace Math;
 
 //------------------------------------------------------------------------------
 /**
 */
 XInputGamePad::XInputGamePad() :
-    lastPacketNumber(0xffffffff)
+    lastPacketNumber(0xffffffff),
+    lastCheckConnectedTime(0)
 {
     // empty
 }
@@ -28,18 +31,68 @@ XInputGamePad::~XInputGamePad()
 
 //------------------------------------------------------------------------------
 /**
+*/
+void
+XInputGamePad::OnAttach()
+{
+    GamePadBase::OnAttach();
+
+    // start our timer, the timer is used to measure time since the last
+    // XInputGetState() for disconnected game pads, this is an expensive 
+    // operation, thus we're only doing it every half a second or so
+    this->timer.Start();
+    this->lastCheckConnectedTime = this->timer.GetTicks() - CheckConnectedInterval;
+}
+
+//------------------------------------------------------------------------------
+/**
     This compares the current state of the game pad against the
     previous state and sets the internal state accordingly.
+
+    FIXME: Calling XInputGetState() on non-connected controllers is very 
+    expensive, thus if XInputGetState return ERROR_DEVICE_NOT_CONNECTED, only
+    call XInputGetState() every 2 seconds to check if a device has actually
+    been connected!!!
 */
 void
 XInputGamePad::OnBeginFrame()
 {
     GamePadBase::OnBeginFrame();
 
-    // get current state of game pad
-    XINPUT_STATE curState;
-    DWORD result = XInputGetState(this->playerIndex, &curState);
-    if (ERROR_SUCCESS == result)
+    // get current state of the game pad, this looks a bit complicated
+    // because disconnected game pads are only checked once in a while
+    // (getting state from a non-connected device is fairly expensive)
+    Timing::Tick curTime = this->timer.GetTicks();
+    XINPUT_STATE curState = { 0 };
+    DWORD result = ERROR_DEVICE_NOT_CONNECTED;
+    if (!this->isConnected)
+    {
+        // if we're not currently connected, only check every little while
+        if ((curTime - this->lastCheckConnectedTime) >= CheckConnectedInterval)
+        {
+            result = XInputGetState(this->playerIndex, &curState);
+            this->lastCheckConnectedTime = curTime;
+        }
+    }
+    else
+    {
+        // if we're currently connected, getting the current state is cheap
+        result = XInputGetState(this->playerIndex, &curState);
+        this->lastCheckConnectedTime = curTime;
+    }
+
+    // check result
+    if (ERROR_DEVICE_NOT_CONNECTED == result)
+    {
+        // game pad is currently not connected, if it just has been
+        // disconnected we need to reset the game pad
+        if (this->isConnected)
+        {
+            this->OnReset();
+            this->isConnected = false;
+        }
+    }
+    else if (ERROR_SUCCESS == result)
     {
         this->isConnected = true;
 
@@ -75,12 +128,8 @@ XInputGamePad::OnBeginFrame()
     }
     else
     {
-        // need to reset if we have been connected
-        if (this->isConnected)
-        {
-            this->OnReset();
-            this->isConnected = false;
-        }
+        // can't happen?
+        n_error("XInputGamePad: can't happen (invalid return value from XInputGetState!)");
     }
 
     // if the vibrator settings have changed, update accordingly

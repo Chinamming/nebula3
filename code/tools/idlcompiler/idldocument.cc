@@ -7,7 +7,7 @@
 
 namespace Tools
 {
-ImplementClass(Tools::IDLDocument, 'ILDC', Core::RefCounted);
+__ImplementClass(Tools::IDLDocument, 'ILDC', Core::RefCounted);
 
 using namespace Util;
 using namespace IO;

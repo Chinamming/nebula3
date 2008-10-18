@@ -20,7 +20,7 @@ namespace IO
 {
 class ConsoleHandler : public Core::RefCounted
 {
-    DeclareClass(ConsoleHandler);
+    __DeclareClass(ConsoleHandler);
 public:
     /// constructor
     ConsoleHandler();

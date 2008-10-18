@@ -17,7 +17,7 @@ namespace Db
 {
 class Sqlite3Command : public Command
 {
-    DeclareClass(Sqlite3Command);
+    __DeclareClass(Sqlite3Command);
 public:
     /// constructor
     Sqlite3Command();

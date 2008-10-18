@@ -17,7 +17,7 @@ namespace Models
 {
 class ShapeNodeInstance : public StateNodeInstance
 {
-    DeclareClass(ShapeNodeInstance);
+    __DeclareClass(ShapeNodeInstance);
 public:
     /// constructor
     ShapeNodeInstance();

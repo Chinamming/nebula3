@@ -11,7 +11,7 @@
 
 namespace Direct3D9
 {
-ImplementClass(Direct3D9::D3D9StreamShaderLoader, 'D9SL', Resources::ResourceLoader);
+__ImplementClass(Direct3D9::D3D9StreamShaderLoader, 'D9SL', Resources::StreamResourceLoader);
 
 using namespace Resources;
 using namespace CoreGraphics;
@@ -29,32 +29,11 @@ D3D9StreamShaderLoader::CanLoadAsync() const
 
 //------------------------------------------------------------------------------
 /**
-*/
-bool
-D3D9StreamShaderLoader::OnLoadRequested()
-{
-    n_assert(this->GetState() == Resource::Initial);
-    n_assert(this->resource.isvalid());
-    n_assert(!this->resource->IsAsyncEnabled());
-
-    Ptr<Stream> stream = IoServer::Instance()->CreateStream(this->resource->GetResourceId().Value());
-    if (this->SetupShaderFromStream(stream))
-    {
-        this->SetState(Resource::Loaded);
-        return true;
-    }
-    // fallthrough: loading failed
-    this->SetState(Resource::Failed);
-    return false;
-}
-
-//------------------------------------------------------------------------------
-/**
     Loads a precompiled shader files from a stream into a D3DXEffect
     object.
 */
 bool
-D3D9StreamShaderLoader::SetupShaderFromStream(const Ptr<Stream>& stream)
+D3D9StreamShaderLoader::SetupResourceFromStream(const Ptr<Stream>& stream)
 {
     n_assert(stream.isvalid());
     n_assert(stream->CanBeMapped());

@@ -7,7 +7,7 @@
 
 namespace App
 {
-ImplementClass(App::StateHandler, 'APST', Core::RefCounted);
+__ImplementClass(App::StateHandler, 'APST', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

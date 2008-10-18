@@ -17,8 +17,8 @@ namespace Direct3D9
 {
 class D3D9DisplayDevice : public Win32::Win32DisplayDevice
 {
-    DeclareClass(D3D9DisplayDevice);
-    DeclareSingleton(D3D9DisplayDevice);
+    __DeclareClass(D3D9DisplayDevice);
+    __DeclareSingleton(D3D9DisplayDevice);
 public:
     /// constructor
     D3D9DisplayDevice();

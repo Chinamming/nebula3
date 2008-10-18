@@ -9,7 +9,7 @@
 
 namespace Test
 {
-ImplementClass(Test::AttributeContainerTest, 'ACTT', Test::TestCase);
+__ImplementClass(Test::AttributeContainerTest, 'ACTT', Test::TestCase);
 
 using namespace Attr;
 

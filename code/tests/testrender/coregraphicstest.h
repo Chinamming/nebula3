@@ -15,15 +15,18 @@
 #include "coregraphics/displaydevice.h"
 #include "coregraphics/renderdevice.h"
 #include "coregraphics/shaderserver.h"
+#include "coregraphics/vertexlayoutserver.h"
 #include "resources/sharedresourceserver.h"
 #include "resources/resourcemanager.h"
+#include "debug/debuginterface.h"
+#include "http/httpinterface.h"
 
 //------------------------------------------------------------------------------
 namespace Test
 {
 class CoreGraphicsTest : public Test::TestCase
 {
-    DeclareClass(CoreGraphicsTest);
+    __DeclareClass(CoreGraphicsTest);
 protected:
     /// setup the required runtime
     bool SetupRuntime();
@@ -32,11 +35,14 @@ protected:
 
     Ptr<IO::IoServer> ioServer;
     Ptr<Interface::IOInterface> ioInterface;
+    Ptr<Http::HttpInterface> httpInterface;
+    Ptr<Debug::DebugInterface> debugInterface;
     Ptr<Resources::SharedResourceServer> resServer;
     Ptr<Resources::ResourceManager> resManager;
     Ptr<CoreGraphics::DisplayDevice> displayDevice;
     Ptr<CoreGraphics::RenderDevice> renderDevice;
     Ptr<CoreGraphics::ShaderServer> shaderServer;
+    Ptr<CoreGraphics::VertexLayoutServer> vertexLayoutServer;
 };
 
 } // namespace Test    

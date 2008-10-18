@@ -15,7 +15,7 @@ namespace Input
 {
 class Keyboard : public Base::KeyboardBase
 {
-    DeclareClass(Keyboard);
+    __DeclareClass(Keyboard);
 };
 }
 #elif __XBOX360__
@@ -24,7 +24,7 @@ namespace Input
 {
 class Keyboard : public Xbox360::Xbox360Keyboard
 {
-    DeclareClass(Keyboard);
+    __DeclareClass(Keyboard);
 };
 }
 #elif __WII__
@@ -33,7 +33,7 @@ namespace Input
 {
 class Keyboard : public Wii::WiiKeyboard
 {
-    DeclareClass(Keyboard);
+    __DeclareClass(Keyboard);
 };
 }
 #else

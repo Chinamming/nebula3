@@ -16,7 +16,7 @@ namespace Base
 {
 class GamePadBase : public Input::InputHandler
 {
-    DeclareClass(GamePadBase);
+    __DeclareClass(GamePadBase);
 public:
     /// gamepad buttons
     enum Button

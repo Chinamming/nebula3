@@ -17,7 +17,7 @@ namespace IO
 {
 class XmlWriter : public IO::StreamWriter
 {
-    DeclareClass(XmlWriter);
+    __DeclareClass(XmlWriter);
 public:
     /// constructor
     XmlWriter();

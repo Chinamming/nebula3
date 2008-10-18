@@ -7,7 +7,7 @@
 
 namespace IO
 {
-ImplementClass(IO::BinaryWriter, 'BINW', IO::StreamWriter);
+__ImplementClass(IO::BinaryWriter, 'BINW', IO::StreamWriter);
 
 using namespace Util;
 using namespace System;
@@ -19,7 +19,6 @@ using namespace Math;
 BinaryWriter::BinaryWriter() :
     enableMapping(false),
     isMapped(false),
-    streamByteOrder(ByteOrder::Host),
     mapCursor(0),
     mapEnd(0)
 {
@@ -114,32 +113,17 @@ BinaryWriter::WriteUChar(unsigned char c)
 void
 BinaryWriter::WriteShort(short s)
 {
+    this->byteOrder.Convert<short>(s);
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(s)) <= this->mapEnd);
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            short val = ByteOrder::ConvertShort(this->streamByteOrder, ByteOrder::Host, s);
-            Memory::Copy(&val, this->mapCursor, sizeof(val));
-        }
-        else
-        {
-            Memory::Copy(&s, this->mapCursor, sizeof(s));
-        }
+        Memory::Copy(&s, this->mapCursor, sizeof(s));
         this->mapCursor += sizeof(s);
     }
     else
     {
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            short val = ByteOrder::ConvertShort(this->streamByteOrder, ByteOrder::Host, s);
-            this->stream->Write(&val, sizeof(val));
-        }
-        else
-        {
-            this->stream->Write(&s, sizeof(s));
-        }
+        this->stream->Write(&s, sizeof(s));
     }
 }
 
@@ -149,32 +133,17 @@ BinaryWriter::WriteShort(short s)
 void
 BinaryWriter::WriteUShort(unsigned short s)
 {
+    this->byteOrder.Convert<ushort>(s);
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(s)) <= this->mapEnd);
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            ushort val = ByteOrder::ConvertUShort(this->streamByteOrder, ByteOrder::Host, s);
-            Memory::Copy(&val, this->mapCursor, sizeof(val));
-        }
-        else
-        {
-            Memory::Copy(&s, this->mapCursor, sizeof(s));
-        }
+        Memory::Copy(&s, this->mapCursor, sizeof(s));
         this->mapCursor += sizeof(s);
     }
     else
     {
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            short val = ByteOrder::ConvertUShort(this->streamByteOrder, ByteOrder::Host, s);
-            this->stream->Write(&val, sizeof(val));
-        }
-        else
-        {
-            this->stream->Write(&s, sizeof(s));
-        }
+        this->stream->Write(&s, sizeof(s));
     }
 }
 
@@ -184,32 +153,17 @@ BinaryWriter::WriteUShort(unsigned short s)
 void
 BinaryWriter::WriteInt(int i)
 {
+    this->byteOrder.Convert<int>(i);
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(i)) <= this->mapEnd);
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            int val = ByteOrder::ConvertInt(this->streamByteOrder, ByteOrder::Host, i);
-            Memory::Copy(&val, this->mapCursor, sizeof(val));
-        }
-        else
-        {
-            Memory::Copy(&i, this->mapCursor, sizeof(i));
-        }
+        Memory::Copy(&i, this->mapCursor, sizeof(i));
         this->mapCursor += sizeof(i);
     }
     else
     {
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            int val = ByteOrder::ConvertInt(this->streamByteOrder, ByteOrder::Host, i);
-            this->stream->Write(&val, sizeof(val));
-        }
-        else
-        {
-            this->stream->Write(&i, sizeof(i));
-        }
+        this->stream->Write(&i, sizeof(i));
     }
 }
 
@@ -219,32 +173,17 @@ BinaryWriter::WriteInt(int i)
 void
 BinaryWriter::WriteUInt(unsigned int i)
 {
+    this->byteOrder.Convert<uint>(i);
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(i)) <= this->mapEnd);
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            unsigned int val = ByteOrder::ConvertUInt(this->streamByteOrder, ByteOrder::Host, i);
-            Memory::Copy(&val, this->mapCursor, sizeof(val));
-        }
-        else
-        {
-            Memory::Copy(&i, this->mapCursor, sizeof(i));
-        }
+        Memory::Copy(&i, this->mapCursor, sizeof(i));
         this->mapCursor += sizeof(i);
     }
     else
     {
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            int val = ByteOrder::ConvertUInt(this->streamByteOrder, ByteOrder::Host, i);
-            this->stream->Write(&val, sizeof(val));
-        }
-        else
-        {
-            this->stream->Write(&i, sizeof(i));
-        }
+        this->stream->Write(&i, sizeof(i));
     }
 }
 
@@ -254,32 +193,17 @@ BinaryWriter::WriteUInt(unsigned int i)
 void
 BinaryWriter::WriteFloat(float f)
 {
+    this->byteOrder.Convert<float>(f);
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(f)) <= this->mapEnd);
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            float val = ByteOrder::ConvertFloat(this->streamByteOrder, ByteOrder::Host, f);
-            Memory::Copy(&val, this->mapCursor, sizeof(val));
-        }
-        else
-        {
-            Memory::Copy(&f, this->mapCursor, sizeof(f));
-        }
+        Memory::Copy(&f, this->mapCursor, sizeof(f));
         this->mapCursor += sizeof(f);
     }
     else
     {
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            float val = ByteOrder::ConvertFloat(this->streamByteOrder, ByteOrder::Host, f);
-            this->stream->Write(&val, sizeof(val));
-        }
-        else
-        {
-            this->stream->Write(&f, sizeof(f));
-        }
+        this->stream->Write(&f, sizeof(f));
     }
 }
 
@@ -289,32 +213,17 @@ BinaryWriter::WriteFloat(float f)
 void
 BinaryWriter::WriteDouble(double d)
 {
+    this->byteOrder.Convert<double>(d);
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(d)) <= this->mapEnd);
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            double val = ByteOrder::ConvertDouble(this->streamByteOrder, ByteOrder::Host, d);
-            Memory::Copy(&val, this->mapCursor, sizeof(val));
-        }
-        else
-        {
-            Memory::Copy(&d, this->mapCursor, sizeof(d));
-        }
+        Memory::Copy(&d, this->mapCursor, sizeof(d));
         this->mapCursor += sizeof(d);
     }
     else
     {
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            double val = ByteOrder::ConvertDouble(this->streamByteOrder, ByteOrder::Host, d);
-            this->stream->Write(&val, sizeof(val));
-        }
-        else
-        {
-            this->stream->Write(&d, sizeof(d));
-        }
+        this->stream->Write(&d, sizeof(d));
     }
 }
 
@@ -399,32 +308,18 @@ BinaryWriter::WriteGuid(const Util::Guid& guid)
 void
 BinaryWriter::WriteFloat4(const float4& v)
 {
+    float4 val = v;
+    this->byteOrder.Convert<float4>(val);
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
         n_assert((this->mapCursor + sizeof(v)) <= this->mapEnd);
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            float4 val = ByteOrder::ConvertFloat4(this->streamByteOrder, ByteOrder::Host, v);
-            Memory::Copy(&val, this->mapCursor, sizeof(val));
-        }
-        else
-        {
-            Memory::Copy(&v, this->mapCursor, sizeof(v));
-        }
-        this->mapCursor += sizeof(v);
+        Memory::Copy(&val, this->mapCursor, sizeof(val));
+        this->mapCursor += sizeof(val);
     }
     else
     {
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            float4 val = ByteOrder::ConvertFloat4(this->streamByteOrder, ByteOrder::Host, v);
-            this->stream->Write(&val, sizeof(val));
-        }
-        else
-        {
-            this->stream->Write(&v, sizeof(v));
-        }
+        this->stream->Write(&val, sizeof(val));
     }
 }
 
@@ -434,32 +329,37 @@ BinaryWriter::WriteFloat4(const float4& v)
 void
 BinaryWriter::WriteMatrix44(const matrix44& m)
 {
+    matrix44 val = m;
+    this->byteOrder.Convert<matrix44>(val);
     if (this->isMapped)
     {
         // note: the memory copy is necessary to circumvent alignment problem on some CPUs
-        n_assert((this->mapCursor + sizeof(m)) <= this->mapEnd);
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            matrix44 val = ByteOrder::ConvertMatrix44(this->streamByteOrder, ByteOrder::Host, m);
-            Memory::Copy(&val, this->mapCursor, sizeof(val));
-        }
-        else
-        {
-            Memory::Copy(&m, this->mapCursor, sizeof(m));
-        }
-        this->mapCursor += sizeof(m);
+        n_assert((this->mapCursor + sizeof(val)) <= this->mapEnd);
+        Memory::Copy(&val, this->mapCursor, sizeof(val));
+        this->mapCursor += sizeof(val);
     }
     else
     {
-        if (ByteOrder::Host != this->streamByteOrder)
-        {
-            matrix44 val = ByteOrder::ConvertMatrix44(this->streamByteOrder, ByteOrder::Host, m);
-            this->stream->Write(&val, sizeof(val));
-        }
-        else
-        {
-            this->stream->Write(&m, sizeof(m));
-        }
+        this->stream->Write(&val, sizeof(val));
+    }
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+BinaryWriter::WriteRawData(const void* ptr, SizeT numBytes)
+{
+    n_assert((ptr != 0) && (numBytes > 0));
+    if (this->isMapped)
+    {
+        n_assert((this->mapCursor + numBytes) <= this->mapEnd);
+        Memory::Copy(ptr, this->mapCursor, numBytes);
+        this->mapCursor += numBytes;
+    }
+    else
+    {
+        this->stream->Write(ptr, numBytes);
     }
 }
 

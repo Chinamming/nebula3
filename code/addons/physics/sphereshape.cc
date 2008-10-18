@@ -5,13 +5,15 @@
 #include "stdneb.h"
 #include "physics/sphereshape.h"
 #include "physics/materialtable.h"
-#include "coregraphics/shaperenderer.h"
+#include "debugrender/debugshaperenderer.h"
 
 namespace Physics
 {
-ImplementClass(Physics::SphereShape, 'PSPS', Physics::Shape);
+__ImplementClass(Physics::SphereShape, 'PSPS', Physics::Shape);
 
+using namespace Debug;
 using namespace Math;
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -64,7 +66,7 @@ SphereShape::RenderDebug(const Math::matrix44& parentTransform)
         m.scale(Math::float4(this->radius, this->radius, this->radius, 0));
         m = matrix44::multiply(m, this->GetTransform());
         m = matrix44::multiply(m, parentTransform);
-        CoreGraphics::ShapeRenderer::Instance()->DrawShape(m, CoreGraphics::ShapeRenderer::Sphere, this->GetDebugVisualizationColor());
+        DebugShapeRenderer::Instance()->DrawSphere(m, this->GetDebugVisualizationColor());
     }
 }
 

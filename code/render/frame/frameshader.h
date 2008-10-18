@@ -17,14 +17,14 @@
 #include "coregraphics/shadervariableinstance.h"
 #include "frame/framepass.h"
 #include "frame/frameposteffect.h"
-#include "graphics/cameraentity.h"
+#include "internalgraphics/internalcameraentity.h"
 
 //------------------------------------------------------------------------------
 namespace Frame
 {
 class FrameShader : public Core::RefCounted
 {
-    DeclareClass(FrameShader);
+    __DeclareClass(FrameShader);
 public:
     /// constructor
     FrameShader();

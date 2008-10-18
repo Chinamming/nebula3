@@ -31,10 +31,6 @@ public:
     virtual void Close();
     /// run the application, return when user wants to exit
     virtual void Run();
-    /// compile a single file
-    bool CompileFile(const IO::URI& fileUri);
-    /// recursively compile files in directory
-    bool CompileDirectory(const IO::URI& dirUri);
     /// get error string
     const Util::String& GetError() const;
     /// get error line number
@@ -45,6 +41,8 @@ private:
     void SetError(const Util::String& err);
     /// parse source file into C++ object hierarchy
     bool ParseFile(const IO::URI& uri);
+    /// compile a single file
+    bool CompileFile(const IO::URI& fileUri);
 
     Util::Array<IO::URI> fileUris;
     Util::String error;

@@ -8,7 +8,7 @@
 
 namespace Game
 {
-ImplementClass(Game::Property, 'GAPR' ,Messaging::Port);
+__ImplementClass(Game::Property, 'GAPR' ,Messaging::Port);
 
 //------------------------------------------------------------------------------
 /**

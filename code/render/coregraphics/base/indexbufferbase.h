@@ -18,7 +18,7 @@ namespace Base
 {
 class IndexBufferBase : public Base::ResourceBase
 {
-    DeclareClass(IndexBufferBase);
+    __DeclareClass(IndexBufferBase);
 public:
     /// constructor
     IndexBufferBase();
@@ -29,17 +29,16 @@ public:
     void* Map(MapType mapType);
     /// unmap the resource
     void Unmap();
+    /// set the index type (Index16 or Index32)
+    void SetIndexType(CoreGraphics::IndexType::Code type);
     /// get the index type (Index16 or Index32)
     CoreGraphics::IndexType::Code GetIndexType() const;
+    /// set number of indices
+    void SetNumIndices(SizeT num);
     /// get number of indices
     SizeT GetNumIndices() const;
 
 protected:
-    /// set the index type (Index16 or Index32)
-    void SetIndexType(CoreGraphics::IndexType::Code type);
-    /// set number of indices
-    void SetNumIndices(SizeT num);
-
     CoreGraphics::IndexType::Code indexType;
     SizeT numIndices;
 };

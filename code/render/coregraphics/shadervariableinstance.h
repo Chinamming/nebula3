@@ -21,7 +21,7 @@ namespace CoreGraphics
 {
 class ShaderVariableInstance : public Base::ShaderVariableInstanceBase
 {
-    DeclareClass(ShaderVariableInstance);
+    __DeclareClass(ShaderVariableInstance);
 };
 }
 #elif __XBOX360__
@@ -30,7 +30,7 @@ namespace CoreGraphics
 {
 class ShaderVariableInstance : public Base::ShaderVariableInstanceBase
 {
-    DeclareClass(ShaderVariableInstance);
+    __DeclareClass(ShaderVariableInstance);
 };
 }
 #elif __WII__
@@ -39,7 +39,7 @@ namespace CoreGraphics
 {
 class ShaderVariableInstance : public Base::ShaderVariableInstanceBase
 {
-    DeclareClass(ShaderVariableInstance);
+    __DeclareClass(ShaderVariableInstance);
 };
 }
 #else

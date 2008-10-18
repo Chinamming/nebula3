@@ -21,7 +21,7 @@ namespace Lighting
 {
 class SM30ShadowServer : public ShadowServerBase
 {
-    DeclareClass(SM30ShadowServer);
+    __DeclareClass(SM30ShadowServer);
 public:
     /// constructor
     SM30ShadowServer();

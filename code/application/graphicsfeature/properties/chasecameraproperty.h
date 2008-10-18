@@ -1,7 +1,9 @@
-#ifndef PROPERTIES_CHASECAMERAPROPERTY_H
-#define PROPERTIES_CHASECAMERAPROPERTY_H
+#ifndef GRAPHICSFEATURE_CHASECAMERAPROPERTY_H
+#define GRAPHICSFEATURE_CHASECAMERAPROPERTY_H
 //------------------------------------------------------------------------------
 /**
+    @class GraphicsFeature::ChaseCameraProperty
+
     A chase camera for 3rd person camera control.
     
     (C) 2005 Radon Labs GmbH
@@ -40,7 +42,7 @@ namespace GraphicsFeature
 
 class ChaseCameraProperty : public CameraProperty
 {
-	DeclareClass(ChaseCameraProperty);
+	__DeclareClass(ChaseCameraProperty);
 public:
     /// constructor
     ChaseCameraProperty();
@@ -80,8 +82,8 @@ protected:
     Math::PFeedbackLoop<Math::point> cameraPos;
     Math::PFeedbackLoop<Math::point> cameraLookat;
 };
-RegisterClass(ChaseCameraProperty);
+__RegisterClass(ChaseCameraProperty);
 
-}; // namespace Property
+}; // namespace GraphicsFeature
 //------------------------------------------------------------------------------
 #endif

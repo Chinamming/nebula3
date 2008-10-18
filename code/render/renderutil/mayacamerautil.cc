@@ -43,10 +43,7 @@ MayaCameraUtil::Setup(const point& defCoi, const point& defEyePos, const vector&
     this->defaultCenterOfInterest = defCoi;
     this->defaultEyePos = defEyePos;
     this->defaultUpVec = defUpVec;
-    vector viewVec = defEyePos - defCoi;
-    this->viewDistance = viewVec.length();
-    this->viewAngles.set(float4::normalize(viewVec));
-    this->Update();
+    this->Reset();
 }
 
 //------------------------------------------------------------------------------

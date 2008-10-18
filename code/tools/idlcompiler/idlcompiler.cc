@@ -35,8 +35,7 @@ IDLCompiler::Open()
         if (helpArg)
         {
             n_printf("Nebula3 IDL Compiler.\n"
-                     "Compiles Nebula3 IDL XML files into C++ source and header files\n\n"
-                     "-help     -- display this help\n");
+                     "Compiles Nebula3 IDL XML files into C++ source and header files\n");
             return false;
         }
 
@@ -85,30 +84,56 @@ IDLCompiler::Run()
     Compiles the provided IDL file into a set of C++ header and source files.
 */
 bool
-IDLCompiler::CompileFile(const IO::URI& uri)
+IDLCompiler::CompileFile(const URI& uri)
 {
     n_printf("Compiling '%s'\n", uri.AsString().AsCharPtr());
 
-    // first parse the file into a C++ tree
-    if (!this->ParseFile(uri))
-    {
-        n_printf("ERROR in file %s line %d: %s\n", uri.AsString().AsCharPtr(), this->errorLineNumber, this->error.AsCharPtr());
-        return false;
-    }
-    
-    // generate C++ output
+    // prepare a code generator object
     Ptr<IDLCodeGenerator> codeGenerator = IDLCodeGenerator::Create();
     codeGenerator->SetURI(uri);
-    codeGenerator->SetDocument(this->document);
-    if (!codeGenerator->GenerateIncludeFile())
+
+    // first do an existance time stamp check on the files
+    IoServer* ioServer = IoServer::Instance();
+    URI dstHeaderURI = codeGenerator->BuildHeaderUri();
+    URI dstSourceURI = codeGenerator->BuildSourceUri();
+    bool needsRebuild = false;
+    if (!(ioServer->FileExists(dstHeaderURI) && ioServer->FileExists(dstSourceURI)))
     {
-        n_printf("ERROR building header file for %s\n", uri.AsString().AsCharPtr());
-        return false;
+        needsRebuild = true;
     }
-    if (!codeGenerator->GenerateSourceFile())
+    else
     {
-        n_printf("ERROR building source file for %s\n", uri.AsString().AsCharPtr());
-        return false;
+        FileTime nidlFileTime = ioServer->GetFileWriteTime(uri);
+        FileTime dstHeaderFileTime = ioServer->GetFileWriteTime(dstHeaderURI);
+        FileTime dstSourceFileTime = ioServer->GetFileWriteTime(dstSourceURI);
+        if ((nidlFileTime > dstHeaderFileTime) || (nidlFileTime > dstSourceFileTime))
+        {
+            needsRebuild = true;
+        }
+    }
+
+    // only compile if actually necessary
+    if (needsRebuild)
+    {
+        // first parse the file into a C++ tree
+        if (!this->ParseFile(uri))
+        {
+            n_printf("ERROR in file %s line %d: %s\n", uri.AsString().AsCharPtr(), this->errorLineNumber, this->error.AsCharPtr());
+            return false;
+        }
+        
+        // generate C++ output
+        codeGenerator->SetDocument(this->document);
+        if (!codeGenerator->GenerateIncludeFile())
+        {
+            n_printf("ERROR building header file for %s\n", uri.AsString().AsCharPtr());
+            return false;
+        }
+        if (!codeGenerator->GenerateSourceFile())
+        {
+            n_printf("ERROR building source file for %s\n", uri.AsString().AsCharPtr());
+            return false;
+        }
     }
     return true;
 }
@@ -118,7 +143,7 @@ IDLCompiler::CompileFile(const IO::URI& uri)
     Parses the XML source file into a tree of C++ objects.
 */
 bool
-IDLCompiler::ParseFile(const IO::URI& uri)
+IDLCompiler::ParseFile(const URI& uri)
 {
     // no source file given?
     if (uri.IsEmpty())

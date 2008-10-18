@@ -9,7 +9,7 @@
 
 namespace Resources
 {
-ImplementClass(Resources::ResourceSaver, 'RSSR', Core::RefCounted);
+__ImplementClass(Resources::ResourceSaver, 'RSSR', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

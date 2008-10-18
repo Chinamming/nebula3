@@ -10,15 +10,15 @@
 
 namespace BaseGameFeature
 {
-ImplementClass(GlobalAttrsManager, 'MGAT', Game::Manager);
-ImplementSingleton(GlobalAttrsManager);
+__ImplementClass(GlobalAttrsManager, 'MGAT', Game::Manager);
+__ImplementSingleton(GlobalAttrsManager);
 
 //------------------------------------------------------------------------------
 /**
 */
 GlobalAttrsManager::GlobalAttrsManager()
 {
-    ConstructSingleton;
+    __ConstructSingleton;
 }
 
 //------------------------------------------------------------------------------
@@ -26,7 +26,7 @@ GlobalAttrsManager::GlobalAttrsManager()
 */
 GlobalAttrsManager::~GlobalAttrsManager()
 {
-    DestructSingleton;
+    __DestructSingleton;
 }
 
 //------------------------------------------------------------------------------

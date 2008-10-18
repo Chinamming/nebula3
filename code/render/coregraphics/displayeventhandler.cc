@@ -7,7 +7,7 @@
 
 namespace CoreGraphics
 {
-ImplementClass(CoreGraphics::DisplayEventHandler, 'DSEH', Core::RefCounted);
+__ImplementClass(CoreGraphics::DisplayEventHandler, 'DSEH', Core::RefCounted);
 
 //------------------------------------------------------------------------------
 /**

@@ -13,7 +13,7 @@
 
 namespace Models
 {
-ImplementClass(Models::StateNode, 'STND', Models::TransformNode);
+__ImplementClass(Models::StateNode, 'STND', Models::TransformNode);
 
 using namespace Attr;
 using namespace Util;

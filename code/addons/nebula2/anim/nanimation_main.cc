@@ -8,7 +8,7 @@
 
 namespace Nebula2
 {
-ImplementClass(Nebula2::nAnimation, 'NANI' ,Resources::Resource);
+__ImplementClass(Nebula2::nAnimation, 'NANI' ,Resources::Resource);
 //------------------------------------------------------------------------------
 /**
 */
@@ -54,6 +54,7 @@ nAnimation::SampleCurves(Timing::Time /*time*/, int /*groupIndex*/, int /*firstC
 void
 nAnimation::Group::BuildHotspots()
 {
+/*
     if (0)//this->metaData.HasData("Hotspot"))
     {
         // hotspot meta data format name1#time1>name2#time2
@@ -102,6 +103,7 @@ nAnimation::Group::BuildHotspots()
             }
         }
     }
+*/
 }
 
 //------------------------------------------------------------------------------
@@ -183,7 +185,6 @@ void
 nAnimation::Group::GetHotspotsByIndex(IndexT index, Util::Array<AnimHotspotInfo>& outResult) const
 {
     const Util::Array<Util::String>& hotspotNames = this->hotspotsByFrame.ValueAtIndex(index);
-    const Timing::Time& hotspotTime = this->hotspotsByFrame.KeyAtIndex(index) / this->keyTime;
 
     IndexT idxHotspot;
     for (idxHotspot = 0; idxHotspot < hotspotNames.Size(); idxHotspot++)

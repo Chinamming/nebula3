@@ -17,7 +17,7 @@ namespace Models
 {
 class ManagedModel : public Resources::ManagedResource
 {
-    DeclareClass(ManagedModel);
+    __DeclareClass(ManagedModel);
 public:
     /// get contained model resource
     const Ptr<Model>& GetModel() const;

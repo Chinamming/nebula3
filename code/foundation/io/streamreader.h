@@ -20,7 +20,7 @@ namespace IO
 {
 class StreamReader : public Core::RefCounted
 {
-    DeclareClass(StreamReader);
+    __DeclareClass(StreamReader);
 public:
     /// constructor
     StreamReader();
