@@ -1,0 +1,6 @@
+The RakNet library is not free for commercial use, you must purchase one of
+the commercial licenses at http://www.jenkinssoftware.com/
+
+RakNet is however free for non-commercial use, that use is covered by the
+Creative Commons License whose terms can be found at 
+http://creativecommons.org/licenses/by-nc/2.5/
