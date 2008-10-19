@@ -1,0 +1,71 @@
+#-------------------------------------------------------------------------------
+# Sqlite
+#-------------------------------------------------------------------------------
+INCLUDE_DIRECTORIES(
+    ${Nebula3_SOURCE_DIR}/foundation/
+    ${Nebula3_SOURCE_DIR}/extlibs/
+)
+SET(extlibs_sqlite_SRCS
+    alter.c
+    analyze.c
+    attach.c
+    auth.c
+    btree.c
+    btree.h
+    build.c
+    callback.c
+    complete.c
+    date.c
+    delete.c
+    expr.c
+    func.c
+    func.c
+    hash.c
+    hash.h
+    insert.c
+    keywordhash.h
+    legacy.c
+    loadext.c
+    main.c
+    opcodes.c
+    opcodes.h
+    os.c
+    os.h
+    os_common.h
+    os_os2.c
+    os_other.cc
+    os_unix.c
+    os_win.c
+    pager.c
+    pager.h
+    parse.c
+    parse.h
+    pragma.c
+    prepare.c
+    printf.c
+    random.c
+    select.c
+    sqlite3.h
+    sqlite3ext.h
+    sqliteInt.h
+    table.c
+    tokenize.c
+    trigger.c
+    update.c
+    utf.c
+    util.c
+    vacuum.c
+    vdbe.c
+    vdbe.h
+    vdbeapi.c
+    vdbeaux.c
+    vdbefifo.c
+    vdbeInt.h
+    vdbemem.c
+    vtab.c
+    where.c
+)
+SOURCE_GROUP(sqlite FILES ${extlibs_sqlite_SRCS})
+ADD_LIBRARY(sqlite STATIC ${extlibs_sqlite_SRCS})
+N_SET_COMPILER_DEFAULTS()
+ADD_DEPENDENCIES(sqlite foundation)

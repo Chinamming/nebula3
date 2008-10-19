@@ -1,0 +1,579 @@
+#-------------------------------------------------------------------------------
+# Foundation
+#-------------------------------------------------------------------------------
+INCLUDE_DIRECTORIES(${Nebula3_SOURCE_DIR}/foundation/
+                    ${Nebula3_SOURCE_DIR}/extlibs/)
+
+SET(foundation_app_src
+    app/application.cc
+    app/application.h
+    app/consoleapplication.cc
+    app/consoleapplication.h
+)
+SET(foundation_attr_src
+    attr/accessmode.h
+    attr/attribute.h
+    attr/attributecontainer.cc
+    attr/attributecontainer.h
+    attr/attributedefinition.h
+    attr/attributedefinitionbase.cc
+    attr/attributedefinitionbase.h
+    attr/attributetable.cc
+    attr/attributetable.h
+    attr/attrid.cc
+    attr/attrid.h
+    attr/blobattrid.h
+    attr/boolattrid.h
+    attr/float4attrid.h
+    attr/floatattrid.h
+    attr/guidattrid.h
+    attr/intattrid.h
+    attr/matrix44attrid.h
+    attr/stringattrid.h
+    attr/valuetype.h
+)
+SET(foundation_commands_src
+    commands/iolibrary.cc
+    commands/iolibrary.h
+    commands/stdlibrary.cc
+    commands/stdlibrary.h
+)
+SET(foundation_core_debug_src
+    core/debug/corepagehandler.cc
+    core/debug/corepagehandler.h
+)
+SET(foundation_core_src
+    core/config.h
+    core/coreserver.cc
+    core/coreserver.h
+    core/debug.cc
+    core/debug.h
+    core/factory.cc
+    core/factory.h
+    core/ptr.h
+    core/refcounted.cc
+    core/refcounted.h
+    core/refcountedlist.cc
+    core/refcountedlist.h
+    core/rtti.cc
+    core/rtti.h
+    core/rttimacros.h
+    core/singleton.h
+    core/sysfunc.h
+    core/types.h
+    core/weakptr.h
+)
+SET(foundation_debug_src
+    debug/debugcounter.cc
+    debug/debugcounter.h
+    debug/debughandler.cc
+    debug/debughandler.h
+    debug/debuginterface.cc
+    debug/debuginterface.h
+    debug/debugpagehandler.cc
+    debug/debugpagehandler.h
+    debug/debugserver.cc
+    debug/debugserver.h
+    debug/debugtimer.cc
+    debug/debugtimer.h
+    debug/minidump.h
+)
+SET(foundation_http_debug_src
+    http/debug/svgtestpagehandler.cc
+    http/debug/svgtestpagehandler.h
+)
+SET(foundation_http_html_src
+    http/html/htmlelement.cc
+    http/html/htmlelement.h
+    http/html/htmlpagewriter.cc
+    http/html/htmlpagewriter.h
+)
+SET(foundation_http_svg_src
+    http/svg/svglinechartwriter.cc
+    http/svg/svglinechartwriter.h
+    http/svg/svgpagewriter.cc
+    http/svg/svgpagewriter.h
+)
+SET(foundation_http_src
+    http/base64writer.cc
+    http/base64writer.h
+    http/defaulthttprequesthandler.cc
+    http/defaulthttprequesthandler.h
+    http/httpinterface.cc
+    http/httpinterface.h
+    http/httpmessagehandler.cc
+    http/httpmessagehandler.h
+    http/httpmethod.h
+    http/httpprotocol.cc
+    http/httpprotocol.h
+    http/httprequest.cc
+    http/httprequest.h
+    http/httprequesthandler.cc
+    http/httprequesthandler.h
+    http/httprequestreader.cc
+    http/httprequestreader.h
+    http/httpresponsewriter.cc
+    http/httpresponsewriter.h
+    http/httpserver.cc
+    http/httpserver.h
+    http/httpserverproxy.cc
+    http/httpserverproxy.h
+    http/httpstatus.cc
+    http/httpstatus.h
+)
+SET(foundation_interface_base_src
+    interface/base/iointerfacehandlerbase.cc
+    interface/base/iointerfacehandlerbase.h
+)
+SET(foundation_interface_src
+    interface/interfaceprotocol.cc
+    interface/interfaceprotocol.h
+    interface/iointerface.cc
+    interface/iointerface.h
+    interface/iointerfacehandler.cc
+    interface/iointerfacehandler.h
+)
+SET(foundation_io_debug_src
+    io/debug/iopagehandler.cc
+    io/debug/iopagehandler.h
+)
+SET(foundation_io_zipfs_src
+    io/zipfs/ziparchive.cc
+    io/zipfs/ziparchive.h
+    io/zipfs/zipdirentry.cc
+    io/zipfs/zipdirentry.h
+    io/zipfs/zipfileentry.cc
+    io/zipfs/zipfileentry.h
+    io/zipfs/zipfilesystem.cc
+    io/zipfs/zipfilesystem.h
+)
+SET(foundation_io_src
+    io/assign.h
+    io/binaryreader.cc
+    io/binaryreader.h
+    io/binarywriter.cc
+    io/binarywriter.h
+    io/console.cc
+    io/console.h
+    io/consolehandler.cc
+    io/consolehandler.h
+    io/excelxmlreader.cc
+    io/excelxmlreader.h
+    io/filestream.cc
+    io/filestream.h
+    io/filetime.h
+    io/fswrapper.h
+    io/ioserver.cc
+    io/ioserver.h
+    io/mediatype.h
+    io/memorystream.cc
+    io/memorystream.h
+    io/stream.cc
+    io/stream.h
+    io/streamreader.cc
+    io/streamreader.h
+    io/streamwriter.cc
+    io/streamwriter.h
+    io/textreader.cc
+    io/textreader.h
+    io/textwriter.cc
+    io/textwriter.h
+    io/uri.cc
+    io/uri.h
+    io/xmlreader.cc
+    io/xmlreader.h
+    io/xmlwriter.cc
+    io/xmlwriter.h
+    io/zipfilestream.cc
+    io/zipfilestream.h
+)
+SET(foundation_math_src
+    math/angularpfeedbackloop.h
+    math/bbox.cc
+    math/bbox.h
+    math/clipstatus.h
+    math/float2.h
+    math/float4.h
+    math/line.cc
+    math/line.h
+    math/matrix44.h
+    math/noise.h
+    math/pfeedbackloop.h
+    math/pidfeedbackloop.h
+    math/plane.h
+    math/point.h
+    math/polar.h
+    math/pquatfeedbackloop.h
+    math/quaternion.h
+    math/rectangle.h
+    math/scalar.h
+    math/sphere_.cc
+    math/sphere_.h
+    math/transform44.h
+    math/vector.h
+)
+SET(foundation_memory_debug_src
+    memory/debug/memorypagehandler.cc
+    memory/debug/memorypagehandler.h
+)
+SET(foundation_memory_src
+    memory/heap.h
+    memory/memory.h
+    memory/memorypool.cc
+    memory/memorypool.h
+    memory/memorypoolpage.cc
+    memory/memorypoolpage.h
+)
+SET(foundation_messaging_src
+    messaging/asyncport.cc
+    messaging/asyncport.h
+    messaging/dispatcher.cc
+    messaging/dispatcher.h
+    messaging/handler.cc
+    messaging/handler.h
+    messaging/id.h
+    messaging/message.cc
+    messaging/message.h
+    messaging/messagereader.cc
+    messaging/messagereader.h
+    messaging/messagewriter.cc
+    messaging/messagewriter.h
+    messaging/port.cc
+    messaging/port.h
+)
+SET(foundation_net_src
+    net/ipaddress.h
+    net/socket.cc
+    net/socket.h
+    net/tcpclient.cc
+    net/tcpclient.h
+    net/tcpclientconnection.cc
+    net/tcpclientconnection.h
+    net/tcpserver.cc
+    net/tcpserver.h
+)
+SET(foundation_remote_src
+    remote/defaultremoterequesthandler.cc
+    remote/defaultremoterequesthandler.h
+    remote/remotecontrol.cc
+    remote/remotecontrol.h
+    remote/remotecontrolproxy.cc
+    remote/remotecontrolproxy.h
+    remote/remoteinterface.cc
+    remote/remoteinterface.h
+    remote/remotemessagehandler.cc
+    remote/remotemessagehandler.h
+    remote/remoteprotocol.cc
+    remote/remoteprotocol.h
+    remote/remoterequest.cc
+    remote/remoterequest.h
+    remote/remoterequesthandler.cc
+    remote/remoterequesthandler.h
+    remote/remoterequestreader.cc
+    remote/remoterequestreader.h
+    remote/remoteresponsewriter.cc
+    remote/remoteresponsewriter.h
+    remote/remotestatus.cc
+    remote/remotestatus.h
+)
+SET(foundation_scripting_debug_src
+    scripting/debug/scriptingpagehandler.cc
+    scripting/debug/scriptingpagehandler.h
+)
+SET(foundation_scripting_lua_src
+    scripting/lua/luaserver.cc
+    scripting/lua/luaserver.h
+)
+SET(foundation_scripting_src
+    scripting/arg.h
+    scripting/argsblock.cc
+    scripting/argsblock.h
+    scripting/command.cc
+    scripting/command.h
+    scripting/scriptserver.cc
+    scripting/scriptserver.h
+)
+SET(foundation_system_base_src
+    system/base/systeminfobase.cc
+    system/base/systeminfobase.h
+)
+SET(foundation_system_src
+    system/appentry.h
+    system/byteorder.h
+    system/cpu.h
+    system/systeminfo.h
+)
+SET(foundation_threading_src
+    threading/barrier.h
+    threading/criticalsection.h
+    threading/event.h
+    threading/interlocked.h
+    threading/safepriorityqueue.h
+    threading/safequeue.h
+    threading/thread.cc
+    threading/thread.h
+    threading/threadid.h
+)
+SET(foundation_timing_base_src
+    timing/base/calendartimebase.cc
+    timing/base/calendartimebase.h
+)
+SET(foundation_timing_src
+    timing/calendartime.h
+    timing/time.h
+    timing/timer.h
+)
+SET(foundation_util_src
+    util/array.h
+    util/atom.h
+    util/blob.cc
+    util/blob.h
+    util/cmdlineargs.cc
+    util/cmdlineargs.h
+    util/crc.cc
+    util/crc.h
+    util/dictionary.h
+    util/fixedarray.h
+    util/fixedtable.h
+    util/fourcc.h
+    util/guid.h
+    util/hashtable.h
+    util/keyvaluepair.h
+    util/list.h
+    util/proxy.h
+    util/quadtree.h
+    util/queue.h
+    util/ringbuffer.h
+    util/runlengthcodec.cc
+    util/runlengthcodec.h
+    util/simpletree.h
+    util/stack.h
+    util/string.cc
+    util/string.h
+    util/stringatom.h
+    util/variant.h
+)
+SET(foundation_precompiled_src
+    stdneb.cc
+    stdneb.h
+)
+SET(Nebula3Foundation_SRCS
+    ${foundation_app_src}
+    ${foundation_attr_src}
+    ${foundation_commands_src}
+    ${foundation_core_debug_src}
+    ${foundation_core_src}
+    ${foundation_debug_src}
+    ${foundation_http_debug_src}       
+    ${foundation_http_html_src}
+    ${foundation_http_svg_src}
+    ${foundation_http_src}
+    ${foundation_interface_base_src}
+    ${foundation_interface_src}
+    ${foundation_io_debug_src}
+    ${foundation_io_zipfs_src}
+    ${foundation_io_src}
+    ${foundation_math_src}    
+    ${foundation_memory_debug_src}
+    ${foundation_memory_src}
+    ${foundation_messaging_src}
+    ${foundation_net_src}    
+    ${foundation_remote_src}
+    ${foundation_scripting_debug_src}
+    ${foundation_scripting_lua_src}
+    ${foundation_scripting_src}
+    ${foundation_system_base_src}
+    ${foundation_system_src}
+    ${foundation_threading_src}
+    ${foundation_timing_base_src}
+    ${foundation_timing_src}
+    ${foundation_util_src}
+    ${foundation_precompiled_src}
+)
+
+IF(WIN32)
+    SET(foundation_core_win32_src
+        core/win32/precompiled.h
+        core/win32/win32singleton.h
+        core/win32/win32sysfunc.cc
+        core/win32/win32sysfunc.h
+    )
+    SET(foundation_debug_win32_src
+        debug/win32/win32minidump.cc
+        debug/win32/win32minidump.h
+    )
+    SET(foundation_io_win32_src
+        io/win32/win32consolehandler.cc
+        io/win32/win32consolehandler.h
+    )
+    SET(foundation_io_win360_src
+        io/win360/win360filetime.h
+        io/win360/win360fswrapper.cc
+        io/win360/win360fswrapper.h
+    )
+    SET(foundation_math_d3dx9_src
+        math/d3dx9/d3dx9_float4.cc
+        math/d3dx9/d3dx9_float4.h
+        math/d3dx9/d3dx9_matrix44.cc
+        math/d3dx9/d3dx9_matrix44.h
+        math/d3dx9/d3dx9_plane.cc
+        math/d3dx9/d3dx9_plane.h
+        math/d3dx9/d3dx9_point.h
+        math/d3dx9/d3dx9_quaternion.h
+        math/d3dx9/d3dx9_scalar.h
+        math/d3dx9/d3dx9_vector.h
+    )
+    SET(foundation_memory_win32_src
+        memory/win32/win32memory.h
+    )
+    SET(foundation_memory_win360_src
+        memory/win360/win360heap.cc
+        memory/win360/win360heap.h
+        memory/win360/win360memory.cc
+        memory/win360/win360memory.h
+        memory/win360/win360memoryconfig.cc
+        memory/win360/win360memoryconfig.h
+    )
+    SET(foundation_net_win360_src
+        net/win360/win360ipaddress.cc
+        net/win360/win360ipaddress.h
+        net/win360/win360socket.cc
+        net/win360/win360socket.h
+    )
+    SET(foundation_system_win32_src
+        system/win32/win32cpu.h
+        system/win32/win32registry.cc
+        system/win32/win32registry.h
+        system/win32/win32systeminfo.cc
+        system/win32/win32systeminfo.h
+    )
+    SET(foundation_threading_win360_src
+        threading/win360/win360barrier.h
+        threading/win360/win360criticalsection.h
+        threading/win360/win360event.h
+        threading/win360/win360interlocked.h
+        threading/win360/win360thread.cc
+        threading/win360/win360thread.h
+        threading/win360/win360threadid.h
+    )
+    SET(foundation_timing_win360_src
+        timing/win360/win360calendartime.cc
+        timing/win360/win360calendartime.h
+        timing/win360/win360timer.cc
+        timing/win360/win360timer.h
+    )
+    SET(foundation_util_win32_src
+        util/win32/win32guid.cc
+        util/win32/win32guid.h
+    )
+    SET(Nebula3Foundation_SRCS
+        ${Nebula3Foundation_SRCS}
+        ${foundation_core_win32_src}
+        ${foundation_debug_win32_src}
+        ${foundation_io_win32_src}
+        ${foundation_io_win360_src}
+        ${foundation_math_d3dx9_src}
+        ${foundation_memory_win32_src}
+        ${foundation_memory_win360_src}
+        ${foundation_net_win360_src}
+        ${foundation_system_win32_src}
+        ${foundation_threading_win360_src}
+        ${foundation_timing_win360_src}
+        ${foundation_util_win32_src}
+    )
+ENDIF()
+
+IF(APPLE)
+    SET(Nebula3Foundation_SRCS
+        ${Nebula3Foundation_SRCS}
+        core/posix/posixsingleton.h
+        core/posix/posixsysfunc.cc
+        core/posix/posixsysfunc.h
+        core/posix/precompiled.h
+        io/posix/posixconsolehandler.cc
+        io/posix/posixconsolehandler.h
+        io/posix/posixfiletime.h
+        io/posix/posixfswrapper.cc
+        io/posix/posixfswrapper.h
+        math/sce/sce_float4.cc
+        math/sce/sce_float4.h
+        math/sce/sce_matrix44.cc
+        math/sce/sce_matrix44.h
+        math/sce/sce_plane.cc
+        math/sce/sce_plane.h
+        math/sce/sce_point.h
+        math/sce/sce_scalar.h
+        math/sce/sce_vector.h
+        memory/posix/posixheap.cc
+        memory/posix/posixheap.h
+        memory/posix/posixmemory.cc
+        memory/posix/posixmemory.h
+        net/posix/posixipaddress.cc
+        net/posix/posixipaddress.h
+        net/posix/posixsocket.cc
+        net/posix/posixsocket.h
+        system/darwin/darwinbyteorder.h
+        threading/darwin/darwininterlocked.h
+        threading/posix/posixbarrier.h
+        threading/posix/posixcriticalsection.h
+        threading/posix/posixevent.h
+        threading/posix/posixthread.cc
+        threading/posix/posixthread.h
+        timing/darwin/darwintimer.cc
+        timing/darwin/darwintimer.h
+        timing/posix/posixcalendartime.cc
+        timing/posix/posixcalendartime.h
+        util/posix/posixguid.cc
+        util/posix/posixguid.h
+    )
+ENDIF()
+
+SOURCE_GROUP(app FILES ${foundation_app_src})
+SOURCE_GROUP(attr FILES ${foundation_attr_src})
+SOURCE_GROUP(commands FILES ${foundation_commands_src})
+SOURCE_GROUP(core FILES ${foundation_core_src})
+SOURCE_GROUP(core\\debug FILES ${foundation_core_debug_src})
+SOURCE_GROUP(core\\win32 FILES ${foundation_core_win32_src})
+SOURCE_GROUP(debug FILES ${foundation_debug_src})
+SOURCE_GROUP(debug\\win32 FILES ${foundation_debug_win32_src})
+SOURCE_GROUP(http FILES ${foundation_http_src})
+SOURCE_GROUP(http\\debug FILES ${foundation_http_debug_src})
+SOURCE_GROUP(http\\html FILES ${foundation_http_html_src})
+SOURCE_GROUP(http\\svg FILES ${foundation_http_svg_src})
+SOURCE_GROUP(interface FILES ${foundation_interface_src})
+SOURCE_GROUP(interface\\base FILES ${foundation_interface_base_src})
+SOURCE_GROUP(io FILES ${foundation_io_src})
+SOURCE_GROUP(io\\debug FILES ${foundation_io_debug_src})
+SOURCE_GROUP(io\\zipfs FILES ${foundation_io_zipfs_src})
+SOURCE_GROUP(io\\win32 FILES ${foundation_io_win32_src})
+SOURCE_GROUP(io\\win360 FILES ${foundation_io_win360_src})
+SOURCE_GROUP(math FILES ${foundation_math_src})
+SOURCE_GROUP(math\\d3dx9 FILES ${foundation_math_d3dx9_src})
+SOURCE_GROUP(memory FILES ${foundation_memory_src})
+SOURCE_GROUP(memory\\debug FILES ${foundation_memory_debug_src})
+SOURCE_GROUP(memory\\win32 FILES ${foundation_memory_win32_src})
+SOURCE_GROUP(memory\\win360 FILES ${foundation_memory_win360_src})
+SOURCE_GROUP(messaging FILES ${foundation_messaging_src})
+SOURCE_GROUP(net FILES ${foundation_net_src})
+SOURCE_GROUP(net\\win360 FILES ${foundation_net_win360_src})
+SOURCE_GROUP(remote FILES ${foundation_remote_src})
+SOURCE_GROUP(scripting FILES ${foundation_scripting_src})
+SOURCE_GROUP(scripting\\debug FILES ${foundation_scripting_debug_src})
+SOURCE_GROUP(scripting\\lua FILES ${foundation_scripting_lua_src})
+SOURCE_GROUP(system FILES ${foundation_system_src})
+SOURCE_GROUP(system\\base FILES ${foundation_system_base_src})
+SOURCE_GROUP(system\\win32 FILES ${foundation_system_win32_src})
+SOURCE_GROUP(threading FILES ${foundation_threading_src})
+SOURCE_GROUP(threading\\win360 FILES ${foundation_threading_win360_src})
+SOURCE_GROUP(timing FILES ${foundation_timing_src})
+SOURCE_GROUP(timing\\base FILES ${foundation_timing_base_src})
+SOURCE_GROUP(timing\\win360 FILES ${foundation_timing_win360_src})
+SOURCE_GROUP(util FILES ${foundation_util_src})
+SOURCE_GROUP(util\\win32 FILES ${foundation_util_win32_src})
+SOURCE_GROUP(precompiled FILES ${foundation_precompiled_src})
+
+ADD_LIBRARY(foundation STATIC ${Nebula3Foundation_SRCS})
+N_SET_COMPILER_DEFAULTS()
+IF(N_USE_PRECOMPILED_HEADERS)
+    N_SET_PCH(foundation stdneb.h stdneb.cc)
+ENDIF()

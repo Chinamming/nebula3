@@ -1,0 +1,120 @@
+#-------------------------------------------------------------------------------
+# OPCODE
+#-------------------------------------------------------------------------------
+SET(extlibs_opcode_ice_src
+    Ice/IceAABB.cc
+    Ice/IceAABB.h
+    Ice/IceAxes.h
+    Ice/IceBoundingSphere.h
+    Ice/IceContainer.cc
+    Ice/IceContainer.h
+    Ice/IceFPU.h
+    Ice/IceHPoint.cc
+    Ice/IceHPoint.h
+    Ice/IceIndexedTriangle.cc
+    Ice/IceIndexedTriangle.h
+    Ice/IceLSS.h
+    Ice/IceMatrix3x3.cc
+    Ice/IceMatrix3x3.h
+    Ice/IceMatrix4x4.cc
+    Ice/IceMatrix4x4.h
+    Ice/IceMemoryMacros.h
+    Ice/IceOBB.cc
+    Ice/IceOBB.h
+    Ice/IcePairs.h
+    Ice/IcePlane.cc
+    Ice/IcePlane.h
+    Ice/IcePoint.cc
+    Ice/IcePoint.h
+    Ice/IcePreprocessor.h
+    Ice/IceRandom.cc
+    Ice/IceRandom.h
+    Ice/IceRay.cc
+    Ice/IceRay.h
+    Ice/IceRevisitedRadix.cc
+    Ice/IceRevisitedRadix.h
+    Ice/IceSegment.cc
+    Ice/IceSegment.h
+    Ice/IceTriangle.cc
+    Ice/IceTriangle.h
+    Ice/IceTriList.h
+    Ice/IceTypes.h
+    Ice/IceUtils.cc
+    Ice/IceUtils.h
+)
+SET(extlibs_opcode_src
+    OPC_AABBCollider.cc
+    OPC_AABBCollider.h
+    OPC_AABBTree.cc
+    OPC_AABBTree.h
+    OPC_BaseModel.cc
+    OPC_BaseModel.h
+    OPC_BoxBoxOverlap.h
+    OPC_BoxPruning.cc
+    OPC_BoxPruning.h
+    OPC_Collider.cc
+    OPC_Collider.h
+    OPC_Common.cc
+    OPC_Common.h
+    OPC_HybridModel.cc
+    OPC_HybridModel.h
+    OPC_IceHook.h
+    OPC_LSSAABBOverlap.h
+    OPC_LSSCollider.cc
+    OPC_LSSCollider.h
+    OPC_LSSTriOverlap.h
+    OPC_MeshInterface.cc
+    OPC_MeshInterface.h
+    OPC_Model.cc
+    OPC_Model.h
+    OPC_OBBCollider.cc
+    OPC_OBBCollider.h
+    OPC_OptimizedTree.cc
+    OPC_OptimizedTree.h
+    OPC_Picking.cc
+    OPC_Picking.h
+    OPC_PlanesAABBOverlap.h
+    OPC_PlanesCollider.cc
+    OPC_PlanesCollider.h
+    OPC_PlanesTriOverlap.h
+    OPC_RayAABBOverlap.h
+    OPC_RayCollider.cc
+    OPC_RayCollider.h
+    OPC_RayTriOverlap.h
+    OPC_Settings.h
+    OPC_SphereAABBOverlap.h
+    OPC_SphereCollider.cc
+    OPC_SphereCollider.h
+    OPC_SphereTriOverlap.h
+    OPC_SweepAndPrune.cc
+    OPC_SweepAndPrune.h
+    OPC_TreeBuilders.cc
+    OPC_TreeBuilders.h
+    OPC_TreeCollider.cc
+    OPC_TreeCollider.h
+    OPC_TriBoxOverlap.h
+    OPC_TriTriOverlap.h
+    OPC_VolumeCollider.cc
+    OPC_VolumeCollider.h
+    Opcode.cc
+    Opcode.h
+)
+SET(extlibs_opcode_precompiled_src
+    StdAfx.cc
+    StdAfx.h
+)
+SET(extlibs_opcode_SRCS
+    ${extlibs_opcode_ice_src}
+    ${extlibs_opcode_src}
+    ${extlibs_opcode_precompiled_src}
+)
+SOURCE_GROUP(OPCODE FILES ${extlibs_opcode_src})
+SOURCE_GROUP(OPCODE\\Ice FILES ${extlibs_opcode_ice_src})
+SOURCE_GROUP(OPCODE\\precompiled FILES ${extlibs_opcode_precompiled_src})
+
+ADD_LIBRARY(opcode STATIC ${extlibs_opcode_SRCS})
+N_SET_COMPILER_DEFAULTS()
+IF(N_USE_PRECOMPILED_HEADERS)
+    N_SET_PCH(opcode StdAfx.h StdAfx.cc)
+ENDIF()
+ADD_DEPENDENCIES(opcode foundation)

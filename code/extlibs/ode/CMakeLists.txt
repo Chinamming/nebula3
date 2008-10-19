@@ -1,0 +1,114 @@
+#-------------------------------------------------------------------------------
+# extlibs/ode
+#-------------------------------------------------------------------------------
+INCLUDE_DIRECTORIES(
+    ${Nebula3_SOURCE_DIR}/extlibs/ode/
+    ${Nebula3_SOURCE_DIR}/extlibs/OPCODE/
+    ${Nebula3_SOURCE_DIR}/extlibs/GIMPACT/
+)
+SET(extlibs_ode_ode_src
+    ode/collision.h
+    ode/collision_space.h
+    ode/collision_trimesh.h
+    ode/common.h
+    ode/compatibility.h
+    ode/config.h
+    ode/contact.h
+    ode/error.h
+    ode/export-dif.h
+    ode/mass.h
+    ode/matrix.h
+    ode/memory.h
+    ode/misc.h
+    ode/objects.h
+    ode/ode.h
+    ode/odecpp.h
+    ode/odecpp_collision.h
+    ode/odemath.h
+    ode/rotation.h
+    ode/timer.h
+)
+SET(extlibs_ode_src_src
+    src/array.cc
+    src/array.h
+    src/box.cc
+    src/capsule.cc
+    src/collision_cylinder_box.cc
+    src/collision_cylinder_plane.cc
+    src/collision_cylinder_sphere.cc
+    src/collision_cylinder_trimesh.cc
+    src/collision_kernel.cc
+    src/collision_kernel.h
+    src/collision_quadtreespace.cc
+    src/collision_space.cc
+    src/collision_space_internal.h
+    src/collision_std.h
+    src/collision_transform.cc
+    src/collision_transform.h
+    src/collision_trimesh_box.cc
+    src/collision_trimesh_ccylinder.cc
+    src/collision_trimesh_distance.cc
+    src/collision_trimesh_gimpact.cc
+    src/collision_trimesh_internal.h
+    src/collision_trimesh_opcode.cc
+    src/collision_trimesh_plane.cc
+    src/collision_trimesh_ray.cc
+    src/collision_trimesh_sphere.cc
+    src/collision_trimesh_trimesh.cc
+    src/collision_trimesh_trimesh_new.cc
+    src/collision_util.cc
+    src/collision_util.h
+    src/convex.cc
+    src/cylinder.cc
+    src/error.cc
+    src/export-dif.cc
+    src/fastdot.c
+    src/fastldlt.c
+    src/fastlsolve.c
+    src/fastltsolve.c
+    src/heightfield.cc
+    src/heightfield.h
+    src/joint.cc
+    src/joint.h
+    src/lcp.cc
+    src/lcp.h
+    src/mass.cc
+    src/mat.cc
+    src/mat.h
+    src/matrix.cc
+    src/memory.cc
+    src/misc.cc
+    src/objects.h
+    src/obstack.cc
+    src/obstack.h
+    src/ode.cc
+    src/odemath.cc
+    src/plane.cc
+    src/quickstep.cc
+    src/quickstep.h
+    src/ray.cc
+    src/rotation.cc
+    src/sphere.cc
+    src/stack.h
+    src/step.cc
+    src/step.h
+    src/stepfast.cc
+    src/testing.cc
+    src/testing.h
+    src/timer.cc
+    src/util.cc
+    src/util.h
+)
+SET(extlibs_ode_SRCS
+    ${extlibs_ode_ode_src}
+    ${extlibs_ode_src_src}
+)
+SOURCE_GROUP(ode\\ode FILES ${extlibs_ode_ode_src})
+SOURCE_GROUP(ode\\src FILES ${extlibs_ode_src_src})
+
+ADD_LIBRARY(ode STATIC ${extlibs_ode_SRCS})
+N_SET_COMPILER_DEFAULTS()
+IF(MSVC)
+    ADD_DEFINITIONS(/D_CRT_SECURE_NO_WARNINGS)
+ENDIF()
+ADD_DEPENDENCIES(ode foundation)
