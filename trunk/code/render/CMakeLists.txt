@@ -1,0 +1,662 @@
+#-------------------------------------------------------------------------------
+# render
+#-------------------------------------------------------------------------------
+INCLUDE_DIRECTORIES(
+    ${Nebula3_SOURCE_DIR}/
+    ${Nebula3_SOURCE_DIR}/foundation/
+    ${Nebula3_SOURCE_DIR}/extlibs/
+    ${Nebula3_SOURCE_DIR}/addons/
+    ${Nebula3_SOURCE_DIR}/render/
+)
+SET(render_animation_src
+    animation/animjob.cc
+    animation/animjob.h
+    animation/animmapper.h
+    animation/animsequencer.cc
+    animation/animsequencer.h
+    animation/playclipjob.cc
+    animation/playclipjob.h
+)
+SET(render_apprender_src
+    apprender/platformconfig.h
+    apprender/renderapplication.cc
+    apprender/renderapplication.h
+    apprender/viewerapplication.cc
+    apprender/viewerapplication.h
+)
+SET(render_audio_src
+    audio/audioemitter.cc
+    audio/audioemitter.h
+    audio/audiohandler.cc
+    audio/audiohandler.h
+    audio/audiointerface.cc
+    audio/audiointerface.h
+    audio/audiolistener.cc
+    audio/audiolistener.h
+    audio/audioplayer.cc
+    audio/audioplayer.h
+    audio/audioprotocol.cc
+    audio/audioprotocol.h
+    audio/audioserver.cc
+    audio/audioserver.h
+    audio/cuehandle.h
+    audio/wavehandle.h
+)
+SET(render_coreanimation_src
+    coreanimation/animclip.cc
+    coreanimation/animclip.h
+    coreanimation/animcurve.h
+    coreanimation/animevent.h
+    coreanimation/animkeybuffer.cc
+    coreanimation/animkeybuffer.h
+    coreanimation/animmixer.cc
+    coreanimation/animmixer.h
+    coreanimation/animresource.cc
+    coreanimation/animresource.h
+    coreanimation/animsamplebuffer.cc
+    coreanimation/animsamplebuffer.h
+    coreanimation/animsampler.cc
+    coreanimation/animsampler.h
+    coreanimation/curvetype.cc
+    coreanimation/curvetype.h
+    coreanimation/infinitytype.cc
+    coreanimation/infinitytype.h
+    coreanimation/managedanimresource.cc
+    coreanimation/managedanimresource.h
+    coreanimation/sampletype.cc
+    coreanimation/sampletype.h
+    coreanimation/streamanimationloader.cc
+    coreanimation/streamanimationloader.h
+)
+SET(render_coreaudio_src
+    coreaudio/audioadapterinfo.cc
+    coreaudio/audioadapterinfo.h
+    coreaudio/audiodevice.cc
+    coreaudio/audiodevice.h
+    coreaudio/config.h
+    coreaudio/cue.cc
+    coreaudio/cue.h
+    coreaudio/cueid.h
+    coreaudio/cueinfo.h
+    coreaudio/soundbank.cc
+    coreaudio/soundbank.h
+    coreaudio/soundstate.h
+    coreaudio/wave.cc
+    coreaudio/wave.h
+    coreaudio/waveid.h
+    coreaudio/waveinfo.h
+)
+SET(render_coreaudio_base_src
+    coreaudio/base/audiodevicebase.cc
+    coreaudio/base/audiodevicebase.h
+    coreaudio/base/cuebase.cc
+    coreaudio/base/cuebase.h
+    coreaudio/base/soundbankbase.cc
+    coreaudio/base/soundbankbase.h
+    coreaudio/base/wavebase.cc
+    coreaudio/base/wavebase.h
+)
+SET(render_coreaudio_debug_src
+    coreaudio/debug/coreaudiopagehandler.cc
+    coreaudio/debug/coreaudiopagehandler.h
+)
+SET(render_coreaudio_win360_src
+    coreaudio/win360/xactaudiodevice.cc
+    coreaudio/win360/xactaudiodevice.h
+    coreaudio/win360/xactcue.cc
+    coreaudio/win360/xactcue.h
+    coreaudio/win360/xactsoundbank.cc
+    coreaudio/win360/xactsoundbank.h
+    coreaudio/win360/xactwave.cc
+    coreaudio/win360/xactwave.h
+)
+SET(render_coregraphics_src
+    coregraphics/adapter.cc
+    coregraphics/adapter.h
+    coregraphics/adapterinfo.h
+    coregraphics/antialiasquality.cc
+    coregraphics/antialiasquality.h
+    coregraphics/batchtype.h
+    coregraphics/config.h
+    coregraphics/displaydevice.cc
+    coregraphics/displaydevice.h
+    coregraphics/displayevent.h
+    coregraphics/displayeventhandler.cc
+    coregraphics/displayeventhandler.h
+    coregraphics/displaymode.h
+    coregraphics/imagefileformat.cc
+    coregraphics/imagefileformat.h
+    coregraphics/indexbuffer.cc
+    coregraphics/indexbuffer.h
+    coregraphics/indextype.h
+    coregraphics/memoryindexbufferloader.cc
+    coregraphics/memoryindexbufferloader.h
+    coregraphics/memoryvertexbufferloader.cc
+    coregraphics/memoryvertexbufferloader.h
+    coregraphics/mesh.cc
+    coregraphics/mesh.h
+    coregraphics/pixelformat.cc
+    coregraphics/pixelformat.h
+    coregraphics/primitivegroup.h
+    coregraphics/primitivetopology.cc
+    coregraphics/primitivetopology.h
+    coregraphics/renderdevice.cc
+    coregraphics/renderdevice.h
+    coregraphics/renderevent.h
+    coregraphics/rendereventhandler.cc
+    coregraphics/rendereventhandler.h
+    coregraphics/rendertarget.cc
+    coregraphics/rendertarget.h
+    coregraphics/shader.cc
+    coregraphics/shader.h
+    coregraphics/shaderfeature.cc
+    coregraphics/shaderfeature.h
+    coregraphics/shaderinstance.cc
+    coregraphics/shaderinstance.h
+    coregraphics/shaderserver.cc
+    coregraphics/shaderserver.h
+    coregraphics/shadervariable.cc
+    coregraphics/shadervariable.h
+    coregraphics/shadervariableinstance.cc
+    coregraphics/shadervariableinstance.h
+    coregraphics/shadervariation.cc
+    coregraphics/shadervariation.h
+    coregraphics/shape.cc
+    coregraphics/shape.h
+    coregraphics/shaperenderer.cc
+    coregraphics/shaperenderer.h
+    coregraphics/streammeshloader.cc
+    coregraphics/streammeshloader.h
+    coregraphics/streamshaderloader.cc
+    coregraphics/streamshaderloader.h
+    coregraphics/streamtextureloader.cc
+    coregraphics/streamtextureloader.h
+    coregraphics/streamtexturesaver.cc
+    coregraphics/streamtexturesaver.h
+    coregraphics/textelement.cc
+    coregraphics/textelement.h
+    coregraphics/texture.cc
+    coregraphics/texture.h
+    coregraphics/threadsafedisplayeventhandler.cc
+    coregraphics/threadsafedisplayeventhandler.h
+    coregraphics/threadsaferendereventhandler.cc
+    coregraphics/threadsaferendereventhandler.h
+    coregraphics/transformdevice.cc
+    coregraphics/transformdevice.h
+    coregraphics/vertexbuffer.cc
+    coregraphics/vertexbuffer.h
+    coregraphics/vertexcomponent.h
+    coregraphics/vertexlayout.cc
+    coregraphics/vertexlayout.h
+    coregraphics/vertexlayoutserver.cc
+    coregraphics/vertexlayoutserver.h
+)
+SET(render_coregraphics_base_src
+    coregraphics/base/displaydevicebase.cc
+    coregraphics/base/displaydevicebase.h
+    coregraphics/base/indexbufferbase.cc
+    coregraphics/base/indexbufferbase.h
+    coregraphics/base/memoryindexbufferloaderbase.cc
+    coregraphics/base/memoryindexbufferloaderbase.h
+    coregraphics/base/memoryvertexbufferloaderbase.cc
+    coregraphics/base/memoryvertexbufferloaderbase.h
+    coregraphics/base/meshbase.cc
+    coregraphics/base/meshbase.h
+    coregraphics/base/renderdevicebase.cc
+    coregraphics/base/renderdevicebase.h
+    coregraphics/base/rendertargetbase.cc
+    coregraphics/base/rendertargetbase.h
+    coregraphics/base/resourcebase.cc
+    coregraphics/base/resourcebase.h
+    coregraphics/base/shaderbase.cc
+    coregraphics/base/shaderbase.h
+    coregraphics/base/shaderinstancebase.cc
+    coregraphics/base/shaderinstancebase.h
+    coregraphics/base/shaderserverbase.cc
+    coregraphics/base/shaderserverbase.h
+    coregraphics/base/shadervariablebase.cc
+    coregraphics/base/shadervariablebase.h
+    coregraphics/base/shadervariableinstancebase.cc
+    coregraphics/base/shadervariableinstancebase.h
+    coregraphics/base/shadervariationbase.cc
+    coregraphics/base/shadervariationbase.h
+    coregraphics/base/shaperendererbase.cc
+    coregraphics/base/shaperendererbase.h
+    coregraphics/base/streamtexturesaverbase.cc
+    coregraphics/base/streamtexturesaverbase.h
+    coregraphics/base/textrendererbase.cc
+    coregraphics/base/textrendererbase.h
+    coregraphics/base/texturebase.cc
+    coregraphics/base/texturebase.h
+    coregraphics/base/transformdevicebase.cc
+    coregraphics/base/transformdevicebase.h
+    coregraphics/base/vertexbufferbase.cc
+    coregraphics/base/vertexbufferbase.h
+    coregraphics/base/vertexlayoutbase.cc
+    coregraphics/base/vertexlayoutbase.h
+    coregraphics/base/vertexlayoutserverbase.cc
+    coregraphics/base/vertexlayoutserverbase.h
+)
+SET(render_coregraphics_d3d9_src
+    coregraphics/d3d9/d3d9displaydevice.cc
+    coregraphics/d3d9/d3d9displaydevice.h
+    coregraphics/d3d9/d3d9renderdevice.cc
+    coregraphics/d3d9/d3d9renderdevice.h
+    coregraphics/d3d9/d3d9rendertarget.cc
+    coregraphics/d3d9/d3d9rendertarget.h
+    coregraphics/d3d9/d3d9shader.cc
+    coregraphics/d3d9/d3d9shader.h
+    coregraphics/d3d9/d3d9shaderinstance.cc
+    coregraphics/d3d9/d3d9shaderinstance.h
+    coregraphics/d3d9/d3d9shaderserver.cc
+    coregraphics/d3d9/d3d9shaderserver.h
+    coregraphics/d3d9/d3d9shadervariable.cc
+    coregraphics/d3d9/d3d9shadervariable.h
+    coregraphics/d3d9/d3d9shadervariation.cc
+    coregraphics/d3d9/d3d9shadervariation.h
+    coregraphics/d3d9/d3d9streamshaderloader.cc
+    coregraphics/d3d9/d3d9streamshaderloader.h
+    coregraphics/d3d9/d3d9textrenderer.cc
+    coregraphics/d3d9/d3d9textrenderer.h
+)
+SET(render_coregraphics_debug_src
+    coregraphics/debug/displaypagehandler.cc
+    coregraphics/debug/displaypagehandler.h
+    coregraphics/debug/meshpagehandler.cc
+    coregraphics/debug/meshpagehandler.h
+    coregraphics/debug/shaderpagehandler.cc
+    coregraphics/debug/shaderpagehandler.h
+    coregraphics/debug/texturepagehandler.cc
+    coregraphics/debug/texturepagehandler.h
+)
+SET(render_coregraphics_legacy_src
+    coregraphics/legacy/nvx2streamreader.cc
+    coregraphics/legacy/nvx2streamreader.h
+)
+SET(render_coregraphics_win32_src
+    coregraphics/win32/win32displaydevice.cc
+    coregraphics/win32/win32displaydevice.h
+)
+SET(render_coregraphics_win360_src
+    coregraphics/win360/d3d9indexbuffer.cc
+    coregraphics/win360/d3d9indexbuffer.h
+    coregraphics/win360/d3d9memoryindexbufferloader.cc
+    coregraphics/win360/d3d9memoryindexbufferloader.h
+    coregraphics/win360/d3d9memoryvertexbufferloader.cc
+    coregraphics/win360/d3d9memoryvertexbufferloader.h
+    coregraphics/win360/d3d9shaperenderer.cc
+    coregraphics/win360/d3d9shaperenderer.h
+    coregraphics/win360/d3d9streammeshloader.cc
+    coregraphics/win360/d3d9streammeshloader.h
+    coregraphics/win360/d3d9streamtextureloader.cc
+    coregraphics/win360/d3d9streamtextureloader.h
+    coregraphics/win360/d3d9streamtexturesaver.cc
+    coregraphics/win360/d3d9streamtexturesaver.h
+    coregraphics/win360/d3d9texture.cc
+    coregraphics/win360/d3d9texture.h
+    coregraphics/win360/d3d9transformdevice.cc
+    coregraphics/win360/d3d9transformdevice.h
+    coregraphics/win360/d3d9types.h
+    coregraphics/win360/d3d9vertexbuffer.cc
+    coregraphics/win360/d3d9vertexbuffer.h
+    coregraphics/win360/d3d9vertexlayout.cc
+    coregraphics/win360/d3d9vertexlayout.h
+)
+SET(render_debugrender_src
+    debugrender/debuggraphicshandler.cc
+    debugrender/debuggraphicshandler.h
+    debugrender/debugrender.h
+    debugrender/debugrenderprotocol.cc
+    debugrender/debugrenderprotocol.h
+    debugrender/debugshaperenderer.cc
+    debugrender/debugshaperenderer.h
+    debugrender/debugtextrenderer.cc
+    debugrender/debugtextrenderer.h
+    debugrender/renderconsolehandler.cc
+    debugrender/renderconsolehandler.h
+)
+SET(render_frame_src
+    frame/framebatch.cc
+    frame/framebatch.h
+    frame/framepass.cc
+    frame/framepass.h
+    frame/frameposteffect.cc
+    frame/frameposteffect.h
+    frame/frameserver.cc
+    frame/frameserver.h
+    frame/frameshader.cc
+    frame/frameshader.h
+    frame/frameshaderloader.cc
+    frame/frameshaderloader.h
+    frame/lightingmode.cc
+    frame/lightingmode.h
+    frame/sortingmode.cc
+    frame/sortingmode.h
+)
+SET(render_graphics_src
+    graphics/abstractlightentity.cc
+    graphics/abstractlightentity.h
+    graphics/cameraentity.cc
+    graphics/cameraentity.h
+    graphics/display.cc
+    graphics/display.h
+    graphics/globallightentity.cc
+    graphics/globallightentity.h
+    graphics/graphicsentity.cc
+    graphics/graphicsentity.h
+    graphics/graphicsentitytype.h
+    graphics/graphicshandler.cc
+    graphics/graphicshandler.h
+    graphics/graphicsinterface.cc
+    graphics/graphicsinterface.h
+    graphics/graphicsprotocol.cc
+    graphics/graphicsprotocol.h
+    graphics/graphicsserver.cc
+    graphics/graphicsserver.h
+    graphics/handle.h
+    graphics/modelentity.cc
+    graphics/modelentity.h
+    graphics/spotlightentity.cc
+    graphics/spotlightentity.h
+    graphics/stage.cc
+    graphics/stage.h
+    graphics/stagebuilders.h
+    graphics/view.cc
+    graphics/view.h
+)
+SET(render_input_src
+    input/char.h
+    input/gamepad.cc
+    input/gamepad.h
+    input/inputevent.h
+    input/inputhandler.cc
+    input/inputhandler.h
+    input/inputpriority.h
+    input/inputserver.cc
+    input/inputserver.h
+    input/key.cc
+    input/key.h
+    input/keyboard.cc
+    input/keyboard.h
+    input/mouse.cc
+    input/mouse.h
+    input/mousebutton.cc
+    input/mousebutton.h
+)
+SET(render_input_base_src
+    input/base/gamepadbase.cc
+    input/base/gamepadbase.h
+    input/base/inputserverbase.cc
+    input/base/inputserverbase.h
+    input/base/keyboardbase.cc
+    input/base/keyboardbase.h
+    input/base/mousebase.cc
+    input/base/mousebase.h
+)
+SET(render_input_win32_src
+    input/win32/win32inputdisplayeventhandler.cc
+    input/win32/win32inputdisplayeventhandler.h
+    input/win32/win32inputserver.cc
+    input/win32/win32inputserver.h
+    input/win32/win32mouse.cc
+    input/win32/win32mouse.h
+)
+SET(render_input_xinput_src
+    input/xinput/xinputgamepad.cc
+    input/xinput/xinputgamepad.h
+)
+SET(render_internalgraphics_src
+    internalgraphics/cell.cc
+    internalgraphics/cell.h
+    internalgraphics/internalactorentity.cc
+    internalgraphics/internalactorentity.h
+    internalgraphics/internalcameraentity.cc
+    internalgraphics/internalcameraentity.h
+    internalgraphics/internalgraphicsentity.cc
+    internalgraphics/internalgraphicsentity.h
+    internalgraphics/internalgraphicsentitytype.h
+    internalgraphics/internalgraphicsserver.cc
+    internalgraphics/internalgraphicsserver.h
+    internalgraphics/internalmodelentity.cc
+    internalgraphics/internalmodelentity.h
+    internalgraphics/internalstage.cc
+    internalgraphics/internalstage.h
+    internalgraphics/internalview.cc
+    internalgraphics/internalview.h
+    internalgraphics/quadtreestagebuilder.cc
+    internalgraphics/quadtreestagebuilder.h
+    internalgraphics/simplestagebuilder.cc
+    internalgraphics/simplestagebuilder.h
+    internalgraphics/stagebuilder.cc
+    internalgraphics/stagebuilder.h
+)
+SET(render_lighting_src
+    lighting/internalabstractlightentity.cc
+    lighting/internalabstractlightentity.h
+    lighting/internalgloballightentity.cc
+    lighting/internalgloballightentity.h
+    lighting/internalspotlightentity.cc
+    lighting/internalspotlightentity.h
+    lighting/lightserver.cc
+    lighting/lightserver.h
+    lighting/lighttype.h
+    lighting/shadowserver.cc
+    lighting/shadowserver.h
+)
+SET(render_lighting_base_src
+    lighting/base/lightserverbase.cc
+    lighting/base/lightserverbase.h
+    lighting/base/shadowserverbase.cc
+    lighting/base/shadowserverbase.h
+)
+SET(render_lighting_sm30_src
+    lighting/sm30/pssmutil.cc
+    lighting/sm30/pssmutil.h
+    lighting/sm30/sm30lightserver.cc
+    lighting/sm30/sm30lightserver.h
+    lighting/sm30/sm30shadowserver.cc
+    lighting/sm30/sm30shadowserver.h
+)
+SET(render_models_src
+    models/attributes.cc
+    models/attributes.h
+    models/managedmodel.cc
+    models/managedmodel.h
+    models/model.cc
+    models/model.h
+    models/modelinstance.cc
+    models/modelinstance.h
+    models/modelnode.cc
+    models/modelnode.h
+    models/modelnodeinstance.cc
+    models/modelnodeinstance.h
+    models/modelnodetype.cc
+    models/modelnodetype.h
+    models/modelserver.cc
+    models/modelserver.h
+    models/visresolvecontainer.h
+    models/visresolver.cc
+    models/visresolver.h
+)
+SET(render_models_load_src
+    models/load/binarymodelreader.cc
+    models/load/binarymodelreader.h
+    models/load/modelreader.cc
+    models/load/modelreader.h
+    models/load/n2modelreader.cc
+    models/load/n2modelreader.h
+    models/load/streammodelloader.cc
+    models/load/streammodelloader.h
+    models/load/xmlmodelreader.cc
+    models/load/xmlmodelreader.h
+)
+SET(render_models_nodes_src
+    models/nodes/characternode.cc
+    models/nodes/characternode.h
+    models/nodes/characternodeinstance.cc
+    models/nodes/characternodeinstance.h
+    models/nodes/shapenode.cc
+    models/nodes/shapenode.h
+    models/nodes/shapenodeinstance.cc
+    models/nodes/shapenodeinstance.h
+    models/nodes/skinshapenode.cc
+    models/nodes/skinshapenode.h
+    models/nodes/skinshapenodeinstance.cc
+    models/nodes/skinshapenodeinstance.h
+    models/nodes/statenode.cc
+    models/nodes/statenode.h
+    models/nodes/statenodeinstance.cc
+    models/nodes/statenodeinstance.h
+    models/nodes/transformnode.cc
+    models/nodes/transformnode.h
+    models/nodes/transformnodeinstance.cc
+    models/nodes/transformnodeinstance.h
+)
+SET(render_models_save_src
+    models/save/binarymodelwriter.cc
+    models/save/binarymodelwriter.h
+    models/save/modelwriter.cc
+    models/save/modelwriter.h
+    models/save/xmlmodelwriter.cc
+    models/save/xmlmodelwriter.h
+)
+SET(render_preshaders_src
+    preshaders/boxfilterkernel.cc
+    preshaders/boxfilterkernel.h
+    preshaders/gaussianblur5x5filterkernel.cc
+    preshaders/gaussianblur5x5filterkernel.h
+    preshaders/preshaders.h
+)
+SET(render_renderutil_src
+    renderutil/mayacamerautil.cc
+    renderutil/mayacamerautil.h
+)
+SET(render_resources_src
+    resources/managedmesh.cc
+    resources/managedmesh.h
+    resources/managedresource.cc
+    resources/managedresource.h
+    resources/managedtexture.cc
+    resources/managedtexture.h
+    resources/resource.cc
+    resources/resource.h
+    resources/resourceallocator.cc
+    resources/resourceallocator.h
+    resources/resourcedictionary.cc
+    resources/resourcedictionary.h
+    resources/resourceid.h
+    resources/resourceloader.cc
+    resources/resourceloader.h
+    resources/resourcelump.cc
+    resources/resourcelump.h
+    resources/resourcemanager.cc
+    resources/resourcemanager.h
+    resources/resourcemapper.cc
+    resources/resourcemapper.h
+    resources/resourcesaver.cc
+    resources/resourcesaver.h
+    resources/sharedresourceserver.cc
+    resources/sharedresourceserver.h
+    resources/simpleresourcemapper.cc
+    resources/simpleresourcemapper.h
+    resources/streamresourceloader.cc
+    resources/streamresourceloader.h
+)
+SET(render_ui_src
+    ui/uielement.cc
+    ui/uielement.h
+    ui/uigraphicshandler.cc
+    ui/uigraphicshandler.h
+    ui/uirenderer.cc
+    ui/uirenderer.h
+    ui/uirenderprotocol.cc
+    ui/uirenderprotocol.h
+)
+SET(render_pch_src
+    stdneb.cc
+    stdneb.h
+)
+SET(render_SRCS
+    ${render_animation_src}
+    ${render_apprender_src}
+    ${render_audio_src}
+    ${render_coreanimation_src}
+    ${render_coreaudio_src}
+    ${render_coreaudio_base_src}
+    ${render_coreaudio_debug_src}
+    ${render_coregraphics_base_src}
+    ${render_coregraphics_debug_src}
+    ${render_coregraphics_legacy_src}
+    ${render_coregraphics_src}
+    ${render_debugrender_src}
+    ${render_frame_src}
+    ${render_graphics_src}
+    ${render_input_base_src}
+    ${render_input_src}
+    ${render_internalgraphics_src}
+    ${render_lighting_base_src}
+    ${render_lighting_sm30_src}
+    ${render_lighting_src}
+    ${render_models_load_src}
+    ${render_models_nodes_src}
+    ${render_models_save_src}
+    ${render_models_src}
+    ${render_renderutil_src}
+    ${render_resources_src}
+    ${render_ui_src}
+    ${render_pch_src}
+)
+
+IF(WIN32)
+    SET(render_SRCS
+        ${render_SRCS}
+        ${render_coreaudio_win360_src}
+        ${render_coregraphics_d3d9_src}
+        ${render_coregraphics_win32_src}
+        ${render_coregraphics_win360_src}
+        ${render_input_win32_src}
+        ${render_input_xinput_src}
+    )
+ENDIF()
+
+SOURCE_GROUP(animation FILES ${render_animation_src})
+SOURCE_GROUP(apprender FILES ${render_apprender_src})
+SOURCE_GROUP(audio FILES ${render_audio_src})
+SOURCE_GROUP(coreanimation FILES ${render_coreanimation_src})
+SOURCE_GROUP(coreaudio FILES ${render_coreaudio_src})
+SOURCE_GROUP(coreaudio\\base FILES ${render_coreaudio_base_src})
+SOURCE_GROUP(coreaudio\\debug FILES ${render_coreaudio_debug_src})
+SOURCE_GROUP(coreaudio\\win360 FILES ${render_coreaudio_win360_src})
+SOURCE_GROUP(coregraphics FILES ${render_coregraphics_src})
+SOURCE_GROUP(coregraphics\\base FILES ${render_coregraphics_base_src})
+SOURCE_GROUP(coregraphics\\d3d9 FILES ${render_coregraphics_d3d9_src})
+SOURCE_GROUP(coregraphics\\debug FILES ${render_coregraphics_debug_src})
+SOURCE_GROUP(coregraphics\\legacy FILES ${render_coregraphics_legacy_src})
+SOURCE_GROUP(coregraphics\\win32 FILES ${render_coregraphics_win32_src})
+SOURCE_GROUP(coregraphics\\win360 FILES ${render_coregraphics_win360_src})
+SOURCE_GROUP(debugrender FILES ${render_debugrender_src})
+SOURCE_GROUP(frame FILES ${render_frame_src})
+SOURCE_GROUP(graphics FILES ${render_graphics_src})
+SOURCE_GROUP(input FILES ${render_input_src})
+SOURCE_GROUP(input\\base FILES ${render_input_base_src})
+SOURCE_GROUP(input\\win32 FILES ${render_input_win32_src})
+SOURCE_GROUP(input\\xinput FILES ${render_input_xinput_src})
+SOURCE_GROUP(internalgraphics FILES ${render_internalgraphics_src})
+SOURCE_GROUP(lighting FILES ${render_lighting_src})
+SOURCE_GROUP(lighting\\base FILES ${render_lighting_base_src})
+SOURCE_GROUP(lighting\\sm30 FILES ${render_lighting_sm30_src})
+SOURCE_GROUP(models FILES ${render_models_src})
+SOURCE_GROUP(models\\load FILES ${render_models_load_src})
+SOURCE_GROUP(models\\nodes FILES ${render_models_nodes_src})
+SOURCE_GROUP(models\\save FILES ${render_models_save_src})
+SOURCE_GROUP(renderutil FILES ${render_renderutil_src})
+SOURCE_GROUP(resources FILES ${render_resources_src})
+SOURCE_GROUP(ui FILES ${render_ui_src})
+SOURCE_GROUP(precompiled FILES ${render_pch_src})
+
+ADD_LIBRARY(render STATIC ${render_SRCS})
+N_SET_COMPILER_DEFAULTS()
+IF(N_USE_PRECOMPILED_HEADERS)
+    N_SET_PCH(render stdneb.h stdneb.cc)
+ENDIF()
+ADD_DEPENDENCIES(render foundation)
