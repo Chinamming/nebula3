@@ -28,7 +28,8 @@ OPTION(N_BUILD_TOOLS "Build Tools." OFF)
 # Sets up the default compiler options for a Nebula library target or executable.
 #-------------------------------------------------------------------------------
 MACRO(N_SET_COMPILER_DEFAULTS)
-    IF(MSVC)        
+    IF(MSVC)
+        # C++ compiler        
         SET(CMAKE_CXX_FLAGS 
             "/D__WIN32__ /DWIN32 /D_HAS_EXCEPTIONS=0 /GF /fp:fast /W3 /WX /nologo /errorReport:prompt" 
             CACHE STRING "Flags used by the compiler during all build types." FORCE)
@@ -36,6 +37,16 @@ MACRO(N_SET_COMPILER_DEFAULTS)
             "/D_DEBUG /Od /Gm /RTC1 /MTd /Gy /Wp64 /ZI"
             CACHE STRING "Flags used by the compiler during debug builds." FORCE)
         SET(CMAKE_CXX_FLAGS_RELEASE
+            "/Ob2 /Oi /Os /Oy /GL /FD /MT /GS- /Zi"
+            CACHE STRING "Flags used by the compiler during release builds." FORCE)
+        # C compiler (force compilation of .c files using C++ compiler)
+        SET(CMAKE_C_FLAGS 
+            "/D__WIN32__ /DWIN32 /D_HAS_EXCEPTIONS=0 /GF /fp:fast /W3 /WX /nologo /errorReport:prompt" 
+            CACHE STRING "Flags used by the compiler during all build types." FORCE)
+        SET(CMAKE_C_FLAGS_DEBUG
+            "/D_DEBUG /Od /Gm /RTC1 /MTd /Gy /Wp64 /ZI"
+            CACHE STRING "Flags used by the compiler during debug builds." FORCE)
+        SET(CMAKE_C_FLAGS_RELEASE
             "/Ob2 /Oi /Os /Oy /GL /FD /MT /GS- /Zi"
             CACHE STRING "Flags used by the compiler during release builds." FORCE)
     ENDIF()
@@ -111,9 +122,9 @@ ENDIF()
 #IF(N_BUILD_TESTS)
 #    ADD_SUBDIRECTORY(tests)
 #ENDIF()
-#IF(N_BUILD_TOOLKIT)
-#    ADD_SUBDIRECTORY(toolkit)
-#ENDIF()
+IF(N_BUILD_TOOLKIT)
+    ADD_SUBDIRECTORY(toolkit)
+ENDIF()
 #IF(N_BUILD_TOOLS)
 #    ADD_SUBDIRECTORY(tools)
 #ENDIF()
