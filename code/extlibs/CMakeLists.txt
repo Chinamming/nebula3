@@ -1,4 +1,4 @@
 #-------------------------------------------------------------------------------
 # ExtLibs
 #-------------------------------------------------------------------------------
-SUBDIRS(GIMPACT lua ode OPCODE raknet sqlite tinyxml zlib)
+SUBDIRS(DevIL GIMPACT lua ode OPCODE raknet sqlite tinyxml zlib)
