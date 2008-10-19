@@ -143,8 +143,8 @@ typedef void           ILvoid;
 // IL-specific #define's
 //
 
-#define IL_VERSION_1_7_1 1
-#define IL_VERSION       171
+#define IL_VERSION_1_7_2 1
+#define IL_VERSION       172
 
 
 // Attribute Bits
@@ -206,6 +206,7 @@ typedef void           ILvoid;
 #define IL_HDR          0x043F
 #define IL_ICNS			0x0440
 #define IL_JP2			0x0441
+#define IL_EXR			0x0442
 
 
 #define IL_JASC_PAL     0x0475

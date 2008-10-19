@@ -11,13 +11,17 @@
 /* #undef IL_NO_DCX */
 /* #undef IL_NO_DDS */
 /* #undef IL_NO_DOOM */
+#define IL_NO_EXR
 /* #undef IL_NO_GIF */
 /* #undef IL_NO_HDR */
 /* #undef IL_NO_ICO */
 /* #undef IL_NO_ICNS */
 /* #undef IL_NO_JP2 */
+#define IL_NO_JP2
 /* #undef IL_NO_JPG */
+#define IL_NO_JPG
 /* #undef IL_NO_LCMS */
+#define IL_NO_LCMS
 /* #undef IL_NO_LIF */
 /* #undef IL_NO_MDL */
 #define IL_NO_MNG
@@ -26,6 +30,7 @@
 /* #undef IL_NO_PIC */
 /* #undef IL_NO_PIX */
 /* #undef IL_NO_PNG */
+#define IL_NO_PNG
 /* #undef IL_NO_PNM */
 /* #undef IL_NO_PSD */
 /* #undef IL_NO_PSP */
@@ -34,6 +39,7 @@
 /* #undef IL_NO_SGI */
 /* #undef IL_NO_TGA */
 /* #undef IL_NO_TIF */
+#define IL_NO_TIF
 /* #undef IL_NO_WAL */
 /* #undef IL_NO_XPM */
 #define IL_USE_JPEGLIB_UNMODIFIED 1
