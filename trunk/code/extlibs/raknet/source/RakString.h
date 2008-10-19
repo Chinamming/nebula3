@@ -4,6 +4,8 @@
 #include "Export.h"
 #include "DS_List.h"
 #include "RakNetTypes.h" // int64_t
+#include <exception>  // these two lines are neccessary when
+using std::exception; // _HAS_EXCEPTIONS=0 is defined
 #include <stdio.h>
 
 namespace RakNet

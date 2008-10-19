@@ -8,7 +8,6 @@
 #include "MessageIdentifiers.h"
 #include "NetworkIDObject.h"
 #include "NetworkIDManager.h"
-#include <stdlib.h>
 
 using namespace RakNet;
 
