@@ -1,0 +1,3 @@
+The Nebula Device 3 or Nebula3 for short, is a 3d game engine currently being developed by Radon Labs (creators of the Nebula and Nebula2 3d engines). Like its predecessors Nebula3 has been open sourced under a very liberal license allowing for its use in both commercial and non-commercial projects absolutely free of charge.
+
+While Nebula3 is still very much a work in progress, some people outside Radon Labs have already started tinkering with it. The aim of this particular project is to share the work being done by Radon Labs and various other individuals.
